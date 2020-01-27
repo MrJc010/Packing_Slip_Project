@@ -6,11 +6,10 @@
 
 	<display-name>To do List</display-name>
 
-	<welcome-file-list>
 
-		<!-- <welcome-file>login.do</welcome-file> -->
-
-		<welcome-file>packingslip.do</welcome-file>
-	</welcome-file-list>
+	<!-- <welcome-file>login.do</welcome-file> -->
+<welcome-file-list>
+	<welcome-file>packingslip.do</welcome-file>
+</welcome-file-list>
 
 </web-app>

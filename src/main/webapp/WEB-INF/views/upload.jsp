@@ -1,24 +1,21 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
+    pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Welcome</title>
+<title>Insert title here</title>
 </head>
 <body>
-
-
-
-<form method="post" action="/home" enctype="multipart/form-data">
+ <center>
+        <form method="post" action="/upload" enctype="multipart/form-data">
             Select file to upload:
             <input type="file" name="uploadFile" />
             <br/><br/>
             <input type="submit" value="Upload" />
         </form>
-
+    </center>
 </body>
 </html>
 
-<!--  Valid User -> welcome.jsp -->
-<!--  invalid User -> signin.jsp -->
+

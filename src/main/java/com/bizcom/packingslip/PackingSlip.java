@@ -1,5 +1,10 @@
 package com.bizcom.packingslip;
 
+/**
+ * This object is used to read the column name of the excel file
+ * @author viet
+ *
+ */
 public class PackingSlip {
 	private String partNumber;
 	private String poNumber;
