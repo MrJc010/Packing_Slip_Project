@@ -1,0 +1,127 @@
+2020-01-15T11:22:32.175-0800 TRACE [main] TRACE com.bizcom.excel.ExcelService - File read
+2020-01-15T11:22:32.191-0800 TRACE [main] TRACE com.bizcom.excel.ExcelService - File read
+2020-01-15T11:22:35.571-0800 INFO [main] INFO  com.bizcom.excel.ExcelService - Got file
+2020-01-15T11:22:35.571-0800 INFO [main] INFO  com.bizcom.excel.ExcelService - Got file
+2020-01-15T11:22:35.595-0800 INFO [main] INFO  com.bizcom.excel.ExcelService -  --  PACKING SLIP --
+2020-01-15T11:22:35.595-0800 INFO [main] INFO  com.bizcom.excel.ExcelService -  --  PACKING SLIP --
+2020-01-15T11:23:52.237-0800 TRACE [main] TRACE com.bizcom.excel.ExcelService - File read
+2020-01-15T11:23:52.661-0800 INFO [main] INFO  com.bizcom.excel.ExcelService - Got file
+2020-01-15T11:23:52.661-0800 INFO [main] INFO  com.bizcom.excel.ExcelService -  --  PACKING SLIP --
+2020-01-15T11:24:52.131-0800 TRACE [main] TRACE com.bizcom.excel.ExcelService - File read
+2020-01-15T11:24:52.460-0800 INFO [main] INFO  com.bizcom.excel.ExcelService - Got file
+2020-01-15T11:25:58.568-0800 TRACE [main] TRACE com.bizcom.excel.ExcelService - File read
+2020-01-15T11:25:58.897-0800 INFO [main] INFO  com.bizcom.excel.ExcelService - Got file
+2020-01-15T11:28:50.690-0800 TRACE [main] TRACE com.bizcom.excel.ExcelService - File read
+2020-01-15T11:28:51.002-0800 INFO [main] INFO  com.bizcom.excel.ExcelService - Got file
+2020-01-15T11:30:28.667-0800 TRACE [main] TRACE com.bizcom.excel.ExcelService - File read
+2020-01-15T11:30:29.010-0800 INFO [main] INFO  com.bizcom.excel.ExcelService - Got file
+2020-01-15T11:33:08.507-0800 TRACE [main]
+			TRACE com.bizcom.excel.ExcelService - File read
+2020-01-15T11:33:08.828-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Got file
+2020-01-15T11:34:12.116-0800 TRACE [main]
+			TRACE com.bizcom.excel.ExcelService - File read
+2020-01-15T11:34:12.442-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Got file
+2020-01-15T11:48:11.721-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Start to featch file excel
+2020-01-15T13:09:03.682-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Start to featch file excel
+2020-01-15T13:09:04.028-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Read File Completed!
+2020-01-15T13:09:37.484-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Start to featch file excel
+2020-01-15T13:09:37.792-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Read File Completed!
+2020-01-15T13:10:31.852-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Start to featch file excel
+2020-01-15T13:10:32.207-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Read File Completed!
+2020-01-15T13:11:00.624-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Start to featch file excel
+2020-01-15T13:11:00.933-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Read File Completed!
+2020-01-15T13:16:18.329-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Start to featch file excel
+2020-01-15T13:16:18.675-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Read File Completed!
+2020-01-15T13:16:47.476-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Start to featch file excel
+2020-01-15T13:16:47.903-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Read File Completed!
+2020-01-15T13:23:47.601-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Start to featch file excel
+2020-01-15T13:23:47.929-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Read File Completed!
+2020-01-15T13:24:31.875-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Start to featch file excel
+2020-01-15T13:24:32.190-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Read File Completed!
+2020-01-15T13:26:09.491-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Start to featch file excel
+2020-01-15T13:26:09.836-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Read File Completed!
+2020-01-15T13:28:21.534-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Start to featch file excel
+2020-01-15T13:28:21.866-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Read File Completed!
+2020-01-15T13:29:12.344-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Start to featch file excel
+2020-01-15T13:29:12.673-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Read File Completed!
+2020-01-15T13:29:33.070-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Start to featch file excel
+2020-01-15T13:29:33.382-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Read File Completed!
+2020-01-15T13:29:58.073-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Start to featch file excel
+2020-01-15T13:29:58.378-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Read File Completed!
+2020-01-15T13:30:16.706-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Start to featch file excel
+2020-01-15T13:30:16.994-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Read File Completed!
+2020-01-15T13:32:31.049-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Start to featch file excel
+2020-01-15T13:32:31.378-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Read File Completed!
+2020-01-15T13:33:01.920-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Start to featch file excel
+2020-01-15T13:33:02.268-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Read File Completed!
+2020-01-15T13:47:14.450-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Start to featch file excel
+2020-01-15T13:47:14.813-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Read File Completed!
+2020-01-15T13:49:08.421-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Start to featch file excel
+2020-01-15T13:49:09.030-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Read File Completed!
+2020-01-15T13:49:45.673-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Start to featch file excel
+2020-01-15T13:49:46.045-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Read File Completed!
+2020-01-15T14:02:32.034-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Start to featch file excel
+2020-01-15T14:02:32.439-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Read File Completed!
+2020-01-15T14:04:09.234-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Start to featch file excel
+2020-01-15T14:04:09.608-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Read File Completed!
+2020-01-15T14:05:35.198-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Start to featch file excel
+2020-01-15T14:05:35.634-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Read File Completed!
+2020-01-15T14:05:58.131-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Start to featch file excel
+2020-01-15T14:05:58.489-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Read File Completed!
+2020-01-15T14:08:26.044-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Start to featch file excel
+2020-01-15T14:08:26.976-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Read File Completed!
+2020-01-15T14:08:57.434-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Start to featch file excel
+2020-01-15T14:08:57.782-0800 INFO [main]
+			INFO  com.bizcom.excel.ExcelService - Read File Completed!
