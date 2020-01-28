@@ -4,19 +4,19 @@ public class PPID {
 	private String pnNumber;
 	private String ppidNumber;
 	private String coNumber;
-	private String systemDateReceived;
+	private String dateReceived;
 	private String lotNumber;
 	private String dpsNumber;
 	private String problemCode;
 	private String problemDescription;
 
-	public PPID(String pnNumber, String ppidNumber, String coNumber, String systemDateReceived, String lotNumber,
+	public PPID(String pnNumber, String ppidNumber, String coNumber, String dateReceived, String lotNumber,
 			String dpsNumber, String problemCode, String problemDescription) {
 		super();
 		this.pnNumber = pnNumber;
 		this.ppidNumber = ppidNumber;
 		this.coNumber = coNumber;
-		this.systemDateReceived = systemDateReceived;
+		this.dateReceived = dateReceived;
 		this.lotNumber = lotNumber;
 		this.dpsNumber = dpsNumber;
 		this.problemCode = problemCode;
@@ -35,8 +35,8 @@ public class PPID {
 		return coNumber;
 	}
 
-	public String getSystemDateReceived() {
-		return systemDateReceived;
+	public String getDateReceived() {
+		return dateReceived;
 	}
 
 	public String getLotNumber() {
@@ -66,7 +66,7 @@ public class PPID {
 		result = prime * result + ((ppidNumber == null) ? 0 : ppidNumber.hashCode());
 		result = prime * result + ((problemCode == null) ? 0 : problemCode.hashCode());
 		result = prime * result + ((problemDescription == null) ? 0 : problemDescription.hashCode());
-		result = prime * result + ((systemDateReceived == null) ? 0 : systemDateReceived.hashCode());
+		result = prime * result + ((dateReceived == null) ? 0 : dateReceived.hashCode());
 		return result;
 	}
 
@@ -114,10 +114,10 @@ public class PPID {
 				return false;
 		} else if (!problemDescription.equals(other.problemDescription))
 			return false;
-		if (systemDateReceived == null) {
-			if (other.systemDateReceived != null)
+		if (dateReceived == null) {
+			if (other.dateReceived != null)
 				return false;
-		} else if (!systemDateReceived.equals(other.systemDateReceived))
+		} else if (!dateReceived.equals(other.dateReceived))
 			return false;
 		return true;
 	}
@@ -125,9 +125,8 @@ public class PPID {
 	@Override
 	public String toString() {
 		return String.format(
-				"PPID [pnNumber=%s, ppidNumber=%s, coNumber=%s, systemDateReceived=%s, lotNumber=%s, dpsNumber=%s, problemCode=%s, problemDescription=%s]",
-				pnNumber, ppidNumber, coNumber, systemDateReceived, lotNumber, dpsNumber, problemCode,
-				problemDescription);
+				"PPID [pnNumber=%s, ppidNumber=%s, coNumber=%s, dateReceived=%s, lotNumber=%s, dpsNumber=%s, problemCode=%s, problemDescription=%s]",
+				pnNumber, ppidNumber, coNumber, dateReceived, lotNumber, dpsNumber, problemCode, problemDescription);
 	}
 
 }

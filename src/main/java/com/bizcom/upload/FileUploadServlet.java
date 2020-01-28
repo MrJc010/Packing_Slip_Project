@@ -77,7 +77,6 @@ public class FileUploadServlet extends HttpServlet {
 		// this path is relative to application's directory
 		String uploadPath = getServletContext().getRealPath("") + File.separator + UPLOAD_DIRECTORY;
 
-		
 		// creates the directory if it does not exist
 		File uploadDir = new File(uploadPath);
 		if (!uploadDir.exists()) {
@@ -97,22 +96,17 @@ public class FileUploadServlet extends HttpServlet {
 						String fileName = new File(item.getName()).getName();
 						String filePath = uploadPath + File.separator + fileName;
 						File storeFile = new File(filePath);
-						System.out.println("PATH: " +filePath);
 						request.getSession().setAttribute("PathFile", filePath);
 						// saves the file on disk
 						item.write(storeFile);
-						
-						response.sendRedirect("/packingslip");
-					
-						
+
+						response.sendRedirect("/list-ppid.do");
+
 					}
 				}
 			}
 		} catch (Exception ex) {
 			request.setAttribute("message", "There was an error: " + ex.getMessage());
 		}
-		// redirects client to message page
-//		getServletContext().getRequestDispatcher("/packingslip").forward(request, response);
-		
 	}
 }
