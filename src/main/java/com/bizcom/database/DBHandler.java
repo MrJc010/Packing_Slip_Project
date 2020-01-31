@@ -5,8 +5,10 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
+import com.bizcom.physicalreceiving.Item;
 import com.bizcom.ppid.PPID;
 
 public class DBHandler {
@@ -144,6 +146,105 @@ public class DBHandler {
 		}
 
 		return result;
+	}
+
+	public List<Item> fetchRMA(String rma, String ppidN, String dpsN) {
+		List<Item> result = new ArrayList<>();
+		String FETCH_RMA_QUERY = "SELECT * FROM ppid WHERE rma=? and ppid = ? and dps = ?";
+
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(FETCH_RMA_QUERY);
+			pst.setString(1, rma);
+			pst.setString(2, ppidN);
+			pst.setString(3, dpsN);
+			rs = pst.executeQuery();
+			System.out.println("result: " + rs.getFetchSize());
+			while (rs.next()) {
+				String CPO_SN = "";
+				String ppid = rs.getString("ppid");
+				String pn = rs.getString("pn");
+				String co = rs.getString("pn");
+				String sn = "";
+				String revision = "";
+				String description = rs.getString("problem_desc");
+				String specialInstruction = "";
+				String lot = rs.getString("lot");
+				String problemCode = rs.getString("problem_code");
+				String dps = rs.getString("dps");
+				String mfgPN = "";
+
+				result.add(new Item(CPO_SN, ppid, pn, sn, revision, description, specialInstruction, co, lot,
+						problemCode, rma, dps, mfgPN));
+			}
+
+		} catch (Exception e) {
+			System.out.println("ERROR fetchRMA");
+		} finally {
+			shutdown();
+		}
+		return result;
+	}
+
+	public void deletaAPPID(Connection conn, String ppid) throws SQLException {
+		String DELETE_A_PPID = "DELETE FROM ppid WHERE ppid=?";
+
+		pst = conn.prepareStatement(DELETE_A_PPID);
+		pst.setString(1, ppid);
+		pst.executeUpdate();
+	}
+
+	public void SavingRMA(String rmaNum, String cposn, String ppid, String pn, String sn, String revision,
+			String specialInstruction, String mfgPN, String lot, String description, String problemCode, String dps) {
+		List<Item> result = new ArrayList<>();
+		String FETCH_RMA_QUERY = "INSERT INTO rmaReceiving VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+		try {
+			dbconnection = getConnectionAWS();
+			dbconnection.setAutoCommit(false);
+			pst = dbconnection.prepareStatement(FETCH_RMA_QUERY);
+			pst.setString(1, rmaNum);
+			pst.setString(2, cposn);
+			pst.setString(3, ppid);
+			pst.setString(4, pn);
+
+			pst.setString(5, sn);
+			pst.setString(6, revision);
+			pst.setString(7, specialInstruction);
+
+			pst.setString(8, mfgPN);
+			pst.setString(9, lot);
+			pst.setString(10, description);
+			pst.setString(11, problemCode);
+			pst.setString(12, dps);
+			pst.executeUpdate();
+			shutdown();
+			deletaAPPID(dbconnection, ppid);
+
+			dbconnection.commit();
+//			while (rs.next()) {
+//				String CPO_SN = "";
+//				String ppid = rs.getString("ppid");
+//				String pn = rs.getString("pn");
+//				String co = rs.getString("pn");
+//				String sn = "";
+//				String revision = "";
+//				String description = rs.getString("problem_desc");
+//				String specialInstruction = "";
+//				String lot = rs.getString("lot");
+//				String problemCode = rs.getString("problem_code");
+//				String dps = rs.getString("dps");
+//				String mfgPN = "";
+//
+//				result.add(new Item(CPO_SN, ppid, pn, sn, revision, description, specialInstruction, co, lot,
+//						problemCode, rma, dps,mfgPN));
+//			}
+
+		} catch (Exception e) {
+			System.out.println(e);
+		} finally {
+			shutdown();
+		}
 	}
 
 }
