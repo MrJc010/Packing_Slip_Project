@@ -218,7 +218,6 @@ public class DBHandler {
 			pst.setString(11, problemCode);
 			pst.setString(12, dps);
 			pst.executeUpdate();
-			shutdown();
 			deletaAPPID(dbconnection, ppid);
 
 			dbconnection.commit();
