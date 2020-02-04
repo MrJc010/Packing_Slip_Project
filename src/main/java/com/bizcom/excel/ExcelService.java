@@ -12,6 +12,7 @@ import java.util.List;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Hyperlink;
 import org.apache.poi.ss.usermodel.RichTextString;
@@ -23,25 +24,37 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.bizcom.packingslip.PackingSlip;
 import com.bizcom.path.ApplicationPath;
+import com.bizcom.ppid.PPID;
 
 public class ExcelService {
 
 //	private static final Logger LOGGER = LogManager.getLogger(ExcelService.class);
 	private Workbook myWorkBook;
 	private List<PackingSlip> listOfRow;
+	private List<PPID> listPPID;
 	private ApplicationPath currentpath;
 	// === CONSTANT VARIABLE BASED ON EXCEL FILE
-	private final int ROW_NUMBER = 6;
+	private final int COL_NUMBER = 6;
 	private static final String PO_PATTERN = "^(CMP-)[^\\s.]{5}$";
 	private static final int PN_COL_NUM = 2;
 	private static final int PO_COL_NUM = 3;
 	private static final int LOT_COL_NUM = 4;
 	private static final int QTY_COL_NUM = 5;
 
+	private static int PN_COL_NUM_PPID;
+	private static int PPID_COL_NUM_PPID;
+	private static int CO_COL_NUM_PPID;
+	private static int SYS_DATE_COL_NUM_PPID;
+	private static int LOT_COL_NUM_PPID;
+	private static int DPS_COL_NUM_PPID;
+	private static int PROPBLEM_CODE_COL_NUM_PPID;
+	private static int PROPBLEM_DES_COL_NUM_PPID;
+
 	public ExcelService() {
 		currentpath = new ApplicationPath();
 		myWorkBook = null;
 		listOfRow = new ArrayList<>();
+		listPPID = new ArrayList<>();
 	}
 
 	public Workbook getWorkbook() {
@@ -54,33 +67,62 @@ public class ExcelService {
 		return this.listOfRow;
 	}
 
-	
+	public List<PPID> getListOfRowPPID() {
+		this.listPPID.clear();
+		getAllRowsPPID();
+		return this.listPPID;
+	}
+
 	public void getAllRowsPPID() {
 		Sheet sheetOne = myWorkBook.getSheetAt(1);
+		DataFormatter formatter = new DataFormatter();
+		int count = 0;
 		for (Row row : sheetOne) {
-			if (row.getPhysicalNumberOfCells() == ROW_NUMBER
-					&& row.getCell(2).getRichStringCellValue().toString().matches(PO_PATTERN)) {
+			if (count < 1) {
+				count++;
+				int index = 0;
+				for (Cell c : row) {
+					String temp = formatter.formatCellValue(c);
+					if (temp.equalsIgnoreCase("pn")) {
+						PN_COL_NUM_PPID = index;
+					} else if (temp.equalsIgnoreCase("ppid#")) {
+						PPID_COL_NUM_PPID = index;
+					} else if (temp.equalsIgnoreCase("co#")) {
+						CO_COL_NUM_PPID = index;
+					} else if (temp.equalsIgnoreCase("SYS-DATE-REC")) {
+						SYS_DATE_COL_NUM_PPID = index;
+					} else if (temp.equalsIgnoreCase("LOT#")) {
+						LOT_COL_NUM_PPID = index;
+					} else if (temp.equalsIgnoreCase("DPS#")) {
+						DPS_COL_NUM_PPID = index;
+					} else if (temp.equalsIgnoreCase("PROBLEM-CODE")) {
+						PROPBLEM_CODE_COL_NUM_PPID = index;
+					} else if (temp.equalsIgnoreCase("PROBLEM-DESC")) {
+						PROPBLEM_DES_COL_NUM_PPID = index;
+					}
+					index++;
+				}
+			} else {
+				String pn = row.getCell(PN_COL_NUM_PPID).getStringCellValue();
+				String ppid = row.getCell(PPID_COL_NUM_PPID).getStringCellValue();
+				String co = row.getCell(CO_COL_NUM_PPID).getStringCellValue();
+				String sys_date_rec = row.getCell(SYS_DATE_COL_NUM_PPID).toString();
+				String lot = row.getCell(LOT_COL_NUM_PPID).getStringCellValue();
+				String dps = row.getCell(DPS_COL_NUM_PPID).getStringCellValue();
+				String problem_code = row.getCell(PROPBLEM_CODE_COL_NUM_PPID).getStringCellValue();
+				String problem_desc = row.getCell(PROPBLEM_DES_COL_NUM_PPID).toString();
 
-				String partNumber = getCellValueObject(row.getCell(PN_COL_NUM)).toString();
-				String poNumber = getCellValueObject(row.getCell(PO_COL_NUM)).toString();
-				String lotNumber = getCellValueObject(row.getCell(LOT_COL_NUM)).toString();
-				int quality = (int) row.getCell(QTY_COL_NUM).getNumericCellValue();
-				String rMANumber = "";
-				PackingSlip temp = new PackingSlip(partNumber, poNumber, lotNumber, quality, rMANumber);
-				listOfRow.add(temp);
-
+				listPPID.add(new PPID(pn, ppid, co, sys_date_rec, lot, dps, problem_code, problem_desc));
 			}
 
 		}
 
 	}
-	
+
 	public void getAllRowsPackingSlip() {
 		Sheet sheetOne = myWorkBook.getSheetAt(0);
-//		System.out.println(sheetOne.getRow(sheetOne.getLastRowNum()).getCell(QTY_COL_NUM).getNumericCellValue());
-//		System.out.println(sheetOne.getRow(sheetOne.getLastRowNum()).getCell(1).getNumericCellValue());
 		for (Row row : sheetOne) {
-			if (row.getPhysicalNumberOfCells() == ROW_NUMBER
+			if (row.getPhysicalNumberOfCells() == COL_NUMBER
 					&& row.getCell(2).getRichStringCellValue().toString().matches(PO_PATTERN)) {
 
 				String partNumber = getCellValueObject(row.getCell(PN_COL_NUM)).toString();
@@ -246,12 +288,12 @@ public class ExcelService {
 		switch (eCellType) {
 		case NUMERIC:
 			if (DateUtil.isCellDateFormatted(aCell)) {
-				return getCellAsDateObject(aCell);
+				return getCellAsDateObject(aCell).toString();
 			} else {
 				return getAsNumberObject(aCell.getNumericCellValue());
 			}
 		case STRING:
-			return getCellValueRichText(aCell);
+			return getCellValueRichText(aCell).getString();
 		case BOOLEAN:
 			return aCell.getBooleanCellValue();
 		case FORMULA:

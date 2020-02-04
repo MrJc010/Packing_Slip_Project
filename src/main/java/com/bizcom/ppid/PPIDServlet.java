@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.bizcom.database.DBHandler;
 import com.bizcom.excel.ExcelService;
 
 //Add Router Link to URL
@@ -18,15 +19,16 @@ public class PPIDServlet extends HttpServlet {
 	 */
 	private static final long serialVersionUID = -8462034835164475305L;
 	private ExcelService excelService = new ExcelService();
+	private DBHandler dbHandler = new DBHandler();
 
 	@Override
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		// PPID stay at Sheet 1
-		excelService.read("myfile.xls");
-
-		request.getSession().setAttribute("rows2", excelService.getListOfRowPackingSlip());
+		excelService.read(request.getSession().getAttribute("PathFile").toString());
+		request.setAttribute("rows2", excelService.getListOfRowPPID());
+		dbHandler.ppidToDB(excelService.getListOfRowPPID());
 		request.getRequestDispatcher("/WEB-INF/views/ppid/list-ppid.jsp").forward(request, response);
 	}
 

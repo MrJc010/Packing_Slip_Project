@@ -1,3 +1,4 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
@@ -33,22 +34,15 @@
 				</thead>
 				<tbody>
 					<c:forEach items="${rows2}" var="aRow">
-
 						<tr>
-							<td>${aRow.partNumber}</td>
-							<td>${aRow.poNumber}</td>
+							<td>${aRow.pnNumber}</td>
+							<td>${aRow.ppidNumber}</td>
+							<td>${aRow.coNumber}</td>
+							<td>${aRow.dateReceived}</td>
 							<td>${aRow.lotNumber}</td>
-							<td>${aRow.quality}</td>
-							<td>${aRow.RMANumber}</td>
-							
-							<td>CMP-PMH0T</td>
-							<td>CN0PMH0T1296361EA034</td>
-							<td>18343956W</td>
-							<td>2/12/2018</td>
-							<td>017340459</td>
-							<td>344433183</td>
-							<td>PB3I</td>
-							<td>SR Online : networkconnection:Windows 10:</td>
+							<td>${aRow.dpsNumber}</td>
+							<td>${aRow.problemCode}</td>
+							<td>${aRow.problemDescription}</td>
 						</tr>
 
 
