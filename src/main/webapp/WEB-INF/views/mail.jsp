@@ -14,10 +14,10 @@
 
 
 	<div class="container">
-		<p>Date: 10/10/2000</p>
+		<p name="time">Date: <%= (new java.util.Date()).toLocaleString()%></p>
 
 		<br>
-		<form action="/sendemail" method="POST">
+		<form action="sendmail" method="POST">
 			<span>RMA </span><input type="text" name="rma">
 			<table class="table">
 				<thead>
