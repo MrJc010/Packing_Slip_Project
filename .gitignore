@@ -4,3 +4,4 @@
 *.class
 *.properties
 /target/*
+target/m2e-wtp/web-resources/META-INF/maven/com.bizcom/JSP-Servlet-AWS/pom.properties
