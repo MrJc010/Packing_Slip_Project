@@ -1,4 +1,4 @@
-package com.bizcom.path;
+package com.bizcom.excel;
 
 import java.io.File;
 import java.net.URISyntaxException;

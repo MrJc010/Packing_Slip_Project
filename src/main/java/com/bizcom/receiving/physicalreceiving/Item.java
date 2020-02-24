@@ -1,4 +1,4 @@
-package com.bizcom.physicalreceiving;
+package com.bizcom.receiving.physicalreceiving;
 
 public class Item {
 	private String CPO_SN;

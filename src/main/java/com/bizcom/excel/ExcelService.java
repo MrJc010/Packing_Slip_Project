@@ -23,7 +23,6 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.bizcom.packingslip.PackingSlip;
-import com.bizcom.path.ApplicationPath;
 import com.bizcom.ppid.PPID;
 
 public class ExcelService {

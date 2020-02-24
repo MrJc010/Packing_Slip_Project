@@ -8,8 +8,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.bizcom.physicalreceiving.Item;
 import com.bizcom.ppid.PPID;
+import com.bizcom.receiving.physicalreceiving.Item;
 
 public class DBHandler {
 	private Connection dbconnection;

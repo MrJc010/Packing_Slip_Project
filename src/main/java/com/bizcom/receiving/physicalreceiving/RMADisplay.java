@@ -1,4 +1,4 @@
-package com.bizcom.physicalreceiving;
+package com.bizcom.receiving.physicalreceiving;
 
 import java.io.IOException;
 import java.util.ArrayList;

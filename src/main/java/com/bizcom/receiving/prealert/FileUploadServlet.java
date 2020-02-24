@@ -1,4 +1,4 @@
-package com.bizcom.receiving;
+package com.bizcom.receiving.prealert;
 
 import java.io.File;
 import java.io.IOException;
