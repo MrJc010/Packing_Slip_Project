@@ -21,7 +21,7 @@ import com.bizcom.excel.ExcelService;
  * A Java servlet that handles file upload from client.
 
  */
-@WebServlet(urlPatterns = "/upload")
+@WebServlet(urlPatterns = "/prealert")
 public class FileUploadServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private ExcelService excelService = new ExcelService();
