@@ -11,7 +11,7 @@ import com.bizcom.database.DBHandler;
 import com.bizcom.excel.ExcelService;
 
 //Add Router Link to URL
-@WebServlet(urlPatterns = "/list-ppid.do")
+@WebServlet(urlPatterns = "/listppid")
 public class PPIDServlet extends HttpServlet {
 
 	/**
@@ -29,7 +29,7 @@ public class PPIDServlet extends HttpServlet {
 		excelService.read(request.getSession().getAttribute("PathFile").toString());
 		request.setAttribute("rows2", excelService.getListOfRowPPID());
 		dbHandler.ppidToDB(excelService.getListOfRowPPID());
-		request.getRequestDispatcher("/WEB-INF/views/ppid/list-ppid.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/views/receiving_station/ppid/list-ppid.jsp").forward(request, response);
 	}
 
 }

@@ -34,7 +34,7 @@
 						<div class="dropdown-menu dropdown-menu-right"
 							aria-labelledby="navbarDropdownMenuLink">
 							<a class="dropdown-item"
-								href="<%=request.getContextPath()%>/upload">Pre-Alert</a> <a
+								href="<%=request.getContextPath()%>/prealert">Pre-Alert</a> <a
 								class="dropdown-item" href="#">Part number and warranty
 								check</a> <a class="dropdown-item" href="#">Issue RMA</a>
 						</div></li>

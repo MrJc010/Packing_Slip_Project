@@ -16,6 +16,7 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import com.bizcom.excel.ExcelService;
+import com.bizcom.packingslip.PackingSlip;
 
 /**
  * A Java servlet that handles file upload from client.
@@ -39,7 +40,7 @@ public class FileUploadServlet extends HttpServlet {
 			throws IOException, ServletException {
 		// PPID stay at Sheet 1
 
-		request.getRequestDispatcher("/WEB-INF/views/upload.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/views/receiving_station/prealert/prealert.jsp").forward(request, response);
 	}
 
 	/**
@@ -74,7 +75,7 @@ public class FileUploadServlet extends HttpServlet {
 
 		// constructs the directory path to store upload file
 		// this path is relative to application's directory
-		String uploadPath = getServletContext().getRealPath("") + File.separator + UPLOAD_DIRECTORY;
+		String uploadPath = getServletContext().getRealPath("") +  UPLOAD_DIRECTORY;
 
 		// creates the directory if it does not exist
 		File uploadDir = new File(uploadPath);
@@ -98,8 +99,11 @@ public class FileUploadServlet extends HttpServlet {
 						request.getSession().setAttribute("PathFile", filePath);
 						// saves the file on disk
 						item.write(storeFile);
-
-						response.sendRedirect("/list-ppid.do");
+						System.out.println(request.getContextPath()+"/packingslip");
+						response.sendRedirect(request.getContextPath()+"/packingslip");
+						
+					
+						
 
 					}
 				}

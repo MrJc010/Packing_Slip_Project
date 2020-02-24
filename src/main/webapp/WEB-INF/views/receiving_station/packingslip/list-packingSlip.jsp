@@ -17,6 +17,17 @@
 
 	<div class="container">
 		<div class="row">
+			
+				<input type="text" name="#RMA"/>
+				<button>Save</button>
+				<button>Download</button>
+			
+		
+		</div>
+	
+	
+	
+		<div class="row">
 			<h3>Excel File Reader</h3>
 		</div>
 		<div class="row p5">
