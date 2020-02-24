@@ -4,6 +4,7 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
+
 <!-- Bootstrap core CSS -->
 <link href="webjars/bootstrap/4.4.1/css/bootstrap.min.css"
 	rel="stylesheet">
@@ -11,20 +12,16 @@
 
 <title>Insert title here</title>
 </head>
-<style>
-.footer {
-	position: absolute;
-	bottom: 0;
-	width: 100%;
-	height: 60px;
-	background-color: #f5f5f5;
-}
-</style>
 <body>
-	<footer class="footer">
-		<div>footer content</div>
-		<p>New Style</p>
-	</footer>
+	<div class="container p-5">
+
+		<a type="button" class="btn btn-primary mx-5"
+			href="<%=request.getContextPath()%>/upload" role="button">Pre-Alert</a>
+
+		<a type="button" class="btn btn-primary"
+			href="<%=request.getContextPath()%>/" role="button">Pre-Alert</a>
+	</div>
+
 
 	<script src="webjars/jquery/3.4.1/jquery.min.js"></script>
 	<script src="webjars/bootstrap/4.4.1/js/bootstrap.min.js"></script>

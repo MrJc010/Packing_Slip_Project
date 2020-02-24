@@ -35,21 +35,19 @@ public class DBHandler {
 	 */
 	public Connection getConnectionAWS() {
 
-		System.out.println("MySQL JDBC Driver Registered!");
-
 		try {
 			dbconnection = DriverManager.getConnection(
 					"jdbc:mysql://" + Configs.dbHost + ":" + Configs.dbPort + "/" + Configs.dbName, Configs.dbUsername,
 					Configs.dbPassword);
 		} catch (SQLException e) {
 
-			System.out.println("FAILLL");
+			System.out.println("Fail to connect");
 		}
 
 		if (dbconnection != null) {
 			System.out.println("SUCCESS!!!! You made it, take control your database now!");
 		} else {
-			System.out.println("FAILLL");
+			System.out.println("Fail to connect");
 		}
 		return dbconnection;
 
@@ -106,7 +104,7 @@ public class DBHandler {
 			}
 
 		} catch (Exception e) {
-			System.out.println("FAILLL");
+			System.out.println("Fail to connect");
 		} finally {
 			// close database resources
 			shutdown();

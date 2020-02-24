@@ -19,8 +19,7 @@ import com.bizcom.excel.ExcelService;
 
 /**
  * A Java servlet that handles file upload from client.
- *
- * @author www.codejava.net
+
  */
 @WebServlet(urlPatterns = "/upload")
 public class FileUploadServlet extends HttpServlet {
