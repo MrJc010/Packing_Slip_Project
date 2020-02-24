@@ -1,4 +1,4 @@
-package com.bizcom.upload;
+package com.bizcom.receiving;
 
 import java.io.File;
 import java.io.IOException;
