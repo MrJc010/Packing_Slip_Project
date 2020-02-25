@@ -34,6 +34,7 @@ public class PackingSlipServlet extends HttpServlet {
 //		request.setAttribute("rows", excelService.getListOfRowPackingSlip());
 	
 		excelService.read(request.getSession().getAttribute("PathFile").toString());
+		//System.out.println(request.getSession().getAttribute("PathFile").toString());
 		request.setAttribute("rows", excelService.getListOfRowPackingSlip());
 		request.getRequestDispatcher("/WEB-INF/views/receiving_station/packingslip/list-packingSlip.jsp").forward(request, response);
 	}

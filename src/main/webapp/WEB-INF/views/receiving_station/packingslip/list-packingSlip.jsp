@@ -20,7 +20,7 @@
 			
 				<input type="text" name="#RMA"/>
 				<button>Save</button>
-				<button>Download</button>
+				<a href="File_DownLoad">DownLoad File</a>
 			
 		
 		</div>
