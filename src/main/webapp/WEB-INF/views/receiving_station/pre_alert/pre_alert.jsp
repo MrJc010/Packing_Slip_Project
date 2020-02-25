@@ -3,7 +3,7 @@
 
 
 
-<section style="height: 80vh;">
+<section>
 
 	<div class="container border mt-5 ">
 		<h1 class="text-center mb-4">Upload excel file</h1>
@@ -54,51 +54,98 @@
 		<div class="tab-content p-4">
 			<div class="tab-pane active" id="packingslip" role="tabpanel"
 				aria-labelledby="packingslip-tab">
-				<div class="container" ${setHidden}>	
-	
-		<div class="row">
-			<h3>Excel File Reader</h3>
-			
-		</div>
-		<div class="row p5">
-			<table class="table table-striped">
-				<thead>
-					<tr>
-						<th scope="col" class="text-left">PN#</th>
-						<th scope="col" class="text-left">PO#</th>
-						<th scope="col" class="text-left">LOT#</th>
-						<th scope="col" class="text-left">QTY</th>
-						<th scope="col" class="text-left">RMA#</th>
-					</tr>
-				</thead>
-				<tbody>		
-				
-					<c:forEach items="${rows}" var="aRow">
-	
-						<tr>
-							
-							<td>${aRow.partNumber}</td>
-							<td>${aRow.poNumber}</td>
-							<td>${aRow.lotNumber}</td>
-							<td>${aRow.quality}</td>
-							<td>${aRow.RMANumber}</td>
+				<div class="container-fluid" ${setHidden}>
 
-						</tr>
+					<div>
+						<h3>Packing Slip</h3>
+						<br> <input type="text" name="_RMA" />
+						<button href="<%=request.getContextPath()%>/pre_alert?page=save" type="button" class="btn btn-md btn-primary" disabled>
+						</button>
 
 
-					</c:forEach>
 
-				</tbody>
-			</table>
+					</div>
+					<div class="row p5">
+						<table class="table table-striped">
+							<thead>
+								<tr>
+									<th scope="col" class="text-left">PN#</th>
+									<th scope="col" class="text-left">PO#</th>
+									<th scope="col" class="text-left">LOT#</th>
+									<th scope="col" class="text-left">QTY</th>
+									<th scope="col" class="text-left">RMA#</th>
+								</tr>
+							</thead>
+							<tbody>
 
-		</div>
-	</div>
-				
-				
+								<c:forEach items="${rows}" var="aRow">
+
+									<tr>
+
+										<td>${aRow.partNumber}</td>
+										<td>${aRow.poNumber}</td>
+										<td>${aRow.lotNumber}</td>
+										<td>${aRow.quality}</td>
+										<td>${aRow.RMANumber}</td>
+
+									</tr>
+
+
+								</c:forEach>
+
+							</tbody>
+						</table>
+
+					</div>
 				</div>
+
+
+			</div>
 			<div class="tab-pane" id="ppids" role="tabpanel"
 				aria-labelledby="ppids-tab">
 
+
+				<div class="container-fluid">
+					<div class="row">
+						<h3>List PPID Read From Excel</h3>
+					</div>
+					<div class="row p5">
+						<table class="table table-striped">
+							<thead>
+								<tr>
+									<th scope="col" class="text-left">PN#</th>
+									<th scope="col" class="text-left">PPID#</th>
+									<th scope="col" class="text-left">CO#</th>
+									<th scope="col" class="text-left">SYS-DATE-REC</th>
+									<th scope="col" class="text-left">LOT#</th>
+									<th scope="col" class="text-left">DPS#</th>
+									<th scope="col" class="text-left">PROBLEM-CODE</th>
+									<th scope="col" class="text-left">PROBLEM-DESC</th>
+								</tr>
+							</thead>
+							<tbody>
+								<c:forEach items="${rows2}" var="aRow">
+									<tr>
+										<td>${aRow.pnNumber}</td>
+										<td>${aRow.ppidNumber}</td>
+										<td>${aRow.coNumber}</td>
+										<td>${aRow.dateReceived}</td>
+										<td>${aRow.lotNumber}</td>
+										<td>${aRow.dpsNumber}</td>
+										<td>${aRow.problemCode}</td>
+										<td>${aRow.problemDescription}</td>
+									</tr>
+
+
+								</c:forEach>
+								<tr>
+
+								</tr>
+							</tbody>
+						</table>
+
+					</div>
+				</div>
 
 
 			</div>
@@ -112,6 +159,7 @@
 					href="<%=request.getContextPath()%>/pre_alert?page=export"
 					role="button"
 					onclick="if(!confirm('Are you sure to export?')) return false">Export</a>
+
 
 
 

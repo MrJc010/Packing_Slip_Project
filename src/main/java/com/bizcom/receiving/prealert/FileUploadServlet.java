@@ -1,6 +1,8 @@
 package com.bizcom.receiving.prealert;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -14,9 +16,15 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.bizcom.excel.ExcelService;
-import com.bizcom.packingslip.PackingSlip;
 
 /**
  * A Java servlet that handles file upload from client.
@@ -34,29 +42,37 @@ public class FileUploadServlet extends HttpServlet {
 	private static final int MAX_FILE_SIZE = 1024 * 1024 * 40; // 40MB
 	private static final int MAX_REQUEST_SIZE = 1024 * 1024 * 50; // 50MB
 
+	private String pathFile;
+
 	@Override
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
-		request.setAttribute("setHidden", "hidden");
+//		request.setAttribute("setHidden", "hidden");
+
+		pathFile = "";
+		if (request.getSession().getAttribute("PathFile") != null) {
+			pathFile = request.getSession().getAttribute("PathFile").toString();
+			refeshPackingSlip(request, response, pathFile);
+			refeshPPIDs(request, response, pathFile);
+		}
+
 		String page = "";
 		try {
 			page = request.getParameter("page").toLowerCase();
 		} catch (NullPointerException e) {
-			System.out.println("Null detected");
+			
 		}
 
 		switch (page) {
-		case "export":
-			System.out.println("export to file and download");
-			upload_file(request, response);
+		case "save":
+		
+			
 			break;
 		default:
 			request.getRequestDispatcher("/WEB-INF/views/receiving_station/pre_alert/pre_alert.jsp").forward(request,
 					response);
 		}
-		
-		
 
 	}
 
@@ -66,7 +82,7 @@ public class FileUploadServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
+
 		// checks if the request actually contains upload file
 		if (!ServletFileUpload.isMultipartContent(request)) {
 			// if not, we stop here
@@ -100,7 +116,7 @@ public class FileUploadServlet extends HttpServlet {
 		if (!uploadDir.exists()) {
 			uploadDir.mkdir();
 		}
-		String filePath ="";
+		String filePath = "";
 		try {
 			// parses the request's content to extract file data
 			@SuppressWarnings("unchecked")
@@ -119,7 +135,7 @@ public class FileUploadServlet extends HttpServlet {
 						request.getSession().setAttribute("Name", fileName);
 						// saves the file on disk
 						item.write(storeFile);
-//						response.sendRedirect(request.getContextPath() + "/packing_slip");
+						response.sendRedirect(request.getContextPath() + "/pre_alert");
 
 					}
 				}
@@ -127,30 +143,24 @@ public class FileUploadServlet extends HttpServlet {
 		} catch (Exception ex) {
 			request.setAttribute("message", "There was an error: " + ex.getMessage());
 		}
-//		request.setAttribute("newValue", "NEWWWW");
-//		System.out.println("POST DONE: "  + filePath);
-//		// show PACKING SLIP
+
 //	
 //		excelService.read(filePath);
 //		response.sendRedirect(request.getContextPath() + "/pre_alert");
 //		request.setAttribute("rows", excelService.getListOfRowPackingSlip());
 	}
 
-	public void refeshPackingSlip(HttpServletRequest request, HttpServletResponse response,String path) throws IOException {
+	public void refeshPackingSlip(HttpServletRequest request, HttpServletResponse response, String path)
+			throws IOException {
 		excelService.read(path);
-		request.setAttribute("newValue", "NEWWWW");
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		for( PackingSlip pl : excelService.getListOfRowPackingSlip() ) {
-			System.out.println(pl.toString());
-		}
 		request.setAttribute("rows", excelService.getListOfRowPackingSlip());
-		
+
 	}
+
+	public void refeshPPIDs(HttpServletRequest request, HttpServletResponse response, String path) throws IOException {
+		request.setAttribute("rows2", excelService.getListOfRowPPID());
+	}
+
 	public void errorPage(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		request.setAttribute("title", "Error page");
@@ -158,10 +168,59 @@ public class FileUploadServlet extends HttpServlet {
 
 	}
 
-	public void upload_file(HttpServletRequest request, HttpServletResponse response)
+	public void saveFile(HttpServletRequest request, HttpServletResponse response, String newRMA)
 			throws ServletException, IOException {
+		int PN_COL_NUM;
+		int PO_COL_NUM;
+		int LOT_COL_NUM;
+		int QTY_COL_NUM;
+		int RMA_COL = -1;
+		FileInputStream inputStream = new FileInputStream(new File(pathFile));
+		Workbook workbook = null;
+		try {
+			if (pathFile.endsWith("xlsx")) {
+				workbook = new XSSFWorkbook(inputStream);
+			} else if (pathFile.endsWith("xls")) {
+				// HSSFWorkbook
+				workbook = new HSSFWorkbook(inputStream);
+			}
+		} catch (Exception e) {
+			System.out.println("Cannot Read The File!");
+		}
 
-		System.out.println("run any thing in here ok");
+		Sheet sheetOne = workbook.getSheetAt(0);
+		DataFormatter formatter = new DataFormatter();
+		int count = 0;
+		for (Row row : sheetOne) {
+			if (count < 1) {
+				int index = 1;
+				for (Cell c : row) {
+					String temp = formatter.formatCellValue(c);
+					if (temp.equalsIgnoreCase("PN")) {
+						PN_COL_NUM = index;
+					} else if (temp.equalsIgnoreCase("PO#")) {
+						PO_COL_NUM = index;
+
+					} else if (temp.equalsIgnoreCase("LOT#")) {
+						LOT_COL_NUM = index;
+					} else if (temp.equalsIgnoreCase("QTY")) {
+						QTY_COL_NUM = index;
+						count++;
+					} else if (temp.equalsIgnoreCase("RMA#")) {
+						RMA_COL = index;
+					}
+					index++;
+				}
+			} else {
+				row.getCell(RMA_COL).setCellValue(newRMA);
+			}
+
+		}
+		FileOutputStream outFile = new FileOutputStream(pathFile);
+		workbook.write(outFile);
+		outFile.flush();
+		outFile.close();
+		workbook.close();
 
 	}
 }

@@ -5,9 +5,11 @@
 
 
 <section>
-	<div class="container">
+	<div class="container mt-5 mb-5">
 
 		<h2>This is Home Page</h2>
+
+	
 	</div>
 </section>
 

@@ -143,7 +143,7 @@ public class ExcelService {
 					}
 						index++;
 				}
-				System.out.println(count);
+			
 			} else {	
 				String pn = row.getCell(PN_COL_NUM).getStringCellValue();
 				String po = row.getCell(PO_COL_NUM).getStringCellValue();
@@ -209,6 +209,8 @@ public class ExcelService {
 			e.printStackTrace();
 			//			LOGGER.error("Fail to read excel file {}", e.getMessage());
 		}
+		
+		
 	}
 
 	public void writeRMA(String RMA) {
