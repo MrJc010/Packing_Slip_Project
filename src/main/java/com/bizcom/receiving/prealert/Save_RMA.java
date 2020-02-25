@@ -26,7 +26,6 @@ import com.bizcom.packingslip.PackingSlip;
 /**
  * Servlet implementation class guru_download
  */
-@WebServlet("/Save_RMA")
 public class Save_RMA extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static int PN_COL_NUM;

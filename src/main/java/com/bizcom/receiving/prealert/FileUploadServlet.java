@@ -38,6 +38,7 @@ public class FileUploadServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
+		request.setAttribute("setHidden", "hidden");
 		String page = "";
 		try {
 			page = request.getParameter("page").toLowerCase();
@@ -54,6 +55,8 @@ public class FileUploadServlet extends HttpServlet {
 			request.getRequestDispatcher("/WEB-INF/views/receiving_station/pre_alert/pre_alert.jsp").forward(request,
 					response);
 		}
+		
+		
 
 	}
 
@@ -63,6 +66,7 @@ public class FileUploadServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		
 		// checks if the request actually contains upload file
 		if (!ServletFileUpload.isMultipartContent(request)) {
 			// if not, we stop here
@@ -96,7 +100,7 @@ public class FileUploadServlet extends HttpServlet {
 		if (!uploadDir.exists()) {
 			uploadDir.mkdir();
 		}
-
+		String filePath ="";
 		try {
 			// parses the request's content to extract file data
 			@SuppressWarnings("unchecked")
@@ -108,14 +112,14 @@ public class FileUploadServlet extends HttpServlet {
 					// processes only fields that are not form fields
 					if (!item.isFormField()) {
 						String fileName = new File(item.getName()).getName();
-						String filePath = uploadPath + File.separator + fileName;
+						filePath = uploadPath + File.separator + fileName;
 						File storeFile = new File(filePath);
 						request.getSession().setAttribute("PathFile", filePath);
 						request.getSession().setAttribute("Path", uploadPath);
 						request.getSession().setAttribute("Name", fileName);
 						// saves the file on disk
 						item.write(storeFile);
-						response.sendRedirect(request.getContextPath() + "/packing_slip");
+//						response.sendRedirect(request.getContextPath() + "/packing_slip");
 
 					}
 				}
@@ -123,8 +127,30 @@ public class FileUploadServlet extends HttpServlet {
 		} catch (Exception ex) {
 			request.setAttribute("message", "There was an error: " + ex.getMessage());
 		}
+//		request.setAttribute("newValue", "NEWWWW");
+//		System.out.println("POST DONE: "  + filePath);
+//		// show PACKING SLIP
+//	
+//		excelService.read(filePath);
+//		response.sendRedirect(request.getContextPath() + "/pre_alert");
+//		request.setAttribute("rows", excelService.getListOfRowPackingSlip());
 	}
 
+	public void refeshPackingSlip(HttpServletRequest request, HttpServletResponse response,String path) throws IOException {
+		excelService.read(path);
+		request.setAttribute("newValue", "NEWWWW");
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		for( PackingSlip pl : excelService.getListOfRowPackingSlip() ) {
+			System.out.println(pl.toString());
+		}
+		request.setAttribute("rows", excelService.getListOfRowPackingSlip());
+		
+	}
 	public void errorPage(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		request.setAttribute("title", "Error page");

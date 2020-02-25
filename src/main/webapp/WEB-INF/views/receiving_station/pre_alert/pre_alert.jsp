@@ -53,9 +53,57 @@
 
 		<div class="tab-content p-4">
 			<div class="tab-pane active" id="packingslip" role="tabpanel"
-				aria-labelledby="packingslip-tab"></div>
+				aria-labelledby="packingslip-tab">
+				<div class="container" ${setHidden}>	
+	
+		<div class="row">
+			<h3>Excel File Reader</h3>
+			
+		</div>
+		<div class="row p5">
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th scope="col" class="text-left">PN#</th>
+						<th scope="col" class="text-left">PO#</th>
+						<th scope="col" class="text-left">LOT#</th>
+						<th scope="col" class="text-left">QTY</th>
+						<th scope="col" class="text-left">RMA#</th>
+					</tr>
+				</thead>
+				<tbody>		
+				
+					<c:forEach items="${rows}" var="aRow">
+	
+						<tr>
+							
+							<td>${aRow.partNumber}</td>
+							<td>${aRow.poNumber}</td>
+							<td>${aRow.lotNumber}</td>
+							<td>${aRow.quality}</td>
+							<td>${aRow.RMANumber}</td>
+
+						</tr>
+
+
+					</c:forEach>
+
+				</tbody>
+			</table>
+
+		</div>
+	</div>
+				
+				
+				</div>
 			<div class="tab-pane" id="ppids" role="tabpanel"
-				aria-labelledby="ppids-tab">ppids</div>
+				aria-labelledby="ppids-tab">
+
+
+
+			</div>
+
+
 			<div class="tab-pane" id="export" role="tabpanel"
 				aria-labelledby="export-tab">
 
