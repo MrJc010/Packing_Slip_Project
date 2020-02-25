@@ -20,9 +20,9 @@ import com.bizcom.packingslip.PackingSlip;
 
 /**
  * A Java servlet that handles file upload from client.
-
+ * 
  */
-@WebServlet(urlPatterns = "/prealert")
+@WebServlet(urlPatterns = "/pre_alert")
 public class FileUploadServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private ExcelService excelService = new ExcelService();
@@ -40,7 +40,8 @@ public class FileUploadServlet extends HttpServlet {
 			throws IOException, ServletException {
 		// PPID stay at Sheet 1
 
-		request.getRequestDispatcher("/WEB-INF/views/receiving_station/prealert/prealert.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/views/receiving_station/pre_alert/pre_alert.jsp").forward(request,
+				response);
 	}
 
 	/**
@@ -75,7 +76,7 @@ public class FileUploadServlet extends HttpServlet {
 
 		// constructs the directory path to store upload file
 		// this path is relative to application's directory
-		String uploadPath = getServletContext().getRealPath("") +  UPLOAD_DIRECTORY;
+		String uploadPath = getServletContext().getRealPath("") + UPLOAD_DIRECTORY;
 
 		// creates the directory if it does not exist
 		File uploadDir = new File(uploadPath);
@@ -99,11 +100,7 @@ public class FileUploadServlet extends HttpServlet {
 						request.getSession().setAttribute("PathFile", filePath);
 						// saves the file on disk
 						item.write(storeFile);
-						System.out.println(request.getContextPath()+"/packingslip");
-						response.sendRedirect(request.getContextPath()+"/packingslip");
-						
-					
-						
+						response.sendRedirect(request.getContextPath() + "/packing_slip");
 
 					}
 				}

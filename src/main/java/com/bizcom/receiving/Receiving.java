@@ -29,7 +29,21 @@ public class Receiving extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		request.getRequestDispatcher("/WEB-INF/views/receiving_station/receiving_home.jsp").forward(request, response);
+		String page = request.getParameter("page");
+		String pathJSP = "/WEB-INF/views/receiving_station/receiving_home.jsp";
+		switch(page) {
+		case "packing_slip":
+			pathJSP = "/WEB-INF/views/receiving_station/packingslip/list-packingSlip.jsp";
+			break;
+		case "ppid_list":
+			pathJSP = "/WEB-INF/views/receiving_station/ppid/list-ppid.jsp";
+			break;
+		default :
+			pathJSP = "/WEB-INF/views/receiving_station/receiving_home.jsp";
+			break;
+			
+		}
+		request.getRequestDispatcher(pathJSP).forward(request, response);
 		
 		
 	}

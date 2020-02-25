@@ -15,7 +15,7 @@ import com.bizcom.excel.ExcelService;
  *
  */
 //Add Router Link to URL
-@WebServlet(urlPatterns = "/packingslip")
+@WebServlet(urlPatterns = "/packing_slip")
 public class PackingSlipServlet extends HttpServlet {
 
 	/**

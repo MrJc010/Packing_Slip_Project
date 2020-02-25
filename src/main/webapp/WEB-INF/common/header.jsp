@@ -10,6 +10,7 @@
 <!-- Bootstrap core CSS -->
 <link href="webjars/bootstrap/4.4.1/css/bootstrap.min.css"
 	rel="stylesheet">
+<link href="../css/style.css" type="text/css" rel="stylesheet" />
 
 
 <title>${param.title}</title>
