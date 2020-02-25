@@ -135,8 +135,7 @@ public class FileUploadServlet extends HttpServlet {
 	public void upload_file(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		response.sendRedirect(request.getContextPath()+"/pre_alert");
-		return;
+		System.out.println("run any thing in here ok");
 
 	}
 }

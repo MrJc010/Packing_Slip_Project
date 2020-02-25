@@ -53,16 +53,19 @@
 
 		<div class="tab-content p-4">
 			<div class="tab-pane active" id="packingslip" role="tabpanel"
-				aria-labelledby="packingslip-tab">packing slips</div>
+				aria-labelledby="packingslip-tab"></div>
 			<div class="tab-pane" id="ppids" role="tabpanel"
 				aria-labelledby="ppids-tab">ppids</div>
 			<div class="tab-pane" id="export" role="tabpanel"
 				aria-labelledby="export-tab">
 
 
-			<a class="btn btn-primary" href="<%=request.getContextPath()%>/pre_alert?page=export" role="button" onclick="if(!confirm('Are you sure to export?')) return false">Export</a>
+				<a class="btn btn-primary"
+					href="<%=request.getContextPath()%>/pre_alert?page=export"
+					role="button"
+					onclick="if(!confirm('Are you sure to export?')) return false">Export</a>
 
-			
+
 
 
 			</div>

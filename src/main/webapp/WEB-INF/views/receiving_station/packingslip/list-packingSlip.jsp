@@ -18,7 +18,7 @@
 
 	<div class="container">
 		<div class="row">
-				<form method ="POST">
+				<form method ="POST" action="<%=request.getContextPath()%>/packing_slip">
 					<input type="text" name="_RMA"/>
 					<input type = "submit" value = "Save"/><br/>
 				</form>
