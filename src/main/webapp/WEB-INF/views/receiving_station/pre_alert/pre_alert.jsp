@@ -3,9 +3,9 @@
 
 
 
-<section>
+<section style="height: 80vh;">
 
-	<div class="container" style="height: 25vh;">
+	<div class="container border mt-5 ">
 		<h1 class="text-center mb-4">Upload excel file</h1>
 		<form method="POST" action="<%=request.getContextPath()%>/pre_alert"
 			enctype="multipart/form-data">
@@ -15,20 +15,65 @@
 					id="customFile1"> <label class="custom-file-label"
 					for="customFile">Choose file</label>
 			</div>
-			<div class="input-group-append">
-				<input type="submit" value="UPLOAD" />
+			<div class="input-group-append justify-content-center">
+				<input type="submit" class="btn btn-primary btn-md my-4"
+					value="UPLOAD" />
 			</div>
 
 			<script>
-				$('#customFile1').on('change', function() {
-					//get the file name
-					var fileName = $(this).val();
-					//replace the "Choose a file" label
-					$(this).next('.custom-file-label').html(fileName);
-				})
+				document
+						.querySelector('.custom-file-input')
+						.addEventListener(
+								'change',
+								function(e) {
+									var fileName = document
+											.getElementById("customFile1").files[0].name;
+									var nextSibling = e.target.nextElementSibling
+									nextSibling.innerText = fileName
+								})
 			</script>
 
 		</form>
+	</div>
+
+	<div class="container-fluid p-5">
+
+		<ul class="nav nav-tabs nav-pills" id="myTab" role="tablist">
+			<li class="nav-item"><a class="nav-link active"
+				id="packingslip-tab" data-toggle="tab" href="#packingslip"
+				role="tab" aria-controls="packingslip" aria-selected="true"><strong>Packing
+						Slip</strong></a></li>
+			<li class="nav-item"><a class="nav-link" id="ppids-tab"
+				data-toggle="tab" href="#ppids" role="tab" aria-controls="ppids"
+				aria-selected="false"><strong>PPIDs</strong></a></li>
+			<li class="nav-item"><a class="nav-link" id="export-tab"
+				data-toggle="tab" href="#export" role="tab" aria-controls="export"
+				aria-selected="false"><strong>Export Data</strong></a></li>
+		</ul>
+
+		<div class="tab-content p-4">
+			<div class="tab-pane active" id="packingslip" role="tabpanel"
+				aria-labelledby="packingslip-tab">packing slips</div>
+			<div class="tab-pane" id="ppids" role="tabpanel"
+				aria-labelledby="ppids-tab">ppids</div>
+			<div class="tab-pane" id="export" role="tabpanel"
+				aria-labelledby="export-tab">
+
+
+			<a class="btn btn-primary" href="<%=request.getContextPath()%>/pre_alert?page=export" role="button" onclick="if(!confirm('Are you sure to export?')) return false">Export</a>
+
+			
+
+
+			</div>
+
+		</div>
+
+		<script>
+			$(function() {
+				$('#myTab li:last-child a').tab('show')
+			})
+		</script>
 	</div>
 
 </section>

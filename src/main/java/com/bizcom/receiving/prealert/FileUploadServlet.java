@@ -38,10 +38,23 @@ public class FileUploadServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
-		// PPID stay at Sheet 1
+		String page = "";
+		try {
+			page = request.getParameter("page").toLowerCase();
+		} catch (NullPointerException e) {
+			System.out.println("Null detected");
+		}
 
-		request.getRequestDispatcher("/WEB-INF/views/receiving_station/pre_alert/pre_alert.jsp").forward(request,
-				response);
+		switch (page) {
+		case "export":
+			System.out.println("export to file and download");
+			upload_file(request, response);
+			break;
+		default:
+			request.getRequestDispatcher("/WEB-INF/views/receiving_station/pre_alert/pre_alert.jsp").forward(request,
+					response);
+		}
+
 	}
 
 	/**
@@ -110,5 +123,20 @@ public class FileUploadServlet extends HttpServlet {
 		} catch (Exception ex) {
 			request.setAttribute("message", "There was an error: " + ex.getMessage());
 		}
+	}
+
+	public void errorPage(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		request.setAttribute("title", "Error page");
+		request.getRequestDispatcher("/WEB-INF/error/error.jsp").forward(request, response);
+
+	}
+
+	public void upload_file(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		response.sendRedirect(request.getContextPath()+"/pre_alert");
+		return;
+
 	}
 }
