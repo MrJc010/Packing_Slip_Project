@@ -1,6 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
+	<%@ page import="com.bizcom.excel.ExcelService"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -17,12 +18,11 @@
 
 	<div class="container">
 		<div class="row">
-			
-				<input type="text" name="#RMA"/>
-				<button>Save</button>
+				<form method ="POST">
+					<input type="text" name="_RMA"/>
+					<input type = "submit" value = "Save"/><br/>
+				</form>
 				<a href="File_DownLoad">DownLoad File</a>
-			
-		
 		</div>
 	
 	

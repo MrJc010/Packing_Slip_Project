@@ -27,18 +27,19 @@ import com.bizcom.ppid.PPID;
 
 public class ExcelService {
 
-//	private static final Logger LOGGER = LogManager.getLogger(ExcelService.class);
+	//	private static final Logger LOGGER = LogManager.getLogger(ExcelService.class);
 	private Workbook myWorkBook;
 	private List<PackingSlip> listOfRow;
 	private List<PPID> listPPID;
 	private ApplicationPath currentpath;
 	// === CONSTANT VARIABLE BASED ON EXCEL FILE
-	private final int COL_NUMBER = 6;
-	private static final String PO_PATTERN = "^(CMP-)[^\\s.]{5}$";
-	private static final int PN_COL_NUM = 2;
-	private static final int PO_COL_NUM = 3;
-	private static final int LOT_COL_NUM = 4;
-	private static final int QTY_COL_NUM = 5;
+	//	private final int COL_NUMBER = 6;
+	//	private static final String PO_PATTERN = "^(CMP-)[^\\s.]{5}$";
+	private static int PN_COL_NUM;
+	private static int PO_COL_NUM;
+	private static int LOT_COL_NUM;
+	private static int QTY_COL_NUM;
+	private static int RMA_COL;
 
 	private static int PN_COL_NUM_PPID;
 	private static int PPID_COL_NUM_PPID;
@@ -62,7 +63,7 @@ public class ExcelService {
 
 	public List<PackingSlip> getListOfRowPackingSlip() {
 		this.listOfRow.clear();
-		getAllRowsPackingSlip();
+		getAllPackingSlip();
 		return this.listOfRow;
 	}
 
@@ -118,25 +119,64 @@ public class ExcelService {
 
 	}
 
-	public void getAllRowsPackingSlip() {
+	public void getAllPackingSlip() {
 		Sheet sheetOne = myWorkBook.getSheetAt(0);
+		DataFormatter formatter = new DataFormatter();
+		int count = 0;
 		for (Row row : sheetOne) {
-			if (row.getPhysicalNumberOfCells() == COL_NUMBER
-					&& row.getCell(2).getRichStringCellValue().toString().matches(PO_PATTERN)) {
+			if (count < 1) {
+				int index = 1;
+				for (Cell c : row) {
+					String temp = formatter.formatCellValue(c);
+					if (temp.equalsIgnoreCase("PN")) {
+						PN_COL_NUM = index;
+					} else if (temp.equalsIgnoreCase("PO#")) {
+						PO_COL_NUM = index;
 
-				String partNumber = getCellValueObject(row.getCell(PN_COL_NUM)).toString();
-				String poNumber = getCellValueObject(row.getCell(PO_COL_NUM)).toString();
-				String lotNumber = getCellValueObject(row.getCell(LOT_COL_NUM)).toString();
-				int quality = (int) row.getCell(QTY_COL_NUM).getNumericCellValue();
+					} else if (temp.equalsIgnoreCase("LOT#")) {
+						LOT_COL_NUM = index;
+					}else if (temp.equalsIgnoreCase("QTY")) {
+						QTY_COL_NUM = index;
+						count++;
+					} else if (temp.equalsIgnoreCase("RMA#")) {
+						RMA_COL = index;
+					}
+						index++;
+				}
+				System.out.println(count);
+			} else {	
+				String pn = row.getCell(PN_COL_NUM).getStringCellValue();
+				String po = row.getCell(PO_COL_NUM).getStringCellValue();
+				String lot = row.getCell(LOT_COL_NUM).getStringCellValue();
+				int qty = (int) row.getCell(QTY_COL_NUM).getNumericCellValue();
+
 				String rMANumber = "";
-				PackingSlip temp = new PackingSlip(partNumber, poNumber, lotNumber, quality, rMANumber);
-				listOfRow.add(temp);
-
+				PackingSlip temp = new PackingSlip(pn, po, lot, qty, rMANumber);
+				listOfRow.add(temp);			
 			}
 
 		}
 
 	}
+
+
+	//	public void getAllRowsPackingSlip() {
+	//		Sheet sheetOne = myWorkBook.getSheetAt(0);
+	//		for (Row row : sheetOne) {
+	//			if (row.getPhysicalNumberOfCells() == COL_NUMBER
+	//					&& row.getCell(2).getRichStringCellValue().toString().matches(PO_PATTERN)) {
+	//
+	//				String partNumber = getCellValueObject(row.getCell(PN_COL_NUM)).toString();
+	//				String poNumber = getCellValueObject(row.getCell(PO_COL_NUM)).toString();
+	//				String lotNumber = getCellValueObject(row.getCell(LOT_COL_NUM)).toString();
+	//				int quality = (int) row.getCell(QTY_COL_NUM).getNumericCellValue();
+	//
+	//
+	//			}
+	//
+	//		}
+	//
+	//	}
 
 	public List<Sheet> getAllSheet(Workbook wb) {
 		ArrayList<Sheet> listOfSheets = new ArrayList<>();
@@ -167,7 +207,37 @@ public class ExcelService {
 			myWorkBook = WorkbookFactory.create(new FileInputStream(path));
 		} catch (IOException e) {
 			e.printStackTrace();
-//			LOGGER.error("Fail to read excel file {}", e.getMessage());
+			//			LOGGER.error("Fail to read excel file {}", e.getMessage());
+		}
+	}
+
+	public void writeRMA(String RMA) {
+		Sheet sheetOne = myWorkBook.getSheetAt(0);
+		DataFormatter formatter = new DataFormatter();
+		int count = 0;
+		for (Row row : sheetOne) {
+			if (count < 1) {
+				int index = 0;
+				for (Cell c : row) {
+					String temp = formatter.formatCellValue(c);
+					if (temp.equalsIgnoreCase("RMA#")) {
+						RMA_COL = index;
+						count++;
+					}else {
+						index++;
+					}
+
+				}
+			} else {
+				row.getCell(RMA_COL).setCellValue(RMA);
+			}
+
+		}
+		try {
+			myWorkBook.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
@@ -261,7 +331,7 @@ public class ExcelService {
 				return aCell.getDateCellValue();
 			} catch (final RuntimeException ex) {
 				// fall through
-//				LOGGER.warn("Failed to get cell value as date: " + ex.getMessage());
+				//				LOGGER.warn("Failed to get cell value as date: " + ex.getMessage());
 			}
 		return null;
 	}
