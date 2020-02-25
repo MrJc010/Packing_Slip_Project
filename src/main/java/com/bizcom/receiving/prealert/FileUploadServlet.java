@@ -184,7 +184,6 @@ public class FileUploadServlet extends HttpServlet {
 		String filePath = "";
 		try {
 			// parses the request's content to extract file data
-			@SuppressWarnings("unchecked")
 			List<FileItem> formItems = upload.parseRequest(request);
 
 			if (formItems != null && formItems.size() > 0) {
@@ -288,5 +287,19 @@ public class FileUploadServlet extends HttpServlet {
 		outFile.close();
 		workbook.close();
 
+	}
+	
+	public boolean isFileExist(String path) {
+		return new File(path).exists();
+	}
+	
+	
+	public boolean deleteFile(String path) {
+		if(isFileExist(path)) {
+			return new File(path).delete();
+		}else {
+			System.out.println("File Does Not Exist");
+			return false;
+		}
 	}
 }
