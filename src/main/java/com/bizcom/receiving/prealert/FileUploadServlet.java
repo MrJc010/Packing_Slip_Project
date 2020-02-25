@@ -97,14 +97,12 @@ public class FileUploadServlet extends HttpServlet {
 						String filePath = uploadPath + File.separator + fileName;
 						File storeFile = new File(filePath);
 						request.getSession().setAttribute("PathFile", filePath);
+						request.getSession().setAttribute("Path", uploadPath);
+						request.getSession().setAttribute("Name", fileName);
 						// saves the file on disk
 						item.write(storeFile);
-						System.out.println(request.getContextPath()+"/packingslip");
+						
 						response.sendRedirect(request.getContextPath()+"/packingslip");
-						
-					
-						
-
 					}
 				}
 			}
