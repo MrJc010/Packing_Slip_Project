@@ -82,8 +82,9 @@ public class Save_RMA extends HttpServlet {
 		}
 		FileOutputStream outFile = new FileOutputStream(path);
 		workbook.write(outFile);
-		outFile.flush();
+		//outFile.flush();
 		outFile.close();
+		inputStream.close();
 		workbook.close();
 		response.sendRedirect(request.getContextPath()+"/packingslip");
 	} 

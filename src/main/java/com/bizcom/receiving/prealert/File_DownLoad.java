@@ -24,34 +24,6 @@ public class File_DownLoad extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//		String SAMPLE_XLSX_FILE_PATH = request.getSession().getAttribute("PathFile").toString();
-		//		System.out.println(SAMPLE_XLSX_FILE_PATH+"here");
-		//		FileInputStream inputStream = new FileInputStream(SAMPLE_XLSX_FILE_PATH);
-		//		Workbook workbook = null;
-		//		try{
-		//			if (SAMPLE_XLSX_FILE_PATH.endsWith("xlsx")) {
-		//				workbook = new XSSFWorkbook(inputStream);
-		//			} else if (SAMPLE_XLSX_FILE_PATH.endsWith("xls")) {
-		//			//HSSFWorkbook
-		//				workbook = new HSSFWorkbook(inputStream);
-		//			}
-		//		}catch(Exception e) {
-		//			System.out.println("Cannot read the file!");
-		//		}
-		//		
-		//		ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
-		//		workbook.write(outByteStream);
-		//		
-		//		
-		//		byte [] outArray = outByteStream.toByteArray();
-		//		response.setContentType("application/ms-excel");
-		//		response.setContentLength(outArray.length); 
-		//		response.setHeader("Expires:", "0"); // eliminates browser caching
-		//		response.setHeader("Content-Disposition", "attachment; filename=Leave Details.xls");
-		//		OutputStream outStream = response.getOutputStream();
-		//		outStream.write(outArray);
-		//		outStream.flush();
-
 		response.setContentType("text/html");  
 		PrintWriter out = response.getWriter();  
 		String filename = request.getSession().getAttribute("Name").toString();   

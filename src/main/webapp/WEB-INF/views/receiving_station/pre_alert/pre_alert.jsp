@@ -12,7 +12,7 @@
 
 			<div class="custom-file">
 				<input type="file" name="uploadFile" class="custom-file-input"
-					id="customFile1"> <label class="custom-file-label"
+					id="customFile1" required> <label class="custom-file-label"
 					for="customFile">Choose file</label>
 			</div>
 			<div class="input-group-append justify-content-center">
@@ -58,9 +58,11 @@
 
 					<div>
 						<h3>Packing Slip</h3>
-						<br> <input type="text" name="_RMA" />
-						<button href="<%=request.getContextPath()%>/pre_alert?page=save" type="button" class="btn btn-md btn-primary" disabled>
-						</button>
+						<form method="GET" action="<%=request.getContextPath()%>/pre_alert" enctype=multipart/form-data>
+							<br> <input type="text" name="RMA Number" required/>
+							<input type="submit" class="btn btn-md btn-primary" value="Save RMA" />
+						</form>
+						
 
 
 
@@ -156,7 +158,7 @@
 
 
 				<a class="btn btn-primary"
-					href="<%=request.getContextPath()%>/pre_alert?page=export"
+					href="<%=request.getContextPath()%>/File_DownLoad"
 					role="button"
 					onclick="if(!confirm('Are you sure to export?')) return false">Export</a>
 
