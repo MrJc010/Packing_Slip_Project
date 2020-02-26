@@ -296,7 +296,7 @@ public class FileUploadServlet extends HttpServlet {
 	public void errorPage(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		request.setAttribute("title", "Error page");
-		request.getRequestDispatcher("/WEB-INF/error/error.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/error/404.jsp").forward(request, response);
 
 	}
 

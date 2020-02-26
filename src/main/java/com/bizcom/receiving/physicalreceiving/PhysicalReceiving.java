@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.bizcom.database.DBHandler;
 
-@WebServlet(urlPatterns = "/physicalreceiving")
+@WebServlet(urlPatterns = "/physicalreceiving222")
 public class PhysicalReceiving extends HttpServlet {
 	
 

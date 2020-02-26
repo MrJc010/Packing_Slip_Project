@@ -16,7 +16,6 @@
 					for="customFile">Choose file</label>
 			</div>
 			<div class="input-group-append justify-content-center">
-				<input type="file" name="file"/>
 				<input type="submit" class="btn btn-primary btn-md my-4"
 					value="UPLOAD" />
 			</div>
@@ -153,7 +152,7 @@
 
 			</div>
 
-
+			// TODO : Implement export (save file)
 			<div class="tab-pane" id="export" role="tabpanel"
 				aria-labelledby="export-tab">
 				${urll}
