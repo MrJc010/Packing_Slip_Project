@@ -137,11 +137,14 @@ public class Item {
 		return specialInstruction;
 	}
 
+
+
 	@Override
 	public String toString() {
-		return String.format(
-				"Item [CPO_SN=%s, ppid=%s, pn=%s, sn=%s, revision=%s, description=%s, specialInstruction=%s]", CPO_SN,
-				ppid, pn, sn, revision, description, specialInstruction);
+		return "Item [CPO_SN=" + CPO_SN + ", ppid=" + ppid + ", pn=" + pn + ", sn=" + sn + ", revision=" + revision
+				+ ", description=" + description + ", specialInstruction=" + specialInstruction + ", co=" + co
+				+ ", lot=" + lot + ", problemCode=" + problemCode + ", rma=" + rma + ", dps=" + dps + ", mfgPN=" + mfgPN
+				+ "]";
 	}
 
 	@Override

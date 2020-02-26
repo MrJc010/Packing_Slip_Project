@@ -1,68 +1,131 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
-<!DOCTYPE html>
-<html>
-<head>
-<!-- Bootstrap core CSS -->
-<link href="webjars/bootstrap/4.4.1/css/bootstrap.min.css"
-	rel="stylesheet">
+<jsp:include page="/WEB-INF/common/header.jsp" />
 
 
-<meta charset="ISO-8859-1">
-<title>RMA Receiving</title>
-<style type="text/css">
-</style>
-</head>
-<body>
-	<%
-		int count = 1;
-	%>
+<section>
+
 	<div class="container">
-		<div class="row">
-			<h3>RMA Receiver</h3>
-		</div>
-		<div class="row p5">
-			<form action="/savingdata" method="POST">
-				<table class="table">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">First</th>
-      <th scope="col">Last</th>
-      <th scope="col">Handle</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Jacob</td>
-      <td>Thornton</td>
-      <td>@fat</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td>Larry</td>
-      <td>the Bird</td>
-      <td>@twitter</td>
-    </tr>
-  </tbody>
-</table>
-				<input type="submit" value="Receive" style="margin: 0 auto;">
-			</form>
-		</div>
+
+		<form method="POST"
+			action="<%=request.getContextPath()%>/physicalreceiving">
+			<div class="form-group row">
+				<label for="RMA#" class="col-sm-2 col-form-label">RMA#</label>
+				<div class="col-sm-8">
+					<input type="text" id="RMA#" class="form-control"
+						value="${rma_Number}" name="rma" placeholder="RMA Number" disabled>
+				</div>
+			</div>
+
+			<div class="form-group row">
+				<label for="PPID#" class="col-sm-2 col-form-label">PPID#</label>
+				<div class="col-sm-8">
+					<input type="text" id="RMA#" class="form-control"
+						value="${ppid_Number}" name="ppid" placeholder="PPID Number" disabled>
+				</div>
+			</div>
+
+			<div class="form-group row">
+				<label for="PN#" class="col-sm-2 col-form-label">PN#</label>
+				<div class="col-sm-8">
+					<input type="text" id="PN#" class="form-control"
+						value="${pn_Number}" placeholder="PN Number" name="pn" disabled>
+				</div>
+			</div>
+
+			<div class="form-group row">
+				<label for="CO#" class="col-sm-2 col-form-label">CO#</label>
+				<div class="col-sm-8">
+					<input type="text" id="CO#" class="form-control"
+						value="${co_Number}" placeholder="CO Number" name="co" disabled>
+				</div>
+			</div>
+
+			<div class="form-group row">
+				<label for="problem_desc#" class="col-sm-2 col-form-label">Problem
+					Description</label>
+				<div class="col-sm-8">
+					<input type="text" id="problem_desc#" class="form-control"
+						value="${problem_desc}" name="problemDesc" placeholder="Problem Description" disabled>
+				</div>
+			</div>
+
+			<div class="form-group row">
+				<label for="Lot#" class="col-sm-2 col-form-label">Lot#</label>
+				<div class="col-sm-8">
+					<input type="text" id="Lot#" class="form-control" value="${lot}"
+						placeholder="Lot number" name="lotNumber"  disabled>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="problem_code#" class="col-sm-2 col-form-label">Problem
+					code</label>
+				<div class="col-sm-8">
+					<input type="text" id="problem_code#" class="form-control"
+						value="${problem_code}" name="problemCode"  placeholder="Problem code" disabled>
+				</div>
+			</div>
+
+			<div class="form-group row">
+				<label for="dps#" class="col-sm-2 col-form-label">DPS#</label>
+				<div class="col-sm-8">
+					<input type="text" id="dps#" class="form-control" value="${dps}"
+						placeholder="DPS Number" name="dpnNumber"  disabled>
+				</div>
+			</div>
+
+			<div class="form-group row">
+				<label for="CPO#" class="col-sm-2 col-form-label">CPO#</label>
+				<div class="col-sm-8">
+					<input type="text" id="CPO#" class="form-control" name="cpoNumber"
+						placeholder="CPO Number">
+				</div>
+			</div>
+
+			<div class="form-group row">
+				<label for="SN#" class="col-sm-2 col-form-label">SN#</label>
+				<div class="col-sm-8">
+					<input type="text" id="SN#" class="form-control" name="snNumber"
+						placeholder="Serial Number">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="Revision" class="col-sm-2 col-form-label">Revision</label>
+				<div class="col-sm-8">
+					<input type="text" id="Revision" class="form-control"
+						name="revision" placeholder="Revision">
+				</div>
+			</div>
+
+
+			<div class="form-group row">
+				<label for="specialInstruction" class="col-sm-2 col-form-label">Special
+					Instruction</label>
+				<div class="col-sm-8">
+					<input type="text" id="specialInstruction" class="form-control"
+						name="specialInstruction" placeholder="Special Instruction">
+				</div>
+			</div>
+
+			<div class="form-group row">
+				<label for="mfgPN" class="col-sm-2 col-form-label">Manufactoring
+					PN</label>
+				<div class="col-sm-8">
+					<input type="text" id="mfgPN" class="form-control"
+						name="specialInstruction" placeholder="Manufactoring PN">
+				</div>
+			</div>
+
+
+			<div class="row justify-content-center">
+				<button type="submit" class="btn btn-primary">
+					<strong>Receive Item</strong>
+				</button>
+			</div>
+		</form>
 
 	</div>
 
-	<script src="webjars/jquery/3.4.1/jquery.min.js"></script>
-	<script src="webjars/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-	<script type="extensions/editable/bootstrap-table-editable.js"></script>
+</section>
 
-</body>
-</html>
+
+<jsp:include page="/WEB-INF/common/footer.jsp" />

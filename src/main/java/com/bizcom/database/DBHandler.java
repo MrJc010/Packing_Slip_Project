@@ -52,7 +52,7 @@ public class DBHandler {
 		}
 
 		if (dbconnection != null) {
-			System.out.println("SUCCESS!");
+//			System.out.println("SUCCESS!");
 		} else {
 			System.out.println("Fail to connect to AWS at GetConnection");
 		}
@@ -162,13 +162,12 @@ public class DBHandler {
 			pst.setString(1, ppidN);
 			pst.setString(2, dpsN);
 			rs = pst.executeQuery();
-			System.out.println("result: " + rs.getFetchSize());
 			while (rs.next()) {
 				String rma = rs.getString("rma");
 				String CPO_SN = "";
 				String ppid = rs.getString("ppid");
 				String pn = rs.getString("pn");
-				String co = rs.getString("pn");
+				String co = rs.getString("co");
 				String sn = "";
 				String revision = "";
 				String description = rs.getString("problem_desc");

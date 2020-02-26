@@ -1,6 +1,7 @@
 package com.bizcom.receiving.physicalreceiving;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,40 +20,46 @@ public class PhysicalReceiving extends HttpServlet {
 	 * 
 	 */
 	private static final long serialVersionUID = 1365646760784374827L;
-	private DBHandler dbhandler;
+	private DBHandler dbhandler = new DBHandler();
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-	
-//		String ppid = request.getParameter("ppid");
-//		String dps = request.getParameter("dps");
-		request.setAttribute("title", "Search Item");
-		request.getRequestDispatcher("/WEB-INF/views/receiving_station/physicalreceiving/physicalreceiving.jsp")
-				.forward(request, response);
-		
-		dbhandler = new DBHandler();
-		dbhandler.getConnectionAWS();
-		dbhandler.testConnection();
-		
-		
-//		if (!ppid.isEmpty() && !dps.isEmpty()) {
 
-			// based on ppid and dps get data
+		String ppid = request.getParameter("ppid");
+		String dps = request.getParameter("dps");
 
-//			System.out.println("=====");
-//			dbhandler.testConnection();
-//			List<Item> myList = new ArrayList<>();
-//			myList.addAll(dbhandler.fetchRMA(ppid, dps));
-//
-//			for (Item it : myList) {
-//				System.out.println(it.toString());
-//			}
-//		} else {
-//			System.out.println("Return Back to Search I tem");
-//		}
-		
-		
+		if (!ppid.isEmpty() && !dps.isEmpty()) {
+			List<Item> myList = new ArrayList<>();
+			myList.addAll(dbhandler.fetchRMA(ppid, dps));
+
+			if (myList.size() == 0) {
+
+				response.sendRedirect(request.getContextPath() + "/searchitem");
+//				PrintWriter out = response.getWriter();
+//				out.println("<script type=\"text/javascript\">");
+//				out.println("alert('User or password incorrect');");
+//				out.println("location='/WEB-INF/views/receiving_station/physicalreceiving/searchItems.jsp';");
+//				out.println("</script>");
+
+			} else {
+
+				for (Item it : myList) {
+					System.out.println(it.toString());
+				}
+				request.setAttribute("title", "Search Item");
+				request.getRequestDispatcher("/WEB-INF/views/receiving_station/physicalreceiving/physicalreceiving.jsp")
+						.forward(request, response);
+			}
+
+		} else {
+			PrintWriter out = response.getWriter();
+			out.println("<script type=\"text/javascript\">");
+			out.println("alert('Your information doesn't match. Enter again');");
+			out.println("</script>");
+			response.sendRedirect(request.getContextPath() + "/searchitem");
+		}
+
 	}
 
 	@Override
