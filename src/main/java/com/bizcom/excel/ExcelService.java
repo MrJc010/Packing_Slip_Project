@@ -72,6 +72,11 @@ public class ExcelService {
 		getAllRowsPPID();
 		return this.listPPID;
 	}
+	
+	public List<PPID> appendRMAForPPID(List<PPID> l, String rma) {
+		for(PPID ppid: l) ppid.setRma(rma);
+		return l;
+	}
 
 	public void getAllRowsPPID() {
 		Sheet sheetOne = myWorkBook.getSheetAt(1);
