@@ -24,6 +24,7 @@ public class PhysicalReceiving extends HttpServlet {
 	private static final long serialVersionUID = 1365646760784374827L;
 	private DBHandler dbhandler = new DBHandler();
 	private List<Item> myList;
+
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -32,12 +33,12 @@ public class PhysicalReceiving extends HttpServlet {
 		String dps = request.getParameter("dps");
 		HttpSession session = request.getSession();
 		if (!ppid.isEmpty() && !dps.isEmpty()) {
-			
+
 			myList.addAll(dbhandler.fetchRMA(ppid, dps));
-			
+
 			if (myList.size() == 0) {
 				notFound = "Cannot Find Item With Your Info!";
-				session.setAttribute("re",notFound);
+				session.setAttribute("re", notFound);
 				response.sendRedirect(request.getContextPath() + "/searchitem");
 //				PrintWriter out = response.getWriter();
 //				out.println("<script type=\"text/javascript\">");
@@ -47,7 +48,7 @@ public class PhysicalReceiving extends HttpServlet {
 
 			} else {
 				notFound = "";
-				session.setAttribute("re",notFound);
+				session.setAttribute("re", notFound);
 				for (Item it : myList) {
 					System.out.println(it.toString());
 				}
@@ -60,9 +61,7 @@ public class PhysicalReceiving extends HttpServlet {
 				String lotNum = temp.getLot();
 				String problemCode = temp.getProblemCode();
 				String dpsNumer = temp.getDps();
-				
-				
-				
+
 				request.setAttribute("rma_Number", rma);
 				request.setAttribute("ppid_Number", ppid2);
 				request.setAttribute("pn_Number", pn);
@@ -70,19 +69,15 @@ public class PhysicalReceiving extends HttpServlet {
 				request.setAttribute("problem_desc", problemDescription);
 				request.setAttribute("lot", lotNum);
 				request.setAttribute("problem_code", problemCode);
-				request.setAttribute("dps", dpsNumer);		
+				request.setAttribute("dps", dpsNumer);
 				request.setAttribute("title", "Search Item");
 
 				request.getRequestDispatcher("/WEB-INF/views/receiving_station/physicalreceiving/physicalreceiving.jsp")
-				.forward(request, response);
-				
+						.forward(request, response);
+
 			}
 
 		} else {
-			PrintWriter out = response.getWriter();
-			out.println("<script type=\"text/javascript\">");
-			out.println("alert('Your information doesn't match. Enter again');");
-			out.println("</script>");
 			response.sendRedirect(request.getContextPath() + "/searchitem");
 		}
 
@@ -97,10 +92,31 @@ public class PhysicalReceiving extends HttpServlet {
 //
 //		String url = request.getContextPath() + "/rma-receiver?rma=" + rmaNum + "&ppid=" + ppid + "&dps=" + dps;
 //		response.sendRedirect(url);
-		
-		String 
 
-		
-		
+		if (myList.size() == 1) {
+
+			Item temp = myList.get(0);
+			String rmaNum = temp.getRma();
+			String ppid = temp.getPpid();
+			String pn = temp.getPn();
+
+			String description = temp.getDescription();
+			String lot = temp.getLot();
+			String problemCode = temp.getProblemCode();
+			String dps = temp.getDps();
+			String cposn = request.getParameter("cpoNumber");
+			String revision = request.getParameter("revision");
+			String specialInstruction = request.getParameter("specialInstruction");
+			String mfgPcN = request.getParameter("manufactoring");
+			String sn = request.getParameter("snNumber");
+
+			dbhandler.PhysicalReceive(rmaNum, cposn, ppid, pn, sn, revision, specialInstruction, mfgPcN, lot,
+					description, problemCode, dps);
+			response.sendRedirect(request.getContextPath() + "/searchitem");
+
+		} else {
+			System.out.println("Duplicate Information");
+		}
+
 	}
 }

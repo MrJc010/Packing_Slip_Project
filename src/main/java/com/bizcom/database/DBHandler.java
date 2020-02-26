@@ -190,7 +190,7 @@ public class DBHandler {
 	}
 
 	public void deletaAPPID(Connection conn, String ppid) throws SQLException {
-		String DELETE_A_PPID = "DELETE FROM ppid WHERE ppid=?";
+		String DELETE_A_PPID = "DELETE FROM pre_alert WHERE ppid=?";
 
 		pst = conn.prepareStatement(DELETE_A_PPID);
 		pst.setString(1, ppid);
@@ -199,7 +199,6 @@ public class DBHandler {
 
 	public void PhysicalReceive(String rmaNum, String cposn, String ppid, String pn, String sn, String revision,
 			String specialInstruction, String mfgPN, String lot, String description, String problemCode, String dps) {
-		List<Item> result = new ArrayList<>();
 		String FETCH_RMA_QUERY = "INSERT INTO physicalRecevingDB VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 		try {
@@ -225,6 +224,7 @@ public class DBHandler {
 
 			dbconnection.commit();
 
+			System.out.println("finish upload");
 		} catch (Exception e) {
 			System.out.println(e);
 		} finally {
