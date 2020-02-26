@@ -112,7 +112,7 @@ public class ExcelService {
 				String problem_code = row.getCell(PROPBLEM_CODE_COL_NUM_PPID).getStringCellValue();
 				String problem_desc = row.getCell(PROPBLEM_DES_COL_NUM_PPID).toString();
 
-				listPPID.add(new PPID(pn, ppid, co, sys_date_rec, lot, dps, problem_code, problem_desc));
+				listPPID.add(new PPID(pn, ppid, co, sys_date_rec, lot, dps, problem_code, problem_desc,""));
 			}
 
 		}
@@ -123,6 +123,8 @@ public class ExcelService {
 		Sheet sheetOne = myWorkBook.getSheetAt(0);
 		DataFormatter formatter = new DataFormatter();
 		int count = 0;
+		int locale = 0;
+		String rMANumber = "";
 		for (Row row : sheetOne) {
 			if (count < 1) {
 				int index = 1;
@@ -150,33 +152,20 @@ public class ExcelService {
 				String lot = row.getCell(LOT_COL_NUM).getStringCellValue();
 				int qty = (int) row.getCell(QTY_COL_NUM).getNumericCellValue();
 
-				String rMANumber = row.getCell(RMA_COL).getStringCellValue()!=null?row.getCell(RMA_COL).getStringCellValue():"";
+				rMANumber = row.getCell(RMA_COL).getStringCellValue()!=null?row.getCell(RMA_COL).getStringCellValue():"";
 				PackingSlip temp = new PackingSlip(pn, po, lot, qty, rMANumber);
+				
 				listOfRow.add(temp);			
 			}
 
 		}
-
+		if(rMANumber.length() != 0) {
+			for(PPID ppid:listPPID) {
+				ppid.setRma(rMANumber);
+			}
+		}
 	}
 
-
-	//	public void getAllRowsPackingSlip() {
-	//		Sheet sheetOne = myWorkBook.getSheetAt(0);
-	//		for (Row row : sheetOne) {
-	//			if (row.getPhysicalNumberOfCells() == COL_NUMBER
-	//					&& row.getCell(2).getRichStringCellValue().toString().matches(PO_PATTERN)) {
-	//
-	//				String partNumber = getCellValueObject(row.getCell(PN_COL_NUM)).toString();
-	//				String poNumber = getCellValueObject(row.getCell(PO_COL_NUM)).toString();
-	//				String lotNumber = getCellValueObject(row.getCell(LOT_COL_NUM)).toString();
-	//				int quality = (int) row.getCell(QTY_COL_NUM).getNumericCellValue();
-	//
-	//
-	//			}
-	//
-	//		}
-	//
-	//	}
 
 	public List<Sheet> getAllSheet(Workbook wb) {
 		ArrayList<Sheet> listOfSheets = new ArrayList<>();

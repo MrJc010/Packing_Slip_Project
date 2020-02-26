@@ -55,7 +55,7 @@ public class SavingData extends HttpServlet {
 		String cpoSN = request.getParameter("CPO_SN");
 //		String url = "/rma-receiver?rma=" + rmaNum + "&ppid=" + ppid+"&pn=" + pn+"&sn=" + sn + "&revision=" + revision+"&specialInstruction=" + specialInstruction + 
 //				"&mfgPN=" + mfgPN + "&co=" + co+"&lot=" + lot+"&problemCode=" + problemCode + "&description=" + description+"&dps=" + dps;
-		dbHandler.SavingRMA(rmaNum, cpoSN, ppid, pn, sn, revision, specialInstruction, mfgPN, lot, description,
+		dbHandler.PhysicalReceive(rmaNum, cpoSN, ppid, pn, sn, revision, specialInstruction, mfgPN, lot, description,
 				problemCode, dps);
 		response.sendRedirect("/physicalreceiving");
 

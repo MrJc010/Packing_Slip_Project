@@ -23,7 +23,7 @@ public class RMADisplay extends HttpServlet {
 		String ppidNum = request.getParameter("ppid");
 		String dpsNum = request.getParameter("dps");
 		List<Item> myList = new ArrayList<>();
-		myList.addAll(dbHandler.fetchRMA(rmaNum,ppidNum,dpsNum));
+		myList.addAll(dbHandler.fetchRMA(ppidNum,dpsNum));
 		request.setAttribute("items", myList);
 		request.getRequestDispatcher("/WEB-INF/views/physicalreceiving/rmareceiving.jsp").forward(request, response);
 	}

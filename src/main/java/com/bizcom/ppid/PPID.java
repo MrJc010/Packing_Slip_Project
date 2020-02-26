@@ -9,9 +9,10 @@ public class PPID {
 	private String dpsNumber;
 	private String problemCode;
 	private String problemDescription;
+	private String rma;
 
 	public PPID(String pnNumber, String ppidNumber, String coNumber, String dateReceived, String lotNumber,
-			String dpsNumber, String problemCode, String problemDescription) {
+			String dpsNumber, String problemCode, String problemDescription, String rma) {
 		super();
 		this.pnNumber = pnNumber;
 		this.ppidNumber = ppidNumber;
@@ -21,6 +22,7 @@ public class PPID {
 		this.dpsNumber = dpsNumber;
 		this.problemCode = problemCode;
 		this.problemDescription = problemDescription;
+		this.rma = rma;
 	}
 
 	public String getPnNumber() {
@@ -55,18 +57,27 @@ public class PPID {
 		return problemDescription;
 	}
 
+	public String getRma() {
+		return rma;
+	}
+
+	public void setRma(String rma) {
+		this.rma = rma;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((coNumber == null) ? 0 : coNumber.hashCode());
+		result = prime * result + ((dateReceived == null) ? 0 : dateReceived.hashCode());
 		result = prime * result + ((dpsNumber == null) ? 0 : dpsNumber.hashCode());
 		result = prime * result + ((lotNumber == null) ? 0 : lotNumber.hashCode());
 		result = prime * result + ((pnNumber == null) ? 0 : pnNumber.hashCode());
 		result = prime * result + ((ppidNumber == null) ? 0 : ppidNumber.hashCode());
 		result = prime * result + ((problemCode == null) ? 0 : problemCode.hashCode());
 		result = prime * result + ((problemDescription == null) ? 0 : problemDescription.hashCode());
-		result = prime * result + ((dateReceived == null) ? 0 : dateReceived.hashCode());
+		result = prime * result + ((rma == null) ? 0 : rma.hashCode());
 		return result;
 	}
 
@@ -83,6 +94,11 @@ public class PPID {
 			if (other.coNumber != null)
 				return false;
 		} else if (!coNumber.equals(other.coNumber))
+			return false;
+		if (dateReceived == null) {
+			if (other.dateReceived != null)
+				return false;
+		} else if (!dateReceived.equals(other.dateReceived))
 			return false;
 		if (dpsNumber == null) {
 			if (other.dpsNumber != null)
@@ -114,19 +130,21 @@ public class PPID {
 				return false;
 		} else if (!problemDescription.equals(other.problemDescription))
 			return false;
-		if (dateReceived == null) {
-			if (other.dateReceived != null)
+		if (rma == null) {
+			if (other.rma != null)
 				return false;
-		} else if (!dateReceived.equals(other.dateReceived))
+		} else if (!rma.equals(other.rma))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return String.format(
-				"PPID [pnNumber=%s, ppidNumber=%s, coNumber=%s, dateReceived=%s, lotNumber=%s, dpsNumber=%s, problemCode=%s, problemDescription=%s]",
-				pnNumber, ppidNumber, coNumber, dateReceived, lotNumber, dpsNumber, problemCode, problemDescription);
+		return "PPID [pnNumber=" + pnNumber + ", ppidNumber=" + ppidNumber + ", coNumber=" + coNumber
+				+ ", dateReceived=" + dateReceived + ", lotNumber=" + lotNumber + ", dpsNumber=" + dpsNumber
+				+ ", problemCode=" + problemCode + ", problemDescription=" + problemDescription + ", rma=" + rma + "]";
 	}
+	
+	
 
 }
