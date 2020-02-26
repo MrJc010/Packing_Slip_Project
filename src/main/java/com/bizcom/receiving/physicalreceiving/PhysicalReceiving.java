@@ -20,6 +20,7 @@ public class PhysicalReceiving extends HttpServlet {
 	/**
 	 * 
 	 */
+	private String notFound = "";
 	private static final long serialVersionUID = 1365646760784374827L;
 	private DBHandler dbhandler = new DBHandler();
 	private List<Item> myList;
@@ -29,6 +30,7 @@ public class PhysicalReceiving extends HttpServlet {
 		myList = new ArrayList<>();
 		String ppid = request.getParameter("ppid");
 		String dps = request.getParameter("dps");
+		HttpSession session = request.getSession();
 		if (!ppid.isEmpty() && !dps.isEmpty()) {
 			
 			myList.addAll(dbhandler.fetchRMA(ppid, dps));
@@ -97,6 +99,7 @@ public class PhysicalReceiving extends HttpServlet {
 //		response.sendRedirect(url);
 		
 		String 
+
 		
 		
 	}

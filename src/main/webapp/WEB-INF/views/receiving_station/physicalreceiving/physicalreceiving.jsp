@@ -4,12 +4,59 @@
 
 <section>
 
-	
+
 
 	<div class="container">
 
 		<form method="POST"
 			action="<%=request.getContextPath()%>/physicalreceiving">
+
+			<div class="form-group row">
+				<label for="CPO#" class="col-sm-2 col-form-label">CPO#</label>
+				<div class="col-sm-8">
+					<input type="text" id="CPO#" class="form-control" name="cpoNumber"
+						placeholder="CPO Number" required>
+				</div>
+			</div>
+
+			<div class="form-group row">
+				<label for="SN#" class="col-sm-2 col-form-label">SN#</label>
+				<div class="col-sm-8">
+					<input type="text" id="SN#" class="form-control" name="snNumber"
+						placeholder="Serial Number" required>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="Revision" class="col-sm-2 col-form-label">Revision</label>
+				<div class="col-sm-8">
+					<input type="text" id="Revision" class="form-control"
+						name="revision" placeholder="Revision" required>
+				</div>
+			</div>
+
+
+			<div class="form-group row">
+				<label for="specialInstruction" class="col-sm-2 col-form-label">Special
+					Instruction</label>
+				<div class="col-sm-8">
+					<input type="text" id="specialInstruction" class="form-control"
+						name="specialInstruction" placeholder="Special Instruction"
+						required>
+				</div>
+			</div>
+
+			<div class="form-group row">
+				<label for="mfgPN" class="col-sm-2 col-form-label">Manufactoring
+					PN</label>
+				<div class="col-sm-8">
+					<input type="text" id="mfgPN" class="form-control"
+						name="specialInstruction" placeholder="Manufactoring PN" required>
+				</div>
+			</div>
+
+
+
+
 			<div class="form-group row">
 				<label for="RMA#" class="col-sm-2 col-form-label">RMA#</label>
 				<div class="col-sm-8">
@@ -22,7 +69,8 @@
 				<label for="PPID#" class="col-sm-2 col-form-label">PPID#</label>
 				<div class="col-sm-8">
 					<input type="text" id="RMA#" class="form-control"
-						value="${ppid_Number}" name="ppid" placeholder="PPID Number" disabled>
+						value="${ppid_Number}" name="ppid" placeholder="PPID Number"
+						disabled>
 				</div>
 			</div>
 
@@ -47,7 +95,8 @@
 					Description</label>
 				<div class="col-sm-8">
 					<input type="text" id="problem_desc#" class="form-control"
-						value="${problem_desc}" name="problemDesc" placeholder="Problem Description" disabled>
+						value="${problem_desc}" name="problemDesc"
+						placeholder="Problem Description" disabled>
 				</div>
 			</div>
 
@@ -55,7 +104,7 @@
 				<label for="Lot#" class="col-sm-2 col-form-label">Lot#</label>
 				<div class="col-sm-8">
 					<input type="text" id="Lot#" class="form-control" value="${lot}"
-						placeholder="Lot number" name="lotNumber"  disabled>
+						placeholder="Lot number" name="lotNumber" disabled>
 				</div>
 			</div>
 			<div class="form-group row">
@@ -63,7 +112,8 @@
 					code</label>
 				<div class="col-sm-8">
 					<input type="text" id="problem_code#" class="form-control"
-						value="${problem_code}" name="problemCode"  placeholder="Problem code" disabled>
+						value="${problem_code}" name="problemCode"
+						placeholder="Problem code" disabled>
 				</div>
 			</div>
 
@@ -71,53 +121,9 @@
 				<label for="dps#" class="col-sm-2 col-form-label">DPS#</label>
 				<div class="col-sm-8">
 					<input type="text" id="dps#" class="form-control" value="${dps}"
-						placeholder="DPS Number" name="dpnNumber"  disabled>
+						placeholder="DPS Number" name="dpnNumber" disabled>
 				</div>
 			</div>
-
-			<div class="form-group row">
-				<label for="CPO#" class="col-sm-2 col-form-label">CPO#</label>
-				<div class="col-sm-8">
-					<input type="text" id="CPO#" class="form-control" name="cpoNumber"
-						placeholder="CPO Number">
-				</div>
-			</div>
-
-			<div class="form-group row">
-				<label for="SN#" class="col-sm-2 col-form-label">SN#</label>
-				<div class="col-sm-8">
-					<input type="text" id="SN#" class="form-control" name="snNumber"
-						placeholder="Serial Number">
-				</div>
-			</div>
-			<div class="form-group row">
-				<label for="Revision" class="col-sm-2 col-form-label">Revision</label>
-				<div class="col-sm-8">
-					<input type="text" id="Revision" class="form-control"
-						name="revision" placeholder="Revision">
-				</div>
-			</div>
-
-
-			<div class="form-group row">
-				<label for="specialInstruction" class="col-sm-2 col-form-label">Special
-					Instruction</label>
-				<div class="col-sm-8">
-					<input type="text" id="specialInstruction" class="form-control"
-						name="specialInstruction" placeholder="Special Instruction">
-				</div>
-			</div>
-
-			<div class="form-group row">
-				<label for="mfgPN" class="col-sm-2 col-form-label">Manufactoring
-					PN</label>
-				<div class="col-sm-8">
-					<input type="text" id="mfgPN" class="form-control"
-						name="specialInstruction" placeholder="Manufactoring PN">
-				</div>
-			</div>
-
-
 			<div class="row justify-content-center">
 				<button type="submit" class="btn btn-primary">
 					<strong>Receive Item</strong>
