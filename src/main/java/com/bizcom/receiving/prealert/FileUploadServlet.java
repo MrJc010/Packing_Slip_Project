@@ -49,7 +49,8 @@ import com.amazonaws.services.s3.transfer.TransferManagerConfiguration;
  * A Java servlet that handles file upload from client.
  * 
  */
-@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 10, maxFileSize = 1024 * 1024 * 50,maxRequestSize = 1024 * 1024 * 100)
+@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 10, maxFileSize = 1024 * 1024 * 50, maxRequestSize = 1024 * 1024
+		* 100)
 @WebServlet(urlPatterns = "/pre_alert")
 public class FileUploadServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -69,11 +70,11 @@ public class FileUploadServlet extends HttpServlet {
 
 	private String pathFile;
 	private DBHandler dbHandler = new DBHandler();
-	
-	public FileUploadServlet() throws ClassNotFoundException{
-		
+
+	public FileUploadServlet() throws ClassNotFoundException {
+
 		super();
-		//Class.forName("com.mysql.jdbc.Driver");
+		// Class.forName("com.mysql.jdbc.Driver");
 	}
 
 	@Override
@@ -87,9 +88,9 @@ public class FileUploadServlet extends HttpServlet {
 			request.setAttribute("urll", pathFile);
 			String rmaPara = request.getParameter("RMA Number");
 			System.out.println("RMA out");
-			if(rmaPara != null) {
+			if (rmaPara != null) {
 				System.out.println("RMA in");
-				saveRMA(pathFile,rmaPara);
+				saveRMA(pathFile, rmaPara);
 				try {
 					dbHandler.ppidToDB(excelService.appendRMAForPPID(excelService.getListOfRowPPID(), rmaPara));
 				} catch (ClassNotFoundException e) {
@@ -99,18 +100,14 @@ public class FileUploadServlet extends HttpServlet {
 			}
 			refeshPackingSlip(request, response, pathFile);
 			refeshPPIDs(request, response, pathFile);
-			
-			
-			
+
 		}
-		
-		
 
 		String page = "";
 		try {
 			page = request.getParameter("page").toLowerCase();
 		} catch (NullPointerException e) {
-			
+
 		}
 
 		switch (page) {
@@ -121,23 +118,22 @@ public class FileUploadServlet extends HttpServlet {
 					response);
 		}
 
-		
 	}
-	
+
 	public void saveRMA(String path, String rma) throws IOException {
 		FileInputStream inputStream = new FileInputStream(new File(path));
 		Workbook workbook = null;
-		try{
+		try {
 			if (path.endsWith("xlsx")) {
 				workbook = new XSSFWorkbook(inputStream);
 			} else if (path.endsWith("xls")) {
-			//HSSFWorkbook
+				// HSSFWorkbook
 				workbook = new HSSFWorkbook(inputStream);
 			}
-		}catch(Exception e) {
+		} catch (Exception e) {
 			System.out.println("Cannot Read The File!");
 		}
-		
+
 		Sheet sheetOne = workbook.getSheetAt(0);
 		DataFormatter formatter = new DataFormatter();
 		int count = 0;
@@ -153,26 +149,26 @@ public class FileUploadServlet extends HttpServlet {
 
 					} else if (temp.equalsIgnoreCase("LOT#")) {
 						LOT_COL_NUM = index;
-					}else if (temp.equalsIgnoreCase("QTY")) {
+					} else if (temp.equalsIgnoreCase("QTY")) {
 						QTY_COL_NUM = index;
 						count++;
 					} else if (temp.equalsIgnoreCase("RMA#")) {
 						RMA_COL = index;
 					}
-						index++;
+					index++;
 				}
-			} else {	
-				row.getCell(RMA_COL).setCellValue(rma);			
+			} else {
+				row.getCell(RMA_COL).setCellValue(rma);
 			}
 
 		}
 		FileOutputStream outFile = new FileOutputStream(path);
 		workbook.write(outFile);
-		//outFile.flush();
+		// outFile.flush();
 		outFile.close();
 		inputStream.close();
 		workbook.close();
-		//response.sendRedirect(request.getContextPath()+"/packingslip");
+		// response.sendRedirect(request.getContextPath()+"/packingslip");
 	}
 
 	/**
@@ -181,8 +177,7 @@ public class FileUploadServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
-		
+
 		// checks if the request actually contains upload file
 		if (!ServletFileUpload.isMultipartContent(request)) {
 			// if not, we stop here
@@ -235,7 +230,6 @@ public class FileUploadServlet extends HttpServlet {
 						request.getSession().setAttribute("Name", fileName);
 						// saves the file on disk
 						item.write(storeFile);
-						
 
 					}
 				}
@@ -244,9 +238,8 @@ public class FileUploadServlet extends HttpServlet {
 			request.setAttribute("message", "There was an error: " + ex.getMessage());
 		}
 		response.sendRedirect(request.getContextPath() + "/pre_alert");
-		
-		
-		//get the s3Client
+
+		// get the s3Client
 		AmazonS3 s3Client = new AmazonS3Client(new ProfileCredentialsProvider());
 		String uploadFilePath = uploadPath;
 		File fileSaveDir = new File(uploadFilePath);
@@ -255,28 +248,22 @@ public class FileUploadServlet extends HttpServlet {
 		}
 
 		File uploadFileName = new File(filePath);
-		
+
 		try {
 			System.out.println("Uploading file to s3");
 			s3Client.putObject("bizcom-us-prealert", fileName, uploadFileName);
-			
-			
+
 		} catch (AmazonServiceException ase) {
-			System.out
-					.println("Caught an AmazonServiceException, which "
-							+ "means your request made it "
-							+ "to Amazon S3, but was rejected with an error response"
-							+ " for some reason.");
+			System.out.println("Caught an AmazonServiceException, which " + "means your request made it "
+					+ "to Amazon S3, but was rejected with an error response" + " for some reason.");
 			System.out.println("Error Message:    " + ase.getMessage());
 			System.out.println("HTTP Status Code: " + ase.getStatusCode());
 			System.out.println("AWS Error Code:   " + ase.getErrorCode());
 			System.out.println("Error Type:       " + ase.getErrorType());
 			System.out.println("Request ID:       " + ase.getRequestId());
 		} catch (AmazonClientException ace) {
-			System.out.println("Caught an AmazonClientException, which "
-					+ "means the client encountered "
-					+ "an internal error while trying to "
-					+ "communicate with S3, "
+			System.out.println("Caught an AmazonClientException, which " + "means the client encountered "
+					+ "an internal error while trying to " + "communicate with S3, "
 					+ "such as not being able to access the network.");
 			System.out.println("Error Message: " + ace.getMessage());
 		}
@@ -356,16 +343,15 @@ public class FileUploadServlet extends HttpServlet {
 		workbook.close();
 
 	}
-	
+
 	public boolean isFileExist(String path) {
 		return new File(path).exists();
 	}
-	
-	
+
 	public boolean deleteFile(String path) {
-		if(isFileExist(path)) {
+		if (isFileExist(path)) {
 			return new File(path).delete();
-		}else {
+		} else {
 			System.out.println("File Does Not Exist");
 			return false;
 		}

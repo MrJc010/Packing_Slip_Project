@@ -21,16 +21,15 @@ public class PhysicalReceiving extends HttpServlet {
 	 */
 	private static final long serialVersionUID = 1365646760784374827L;
 	private DBHandler dbhandler = new DBHandler();
-
+	private List<Item> myList;
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
+		myList = new ArrayList<>();
 		String ppid = request.getParameter("ppid");
 		String dps = request.getParameter("dps");
-
 		if (!ppid.isEmpty() && !dps.isEmpty()) {
-			List<Item> myList = new ArrayList<>();
+			
 			myList.addAll(dbhandler.fetchRMA(ppid, dps));
 
 			if (myList.size() == 0) {
@@ -47,9 +46,31 @@ public class PhysicalReceiving extends HttpServlet {
 				for (Item it : myList) {
 					System.out.println(it.toString());
 				}
+				Item temp = myList.get(0);
+				String rma = temp.getRma();
+				String ppid2 = temp.getPpid();
+				String pn = temp.getPn();
+				String co = temp.getCo();
+				String problemDescription = temp.getDescription();
+				String lotNum = temp.getLot();
+				String problemCode = temp.getProblemCode();
+				String dpsNumer = temp.getDps();
+				
+				
+				
+				request.setAttribute("rma_Number", rma);
+				request.setAttribute("ppid_Number", ppid2);
+				request.setAttribute("pn_Number", pn);
+				request.setAttribute("co_Number", co);
+				request.setAttribute("problem_desc", problemDescription);
+				request.setAttribute("lot", lotNum);
+				request.setAttribute("problem_code", problemCode);
+				request.setAttribute("dps", dpsNumer);		
 				request.setAttribute("title", "Search Item");
+
 				request.getRequestDispatcher("/WEB-INF/views/receiving_station/physicalreceiving/physicalreceiving.jsp")
-						.forward(request, response);
+				.forward(request, response);
+				
 			}
 
 		} else {
@@ -65,11 +86,15 @@ public class PhysicalReceiving extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		String rmaNum = request.getParameter("rma");
-		String ppid = request.getParameter("ppid");
-		String dps = request.getParameter("dps");
-
-		String url = request.getContextPath() + "/rma-receiver?rma=" + rmaNum + "&ppid=" + ppid + "&dps=" + dps;
-		response.sendRedirect(url);
+//		String rmaNum = request.getParameter("rma");
+//		String ppid = request.getParameter("ppid");
+//		String dps = request.getParameter("dps");
+//
+//		String url = request.getContextPath() + "/rma-receiver?rma=" + rmaNum + "&ppid=" + ppid + "&dps=" + dps;
+//		response.sendRedirect(url);
+		
+		String 
+		
+		
 	}
 }
