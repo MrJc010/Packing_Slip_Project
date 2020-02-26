@@ -12,24 +12,47 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.bizcom.database.DBHandler;
 
-@WebServlet(urlPatterns = "/physicalreceiving222")
+@WebServlet(urlPatterns = "/physicalreceiving")
 public class PhysicalReceiving extends HttpServlet {
-	
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1365646760784374827L;
+	private DBHandler dbhandler;
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		request.getRequestDispatcher("/WEB-INF/views/physicalreceiving/physicalreceiving.jsp").forward(request,
-				response);
-//		String rmaNum = request.getParameter("rma");
-//
-//		System.out.println("i am here RMA : " + rmaNum);
-//		List<Item> myList = new ArrayList<>();
-//		myList.addAll(dbHandler.fetchRMA(rmaNum));
-//		System.out.println("SIZE LIST " + myList.size());
-//		String url = "/rma-receiver?rma="+rmaNum;
-//		request.getRequestDispatcher("/rma-receiver");
+	
+//		String ppid = request.getParameter("ppid");
+//		String dps = request.getParameter("dps");
+		request.setAttribute("title", "Search Item");
+		request.getRequestDispatcher("/WEB-INF/views/receiving_station/physicalreceiving/physicalreceiving.jsp")
+				.forward(request, response);
+		
+		dbhandler = new DBHandler();
+		dbhandler.getConnectionAWS();
+		dbhandler.testConnection();
+		
+		
+//		if (!ppid.isEmpty() && !dps.isEmpty()) {
 
+			// based on ppid and dps get data
+
+//			System.out.println("=====");
+//			dbhandler.testConnection();
+//			List<Item> myList = new ArrayList<>();
+//			myList.addAll(dbhandler.fetchRMA(ppid, dps));
+//
+//			for (Item it : myList) {
+//				System.out.println(it.toString());
+//			}
+//		} else {
+//			System.out.println("Return Back to Search I tem");
+//		}
+		
+		
 	}
 
 	@Override
@@ -39,7 +62,7 @@ public class PhysicalReceiving extends HttpServlet {
 		String ppid = request.getParameter("ppid");
 		String dps = request.getParameter("dps");
 
-		String url = request.getContextPath() +"/rma-receiver?rma=" + rmaNum + "&ppid=" + ppid+"&dps=" + dps;
+		String url = request.getContextPath() + "/rma-receiver?rma=" + rmaNum + "&ppid=" + ppid + "&dps=" + dps;
 		response.sendRedirect(url);
 	}
 }

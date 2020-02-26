@@ -10,11 +10,11 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Servlet implementation class PhysicalReceivingController
  */
-@WebServlet("/physicalreceiving")
-public class PhysicalReceivingController extends HttpServlet {
+@WebServlet("/searchitem")
+public class SearchItemController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	public PhysicalReceivingController() {
+	public SearchItemController() {
 		super();
 
 	}
@@ -32,12 +32,6 @@ public class PhysicalReceivingController extends HttpServlet {
 
 	}
 
-	private void errorPage(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		request.setAttribute("title", "Error page");
-		request.getRequestDispatcher("/WEB-INF/error/404.jsp").forward(request, response);
-	}
-
 	private void searchItem(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		request.setAttribute("title", "Search Item");
@@ -51,7 +45,10 @@ public class PhysicalReceivingController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
+		String ppid = request.getParameter("ppid");
+		String dps = request.getParameter("dps");
+		String url = request.getContextPath() +"/physicalreceiving?ppid=" + ppid + "&dps=" + dps;
+		response.sendRedirect(url);
 	}
 
 }

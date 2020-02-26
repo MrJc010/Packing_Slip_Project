@@ -6,9 +6,7 @@
 
 	<div class="container">
 		<h1>Searching Item</h1>
-		<form action="physicalreceiving" method="GET">
-			<input type="hidden" name="page"
-				value="Search_Item"> 
+		<form action="<%=request.getContextPath()%>/searchitem" method="POST">			
 		<input id="input-2" name="ppid"
 				placeholder="Enter PPID number" type="text" required/><br> 
 				
