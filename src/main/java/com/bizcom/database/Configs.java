@@ -6,5 +6,6 @@ public class Configs {
 	protected static String dbUsername = "root";
 	protected static String dbPassword = "bizcomdb";
 	protected static String dbName = "bizcomdb";
+	protected static String driver = "com.mysql.jdbc.Driver";
 
 }

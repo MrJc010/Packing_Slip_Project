@@ -17,6 +17,12 @@ public class DBHandler {
 	private ResultSet rs;
 
 	public DBHandler() {
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		dbconnection = null;
 		pst = null;
 		rs = null;
@@ -32,22 +38,23 @@ public class DBHandler {
 	 * getConnectionAWS method makes a connection to AWS RDS
 	 * 
 	 * @return an object connection to AWS
+	 * @throws ClassNotFoundException 
 	 */
-	public Connection getConnectionAWS() {
-
+	public Connection getConnectionAWS() throws ClassNotFoundException {
+		//Class.forName("com.mysql.jdbc.Driver");
 		try {
 			dbconnection = DriverManager.getConnection(
 					"jdbc:mysql://" + Configs.dbHost + ":" + Configs.dbPort + "/" + Configs.dbName, Configs.dbUsername,
 					Configs.dbPassword);
 		} catch (SQLException e) {
 
-			System.out.println("Fail to connect");
+			System.out.println(e);
 		}
 
 		if (dbconnection != null) {
-			System.out.println("SUCCESS!!!! You made it, take control your database now!");
+			System.out.println("SUCCESS!");
 		} else {
-			System.out.println("Fail to connect");
+			System.out.println("Fail to connect to AWS at GetConnection");
 		}
 		return dbconnection;
 
@@ -113,10 +120,10 @@ public class DBHandler {
 		return flag;
 	}
 
-	public boolean ppidToDB(List<PPID> listPPID) {
+	public boolean ppidToDB(List<PPID> listPPID) throws ClassNotFoundException {
 		boolean result = false;
 		String INSERT_PPID = "INSERT INTO pre_alert VALUES(?,?,?,?,?,?,?,?,?)";
-
+		
 		for (PPID aa : listPPID) {
 			try {
 				dbconnection = getConnectionAWS();
@@ -132,7 +139,6 @@ public class DBHandler {
 				pst.setString(8, aa.getProblemDescription());
 				pst.setString(9, aa.getRma());
 				pst.executeUpdate();
-
 				dbconnection.commit();
 				result = true;
 

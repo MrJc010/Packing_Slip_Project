@@ -7,17 +7,19 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.bizcom.database.DBHandler;
+
 
 @WebServlet(description = "Show Up Home page", urlPatterns = { "/a" })
 public class HomeServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
     /**
+     * @throws ClassNotFoundException 
      * @see HttpServlet#HttpServlet()
      */
-    public HomeServlet() {
+    public HomeServlet() throws ClassNotFoundException {
         super();
-        
+
     }
 
 	/**

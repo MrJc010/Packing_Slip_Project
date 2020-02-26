@@ -68,10 +68,12 @@ public class FileUploadServlet extends HttpServlet {
 	private static final int MAX_REQUEST_SIZE = 1024 * 1024 * 50; // 50MB
 
 	private String pathFile;
+	private DBHandler dbHandler = new DBHandler();
 	
-	
-	public FileUploadServlet() {
+	public FileUploadServlet() throws ClassNotFoundException{
+		
 		super();
+		//Class.forName("com.mysql.jdbc.Driver");
 	}
 
 	@Override
@@ -84,13 +86,21 @@ public class FileUploadServlet extends HttpServlet {
 			pathFile = request.getSession().getAttribute("PathFile").toString();
 			request.setAttribute("urll", pathFile);
 			String rmaPara = request.getParameter("RMA Number");
+			System.out.println("RMA out");
 			if(rmaPara != null) {
+				System.out.println("RMA in");
 				saveRMA(pathFile,rmaPara);
+				try {
+					dbHandler.ppidToDB(excelService.appendRMAForPPID(excelService.getListOfRowPPID(), rmaPara));
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			refeshPackingSlip(request, response, pathFile);
 			refeshPPIDs(request, response, pathFile);
-			DBHandler dbHandler = new DBHandler();
-			dbHandler.ppidToDB(excelService.getListOfRowPPID());
+			
+			
 			
 		}
 		
@@ -243,14 +253,7 @@ public class FileUploadServlet extends HttpServlet {
 		if (!fileSaveDir.exists()) {
 			fileSaveDir.mkdirs();
 		}
-		 //get file part from request
-		//Part filePart = request.getPart("file");
-		
-		//get type of file added
-		//String contentType = filePart.getContentType();
-		//get submitted filename. 
-		//if you didn't add enctype attribute, we might only get file name
-		//long fileSize = filePart.getSize();                     //get size of file
+
 		File uploadFileName = new File(filePath);
 		
 		try {
@@ -277,10 +280,7 @@ public class FileUploadServlet extends HttpServlet {
 					+ "such as not being able to access the network.");
 			System.out.println("Error Message: " + ace.getMessage());
 		}
-//	
-//		excelService.read(filePath);
-//		response.sendRedirect(request.getContextPath() + "/pre_alert");
-//		request.setAttribute("rows", excelService.getListOfRowPackingSlip());
+
 	}
 
 	public void refeshPackingSlip(HttpServletRequest request, HttpServletResponse response, String path)
