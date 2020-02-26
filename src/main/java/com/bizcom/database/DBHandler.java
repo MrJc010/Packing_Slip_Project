@@ -115,7 +115,7 @@ public class DBHandler {
 
 	public boolean ppidToDB(List<PPID> listPPID) {
 		boolean result = false;
-		String INSERT_PPID = "INSERT INTO ppid VALUES(?,?,?,?,?,?,?,?)";
+		String INSERT_PPID = "INSERT INTO pre_alert VALUES(?,?,?,?,?,?,?,?,?)";
 
 		for (PPID aa : listPPID) {
 			try {
@@ -130,7 +130,7 @@ public class DBHandler {
 				pst.setString(6, aa.getDpsNumber());
 				pst.setString(7, aa.getProblemCode());
 				pst.setString(8, aa.getProblemDescription());
-
+				pst.setString(9, aa.getRma());
 				pst.executeUpdate();
 
 				dbconnection.commit();
@@ -146,19 +146,19 @@ public class DBHandler {
 		return result;
 	}
 
-	public List<Item> fetchRMA(String rma, String ppidN, String dpsN) {
+	public List<Item> fetchRMA(String ppidN, String dpsN) {
 		List<Item> result = new ArrayList<>();
-		String FETCH_RMA_QUERY = "SELECT * FROM ppid WHERE rma=? and ppid = ? and dps = ?";
+		String FETCH_RMA_QUERY = "SELECT * FROM pre_alert WHERE ppid = ? and dps = ?";
 
 		try {
 			dbconnection = getConnectionAWS();
 			pst = dbconnection.prepareStatement(FETCH_RMA_QUERY);
-			pst.setString(1, rma);
-			pst.setString(2, ppidN);
-			pst.setString(3, dpsN);
+			pst.setString(1, ppidN);
+			pst.setString(2, dpsN);
 			rs = pst.executeQuery();
 			System.out.println("result: " + rs.getFetchSize());
 			while (rs.next()) {
+				String rma = rs.getString("rma");
 				String CPO_SN = "";
 				String ppid = rs.getString("ppid");
 				String pn = rs.getString("pn");
@@ -192,10 +192,10 @@ public class DBHandler {
 		pst.executeUpdate();
 	}
 
-	public void SavingRMA(String rmaNum, String cposn, String ppid, String pn, String sn, String revision,
+	public void PhysicalReceive(String rmaNum, String cposn, String ppid, String pn, String sn, String revision,
 			String specialInstruction, String mfgPN, String lot, String description, String problemCode, String dps) {
 		List<Item> result = new ArrayList<>();
-		String FETCH_RMA_QUERY = "INSERT INTO rmaReceiving VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		String FETCH_RMA_QUERY = "INSERT INTO physicalRecevingDB VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 		try {
 			dbconnection = getConnectionAWS();
@@ -219,23 +219,6 @@ public class DBHandler {
 			deletaAPPID(dbconnection, ppid);
 
 			dbconnection.commit();
-//			while (rs.next()) {
-//				String CPO_SN = "";
-//				String ppid = rs.getString("ppid");
-//				String pn = rs.getString("pn");
-//				String co = rs.getString("pn");
-//				String sn = "";
-//				String revision = "";
-//				String description = rs.getString("problem_desc");
-//				String specialInstruction = "";
-//				String lot = rs.getString("lot");
-//				String problemCode = rs.getString("problem_code");
-//				String dps = rs.getString("dps");
-//				String mfgPN = "";
-//
-//				result.add(new Item(CPO_SN, ppid, pn, sn, revision, description, specialInstruction, co, lot,
-//						problemCode, rma, dps,mfgPN));
-//			}
 
 		} catch (Exception e) {
 			System.out.println(e);
