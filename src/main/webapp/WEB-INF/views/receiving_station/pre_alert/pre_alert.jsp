@@ -16,6 +16,7 @@
 					for="customFile">Choose file</label>
 			</div>
 			<div class="input-group-append justify-content-center">
+				<input type="file" name="file"/>
 				<input type="submit" class="btn btn-primary btn-md my-4"
 					value="UPLOAD" />
 			</div>
@@ -155,17 +156,12 @@
 
 			<div class="tab-pane" id="export" role="tabpanel"
 				aria-labelledby="export-tab">
-
+				${urll}
 
 				<a class="btn btn-primary"
-					href="<%=request.getContextPath()%>/File_DownLoad"
+					href="File_DownLoad"
 					role="button"
 					onclick="if(!confirm('Are you sure to export?')) return false">Export</a>
-
-
-
-
-
 			</div>
 
 		</div>

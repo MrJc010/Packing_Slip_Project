@@ -9,6 +9,7 @@ import java.io.PrintWriter;
 import java.util.List;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -26,11 +27,28 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.bizcom.excel.ExcelService;
+import java.io.File;
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
+
+import com.amazonaws.AmazonClientException;
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.auth.profile.ProfileCredentialsProvider;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.transfer.TransferManagerConfiguration;
 
 /**
  * A Java servlet that handles file upload from client.
  * 
  */
+@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 10, maxFileSize = 1024 * 1024 * 50,maxRequestSize = 1024 * 1024 * 100)
 @WebServlet(urlPatterns = "/pre_alert")
 public class FileUploadServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -49,9 +67,13 @@ public class FileUploadServlet extends HttpServlet {
 	private static final int MAX_REQUEST_SIZE = 1024 * 1024 * 50; // 50MB
 
 	private String pathFile;
+	
+	
+	public FileUploadServlet() {
+		super();
+	}
 
 	@Override
-
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 //		request.setAttribute("setHidden", "hidden");
@@ -59,6 +81,7 @@ public class FileUploadServlet extends HttpServlet {
 		pathFile = "";
 		if (request.getSession().getAttribute("PathFile") != null) {
 			pathFile = request.getSession().getAttribute("PathFile").toString();
+			request.setAttribute("urll", pathFile);
 			String rmaPara = request.getParameter("RMA Number");
 			if(rmaPara != null) {
 				saveRMA(pathFile,rmaPara);
@@ -148,6 +171,7 @@ public class FileUploadServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
+		
 		// checks if the request actually contains upload file
 		if (!ServletFileUpload.isMultipartContent(request)) {
 			// if not, we stop here
@@ -182,6 +206,7 @@ public class FileUploadServlet extends HttpServlet {
 			uploadDir.mkdir();
 		}
 		String filePath = "";
+		String fileName = "";
 		try {
 			// parses the request's content to extract file data
 			@SuppressWarnings("unchecked")
@@ -192,7 +217,7 @@ public class FileUploadServlet extends HttpServlet {
 				for (FileItem item : formItems) {
 					// processes only fields that are not form fields
 					if (!item.isFormField()) {
-						String fileName = new File(item.getName()).getName();
+						fileName = new File(item.getName()).getName();
 						filePath = uploadPath + File.separator + fileName;
 						File storeFile = new File(filePath);
 						request.getSession().setAttribute("PathFile", filePath);
@@ -209,7 +234,49 @@ public class FileUploadServlet extends HttpServlet {
 			request.setAttribute("message", "There was an error: " + ex.getMessage());
 		}
 		response.sendRedirect(request.getContextPath() + "/pre_alert");
-
+		
+		
+		//get the s3Client
+		AmazonS3 s3Client = new AmazonS3Client(new ProfileCredentialsProvider());
+		String uploadFilePath = uploadPath;
+		File fileSaveDir = new File(uploadFilePath);
+		if (!fileSaveDir.exists()) {
+			fileSaveDir.mkdirs();
+		}
+		 //get file part from request
+		//Part filePart = request.getPart("file");
+		
+		//get type of file added
+		//String contentType = filePart.getContentType();
+		//get submitted filename. 
+		//if you didn't add enctype attribute, we might only get file name
+		//long fileSize = filePart.getSize();                     //get size of file
+		File uploadFileName = new File(filePath);
+		
+		try {
+			System.out.println("Uploading file to s3");
+			s3Client.putObject("bizcom-us-prealert", fileName, uploadFileName);
+			
+			
+		} catch (AmazonServiceException ase) {
+			System.out
+					.println("Caught an AmazonServiceException, which "
+							+ "means your request made it "
+							+ "to Amazon S3, but was rejected with an error response"
+							+ " for some reason.");
+			System.out.println("Error Message:    " + ase.getMessage());
+			System.out.println("HTTP Status Code: " + ase.getStatusCode());
+			System.out.println("AWS Error Code:   " + ase.getErrorCode());
+			System.out.println("Error Type:       " + ase.getErrorType());
+			System.out.println("Request ID:       " + ase.getRequestId());
+		} catch (AmazonClientException ace) {
+			System.out.println("Caught an AmazonClientException, which "
+					+ "means the client encountered "
+					+ "an internal error while trying to "
+					+ "communicate with S3, "
+					+ "such as not being able to access the network.");
+			System.out.println("Error Message: " + ace.getMessage());
+		}
 //	
 //		excelService.read(filePath);
 //		response.sendRedirect(request.getContextPath() + "/pre_alert");

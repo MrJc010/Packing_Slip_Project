@@ -150,7 +150,7 @@ public class ExcelService {
 				String lot = row.getCell(LOT_COL_NUM).getStringCellValue();
 				int qty = (int) row.getCell(QTY_COL_NUM).getNumericCellValue();
 
-				String rMANumber = "";
+				String rMANumber = row.getCell(RMA_COL).getStringCellValue()!=null?row.getCell(RMA_COL).getStringCellValue():"";
 				PackingSlip temp = new PackingSlip(pn, po, lot, qty, rMANumber);
 				listOfRow.add(temp);			
 			}

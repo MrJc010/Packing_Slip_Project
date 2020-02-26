@@ -15,6 +15,28 @@
 			<artifactId>poi</artifactId>
 			<version>4.1.1</version>
 		</dependency>
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-bom</artifactId>
+			<version>1.11.327</version>
+			<type>pom</type>
+			<scope>import</scope>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-s3 -->
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-s3</artifactId>
+			<version>1.11.698</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-dynamodb -->
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-dynamodb</artifactId>
+			<version>1.11.698</version>
+		</dependency>
+
 
 
 		<!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml -->
