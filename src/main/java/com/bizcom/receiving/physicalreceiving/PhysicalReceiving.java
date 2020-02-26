@@ -10,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.bizcom.database.DBHandler;
 
@@ -28,13 +29,17 @@ public class PhysicalReceiving extends HttpServlet {
 
 		String ppid = request.getParameter("ppid");
 		String dps = request.getParameter("dps");
-
+		HttpSession session = request.getSession();
+		
+		String notFound = "";
+		//request.setAttribute("re", notFound);
 		if (!ppid.isEmpty() && !dps.isEmpty()) {
 			List<Item> myList = new ArrayList<>();
 			myList.addAll(dbhandler.fetchRMA(ppid, dps));
-
+			
 			if (myList.size() == 0) {
-
+				notFound = "Cannot Find Item With Your Info!";
+				session.setAttribute("re",notFound);
 				response.sendRedirect(request.getContextPath() + "/searchitem");
 //				PrintWriter out = response.getWriter();
 //				out.println("<script type=\"text/javascript\">");
@@ -43,7 +48,8 @@ public class PhysicalReceiving extends HttpServlet {
 //				out.println("</script>");
 
 			} else {
-
+				notFound = "";
+				session.setAttribute("re",notFound);
 				for (Item it : myList) {
 					System.out.println(it.toString());
 				}
