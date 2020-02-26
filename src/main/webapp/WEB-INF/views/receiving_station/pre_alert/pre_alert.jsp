@@ -6,7 +6,7 @@
 <section>
 
 	<div class="container border mt-5 ">
-		<h1 class="text-center mb-4">Upload excel file</h1>
+		<h1 class="text-center mb-4">Upload Excel File</h1>
 		<form method="POST" action="<%=request.getContextPath()%>/pre_alert"
 			enctype="multipart/form-data">
 
