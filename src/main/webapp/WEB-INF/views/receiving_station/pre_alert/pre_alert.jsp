@@ -152,7 +152,7 @@
 
 			</div>
 
-			// TODO : Implement export (save file)
+			
 			<div class="tab-pane" id="export" role="tabpanel"
 				aria-labelledby="export-tab">
 				${urll}

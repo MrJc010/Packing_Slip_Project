@@ -36,7 +36,7 @@
 							aria-labelledby="navbarDropdownMenuLink">
 							<a class="dropdown-item"
 								href="<%=request.getContextPath()%>/pre_alert">Pre-Alert</a> <a
-								class="dropdown-item" href="<%=request.getContextPath()%>/physicalreceiving?page=Search_Item">Physical Receiving</a> <a class="dropdown-item" href="#">Issue RMA</a>
+								class="dropdown-item" href="<%=request.getContextPath()%>/physicalreceiving">Physical Receiving</a> <a class="dropdown-item" href="#">Issue RMA</a>
 						</div></li>
 				</ul>
 			</div>

@@ -1,12 +1,17 @@
-//package com.bizcom.database;
-//
-//public class test {
-//
-//	public static void main(String[] args) {
-//		DBHandler db = new DBHandler();
-//		db.getConnectionAWS();
-//		db.SavingRMA("testing", "testing", "testing", "testing", "testing", "testing", "testing", "testing", "testing", "testing", "testing", "testing");
-//
-//	}
-//
-//}
+package com.bizcom.database;
+
+import java.util.Arrays;
+
+import com.bizcom.ppid.PPID;
+
+public class test {
+
+	public static void main(String[] args) {
+		DBHandler db = new DBHandler();
+		db.getConnectionAWS();
+		
+		db.ppidToDB(Arrays.asList(new PPID("111", "2222", "3333",  "3333",  "3333",  "3333",  "3333",  "3333",  "3333"))) ;
+
+	}
+
+}

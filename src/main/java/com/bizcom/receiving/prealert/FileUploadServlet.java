@@ -26,6 +26,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import com.bizcom.database.DBHandler;
 import com.bizcom.excel.ExcelService;
 import java.io.File;
 import java.io.IOException;
@@ -88,7 +89,8 @@ public class FileUploadServlet extends HttpServlet {
 			}
 			refeshPackingSlip(request, response, pathFile);
 			refeshPPIDs(request, response, pathFile);
-			
+			DBHandler dbHandler = new DBHandler();
+			dbHandler.ppidToDB(excelService.getListOfRowPPID());
 			
 		}
 		
@@ -103,14 +105,13 @@ public class FileUploadServlet extends HttpServlet {
 
 		switch (page) {
 		case "save":
-		
-			
 			break;
 		default:
 			request.getRequestDispatcher("/WEB-INF/views/receiving_station/pre_alert/pre_alert.jsp").forward(request,
 					response);
 		}
 
+		
 	}
 	
 	public void saveRMA(String path, String rma) throws IOException {
