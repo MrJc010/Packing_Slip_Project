@@ -38,10 +38,10 @@ public class DBHandler {
 	 * getConnectionAWS method makes a connection to AWS RDS
 	 * 
 	 * @return an object connection to AWS
-	 * @throws ClassNotFoundException 
+	 * @throws ClassNotFoundException
 	 */
 	public Connection getConnectionAWS() throws ClassNotFoundException {
-		//Class.forName("com.mysql.jdbc.Driver");
+		// Class.forName("com.mysql.jdbc.Driver");
 		try {
 			dbconnection = DriverManager.getConnection(
 					"jdbc:mysql://" + Configs.dbHost + ":" + Configs.dbPort + "/" + Configs.dbName, Configs.dbUsername,
@@ -123,7 +123,7 @@ public class DBHandler {
 	public boolean ppidToDB(List<PPID> listPPID) throws ClassNotFoundException {
 		boolean result = false;
 		String INSERT_PPID = "INSERT INTO pre_alert VALUES(?,?,?,?,?,?,?,?,?)";
-		
+
 		for (PPID aa : listPPID) {
 			try {
 				dbconnection = getConnectionAWS();
@@ -197,10 +197,10 @@ public class DBHandler {
 		pst.executeUpdate();
 	}
 
-	public void PhysicalReceive(String rmaNum, String cposn, String ppid, String pn, String sn, String revision,
+	public boolean PhysicalReceive(String rmaNum, String cposn, String ppid, String pn, String sn, String revision,
 			String specialInstruction, String mfgPN, String lot, String description, String problemCode, String dps) {
 		String FETCH_RMA_QUERY = "INSERT INTO physicalRecevingDB VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
+		boolean result = false;
 		try {
 			dbconnection = getConnectionAWS();
 			dbconnection.setAutoCommit(false);
@@ -223,13 +223,15 @@ public class DBHandler {
 			deletaAPPID(dbconnection, ppid);
 
 			dbconnection.commit();
+			result = true;
 
-			System.out.println("finish upload");
 		} catch (Exception e) {
 			System.out.println(e);
 		} finally {
 			shutdown();
 		}
+
+		return result;
 	}
 
 }

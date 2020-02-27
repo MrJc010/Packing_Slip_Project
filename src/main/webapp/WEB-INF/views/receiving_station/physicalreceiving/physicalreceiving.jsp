@@ -8,6 +8,7 @@
 
 	<div class="container">
 
+
 		<form method="POST"
 			action="<%=request.getContextPath()%>/physicalreceiving">
 
@@ -128,7 +129,11 @@
 				<button type="submit" class="btn btn-primary">
 					<strong>Receive Item</strong>
 				</button>
+				<br>
+
+
 			</div>
+
 		</form>
 
 	</div>

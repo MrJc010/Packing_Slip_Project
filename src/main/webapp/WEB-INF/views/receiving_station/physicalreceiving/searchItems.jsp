@@ -5,7 +5,6 @@
 <section style="height: 59vh;">
 
 	<div class="container">
-
 		<h1 class="display-3 text-primary text-center">
 			<strong>Searching Item</strong>
 		</h1>

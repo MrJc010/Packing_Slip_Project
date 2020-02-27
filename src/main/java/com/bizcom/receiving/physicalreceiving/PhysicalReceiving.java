@@ -31,6 +31,7 @@ public class PhysicalReceiving extends HttpServlet {
 		myList = new ArrayList<>();
 		String ppid = request.getParameter("ppid");
 		String dps = request.getParameter("dps");
+
 		HttpSession session = request.getSession();
 		if (!ppid.isEmpty() && !dps.isEmpty()) {
 
@@ -40,18 +41,9 @@ public class PhysicalReceiving extends HttpServlet {
 				notFound = "Cannot Find Item With Your Info!";
 				session.setAttribute("re", notFound);
 				response.sendRedirect(request.getContextPath() + "/searchitem");
-//				PrintWriter out = response.getWriter();
-//				out.println("<script type=\"text/javascript\">");
-//				out.println("alert('User or password incorrect');");
-//				out.println("location='/WEB-INF/views/receiving_station/physicalreceiving/searchItems.jsp';");
-//				out.println("</script>");
-
 			} else {
 				notFound = "";
 				session.setAttribute("re", notFound);
-				for (Item it : myList) {
-					System.out.println(it.toString());
-				}
 				Item temp = myList.get(0);
 				String rma = temp.getRma();
 				String ppid2 = temp.getPpid();
@@ -74,7 +66,6 @@ public class PhysicalReceiving extends HttpServlet {
 
 				request.getRequestDispatcher("/WEB-INF/views/receiving_station/physicalreceiving/physicalreceiving.jsp")
 						.forward(request, response);
-
 			}
 
 		} else {
@@ -86,12 +77,6 @@ public class PhysicalReceiving extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-//		String rmaNum = request.getParameter("rma");
-//		String ppid = request.getParameter("ppid");
-//		String dps = request.getParameter("dps");
-//
-//		String url = request.getContextPath() + "/rma-receiver?rma=" + rmaNum + "&ppid=" + ppid + "&dps=" + dps;
-//		response.sendRedirect(url);
 
 		if (myList.size() == 1) {
 
@@ -112,6 +97,7 @@ public class PhysicalReceiving extends HttpServlet {
 
 			dbhandler.PhysicalReceive(rmaNum, cposn, ppid, pn, sn, revision, specialInstruction, mfgPcN, lot,
 					description, problemCode, dps);
+
 			response.sendRedirect(request.getContextPath() + "/searchitem");
 
 		} else {
