@@ -189,7 +189,7 @@ public class DBHandler {
 		pst.setString(1, ppid);
 		pst.executeUpdate();
 	}
-	
+
 	public void deletaPhysicalRecord(Connection conn, String ppid) throws SQLException {
 		String DELETE_A_PPID = "DELETE FROM physicalRecevingDB WHERE ppid=?";
 
@@ -253,31 +253,32 @@ public class DBHandler {
 		return result;
 	}
 
-	public int getRecordCount(String sn, String ppid) {
-		String GET_COUNT_IN_RECORD = "SELECT count_recevied FROM sn_record WHERE serial_number=? and ppid = ?";
+	public int getRecordCount(String ppid) {
+		String GET_COUNT_IN_RECORD = "SELECT count_recevied FROM sn_record WHERE ppid = ?";
 		int result = -1;
-		
+
 		try {
 			dbconnection = getConnectionAWS();
 			pst = dbconnection.prepareStatement(GET_COUNT_IN_RECORD);
-			pst.setString(1, sn);
-			pst.setString(2, ppid);
-			
+
+			pst.setString(1, ppid);
+
 			rs = pst.executeQuery();
-			while(rs.next()) {
+			while (rs.next()) {
 				result = rs.getInt("count_recevied");
 			}
-			
-		}catch (Exception e) {
+
+		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("Cannot getRecordCount");
-		}finally {
+		} finally {
 			shutdown();
 		}
-		
+
 		return result;
-		
+
 	}
+
 	public void addToRecord(Connection conn, String sn, String pn, String ppid, String dps) throws SQLException {
 
 		String INSERT_INTO_RECORD = "INSERT INTO sn_record VALUES(?,?,?,?,?)";
@@ -325,7 +326,7 @@ public class DBHandler {
 		System.out.println("RMA : " + result);
 		return result;
 	}
-	
+
 	public boolean MoveToScrap01(String rmaNum, String cposn, String ppid, String pn, String sn, String revision,
 			String specialInstruction, String mfgPN, String lot, String description, String problemCode, String dps) {
 		String FETCH_RMA_QUERY = "INSERT INTO scrap01_table VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
@@ -366,5 +367,5 @@ public class DBHandler {
 
 		return result;
 	}
-	
+
 }
