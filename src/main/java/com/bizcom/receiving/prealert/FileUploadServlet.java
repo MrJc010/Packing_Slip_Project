@@ -2,11 +2,11 @@ package com.bizcom.receiving.prealert;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -26,31 +26,21 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import com.bizcom.database.DBHandler;
-import com.bizcom.excel.ExcelService;
-import java.io.File;
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Part;
-
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.transfer.TransferManagerConfiguration;
+import com.bizcom.database.DBHandler;
+import com.bizcom.excel.ExcelService;
+import com.bizcom.ppid.PPID;
 
 /**
  * A Java servlet that handles file upload from client.
  * 
  */
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 10, maxFileSize = 1024 * 1024 * 50, maxRequestSize = 1024 * 1024
-		* 100)
+* 100)
 @WebServlet(urlPatterns = "/pre_alert")
 public class FileUploadServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -80,19 +70,26 @@ public class FileUploadServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
-//		request.setAttribute("setHidden", "hidden");
+		//		request.setAttribute("setHidden", "hidden");
 
 		pathFile = "";
 		if (request.getSession().getAttribute("PathFile") != null) {
 			pathFile = request.getSession().getAttribute("PathFile").toString();
 			request.setAttribute("urll", pathFile);
 			String rmaPara = request.getParameter("RMA Number");
-			System.out.println("RMA out");
+			//excelService.read(pathFile);
+			System.out.println(pathFile);
+			excelService.read(pathFile);
+			List<PPID> list = excelService.getListOfRowPPID();
+			System.out.println(list.toString());
 			if (rmaPara != null) {
-				System.out.println("RMA in");
 				saveRMA(pathFile, rmaPara);
+				
+//				Multi thread = new Multi(list, rmaPara, excelService, dbHandler);
+//				thread.start();
+				
 				try {
-					dbHandler.ppidToDB(excelService.appendRMAForPPID(excelService.getListOfRowPPID(), rmaPara));
+					dbHandler.ppidToDB(excelService.appendRMAForPPID(list, rmaPara));
 				} catch (ClassNotFoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -168,6 +165,8 @@ public class FileUploadServlet extends HttpServlet {
 		outFile.close();
 		inputStream.close();
 		workbook.close();
+		
+		excelService.read(path);
 		// response.sendRedirect(request.getContextPath()+"/packingslip");
 	}
 
@@ -240,33 +239,33 @@ public class FileUploadServlet extends HttpServlet {
 		response.sendRedirect(request.getContextPath() + "/pre_alert");
 
 		// get the s3Client
-		AmazonS3 s3Client = new AmazonS3Client(new ProfileCredentialsProvider());
-		String uploadFilePath = uploadPath;
-		File fileSaveDir = new File(uploadFilePath);
-		if (!fileSaveDir.exists()) {
-			fileSaveDir.mkdirs();
-		}
-
-		File uploadFileName = new File(filePath);
-
-		try {
-			System.out.println("Uploading file to s3");
-			s3Client.putObject("bizcom-us-prealert", fileName, uploadFileName);
-
-		} catch (AmazonServiceException ase) {
-			System.out.println("Caught an AmazonServiceException, which " + "means your request made it "
-					+ "to Amazon S3, but was rejected with an error response" + " for some reason.");
-			System.out.println("Error Message:    " + ase.getMessage());
-			System.out.println("HTTP Status Code: " + ase.getStatusCode());
-			System.out.println("AWS Error Code:   " + ase.getErrorCode());
-			System.out.println("Error Type:       " + ase.getErrorType());
-			System.out.println("Request ID:       " + ase.getRequestId());
-		} catch (AmazonClientException ace) {
-			System.out.println("Caught an AmazonClientException, which " + "means the client encountered "
-					+ "an internal error while trying to " + "communicate with S3, "
-					+ "such as not being able to access the network.");
-			System.out.println("Error Message: " + ace.getMessage());
-		}
+//		AmazonS3 s3Client = new AmazonS3Client(new ProfileCredentialsProvider());
+//		String uploadFilePath = uploadPath;
+//		File fileSaveDir = new File(uploadFilePath);
+//		if (!fileSaveDir.exists()) {
+//			fileSaveDir.mkdirs();
+//		}
+//
+//		File uploadFileName = new File(filePath);
+//
+//		try {
+//			System.out.println("Uploading file to s3");
+//			s3Client.putObject("bizcom-us-prealert", fileName, uploadFileName);
+//
+//		} catch (AmazonServiceException ase) {
+//			System.out.println("Caught an AmazonServiceException, which " + "means your request made it "
+//					+ "to Amazon S3, but was rejected with an error response" + " for some reason.");
+//			System.out.println("Error Message:    " + ase.getMessage());
+//			System.out.println("HTTP Status Code: " + ase.getStatusCode());
+//			System.out.println("AWS Error Code:   " + ase.getErrorCode());
+//			System.out.println("Error Type:       " + ase.getErrorType());
+//			System.out.println("Request ID:       " + ase.getRequestId());
+//		} catch (AmazonClientException ace) {
+//			System.out.println("Caught an AmazonClientException, which " + "means the client encountered "
+//					+ "an internal error while trying to " + "communicate with S3, "
+//					+ "such as not being able to access the network.");
+//			System.out.println("Error Message: " + ace.getMessage());
+//		}
 
 	}
 
@@ -356,4 +355,28 @@ public class FileUploadServlet extends HttpServlet {
 			return false;
 		}
 	}
+	
+
+
+	static class Multi extends Thread{
+		static String rmaPara;
+		static List<PPID> list;
+		static ExcelService excelService;
+		static DBHandler dbHandler;
+		public Multi(List<PPID> list, String rmaPara, ExcelService excelService, DBHandler dbHandler) {
+			Multi.list = list;
+			Multi.rmaPara = rmaPara;
+			Multi.excelService = excelService;
+			Multi.dbHandler = dbHandler;
+		}
+		public void run(){
+			try {
+				dbHandler.ppidToDB(excelService.appendRMAForPPID(list, rmaPara));
+			} catch (ClassNotFoundException | IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+	}  
 }

@@ -122,33 +122,68 @@ public class DBHandler {
 
 	public boolean ppidToDB(List<PPID> listPPID) throws ClassNotFoundException {
 		boolean result = false;
-		String INSERT_PPID = "INSERT INTO pre_alert VALUES(?,?,?,?,?,?,?,?,?)";
-		
+		String INSERT_PPID = "INSERT INTO pre_alert VALUES";
+//		
+//		for (PPID aa : listPPID) {
+//			try {
+//				dbconnection = getConnectionAWS();
+//				dbconnection.setAutoCommit(false);
+//				pst = dbconnection.prepareStatement(INSERT_PPID);
+//				pst.setString(1, aa.getPpidNumber());
+//				pst.setString(2, aa.getPnNumber());
+//				pst.setString(3, aa.getCoNumber());
+//				pst.setString(4, aa.getDateReceived());
+//				pst.setString(5, aa.getLotNumber());
+//				pst.setString(6, aa.getDpsNumber());
+//				pst.setString(7, aa.getProblemCode());
+//				pst.setString(8, aa.getProblemDescription());
+//				pst.setString(9, aa.getRma());
+//				pst.executeUpdate();
+//				dbconnection.commit();
+//				result = true;
+//
+//			} catch (Exception e) {
+//				System.out.println(e.getMessage());
+//			} finally {
+//				shutdown();
+//			}
+//		}
 		for (PPID aa : listPPID) {
-			try {
-				dbconnection = getConnectionAWS();
-				dbconnection.setAutoCommit(false);
-				pst = dbconnection.prepareStatement(INSERT_PPID);
-				pst.setString(1, aa.getPpidNumber());
-				pst.setString(2, aa.getPnNumber());
-				pst.setString(3, aa.getCoNumber());
-				pst.setString(4, aa.getDateReceived());
-				pst.setString(5, aa.getLotNumber());
-				pst.setString(6, aa.getDpsNumber());
-				pst.setString(7, aa.getProblemCode());
-				pst.setString(8, aa.getProblemDescription());
-				pst.setString(9, aa.getRma());
-				pst.executeUpdate();
-				dbconnection.commit();
-				result = true;
+			INSERT_PPID+=" ('"+aa.getPpidNumber()+"','"+aa.getPnNumber()+"','"+aa.getCoNumber()+"','"
+				+ aa.getDateReceived()+"','"+aa.getLotNumber()+"','"+aa.getDpsNumber()+"','"+
+				aa.getProblemCode()+"','"+aa.getProblemDescription()+"','"+aa.getRma()+"'),";
+//				pst.setString(1, aa.getPpidNumber());
+//				pst.setString(2, aa.getPnNumber());
+//				pst.setString(3, aa.getCoNumber());
+//				pst.setString(4, aa.getDateReceived());
+//				pst.setString(5, aa.getLotNumber());
+//				pst.setString(6, aa.getDpsNumber());
+//				pst.setString(7, aa.getProblemCode());
+//				pst.setString(8, aa.getProblemDescription());
+//				pst.setString(9, aa.getRma());
+//				pst.executeUpdate();
+//				dbconnection.commit();
+				//result = true;
 
-			} catch (Exception e) {
-				System.out.println(e.getMessage());
-			} finally {
-				shutdown();
-			}
+//			} catch (Exception e) {
+//				System.out.println(e.getMessage());
+//			} finally {
+//				shutdown();
+//			}
 		}
-
+		dbconnection = getConnectionAWS();
+		//dbconnection.setAutoCommit(false);
+		
+		INSERT_PPID = INSERT_PPID.substring(0, INSERT_PPID.length() - 1);
+		INSERT_PPID+=";";
+		try {
+			pst = dbconnection.prepareStatement(INSERT_PPID);
+			pst.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		return result;
 	}
 

@@ -115,6 +115,7 @@
 						<table class="table table-striped">
 							<thead>
 								<tr>
+									<th scope="col" class="text-left">ROW #</th>
 									<th scope="col" class="text-left">PN#</th>
 									<th scope="col" class="text-left">PPID#</th>
 									<th scope="col" class="text-left">CO#</th>
@@ -126,8 +127,10 @@
 								</tr>
 							</thead>
 							<tbody>
+							<%int count = 1; %>
 								<c:forEach items="${rows2}" var="aRow">
 									<tr>
+										<td><%=count%></td>
 										<td>${aRow.pnNumber}</td>
 										<td>${aRow.ppidNumber}</td>
 										<td>${aRow.coNumber}</td>
@@ -138,7 +141,7 @@
 										<td>${aRow.problemDescription}</td>
 									</tr>
 
-
+								<%count++;%>
 								</c:forEach>
 								<tr>
 

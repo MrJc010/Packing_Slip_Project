@@ -73,13 +73,17 @@ public class ExcelService {
 		return this.listPPID;
 	}
 	
-	public List<PPID> appendRMAForPPID(List<PPID> l, String rma) {
+	public List<PPID> appendRMAForPPID(List<PPID> l, String rma) throws IOException {
 		for(PPID ppid: l) ppid.setRma(rma);
 		return l;
 	}
 
 	public void getAllRowsPPID() {
+		if(myWorkBook == null) {
+			System.out.println("myWorkBook null");
+		}
 		Sheet sheetOne = myWorkBook.getSheetAt(1);
+		if(myWorkBook == null) System.out.println("myWorkBook null");
 		DataFormatter formatter = new DataFormatter();
 		int count = 0;
 		for (Row row : sheetOne) {
@@ -118,6 +122,7 @@ public class ExcelService {
 				String problem_desc = row.getCell(PROPBLEM_DES_COL_NUM_PPID).toString();
 
 				listPPID.add(new PPID(pn, ppid, co, sys_date_rec, lot, dps, problem_code, problem_desc,""));
+				//System.out.println(new PPID(pn, ppid, co, sys_date_rec, lot, dps, problem_code, problem_desc,"").toString());
 			}
 
 		}
@@ -205,6 +210,16 @@ public class ExcelService {
 		}
 		
 		
+	}
+	
+	
+
+	public Workbook getMyWorkBook() {
+		return myWorkBook;
+	}
+
+	public void setMyWorkBook(Workbook myWorkBook) {
+		this.myWorkBook = myWorkBook;
 	}
 
 	public void writeRMA(String RMA) {

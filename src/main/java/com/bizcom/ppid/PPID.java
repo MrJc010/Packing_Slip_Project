@@ -54,7 +54,7 @@ public class PPID {
 	}
 
 	public String getProblemDescription() {
-		return problemDescription;
+		return problemDescription.replaceAll("'", "");
 	}
 
 	public String getRma() {

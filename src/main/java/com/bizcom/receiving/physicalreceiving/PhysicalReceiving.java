@@ -97,8 +97,6 @@ public class PhysicalReceiving extends HttpServlet {
 //
 //		String url = request.getContextPath() + "/rma-receiver?rma=" + rmaNum + "&ppid=" + ppid + "&dps=" + dps;
 //		response.sendRedirect(url);
-		
-		String 
 
 		
 		
