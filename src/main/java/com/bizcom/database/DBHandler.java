@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.bizcom.ppid.PPID;
@@ -125,13 +126,13 @@ public class DBHandler {
 
 		String INSERT_PPID = "INSERT INTO pre_alert VALUES";
 		for (PPID aa : listPPID) {
-			INSERT_PPID+=" ('"+aa.getPpidNumber()+"','"+aa.getPnNumber()+"','"+aa.getCoNumber()+"','"
-				+ aa.getDateReceived()+"','"+aa.getLotNumber()+"','"+aa.getDpsNumber()+"','"+
-				aa.getProblemCode()+"','"+aa.getProblemDescription()+"','"+aa.getRma()+"'),";
+			INSERT_PPID += " ('" + aa.getPpidNumber() + "','" + aa.getPnNumber() + "','" + aa.getCoNumber() + "','"
+					+ aa.getDateReceived() + "','" + aa.getLotNumber() + "','" + aa.getDpsNumber() + "','"
+					+ aa.getProblemCode() + "','" + aa.getProblemDescription() + "','" + aa.getRma() + "'),";
 		}
 		dbconnection = getConnectionAWS();
 		INSERT_PPID = INSERT_PPID.substring(0, INSERT_PPID.length() - 1);
-		INSERT_PPID+=";";
+		INSERT_PPID += ";";
 		try {
 			pst = dbconnection.prepareStatement(INSERT_PPID);
 			pst.executeUpdate();
@@ -140,7 +141,7 @@ public class DBHandler {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return result;
 	}
 
@@ -188,10 +189,18 @@ public class DBHandler {
 		pst.setString(1, ppid);
 		pst.executeUpdate();
 	}
+	
+	public void deletaPhysicalRecord(Connection conn, String ppid) throws SQLException {
+		String DELETE_A_PPID = "DELETE FROM physicalRecevingDB WHERE ppid=?";
+
+		pst = conn.prepareStatement(DELETE_A_PPID);
+		pst.setString(1, ppid);
+		pst.executeUpdate();
+	}
 
 	public boolean PhysicalReceive(String rmaNum, String cposn, String ppid, String pn, String sn, String revision,
 			String specialInstruction, String mfgPN, String lot, String description, String problemCode, String dps) {
-		String FETCH_RMA_QUERY = "INSERT INTO physicalRecevingDB VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		String FETCH_RMA_QUERY = "INSERT INTO physicalRecevingDB VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
 		boolean result = false;
 		try {
 			dbconnection = getConnectionAWS();
@@ -211,9 +220,13 @@ public class DBHandler {
 			pst.setString(10, description);
 			pst.setString(11, problemCode);
 			pst.setString(12, dps);
+			pst.setString(13, "User ID");
+			pst.setString(14, new Date().toLocaleString());
 			pst.executeUpdate();
+			// delete record in pre_alert table
 			deletaAPPID(dbconnection, ppid);
-
+			// add to record table
+			addToRecord(dbconnection, sn, pn, ppid, dps);
 			dbconnection.commit();
 			result = true;
 
@@ -226,4 +239,132 @@ public class DBHandler {
 		return result;
 	}
 
+	public int fetchCurrentReceivedCount(Connection conn, String sn) throws SQLException {
+		int result = 0;
+		String FETCH_CURRENT_COUNT_RECEIVED = "SELECT * FROM sn_record WHERE serial_number=?";
+
+		pst = conn.prepareStatement(FETCH_CURRENT_COUNT_RECEIVED);
+		pst.setString(1, sn);
+		rs = pst.executeQuery();
+		while (rs.next()) {
+			result = rs.getInt("count_recevied");
+
+		}
+		return result;
+	}
+
+	public int getRecordCount(String sn, String ppid) {
+		String GET_COUNT_IN_RECORD = "SELECT count_recevied FROM sn_record WHERE serial_number=? and ppid = ?";
+		int result = -1;
+		
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(GET_COUNT_IN_RECORD);
+			pst.setString(1, sn);
+			pst.setString(2, ppid);
+			
+			rs = pst.executeQuery();
+			while(rs.next()) {
+				result = rs.getInt("count_recevied");
+			}
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("Cannot getRecordCount");
+		}finally {
+			shutdown();
+		}
+		
+		return result;
+		
+	}
+	public void addToRecord(Connection conn, String sn, String pn, String ppid, String dps) throws SQLException {
+
+		String INSERT_INTO_RECORD = "INSERT INTO sn_record VALUES(?,?,?,?,?)";
+		String UPDATE_RECORD = "UPDATE sn_record set count_recevied= ? where serial_number=?";
+		String query = "";
+		int newCount = fetchCurrentReceivedCount(conn, sn) + 1;
+		if (newCount == 1) {
+			query = INSERT_INTO_RECORD;
+			pst = conn.prepareStatement(query);
+			pst.setString(1, sn);
+			pst.setString(2, pn);
+			pst.setInt(3, newCount);
+			pst.setString(4, ppid);
+			pst.setString(5, dps);
+		} else {
+			query = UPDATE_RECORD;
+			pst = conn.prepareStatement(query);
+			pst.setInt(1, newCount);
+			pst.setString(2, sn);
+		}
+		pst.executeUpdate();
+	}
+
+	public String isRecordPreAlertExist(String ppid, String pn, String lot) {
+		String result = "";
+		String CHECK_PRE_ALERT_RECORD = "SELECT * FROM pre_alert WHERE pn = ? and lot = ? and ppid=? ";
+
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(CHECK_PRE_ALERT_RECORD);
+			pst.setString(1, pn);
+			pst.setString(2, lot);
+			pst.setString(3, ppid);
+			rs = pst.executeQuery();
+
+			while (rs.next()) {
+				result = rs.getString("rma");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("===cannot find rma=====");
+		} finally {
+			shutdown();
+		}
+		System.out.println("RMA : " + result);
+		return result;
+	}
+	
+	public boolean MoveToScrap01(String rmaNum, String cposn, String ppid, String pn, String sn, String revision,
+			String specialInstruction, String mfgPN, String lot, String description, String problemCode, String dps) {
+		String FETCH_RMA_QUERY = "INSERT INTO scrap01_table VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
+		boolean result = false;
+		try {
+			dbconnection = getConnectionAWS();
+			dbconnection.setAutoCommit(false);
+			pst = dbconnection.prepareStatement(FETCH_RMA_QUERY);
+			pst.setString(1, rmaNum);
+			pst.setString(2, cposn);
+			pst.setString(3, ppid);
+			pst.setString(4, pn);
+
+			pst.setString(5, sn);
+			pst.setString(6, revision);
+			pst.setString(7, specialInstruction);
+
+			pst.setString(8, mfgPN);
+			pst.setString(9, lot);
+			pst.setString(10, description);
+			pst.setString(11, problemCode);
+			pst.setString(12, dps);
+			pst.setString(13, "User ID");
+			pst.setString(14, new Date().toLocaleString());
+			pst.executeUpdate();
+			// delete record in pre_alert table
+			deletaPhysicalRecord(dbconnection, ppid);
+			// add to record table
+			addToRecord(dbconnection, sn, pn, ppid, dps);
+			dbconnection.commit();
+			result = true;
+
+		} catch (Exception e) {
+			System.out.println(e);
+		} finally {
+			shutdown();
+		}
+
+		return result;
+	}
+	
 }

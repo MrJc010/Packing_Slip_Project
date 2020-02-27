@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.DateUtil;
@@ -117,7 +118,12 @@ public class ExcelService {
 				String co = row.getCell(CO_COL_NUM_PPID).getStringCellValue();
 				String sys_date_rec = row.getCell(SYS_DATE_COL_NUM_PPID).toString();
 				String lot = row.getCell(LOT_COL_NUM_PPID).getStringCellValue();
-				String dps = row.getCell(DPS_COL_NUM_PPID).getStringCellValue();
+				String dps = "";
+				try {
+					dps =row.getCell(DPS_COL_NUM_PPID).getStringCellValue();
+				}catch(Exception e){
+					dps =row.getCell(DPS_COL_NUM_PPID).getNumericCellValue()+"";
+				}
 				String problem_code = row.getCell(PROPBLEM_CODE_COL_NUM_PPID).getStringCellValue();
 				String problem_desc = row.getCell(PROPBLEM_DES_COL_NUM_PPID).toString();
 
@@ -162,7 +168,7 @@ public class ExcelService {
 				String lot = row.getCell(LOT_COL_NUM).getStringCellValue();
 				int qty = (int) row.getCell(QTY_COL_NUM).getNumericCellValue();
 
-				rMANumber = row.getCell(RMA_COL).getStringCellValue()!=null?row.getCell(RMA_COL).getStringCellValue():"";
+				rMANumber =row.getCell(RMA_COL).getStringCellValue();
 				PackingSlip temp = new PackingSlip(pn, po, lot, qty, rMANumber);
 				
 				listOfRow.add(temp);			

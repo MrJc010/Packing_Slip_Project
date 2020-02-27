@@ -5,7 +5,6 @@
 <section>
 
 
-
 	<div class="container">
 
 
@@ -129,12 +128,29 @@
 				<button type="submit" class="btn btn-primary">
 					<strong>Receive Item</strong>
 				</button>
+				${Alert_More_Than_5}
+				<c:set var="salary" scope="session" value="${Alert_More_Than_5}" />
+				<c:if test="${re == \"More Than 5\"}">
+					<script type="text/javascript">
+						var msg = "This item is received more than 5 times. Will move to Scrap01.";
+						alert(msg);
+					</script>
+				</c:if>
+
+				<c:if test="${re == \"Successfull\"}">
+					<script type="text/javascript">
+						var msg = "Item received succcessfully. Move to IQC.";
+						alert(msg);
+					</script>
+				</c:if>
 				<br>
 
 
 			</div>
 
 		</form>
+
+
 
 	</div>
 

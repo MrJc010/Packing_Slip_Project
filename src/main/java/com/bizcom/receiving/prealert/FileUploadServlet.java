@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -33,6 +34,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.bizcom.database.DBHandler;
 import com.bizcom.excel.ExcelService;
+import com.bizcom.packingslip.PackingSlip;
 import com.bizcom.ppid.PPID;
 
 /**
@@ -40,7 +42,7 @@ import com.bizcom.ppid.PPID;
  * 
  */
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 10, maxFileSize = 1024 * 1024 * 50, maxRequestSize = 1024 * 1024
-* 100)
+		* 100)
 @WebServlet(urlPatterns = "/pre_alert")
 public class FileUploadServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -70,33 +72,55 @@ public class FileUploadServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
-		//		request.setAttribute("setHidden", "hidden");
+		// request.setAttribute("setHidden", "hidden");
 
 		pathFile = "";
 		if (request.getSession().getAttribute("PathFile") != null) {
 			pathFile = request.getSession().getAttribute("PathFile").toString();
 			request.setAttribute("urll", pathFile);
 			String rmaPara = request.getParameter("RMA Number");
-			//excelService.read(pathFile);
-			System.out.println(pathFile);
+			// excelService.read(pathFile);
+
 			excelService.read(pathFile);
-			List<PPID> list = excelService.getListOfRowPPID();
-			System.out.println(list.toString());
-			if (rmaPara != null) {
-				saveRMA(pathFile, rmaPara);
+
+			List<PPID> list = new ArrayList<>();
+	
+			list.addAll(excelService.getListOfRowPPID());
+
+			String isExported = "";
+			PPID tempPPID = list.get(0);
+			String ppidTest = tempPPID.getPpidNumber();
+			String pnTest = tempPPID.getPnNumber();
+			String lotTest = tempPPID.getLotNumber();
+			isExported = dbHandler.isRecordPreAlertExist(ppidTest, pnTest, lotTest);
+
+			if (rmaPara !=null && isExported.isEmpty()) {
+
+				System.out.println("RUN NEW RMA");
 				
+
 //				Multi thread = new Multi(list, rmaPara, excelService, dbHandler);
 //				thread.start();
-				
+
 				try {
 					dbHandler.ppidToDB(excelService.appendRMAForPPID(list, rmaPara));
 				} catch (ClassNotFoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				
+				saveRMA(pathFile, rmaPara);
+				
+			}else {
+				System.out.println("uploaded show uppp");
 			}
-			refeshPackingSlip(request, response, pathFile);
-			refeshPPIDs(request, response, pathFile);
+			try {
+				refeshPackingSlip(request, response, pathFile);
+				refeshPPIDs(request, response, pathFile);
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.out.println(e.getMessage());
+			}
 
 		}
 
@@ -117,6 +141,7 @@ public class FileUploadServlet extends HttpServlet {
 
 	}
 
+	// TODO: Validate if file have RMA
 	public void saveRMA(String path, String rma) throws IOException {
 		FileInputStream inputStream = new FileInputStream(new File(path));
 		Workbook workbook = null;
@@ -165,8 +190,8 @@ public class FileUploadServlet extends HttpServlet {
 		outFile.close();
 		inputStream.close();
 		workbook.close();
-		
-		excelService.read(path);
+
+//		excelService.read(path);
 		// response.sendRedirect(request.getContextPath()+"/packingslip");
 	}
 
@@ -289,6 +314,7 @@ public class FileUploadServlet extends HttpServlet {
 
 	public void saveFile(HttpServletRequest request, HttpServletResponse response, String newRMA)
 			throws ServletException, IOException {
+
 		int PN_COL_NUM;
 		int PO_COL_NUM;
 		int LOT_COL_NUM;
@@ -355,21 +381,21 @@ public class FileUploadServlet extends HttpServlet {
 			return false;
 		}
 	}
-	
 
-
-	static class Multi extends Thread{
+	static class Multi extends Thread {
 		static String rmaPara;
 		static List<PPID> list;
 		static ExcelService excelService;
 		static DBHandler dbHandler;
+
 		public Multi(List<PPID> list, String rmaPara, ExcelService excelService, DBHandler dbHandler) {
 			Multi.list = list;
 			Multi.rmaPara = rmaPara;
 			Multi.excelService = excelService;
 			Multi.dbHandler = dbHandler;
 		}
-		public void run(){
+
+		public void run() {
 			try {
 				dbHandler.ppidToDB(excelService.appendRMAForPPID(list, rmaPara));
 			} catch (ClassNotFoundException | IOException e) {
@@ -378,5 +404,5 @@ public class FileUploadServlet extends HttpServlet {
 			}
 		}
 
-	}  
+	}
 }
