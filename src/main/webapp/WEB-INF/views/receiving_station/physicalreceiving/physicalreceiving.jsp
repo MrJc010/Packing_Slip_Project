@@ -8,6 +8,7 @@
 
 	<div class="container">
 
+
 		<form method="POST"
 			action="<%=request.getContextPath()%>/physicalreceiving">
 
@@ -49,8 +50,8 @@
 				<label for="mfgPN" class="col-sm-2 col-form-label">Manufactoring
 					PN</label>
 				<div class="col-sm-8">
-					<input type="text" id="mfgPN" class="form-control"
-						name="specialInstruction" placeholder="Manufactoring PN" required>
+					<input type="text" id="manufactoring" class="form-control"
+						name="manufactoring" placeholder="Manufactoring PN" required>
 				</div>
 			</div>
 
@@ -128,7 +129,11 @@
 				<button type="submit" class="btn btn-primary">
 					<strong>Receive Item</strong>
 				</button>
+				<br>
+
+
 			</div>
+
 		</form>
 
 	</div>

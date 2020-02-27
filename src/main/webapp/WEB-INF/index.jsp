@@ -4,7 +4,7 @@
 </c:import>
 
 
-<section>
+<section style="height: 60vh;">
 	<div class="container mt-5 mb-5">
 
 		<h2>This is Home Page</h2>

@@ -38,10 +38,10 @@ public class DBHandler {
 	 * getConnectionAWS method makes a connection to AWS RDS
 	 * 
 	 * @return an object connection to AWS
-	 * @throws ClassNotFoundException 
+	 * @throws ClassNotFoundException
 	 */
 	public Connection getConnectionAWS() throws ClassNotFoundException {
-		//Class.forName("com.mysql.jdbc.Driver");
+		// Class.forName("com.mysql.jdbc.Driver");
 		try {
 			dbconnection = DriverManager.getConnection(
 					"jdbc:mysql://" + Configs.dbHost + ":" + Configs.dbPort + "/" + Configs.dbName, Configs.dbUsername,
@@ -122,63 +122,20 @@ public class DBHandler {
 
 	public boolean ppidToDB(List<PPID> listPPID) throws ClassNotFoundException {
 		boolean result = false;
+
 		String INSERT_PPID = "INSERT INTO pre_alert VALUES";
-//		
-//		for (PPID aa : listPPID) {
-//			try {
-//				dbconnection = getConnectionAWS();
-//				dbconnection.setAutoCommit(false);
-//				pst = dbconnection.prepareStatement(INSERT_PPID);
-//				pst.setString(1, aa.getPpidNumber());
-//				pst.setString(2, aa.getPnNumber());
-//				pst.setString(3, aa.getCoNumber());
-//				pst.setString(4, aa.getDateReceived());
-//				pst.setString(5, aa.getLotNumber());
-//				pst.setString(6, aa.getDpsNumber());
-//				pst.setString(7, aa.getProblemCode());
-//				pst.setString(8, aa.getProblemDescription());
-//				pst.setString(9, aa.getRma());
-//				pst.executeUpdate();
-//				dbconnection.commit();
-//				result = true;
-//
-//			} catch (Exception e) {
-//				System.out.println(e.getMessage());
-//			} finally {
-//				shutdown();
-//			}
-//		}
 		for (PPID aa : listPPID) {
 			INSERT_PPID+=" ('"+aa.getPpidNumber()+"','"+aa.getPnNumber()+"','"+aa.getCoNumber()+"','"
 				+ aa.getDateReceived()+"','"+aa.getLotNumber()+"','"+aa.getDpsNumber()+"','"+
 				aa.getProblemCode()+"','"+aa.getProblemDescription()+"','"+aa.getRma()+"'),";
-//				pst.setString(1, aa.getPpidNumber());
-//				pst.setString(2, aa.getPnNumber());
-//				pst.setString(3, aa.getCoNumber());
-//				pst.setString(4, aa.getDateReceived());
-//				pst.setString(5, aa.getLotNumber());
-//				pst.setString(6, aa.getDpsNumber());
-//				pst.setString(7, aa.getProblemCode());
-//				pst.setString(8, aa.getProblemDescription());
-//				pst.setString(9, aa.getRma());
-//				pst.executeUpdate();
-//				dbconnection.commit();
-				//result = true;
-
-//			} catch (Exception e) {
-//				System.out.println(e.getMessage());
-//			} finally {
-//				shutdown();
-//			}
 		}
 		dbconnection = getConnectionAWS();
-		//dbconnection.setAutoCommit(false);
-		
 		INSERT_PPID = INSERT_PPID.substring(0, INSERT_PPID.length() - 1);
 		INSERT_PPID+=";";
 		try {
 			pst = dbconnection.prepareStatement(INSERT_PPID);
 			pst.executeUpdate();
+			result = true;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -225,18 +182,17 @@ public class DBHandler {
 	}
 
 	public void deletaAPPID(Connection conn, String ppid) throws SQLException {
-		String DELETE_A_PPID = "DELETE FROM ppid WHERE ppid=?";
+		String DELETE_A_PPID = "DELETE FROM pre_alert WHERE ppid=?";
 
 		pst = conn.prepareStatement(DELETE_A_PPID);
 		pst.setString(1, ppid);
 		pst.executeUpdate();
 	}
 
-	public void PhysicalReceive(String rmaNum, String cposn, String ppid, String pn, String sn, String revision,
+	public boolean PhysicalReceive(String rmaNum, String cposn, String ppid, String pn, String sn, String revision,
 			String specialInstruction, String mfgPN, String lot, String description, String problemCode, String dps) {
-		List<Item> result = new ArrayList<>();
 		String FETCH_RMA_QUERY = "INSERT INTO physicalRecevingDB VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
+		boolean result = false;
 		try {
 			dbconnection = getConnectionAWS();
 			dbconnection.setAutoCommit(false);
@@ -259,12 +215,15 @@ public class DBHandler {
 			deletaAPPID(dbconnection, ppid);
 
 			dbconnection.commit();
+			result = true;
 
 		} catch (Exception e) {
 			System.out.println(e);
 		} finally {
 			shutdown();
 		}
+
+		return result;
 	}
 
 }
