@@ -71,21 +71,6 @@ public class PhysicalReceiving extends HttpServlet {
 		} else {
 			response.sendRedirect(request.getContextPath() + "/searchitem");
 		}
-		
-//		int count = dbhandler.getRecordCount(sn, ppid);
-//		if (count >= 5) {
-//			// alert show up
-//			request.getSession().setAttribute("Alert_More_Than_5", "More Than 5");
-//			System.out.println("MORE THAN 5 detected");
-////			dbhandler.MoveToScrap01(rmaNum, cposn, ppid, pn, sn, revision, specialInstruction, mfgPcN, lot,
-////					description, problemCode, dps);
-//		
-//
-//		} else {
-//			request.getSession().setAttribute("Alert_More_Than_5", "Successfull");
-//			System.out.println("Successfull");
-//
-//		}
 
 	}
 
@@ -110,11 +95,8 @@ public class PhysicalReceiving extends HttpServlet {
 			String mfgPcN = request.getParameter("manufactoring");
 			String sn = request.getParameter("snNumber");
 
-			// add and delete from pre-alert, also add to record table
 			dbhandler.PhysicalReceive(rmaNum, cposn, ppid, pn, sn, revision, specialInstruction, mfgPcN, lot,
 					description, problemCode, dps);
-
-			
 
 			response.sendRedirect(request.getContextPath() + "/searchitem");
 
