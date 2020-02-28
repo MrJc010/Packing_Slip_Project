@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
+import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -24,14 +25,29 @@ public class PhysicalReceiving extends HttpServlet {
 	private static final long serialVersionUID = 1365646760784374827L;
 	private DBHandler dbhandler = new DBHandler();
 	private List<Item> myList;
+	private boolean flag = false;
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		request.getSession().setAttribute("Alert_More_Than_5", "");
+		request.getSession().setAttribute("Successfull", "");
+
 		myList = new ArrayList<>();
 		String ppid = request.getParameter("ppid");
 		String dps = request.getParameter("dps");
+		int count = dbhandler.getRecordCount(ppid);
+		response.setContentType("text/html");
+		PrintWriter out = response.getWriter(); 
+		if (count >= 5) {
+			// alert show up
+			request.getSession().setAttribute("Alert_More_Than_5", "More Than 5");
+			System.out.println("MORE THAN 5 detected");
+		
+			
+			flag = true;
 
+		}
 		HttpSession session = request.getSession();
 		if (!ppid.isEmpty() && !dps.isEmpty()) {
 
@@ -97,11 +113,23 @@ public class PhysicalReceiving extends HttpServlet {
 
 			dbhandler.PhysicalReceive(rmaNum, cposn, ppid, pn, sn, revision, specialInstruction, mfgPcN, lot,
 					description, problemCode, dps);
+			if (flag) {
+
+				dbhandler.MoveToScrap01(rmaNum, cposn, ppid, pn, sn, revision, specialInstruction, mfgPcN, lot,
+						description, problemCode, dps);
+
+			} else {
+
+				System.out.println("Successfull");
+				request.getSession().setAttribute("Successfull", "Successfull");
+			}
 
 			response.sendRedirect(request.getContextPath() + "/searchitem");
 
 		} else {
 			System.out.println("Duplicate Information");
 		}
+		
+
 	}
 }

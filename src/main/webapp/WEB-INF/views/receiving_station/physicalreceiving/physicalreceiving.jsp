@@ -5,6 +5,8 @@
 <section>
 
 
+
+
 	<div class="container">
 
 
@@ -125,7 +127,8 @@
 				</div>
 			</div>
 			<div class="row justify-content-center">
-				<button type="submit" class="btn btn-primary">
+				<button type="submit" class="btn btn-primary"
+					onclick="if(${Alert_More_Than_5}== 'More Than 5') if(!confirm('Are you sure to export?')) return false">
 					<strong>Receive Item</strong>
 				</button>
 			</div>
