@@ -13,6 +13,37 @@
 		<form method="POST"
 			action="<%=request.getContextPath()%>/physicalreceiving">
 
+			<a id="alert" target="${Alert_More_Than_5}"></a>
+			<script type="text/javascript">
+				function confirmation() {
+					var x = document.getElementById("alert").getAttribute("target");
+					if (x === "More Than 5") {
+						if (!confirm("This item is returned more than 5 times.\nItem will be move to Scrap01 Location")) {
+					        return false;
+					    }
+					}
+				}
+			</script>
+
+			<%-- 			<c:set var="morethanfive" scope="session"
+				value="${Alert_More_Than_5}" />
+			<c:if test="${Alert_More_Than_5 == \"More Than 5\"}">
+				<!-- <script type="text/javascript">
+					var msg = "This item is returned more than 5 times.\nItem will be move to Scrap01 Location";
+					confirm(msg);
+				</script> -->
+
+				<script type="text/javascript">
+				function confirmation(){
+					if (!confirm(msg)) {
+				        return false;
+				    }
+				}
+				
+			
+				</script>
+			</c:if> --%>
+
 			<div class="form-group row">
 				<label for="CPO#" class="col-sm-2 col-form-label">CPO#</label>
 				<div class="col-sm-8">
@@ -128,20 +159,12 @@
 			</div>
 			<div class="row justify-content-center">
 				<button type="submit" class="btn btn-primary"
-					onclick="if(${Alert_More_Than_5}== 'More Than 5') if(!confirm('Are you sure to export?')) return false">
+					onclick="return confirmation();">
 					<strong>Receive Item</strong>
 				</button>
 			</div>
 
 		</form>
-		
-		<c:set var="morethanfive" scope="session" value="${Alert_More_Than_5}" />
-			<c:if test="${re == \"More Than 5\"}">
-				<script type="text/javascript">
-					var msg = "This item is returned more than 5 times.\nItem will be move to Scrap01 Location";
-					confirm(msg);
-				</script>
-			</c:if>
 
 
 
