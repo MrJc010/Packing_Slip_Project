@@ -14,6 +14,29 @@ public class Item {
 	private String rma;
 	private String dps;
 	private String mfgPN;
+	private String userId;
+	private String date;
+
+	public Item(String cPO_SN, String ppid, String pn, String sn, String revision, String description,
+			String specialInstruction, String co, String lot, String problemCode, String rma, String dps, String mfgPN,
+			String userId, String date) {
+
+		CPO_SN = cPO_SN;
+		this.ppid = ppid;
+		this.pn = pn;
+		this.sn = sn;
+		this.revision = revision;
+		this.description = description;
+		this.specialInstruction = specialInstruction;
+		this.co = co;
+		this.lot = lot;
+		this.problemCode = problemCode;
+		this.rma = rma;
+		this.dps = dps;
+		this.mfgPN = mfgPN;
+		this.userId = userId;
+		this.date = date;
+	}
 
 	public Item(String CPO_SN, String ppid, String pn, String sn, String revision, String description,
 			String specialInstruction, String co, String lot, String problemCode, String rma, String dps, String mfgPN) {
