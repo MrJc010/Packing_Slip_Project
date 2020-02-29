@@ -13,6 +13,37 @@
 		<form method="POST"
 			action="<%=request.getContextPath()%>/physicalreceiving">
 
+			<a id="alert" target="${Alert_More_Than_5}"></a>
+			<script type="text/javascript">
+				function confirmation() {
+					var x = document.getElementById("alert").getAttribute("target");
+					if (x === "More Than 5") {
+						if (!confirm("This item is returned more than 5 times.\nItem will be move to Scrap01 Location")) {
+					        return false;
+					    }
+					}
+				}
+			</script>
+
+			<%-- 			<c:set var="morethanfive" scope="session"
+				value="${Alert_More_Than_5}" />
+			<c:if test="${Alert_More_Than_5 == \"More Than 5\"}">
+				<!-- <script type="text/javascript">
+					var msg = "This item is returned more than 5 times.\nItem will be move to Scrap01 Location";
+					confirm(msg);
+				</script> -->
+
+				<script type="text/javascript">
+				function confirmation(){
+					if (!confirm(msg)) {
+				        return false;
+				    }
+				}
+				
+			
+				</script>
+			</c:if> --%>
+
 			<div class="form-group row">
 				<label for="CPO#" class="col-sm-2 col-form-label">CPO#</label>
 				<div class="col-sm-8">
@@ -126,53 +157,11 @@
 						placeholder="DPS Number" name="dpnNumber" disabled>
 				</div>
 			</div>
-			${Alert_More_Than_5}== 'More Than 5'
 			<div class="row justify-content-center">
 				<button type="submit" class="btn btn-primary"
-					onclick="if(${Alert_More_Than_5}== 'More Than 5') if(!confirm('Are you sure to export?')) return false">
+					onclick="return confirmation();">
 					<strong>Receive Item</strong>
 				</button>
-
-				<c:set var="salary" scope="session" value="${Alert_More_Than_5}" />
-				<c:if test="${Alert_More_Than_5 == \"More Than 5\"}">
-					<script type="text/javascript">
-					if (str.localeCompare("More Than 5") === 0) {
-						var retVal = confirm("This item is received more than 5 times. Will move to Scrap01");
-						if (retVal == true) {
-							alert("Your Recieved is processed...");
-							return true;
-						} else {
-							alert("You does not want to continue?");
-							return false;
-						}
-					}
-					</script>
-				</c:if>
-
-
-				<br>
-
-
-				<script>
-				console.log("here111");
-					function getConfirmation() {
-						var str = "${Alert_More_Than_5}";
-						console.log(str);
-						console.log("here");
-						if (str.localeCompare("More Than 5") === 0) {
-							var retVal = confirm("This item is received more than 5 times. Will move to Scrap01");
-							if (retVal == true) {
-								alert("Your Recieved is processed...");
-								return true;
-							} else {
-								alert("You does not want to continue?");
-								return false;
-							}
-
-						}
-					}
-				</script>
-
 			</div>
 
 		</form>

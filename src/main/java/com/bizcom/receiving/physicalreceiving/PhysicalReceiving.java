@@ -30,25 +30,22 @@ public class PhysicalReceiving extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		HttpSession session = request.getSession();
 		request.getSession().setAttribute("Alert_More_Than_5", "");
 		request.getSession().setAttribute("Successfull", "");
+		flag = false;
 
 		myList = new ArrayList<>();
 		String ppid = request.getParameter("ppid");
 		String dps = request.getParameter("dps");
 		int count = dbhandler.getRecordCount(ppid);
-		response.setContentType("text/html");
-		PrintWriter out = response.getWriter(); 
 		if (count >= 5) {
 			// alert show up
 			request.getSession().setAttribute("Alert_More_Than_5", "More Than 5");
 			System.out.println("MORE THAN 5 detected");
-		
-			
 			flag = true;
-
 		}
-		HttpSession session = request.getSession();
+		
 		if (!ppid.isEmpty() && !dps.isEmpty()) {
 
 			myList.addAll(dbhandler.fetchRMA(ppid, dps));
@@ -111,17 +108,12 @@ public class PhysicalReceiving extends HttpServlet {
 			String mfgPcN = request.getParameter("manufactoring");
 			String sn = request.getParameter("snNumber");
 
-			// add and delete from pre-alert, also add to record table
 			dbhandler.PhysicalReceive(rmaNum, cposn, ppid, pn, sn, revision, specialInstruction, mfgPcN, lot,
 					description, problemCode, dps);
-
 			if (flag) {
-
 				dbhandler.MoveToScrap01(rmaNum, cposn, ppid, pn, sn, revision, specialInstruction, mfgPcN, lot,
 						description, problemCode, dps);
-
 			} else {
-
 				System.out.println("Successfull");
 				request.getSession().setAttribute("Successfull", "Successfull");
 			}
