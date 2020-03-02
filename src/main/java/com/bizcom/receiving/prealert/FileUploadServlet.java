@@ -36,6 +36,7 @@ import com.bizcom.database.DBHandler;
 import com.bizcom.excel.ExcelService;
 import com.bizcom.packingslip.PackingSlip;
 import com.bizcom.ppid.PPID;
+import com.bizcom.services.ExcelValidation;
 
 /**
  * A Java servlet that handles file upload from client.
@@ -84,7 +85,7 @@ public class FileUploadServlet extends HttpServlet {
 			excelService.read(pathFile);
 
 			List<PPID> list = new ArrayList<>();
-	
+
 			list.addAll(excelService.getListOfRowPPID());
 
 			String isExported = "";
@@ -94,10 +95,9 @@ public class FileUploadServlet extends HttpServlet {
 			String lotTest = tempPPID.getLotNumber();
 			isExported = dbHandler.isRecordPreAlertExist(ppidTest, pnTest, lotTest);
 
-			if (rmaPara !=null && isExported.isEmpty()) {
+			if (rmaPara != null && isExported.isEmpty()) {
 
 				System.out.println("RUN NEW RMA");
-				
 
 //				Multi thread = new Multi(list, rmaPara, excelService, dbHandler);
 //				thread.start();
@@ -108,11 +108,11 @@ public class FileUploadServlet extends HttpServlet {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
+
 				saveRMA(pathFile, rmaPara);
-				
-			}else {
-				System.out.println("uploaded show uppp");
+
+			} else {
+//				System.out.println("uploaded show uppp");
 			}
 			try {
 				refeshPackingSlip(request, response, pathFile);
@@ -252,8 +252,14 @@ public class FileUploadServlet extends HttpServlet {
 						request.getSession().setAttribute("PathFile", filePath);
 						request.getSession().setAttribute("Path", uploadPath);
 						request.getSession().setAttribute("Name", fileName);
-						// saves the file on disk
+						ExcelValidation validation = new ExcelValidation();
 						item.write(storeFile);
+						System.out.println("filePath : " + filePath);
+						if (validation.prealertValidation(filePath)) {
+							System.out.println("=====test ginsfn sdf============");
+						} else {
+							System.out.println(" ==== erroor not match ====");
+						}
 
 					}
 				}
@@ -297,7 +303,9 @@ public class FileUploadServlet extends HttpServlet {
 	public void refeshPackingSlip(HttpServletRequest request, HttpServletResponse response, String path)
 			throws IOException {
 		excelService.read(path);
-		request.setAttribute("rows", excelService.getListOfRowPackingSlip());
+		List<PackingSlip> packingSlips = excelService.getListOfRowPackingSlip();
+		packingSlips.remove(packingSlips.size() - 1);
+		request.setAttribute("rows", packingSlips);
 
 	}
 
