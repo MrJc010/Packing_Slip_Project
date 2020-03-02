@@ -416,7 +416,6 @@ public class DBHandler {
 		return result;
 	}
 
-
 	public List<PreAlertItem> fetchPreAlert(String byRMA) {
 		List<PreAlertItem> result = new ArrayList<>();
 		String FETCH_ALL_PREALERT = "SELECT * FROM pre_alert";
@@ -466,7 +465,7 @@ public class DBHandler {
 		} catch (Exception e) {
 			System.out.println("FAIL getRMACount" + e.getMessage());
 
-		}finally {
+		} finally {
 			shutdown();
 		}
 
@@ -486,13 +485,41 @@ public class DBHandler {
 		} catch (Exception e) {
 			System.out.println("FAIL createNewRMA" + e.getMessage());
 
-		}finally {
+		} finally {
 			shutdown();
 		}
 
 		return result;
 	}
 
+	// ====== MICI ======
+
+	public String[] getMICIInfo(String ppid) {
+		String query = "SELECT * FROM physicalRecevingDB WHERE ppid=?";
+		String[] result = new String[3];
+
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(query);
+			pst.setString(1, ppid);
+			rs = pst.executeQuery();
+			while (rs.next()) {
+				result[0] = rs.getString("problemCode");
+				result[1] = rs.getString("desc");
+				result[2] = rs.getString("sn");
+			}
+		} catch (Exception e) {
+			System.out.println("FAIL getMICIInfo" + e.getMessage());
+
+		} finally {
+			shutdown();
+		}
+
+		return result;
+
+	}
+
+	
 	public class multi extends Thread {
 		PreparedStatement pst;
 
