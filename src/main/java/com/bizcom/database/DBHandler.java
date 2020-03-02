@@ -54,7 +54,7 @@ public class DBHandler {
 		}
 
 		if (dbconnection != null) {
-//			System.out.println("SUCCESS!");
+			//			System.out.println("SUCCESS!");
 		} else {
 			System.out.println("Fail to connect to AWS at GetConnection");
 		}
@@ -89,7 +89,7 @@ public class DBHandler {
 			try {
 
 				dbconnection.close();
-//				LOGGER.info("====Database close====");
+				//				LOGGER.info("====Database close====");
 			} catch (SQLException e) {
 				System.out.println("FAILLL");
 			}
@@ -122,28 +122,28 @@ public class DBHandler {
 		return flag;
 	}
 
-//	public boolean ppidToDB(List<PPID> listPPID) throws ClassNotFoundException {
-//		boolean result = false;
-//		String INSERT_PPID = "INSERT INTO pre_alert VALUES";
-//		for (PPID aa : listPPID) {
-//			INSERT_PPID += " ('" + aa.getPpidNumber() + "','" + aa.getPnNumber() + "','" + aa.getCoNumber() + "','"
-//					+ aa.getDateReceived() + "','" + aa.getLotNumber() + "','" + aa.getDpsNumber() + "','"
-//					+ aa.getProblemCode() + "','" + aa.getProblemDescription() + "','" + aa.getRma() + "'),";
-//		}
-//		dbconnection = getConnectionAWS();
-//		INSERT_PPID = INSERT_PPID.substring(0, INSERT_PPID.length() - 1);
-//		INSERT_PPID += ";";
-//		try {
-//			pst = dbconnection.prepareStatement(INSERT_PPID);
-//			pst.executeUpdate();
-//			result = true;
-//		} catch (SQLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		return result;
-//	}
-	
+	//	public boolean ppidToDB(List<PPID> listPPID) throws ClassNotFoundException {
+	//		boolean result = false;
+	//		String INSERT_PPID = "INSERT INTO pre_alert VALUES";
+	//		for (PPID aa : listPPID) {
+	//			INSERT_PPID += " ('" + aa.getPpidNumber() + "','" + aa.getPnNumber() + "','" + aa.getCoNumber() + "','"
+	//					+ aa.getDateReceived() + "','" + aa.getLotNumber() + "','" + aa.getDpsNumber() + "','"
+	//					+ aa.getProblemCode() + "','" + aa.getProblemDescription() + "','" + aa.getRma() + "'),";
+	//		}
+	//		dbconnection = getConnectionAWS();
+	//		INSERT_PPID = INSERT_PPID.substring(0, INSERT_PPID.length() - 1);
+	//		INSERT_PPID += ";";
+	//		try {
+	//			pst = dbconnection.prepareStatement(INSERT_PPID);
+	//			pst.executeUpdate();
+	//			result = true;
+	//		} catch (SQLException e) {
+	//			// TODO Auto-generated catch block
+	//			e.printStackTrace();
+	//		}
+	//		return result;
+	//	}
+
 	public boolean ppidToDB(List<PPID> listPPID) throws SQLException, ClassNotFoundException {
 		boolean result = false;
 		String INSERT_PPID = "INSERT INTO pre_alert VALUES(?,?,?,?,?,?,?,?,?)";
@@ -168,13 +168,13 @@ public class DBHandler {
 				m.start();
 				result = true;
 				//dbconnection.commit();
-            }
+			}
 		}
 		//pst.executeBatch();
 
 		return result;
 	}
-	
+
 	public boolean checkArray(int[] a) {
 		if(a.length == 0) return false;
 		if(a.length == 1) return a[0]==1;
@@ -408,7 +408,7 @@ public class DBHandler {
 
 		return result;
 	}
-	
+
 	public class multi extends Thread{
 		PreparedStatement pst;
 		public multi(PreparedStatement pst) {
@@ -424,6 +424,7 @@ public class DBHandler {
 				e.printStackTrace();
 			}
 		}
+	}	
 	public List<PreAlertItem> fetchPreAlert(String byRMA) {
 		List<PreAlertItem> result = new ArrayList<>();
 		String FETCH_ALL_PREALERT = "SELECT * FROM pre_alert";
@@ -463,7 +464,7 @@ public class DBHandler {
 	public int getRMACount(String pattern) {
 		String query = "SELECT COUNT(*)  FROM rmaTable WHERE rma LIKE '"+pattern +"%'";
 		int result = 0;
-		
+
 		try {
 			dbconnection = getConnectionAWS();
 			pst = dbconnection.prepareStatement(query);
@@ -473,14 +474,14 @@ public class DBHandler {
 			}			
 		}catch(Exception e) {
 			System.out.println("FAIL getRMACount" + e.getMessage());
-			
+
 		}finally {
 			shutdown();
 		}
-		
+
 		return result;
 	}
-	
+
 	public boolean createNewRMA(String rma) {
 		String query = "INSERT INTO rmaTable VALUES(?,?)";
 		boolean result = false;
@@ -493,11 +494,11 @@ public class DBHandler {
 			result = true;			
 		}catch(Exception e) {
 			System.out.println("FAIL createNewRMA" + e.getMessage());
-			
+
 		}finally {
 			shutdown();
 		}
-		
+
 		return result;
 	}
 }
