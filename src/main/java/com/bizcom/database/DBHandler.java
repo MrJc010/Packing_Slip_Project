@@ -122,28 +122,67 @@ public class DBHandler {
 		return flag;
 	}
 
-	public boolean ppidToDB(List<PPID> listPPID) throws ClassNotFoundException {
+//	public boolean ppidToDB(List<PPID> listPPID) throws ClassNotFoundException {
+//		boolean result = false;
+//		String INSERT_PPID = "INSERT INTO pre_alert VALUES";
+//		for (PPID aa : listPPID) {
+//			INSERT_PPID += " ('" + aa.getPpidNumber() + "','" + aa.getPnNumber() + "','" + aa.getCoNumber() + "','"
+//					+ aa.getDateReceived() + "','" + aa.getLotNumber() + "','" + aa.getDpsNumber() + "','"
+//					+ aa.getProblemCode() + "','" + aa.getProblemDescription() + "','" + aa.getRma() + "'),";
+//		}
+//		dbconnection = getConnectionAWS();
+//		INSERT_PPID = INSERT_PPID.substring(0, INSERT_PPID.length() - 1);
+//		INSERT_PPID += ";";
+//		try {
+//			pst = dbconnection.prepareStatement(INSERT_PPID);
+//			pst.executeUpdate();
+//			result = true;
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		return result;
+//	}
+	
+	public boolean ppidToDB(List<PPID> listPPID) throws SQLException, ClassNotFoundException {
 		boolean result = false;
-
-		String INSERT_PPID = "INSERT INTO pre_alert VALUES";
-		for (PPID aa : listPPID) {
-			INSERT_PPID += " ('" + aa.getPpidNumber() + "','" + aa.getPnNumber() + "','" + aa.getCoNumber() + "','"
-					+ aa.getDateReceived() + "','" + aa.getLotNumber() + "','" + aa.getDpsNumber() + "','"
-					+ aa.getProblemCode() + "','" + aa.getProblemDescription() + "','" + aa.getRma() + "'),";
-		}
+		String INSERT_PPID = "INSERT INTO pre_alert VALUES(?,?,?,?,?,?,?,?,?)";
 		dbconnection = getConnectionAWS();
-		INSERT_PPID = INSERT_PPID.substring(0, INSERT_PPID.length() - 1);
-		INSERT_PPID += ";";
-		try {
-			pst = dbconnection.prepareStatement(INSERT_PPID);
-			pst.executeUpdate();
-			result = true;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		//dbconnection.setAutoCommit(false);
+		pst = dbconnection.prepareStatement(INSERT_PPID);
+		int i = 0;
+		for (PPID aa : listPPID) {
+			pst.setString(1, aa.getPpidNumber());
+			pst.setString(2, aa.getPnNumber());
+			pst.setString(3, aa.getCoNumber());
+			pst.setString(4, aa.getDateReceived());
+			pst.setString(5, aa.getLotNumber());
+			pst.setString(6, aa.getDpsNumber());
+			pst.setString(7, aa.getProblemCode());
+			pst.setString(8, aa.getProblemDescription());
+			pst.setString(9, aa.getRma());
+			pst.addBatch();
+			i++;
+			if (i == listPPID.size()) {
+				multi m = new multi(pst);
+				m.start();
+				result = true;
+				//dbconnection.commit();
+            }
 		}
+		//pst.executeBatch();
 
 		return result;
+	}
+	
+	public boolean checkArray(int[] a) {
+		if(a.length == 0) return false;
+		if(a.length == 1) return a[0]==1;
+		if(a[0] == 0) return false; 
+		for(int i = 1; i < a.length; i++) {
+			if(a[0] != a[i]) return false;
+		}
+		return true;
 	}
 
 	public List<Item> fetchRMA(String ppidN, String dpsN) {
@@ -300,6 +339,7 @@ public class DBHandler {
 			pst.setInt(1, newCount);
 			pst.setString(2, sn);
 		}
+
 		pst.executeUpdate();
 	}
 
@@ -368,7 +408,22 @@ public class DBHandler {
 
 		return result;
 	}
-
+	
+	public class multi extends Thread{
+		PreparedStatement pst;
+		public multi(PreparedStatement pst) {
+			this.pst = pst;
+		}
+		public void run() {
+			System.out.println("running...");
+			try {
+				int[] a = pst.executeBatch();
+				System.out.println(a.length);	
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	public List<PreAlertItem> fetchPreAlert(String byRMA) {
 		List<PreAlertItem> result = new ArrayList<>();
 		String FETCH_ALL_PREALERT = "SELECT * FROM pre_alert";

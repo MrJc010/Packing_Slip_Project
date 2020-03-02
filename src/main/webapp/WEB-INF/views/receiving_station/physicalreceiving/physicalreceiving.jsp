@@ -12,7 +12,6 @@
 
 		<form method="POST"
 			action="<%=request.getContextPath()%>/physicalreceiving">
-
 			<a id="alert" target="${Alert_More_Than_5}"></a>
 			<script type="text/javascript">
 				function confirmation() {
