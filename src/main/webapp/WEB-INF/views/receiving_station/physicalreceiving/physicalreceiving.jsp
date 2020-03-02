@@ -24,33 +24,6 @@
 				}
 			</script>
 
-			<%-- 			<c:set var="morethanfive" scope="session"
-				value="${Alert_More_Than_5}" />
-			<c:if test="${Alert_More_Than_5 == \"More Than 5\"}">
-				<!-- <script type="text/javascript">
-					var msg = "This item is returned more than 5 times.\nItem will be move to Scrap01 Location";
-					confirm(msg);
-				</script> -->
-
-				<script type="text/javascript">
-				function confirmation(){
-					if (!confirm(msg)) {
-				        return false;
-				    }
-				}
-				
-			
-				</script>
-			</c:if> --%>
-
-			<div class="form-group row">
-				<label for="CPO#" class="col-sm-2 col-form-label">CPO#</label>
-				<div class="col-sm-8">
-					<input type="text" id="CPO#" class="form-control" name="cpoNumber"
-						placeholder="CPO Number" required>
-				</div>
-			</div>
-
 			<div class="form-group row">
 				<label for="SN#" class="col-sm-2 col-form-label">SN#</label>
 				<div class="col-sm-8">
@@ -66,28 +39,30 @@
 				</div>
 			</div>
 
-
 			<div class="form-group row">
-				<label for="specialInstruction" class="col-sm-2 col-form-label">Special
-					Instruction</label>
-				<div class="col-sm-8">
-					<input type="text" id="specialInstruction" class="form-control"
-						name="specialInstruction" placeholder="Special Instruction"
-						required>
-				</div>
-			</div>
-
-			<div class="form-group row">
-				<label for="mfgPN" class="col-sm-2 col-form-label">Manufactoring
-					PN</label>
+				<label for="mfgPN" class="col-sm-2 col-form-label">ManufactoringPN</label>
 				<div class="col-sm-8">
 					<input type="text" id="manufactoring" class="form-control"
-						name="manufactoring" placeholder="Manufactoring PN" required>
+						name="manufactoring" placeholder="Manufactoring PN"
+						pattern="46+[A-Za-z0-9]{9}|45+[A-Za-z0-9]{9}" required>
 				</div>
 			</div>
-
-
-
+			
+			<div class="form-group row">
+				<label for="mac" class="col-sm-2 col-form-label">MAC</label>
+				<div class="col-sm-8">
+					<input type="text" id="mac" class="form-control"
+						name="mac" placeholder="MAC Address" required>
+				</div>
+			</div>
+			
+			<div class="form-group row">
+				<label for="cpu_sn" class="col-sm-2 col-form-label">CPU SN</label>
+				<div class="col-sm-8">
+					<input type="text" id="cpu_sn" class="form-control"
+						name="cpu_sn" placeholder="CPU Serial Number" required>
+				</div>
+			</div>
 
 			<div class="form-group row">
 				<label for="RMA#" class="col-sm-2 col-form-label">RMA#</label>

@@ -37,7 +37,6 @@ public class PhysicalReceiving extends HttpServlet {
 
 		myList = new ArrayList<>();
 		String ppid = request.getParameter("ppid");
-		String dps = request.getParameter("dps");
 		int count = dbhandler.getRecordCount(ppid);
 		if (count >= 5) {
 			// alert show up
@@ -46,9 +45,9 @@ public class PhysicalReceiving extends HttpServlet {
 			flag = true;
 		}
 		
-		if (!ppid.isEmpty() && !dps.isEmpty()) {
+		if (!ppid.isEmpty()) {
 
-			myList.addAll(dbhandler.fetchRMA(ppid, dps));
+			myList.addAll(dbhandler.fetchRMA(ppid));
 
 			if (myList.size() == 0) {
 				notFound = "Cannot Find Item With Your Info!";
@@ -102,17 +101,17 @@ public class PhysicalReceiving extends HttpServlet {
 			String lot = temp.getLot();
 			String problemCode = temp.getProblemCode();
 			String dps = temp.getDps();
-			String cposn = request.getParameter("cpoNumber");
 			String revision = request.getParameter("revision");
-			String specialInstruction = request.getParameter("specialInstruction");
-			String mfgPcN = request.getParameter("manufactoring");
+			String mfgPN = request.getParameter("manufactoring");
 			String sn = request.getParameter("snNumber");
+			String mac = request.getParameter("mac");
+			String cpu_sn = request.getParameter("cpu_sn");
 
-			dbhandler.PhysicalReceive(rmaNum, cposn, ppid, pn, sn, revision, specialInstruction, mfgPcN, lot,
+			dbhandler.PhysicalReceive(rmaNum, mac, ppid, pn, sn, revision, cpu_sn, mfgPN, lot,
 					description, problemCode, dps);
 			if (flag) {
-				dbhandler.MoveToScrap01(rmaNum, cposn, ppid, pn, sn, revision, specialInstruction, mfgPcN, lot,
-						description, problemCode, dps);
+				dbhandler.MoveToScrap01(rmaNum, mac, ppid,pn, sn, revision,
+						 cpu_sn, mfgPN, lot, description, problemCode, dps);
 			} else {
 				System.out.println("Successfull");
 				request.getSession().setAttribute("Successfull", "Successfull");

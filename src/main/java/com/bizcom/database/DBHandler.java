@@ -192,15 +192,14 @@ public class DBHandler {
 		return true;
 	}
 
-	public List<Item> fetchRMA(String ppidN, String dpsN) {
+	public List<Item> fetchRMA(String ppidN) {
 		List<Item> result = new ArrayList<>();
-		String FETCH_RMA_QUERY = "SELECT * FROM pre_alert WHERE ppid = ? and dps = ?";
+		String FETCH_RMA_QUERY = "SELECT * FROM pre_alert WHERE ppid = ?";
 
 		try {
 			dbconnection = getConnectionAWS();
 			pst = dbconnection.prepareStatement(FETCH_RMA_QUERY);
 			pst.setString(1, ppidN);
-			pst.setString(2, dpsN);
 			rs = pst.executeQuery();
 			while (rs.next()) {
 				String rma = rs.getString("rma");
@@ -229,7 +228,7 @@ public class DBHandler {
 		return result;
 	}
 
-	public void deletaAPPID(Connection conn, String ppid) throws SQLException {
+	public void deleteAPPID(Connection conn, String ppid) throws SQLException {
 		String DELETE_A_PPID = "DELETE FROM pre_alert WHERE ppid=?";
 
 		pst = conn.prepareStatement(DELETE_A_PPID);
@@ -245,22 +244,22 @@ public class DBHandler {
 		pst.executeUpdate();
 	}
 
-	public boolean PhysicalReceive(String rmaNum, String cposn, String ppid, String pn, String sn, String revision,
-			String specialInstruction, String mfgPN, String lot, String description, String problemCode, String dps) {
-		String FETCH_RMA_QUERY = "INSERT INTO physicalRecevingDB VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
+	public boolean PhysicalReceive(String rmaNum, String mac, String ppid, String pn, String sn, String revision,
+			String cpu_sn, String mfgPN, String lot, String description, String problemCode, String dps) {
+		String FETCH_RMA_QUERY = "INSERT INTO physicalRecevingDB VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,? ,? ,? ,?)";
 		boolean result = false;
 		try {
 			dbconnection = getConnectionAWS();
 			dbconnection.setAutoCommit(false);
 			pst = dbconnection.prepareStatement(FETCH_RMA_QUERY);
 			pst.setString(1, rmaNum);
-			pst.setString(2, cposn);
-			pst.setString(3, ppid);
-			pst.setString(4, pn);
+			pst.setString(2, ppid);
+			pst.setString(3, pn);
+			pst.setString(4, sn);
 
-			pst.setString(5, sn);
-			pst.setString(6, revision);
-			pst.setString(7, specialInstruction);
+			pst.setString(5, mac);
+			pst.setString(6, cpu_sn);
+			pst.setString(7, revision);
 
 			pst.setString(8, mfgPN);
 			pst.setString(9, lot);
@@ -269,9 +268,11 @@ public class DBHandler {
 			pst.setString(12, dps);
 			pst.setString(13, "User ID");
 			pst.setString(14, new Date().toLocaleString());
+			pst.setString(15, null);
+			pst.setString(16, null);
 			pst.executeUpdate();
 			// delete record in pre_alert table
-			deletaAPPID(dbconnection, ppid);
+			deleteAPPID(dbconnection, ppid);
 			// add to record table
 			addToRecord(dbconnection, sn, pn, ppid, dps);
 			dbconnection.commit();
@@ -375,8 +376,8 @@ public class DBHandler {
 		return result;
 	}
 
-	public boolean MoveToScrap01(String rmaNum, String cposn, String ppid, String pn, String sn, String revision,
-			String specialInstruction, String mfgPN, String lot, String description, String problemCode, String dps) {
+	public boolean MoveToScrap01(String rmaNum, String mac, String ppid, String pn, String sn, String revision,
+			String cpu_sn, String mfgPN, String lot, String description, String problemCode, String dps) {
 		String FETCH_RMA_QUERY = "INSERT INTO scrap01_table VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
 		boolean result = false;
 		try {
@@ -384,13 +385,13 @@ public class DBHandler {
 			dbconnection.setAutoCommit(false);
 			pst = dbconnection.prepareStatement(FETCH_RMA_QUERY);
 			pst.setString(1, rmaNum);
-			pst.setString(2, cposn);
-			pst.setString(3, ppid);
-			pst.setString(4, pn);
+			pst.setString(2, ppid);
+			pst.setString(3, pn);
+			pst.setString(4, sn);
 
-			pst.setString(5, sn);
-			pst.setString(6, revision);
-			pst.setString(7, specialInstruction);
+			pst.setString(5, mac);
+			pst.setString(6, cpu_sn);
+			pst.setString(7, revision);
 
 			pst.setString(8, mfgPN);
 			pst.setString(9, lot);
