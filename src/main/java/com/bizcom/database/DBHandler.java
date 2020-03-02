@@ -268,13 +268,16 @@ public class DBHandler {
 			pst.setString(12, dps);
 			pst.setString(13, "User ID");
 			pst.setString(14, new Date().toLocaleString());
-			pst.setString(15, null);
-			pst.setString(16, null);
+			pst.setString(15, "PHYSICAL_RECEIVING");
+			pst.setString(16, "MICI");
 			pst.executeUpdate();
 			// delete record in pre_alert table
 			deleteAPPID(dbconnection, ppid);
 			// add to record table
 			addToRecord(dbconnection, sn, pn, ppid, dps);
+
+			// add to mici
+			addMICI(dbconnection, ppid, sn);
 			dbconnection.commit();
 			result = true;
 
@@ -285,6 +288,14 @@ public class DBHandler {
 		}
 
 		return result;
+	}
+
+	public void addMICI(Connection conn, String ppid, String sn) throws SQLException {
+		pst = conn.prepareStatement("INSERT INTO mici_table VALUES(?,?)");
+		pst.setString(1, ppid);
+		pst.setString(2, sn);
+
+		pst.execute();
 	}
 
 	public int fetchCurrentReceivedCount(Connection conn, String sn) throws SQLException {
@@ -520,7 +531,29 @@ public class DBHandler {
 
 	}
 
-	
+	public String[] getCurrentStation(String ppid, String sn) {
+		String query = "SELECT * FROM physicalRecevingDB WHERE ppid= ? and sn = ?";
+		String[] result = new String[2];
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(query);
+			pst.setString(1, ppid);
+			pst.setString(2, sn);
+			rs = pst.executeQuery();
+
+			while (rs.next()) {
+				result[0] = rs.getString("from_location");
+				result[1] = rs.getString("to_location");
+			}
+		} catch (Exception e) {
+			System.out.println("FAIL getCurrentStation" + e.getMessage());
+
+		} finally {
+			shutdown();
+		}
+		return result;
+	}
+
 	public class multi extends Thread {
 		PreparedStatement pst;
 
