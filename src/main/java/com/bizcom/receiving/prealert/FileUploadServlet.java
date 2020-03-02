@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -104,7 +105,7 @@ public class FileUploadServlet extends HttpServlet {
 
 				try {
 					dbHandler.ppidToDB(excelService.appendRMAForPPID(list, rmaPara));
-				} catch (ClassNotFoundException e) {
+				} catch (ClassNotFoundException | SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -112,7 +113,7 @@ public class FileUploadServlet extends HttpServlet {
 				saveRMA(pathFile, rmaPara);
 				
 			}else {
-				System.out.println("uploaded show uppp");
+				System.out.println("File Already UP to Use!");
 			}
 			try {
 				refeshPackingSlip(request, response, pathFile);
@@ -382,27 +383,4 @@ public class FileUploadServlet extends HttpServlet {
 		}
 	}
 
-	static class Multi extends Thread {
-		static String rmaPara;
-		static List<PPID> list;
-		static ExcelService excelService;
-		static DBHandler dbHandler;
-
-		public Multi(List<PPID> list, String rmaPara, ExcelService excelService, DBHandler dbHandler) {
-			Multi.list = list;
-			Multi.rmaPara = rmaPara;
-			Multi.excelService = excelService;
-			Multi.dbHandler = dbHandler;
-		}
-
-		public void run() {
-			try {
-				dbHandler.ppidToDB(excelService.appendRMAForPPID(list, rmaPara));
-			} catch (ClassNotFoundException | IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-	}
 }
