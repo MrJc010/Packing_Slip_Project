@@ -54,7 +54,7 @@ public class DBHandler {
 		}
 
 		if (dbconnection != null) {
-//			System.out.println("SUCCESS!");
+			// System.out.println("SUCCESS!");
 		} else {
 			System.out.println("Fail to connect to AWS at GetConnection");
 		}
@@ -89,7 +89,7 @@ public class DBHandler {
 			try {
 
 				dbconnection.close();
-//				LOGGER.info("====Database close====");
+				// LOGGER.info("====Database close====");
 			} catch (SQLException e) {
 				System.out.println("FAILLL");
 			}
@@ -122,33 +122,36 @@ public class DBHandler {
 		return flag;
 	}
 
-//	public boolean ppidToDB(List<PPID> listPPID) throws ClassNotFoundException {
-//		boolean result = false;
-//		String INSERT_PPID = "INSERT INTO pre_alert VALUES";
-//		for (PPID aa : listPPID) {
-//			INSERT_PPID += " ('" + aa.getPpidNumber() + "','" + aa.getPnNumber() + "','" + aa.getCoNumber() + "','"
-//					+ aa.getDateReceived() + "','" + aa.getLotNumber() + "','" + aa.getDpsNumber() + "','"
-//					+ aa.getProblemCode() + "','" + aa.getProblemDescription() + "','" + aa.getRma() + "'),";
-//		}
-//		dbconnection = getConnectionAWS();
-//		INSERT_PPID = INSERT_PPID.substring(0, INSERT_PPID.length() - 1);
-//		INSERT_PPID += ";";
-//		try {
-//			pst = dbconnection.prepareStatement(INSERT_PPID);
-//			pst.executeUpdate();
-//			result = true;
-//		} catch (SQLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		return result;
-//	}
-	
+	// public boolean ppidToDB(List<PPID> listPPID) throws ClassNotFoundException {
+	// boolean result = false;
+	// String INSERT_PPID = "INSERT INTO pre_alert VALUES";
+	// for (PPID aa : listPPID) {
+	// INSERT_PPID += " ('" + aa.getPpidNumber() + "','" + aa.getPnNumber() + "','"
+	// + aa.getCoNumber() + "','"
+	// + aa.getDateReceived() + "','" + aa.getLotNumber() + "','" +
+	// aa.getDpsNumber() + "','"
+	// + aa.getProblemCode() + "','" + aa.getProblemDescription() + "','" +
+	// aa.getRma() + "'),";
+	// }
+	// dbconnection = getConnectionAWS();
+	// INSERT_PPID = INSERT_PPID.substring(0, INSERT_PPID.length() - 1);
+	// INSERT_PPID += ";";
+	// try {
+	// pst = dbconnection.prepareStatement(INSERT_PPID);
+	// pst.executeUpdate();
+	// result = true;
+	// } catch (SQLException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// }
+	// return result;
+	// }
+
 	public boolean ppidToDB(List<PPID> listPPID) throws SQLException, ClassNotFoundException {
 		boolean result = false;
 		String INSERT_PPID = "INSERT INTO pre_alert VALUES(?,?,?,?,?,?,?,?,?)";
 		dbconnection = getConnectionAWS();
-		//dbconnection.setAutoCommit(false);
+		// dbconnection.setAutoCommit(false);
 		pst = dbconnection.prepareStatement(INSERT_PPID);
 		int i = 0;
 		for (PPID aa : listPPID) {
@@ -167,20 +170,24 @@ public class DBHandler {
 				multi m = new multi(pst);
 				m.start();
 				result = true;
-				//dbconnection.commit();
-            }
+				// dbconnection.commit();
+			}
 		}
-		//pst.executeBatch();
+		// pst.executeBatch();
 
 		return result;
 	}
-	
+
 	public boolean checkArray(int[] a) {
-		if(a.length == 0) return false;
-		if(a.length == 1) return a[0]==1;
-		if(a[0] == 0) return false; 
-		for(int i = 1; i < a.length; i++) {
-			if(a[0] != a[i]) return false;
+		if (a.length == 0)
+			return false;
+		if (a.length == 1)
+			return a[0] == 1;
+		if (a[0] == 0)
+			return false;
+		for (int i = 1; i < a.length; i++) {
+			if (a[0] != a[i])
+				return false;
 		}
 		return true;
 	}
@@ -408,22 +415,7 @@ public class DBHandler {
 
 		return result;
 	}
-	
-	public class multi extends Thread{
-		PreparedStatement pst;
-		public multi(PreparedStatement pst) {
-			this.pst = pst;
-		}
-		public void run() {
-			System.out.println("running...");
-			try {
-				int[] a = pst.executeBatch();
-				System.out.println(a.length);	
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+
 	public List<PreAlertItem> fetchPreAlert(String byRMA) {
 		List<PreAlertItem> result = new ArrayList<>();
 		String FETCH_ALL_PREALERT = "SELECT * FROM pre_alert";
@@ -459,28 +451,27 @@ public class DBHandler {
 		return result;
 	}
 
-
 	public int getRMACount(String pattern) {
-		String query = "SELECT COUNT(*)  FROM rmaTable WHERE rma LIKE '"+pattern +"%'";
+		String query = "SELECT COUNT(*)  FROM rmaTable WHERE rma LIKE '" + pattern + "%'";
 		int result = 0;
-		
+
 		try {
 			dbconnection = getConnectionAWS();
 			pst = dbconnection.prepareStatement(query);
 			rs = pst.executeQuery();
-			while(rs.next()) {
+			while (rs.next()) {
 				result = rs.getInt(1);
-			}			
-		}catch(Exception e) {
+			}
+		} catch (Exception e) {
 			System.out.println("FAIL getRMACount" + e.getMessage());
-			
-		}finally {
+
+		} finally {
 			shutdown();
 		}
-		
+
 		return result;
 	}
-	
+
 	public boolean createNewRMA(String rma) {
 		String query = "INSERT INTO rmaTable VALUES(?,?)";
 		boolean result = false;
@@ -490,14 +481,33 @@ public class DBHandler {
 			pst.setString(1, null);
 			pst.setString(2, rma);
 			pst.executeUpdate();
-			result = true;			
-		}catch(Exception e) {
+			result = true;
+		} catch (Exception e) {
 			System.out.println("FAIL createNewRMA" + e.getMessage());
-			
-		}finally {
+
+		} finally {
 			shutdown();
 		}
-		
+
 		return result;
+	}
+
+	public class multi extends Thread {
+		PreparedStatement pst;
+
+		public multi(PreparedStatement pst) {
+			this.pst = pst;
+		}
+
+		public void run() {
+			System.out.println("running...");
+			try {
+				int[] a = pst.executeBatch();
+				System.out.println(a.length);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 }
