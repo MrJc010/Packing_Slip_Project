@@ -416,6 +416,7 @@ public class DBHandler {
 		return result;
 	}
 
+
 	public List<PreAlertItem> fetchPreAlert(String byRMA) {
 		List<PreAlertItem> result = new ArrayList<>();
 		String FETCH_ALL_PREALERT = "SELECT * FROM pre_alert";
@@ -465,7 +466,7 @@ public class DBHandler {
 		} catch (Exception e) {
 			System.out.println("FAIL getRMACount" + e.getMessage());
 
-		} finally {
+		}finally {
 			shutdown();
 		}
 
@@ -485,7 +486,7 @@ public class DBHandler {
 		} catch (Exception e) {
 			System.out.println("FAIL createNewRMA" + e.getMessage());
 
-		} finally {
+		}finally {
 			shutdown();
 		}
 
