@@ -8,8 +8,6 @@ import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -28,11 +26,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import com.amazonaws.AmazonClientException;
-import com.amazonaws.AmazonServiceException;
-import com.amazonaws.auth.profile.ProfileCredentialsProvider;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
 import com.bizcom.database.DBHandler;
 import com.bizcom.excel.ExcelService;
 import com.bizcom.packingslip.PackingSlip;
@@ -74,8 +67,6 @@ public class FileUploadServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
-		// request.setAttribute("setHidden", "hidden");
-
 		pathFile = "";
 		if (request.getSession().getAttribute("PathFile") != null) {
 			pathFile = request.getSession().getAttribute("PathFile").toString();
@@ -255,7 +246,7 @@ public class FileUploadServlet extends HttpServlet {
 						request.getSession().setAttribute("Name", fileName);
 						ExcelValidation validation = new ExcelValidation();
 						item.write(storeFile);
-						System.out.println("filePath : " + filePath);
+						
 						if (validation.prealertValidation(filePath)) {
 							System.out.println("=====test ginsfn sdf============");
 						} else {

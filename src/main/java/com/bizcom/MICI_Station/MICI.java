@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.amazonaws.Request;
 import com.bizcom.database.DBHandler;
 
 /**
@@ -27,7 +28,7 @@ public class MICI extends HttpServlet {
 
 	public MICI() {
 		super();
-
+		
 	}
 
 	/**
@@ -39,15 +40,13 @@ public class MICI extends HttpServlet {
 
 		String page = request.getParameter("page");
 		if (page == null) {
-			errorPage(request, response);
+			miciDisplay(request, response);
 		} else {
 			switch (page) {
-			case "display":
-				System.out.println("Page: " + page);
+			case "display":				
 				miciDisplay(request, response);
 				break;
-			case "check":
-				System.out.println("Page: " + page);
+			case "check":				
 				checkMICI(request, response);
 				break;
 			default:
@@ -74,9 +73,9 @@ public class MICI extends HttpServlet {
 		} else if (action.equalsIgnoreCase("failButton")) {
 			String errorCode = request.getParameter("errorCode");
 			System.out.println("OPTION: " + errorCode);
-			System.out.println("RESULT : " + dbHandler.updateCurrentStation("MICI", "REPAIR01_FAIL", ppid));
+			System.out.println("RESULT : " + dbHandler.updateCurrentStation(MICI, REPAIR01_FAIL, ppid));
 
-			System.out.println("FAILLL");
+
 		} else {
 			System.out.println("ERROR");
 		}
@@ -86,6 +85,7 @@ public class MICI extends HttpServlet {
 	public void miciDisplay(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		request.setAttribute("title", "MICI");
+		request.setAttribute("sethide", "hidden");
 		request.getRequestDispatcher("/WEB-INF/views/mici_station/mici.jsp").forward(request, response);
 	}
 
@@ -98,6 +98,7 @@ public class MICI extends HttpServlet {
 
 	public void checkMICI(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		
 		String page = request.getParameter("page");
 		ppid = request.getParameter("ppidNumber");
 		String sn = request.getParameter("serialnumber");
@@ -108,8 +109,10 @@ public class MICI extends HttpServlet {
 
 		// fetch information...
 		if (ppid != null) {
+			request.setAttribute("sethide", "");
 			String[] currenStaions = dbHandler.getCurrentStation(ppid);
-
+			System.out.println("From: " + currenStaions[0] + "====");
+			System.out.println("To: " + currenStaions[1] + "====");
 			if (currenStaions[0].equalsIgnoreCase(PHYSICAL_RECEIVING) && currenStaions[1].equalsIgnoreCase(MICI)) {
 				// no information here
 

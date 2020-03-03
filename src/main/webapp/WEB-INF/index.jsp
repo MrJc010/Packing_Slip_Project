@@ -7,7 +7,7 @@
 <section style="height: 60vh;">
 	<div class="container mt-5 mb-5">
 
-		<h2>This is Home Page</h2>
+		<h2>SELECT YOUR STATION WITH NAVIGATION BAR ABOVE</h2>
 
 	
 	</div>

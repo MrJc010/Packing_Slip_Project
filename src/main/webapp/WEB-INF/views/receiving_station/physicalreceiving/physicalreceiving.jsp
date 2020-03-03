@@ -1,6 +1,9 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<jsp:include page="/WEB-INF/common/header.jsp" />
-<c:param name="title" value="Physical Receiving"></c:param>
+<c:import url="/WEB-INF/common/header.jsp">
+	<c:param name="title" value="Physical Receiving"></c:param>
+</c:import>
+
+
 
 <section>
 
@@ -15,11 +18,12 @@
 			<a id="alert" target="${Alert_More_Than_5}"></a>
 			<script type="text/javascript">
 				function confirmation() {
-					var x = document.getElementById("alert").getAttribute("target");
+					var x = document.getElementById("alert").getAttribute(
+							"target");
 					if (x === "More Than 5") {
 						if (!confirm("This item is returned more than 5 times.\nItem will be move to Scrap01 Location")) {
-					        return false;
-					    }
+							return false;
+						}
 					}
 				}
 			</script>
@@ -47,20 +51,20 @@
 						pattern="46+[A-Za-z0-9]{9}|45+[A-Za-z0-9]{9}" required>
 				</div>
 			</div>
-			
+
 			<div class="form-group row">
 				<label for="mac" class="col-sm-2 col-form-label">MAC</label>
 				<div class="col-sm-8">
-					<input type="text" id="mac" class="form-control"
-						name="mac" placeholder="MAC Address" required>
+					<input type="text" id="mac" class="form-control" name="mac"
+						placeholder="MAC Address" required>
 				</div>
 			</div>
-			
+
 			<div class="form-group row">
 				<label for="cpu_sn" class="col-sm-2 col-form-label">CPU SN</label>
 				<div class="col-sm-8">
-					<input type="text" id="cpu_sn" class="form-control"
-						name="cpu_sn" placeholder="CPU Serial Number" required>
+					<input type="text" id="cpu_sn" class="form-control" name="cpu_sn"
+						placeholder="CPU Serial Number" required>
 				</div>
 			</div>
 

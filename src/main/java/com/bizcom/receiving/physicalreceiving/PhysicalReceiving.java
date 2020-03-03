@@ -109,6 +109,7 @@ public class PhysicalReceiving extends HttpServlet {
 
 			dbhandler.PhysicalReceive(rmaNum, mac, ppid, pn, sn, revision, cpu_sn, mfgPN, lot,
 					description, problemCode, dps);
+			dbhandler.addToStatusTable(ppid, sn, "START", "PHYSICAL_RECEIVING");
 			if (flag) {
 				dbhandler.MoveToScrap01(rmaNum, mac, ppid,pn, sn, revision,
 						 cpu_sn, mfgPN, lot, description, problemCode, dps);

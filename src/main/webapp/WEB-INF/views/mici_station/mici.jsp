@@ -59,7 +59,7 @@
 
 	</div>
 
-	<div class="container mt-5 text-center">
+	<div class="container mt-5 text-center" ${sethide}>
 
 		<form method="POST" action="<%=request.getContextPath()%>/mici">
 			<div class="input-group mb-3">

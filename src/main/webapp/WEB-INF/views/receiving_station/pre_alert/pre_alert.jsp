@@ -36,7 +36,7 @@
 		</form>
 	</div>
 
-	<div class="container-fluid p-5">
+	<div class="container-fluid p-5" ${setHide}>
 
 		<ul class="nav nav-tabs nav-pills" id="myTab" role="tablist">
 			<li class="nav-item"><a class="nav-link active"

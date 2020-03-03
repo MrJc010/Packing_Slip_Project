@@ -246,7 +246,7 @@ public class DBHandler {
 
 	public boolean PhysicalReceive(String rmaNum, String mac, String ppid, String pn, String sn, String revision,
 			String cpu_sn, String mfgPN, String lot, String description, String problemCode, String dps) {
-		String FETCH_RMA_QUERY = "INSERT INTO physicalRecevingDB VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,? ,? ,? ,?)";
+		String FETCH_RMA_QUERY = "INSERT INTO physicalRecevingDB VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,? ,?)";
 		boolean result = false;
 		try {
 			dbconnection = getConnectionAWS();
@@ -268,21 +268,18 @@ public class DBHandler {
 			pst.setString(12, dps);
 			pst.setString(13, "User ID");
 			pst.setString(14, new Date().toLocaleString());
-			pst.setString(15, "PHYSICAL_RECEIVING");
-			pst.setString(16, "MICI");
+
 			pst.executeUpdate();
 			// delete record in pre_alert table
 			deleteAPPID(dbconnection, ppid);
 			// add to record table
 			addToRecord(dbconnection, sn, pn, ppid, dps);
 
-			// add to mici
-			addMICI(dbconnection, ppid, sn);
 			dbconnection.commit();
 			result = true;
 
 		} catch (Exception e) {
-			System.out.println(e);
+			System.out.println(e.getMessage());
 		} finally {
 			shutdown();
 		}
@@ -290,12 +287,239 @@ public class DBHandler {
 		return result;
 	}
 
-	public void addMICI(Connection conn, String ppid, String sn) throws SQLException {
-		pst = conn.prepareStatement("INSERT INTO mici_table VALUES(?,?)");
-		pst.setString(1, ppid);
-		pst.setString(2, sn);
+	public boolean addMICI(String ppid, String sn) {
 
-		pst.execute();
+		boolean result = false;
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement("INSERT INTO mici_table VALUES(?,?,?,?)");
+			pst.setString(1, ppid);
+			pst.setString(2, sn);
+			pst.setString(3, "User ID");
+			pst.setString(4, new Date().toLocaleString());
+			pst.execute();
+		} catch (SQLException | ClassNotFoundException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			shutdown();
+		}
+
+		return result;
+	}
+
+	public boolean deleteFromMICI(String ppid) {
+
+		boolean result = false;
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement("DELETE FROM mici_table WHERE ppid = ?");
+			pst.setString(1, ppid);
+			pst.executeUpdate();
+			result = true;
+			System.out.println("DELETE FROM mici_table ppid " + ppid);
+		} catch (SQLException | ClassNotFoundException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			shutdown();
+		}
+
+		return result;
+	}
+
+	public boolean addToStatusTable(String ppid, String sn, String from, String to) {
+
+		boolean result = false;
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement("INSERT INTO status_table VALUES(?,?,?,?,?,?)");
+			pst.setString(1, ppid);
+			pst.setString(2, sn);
+			pst.setString(3, from);
+			pst.setString(4, to);
+			pst.setString(5, "USER ID");
+			pst.setString(6, new Date().toLocaleString());
+			pst.execute();
+			result = true;
+		} catch (SQLException | ClassNotFoundException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			shutdown();
+		}
+
+		return result;
+	}
+
+	public boolean deleteFromStatusTable(String ppid) {
+
+		boolean result = false;
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement("DELETE FROM status_table WHERE ppid = ?");
+			pst.setString(1, ppid);
+			pst.executeUpdate();
+			result = true;
+			System.out.println("DELETE FROM status_table ppid " + ppid);
+		} catch (SQLException | ClassNotFoundException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			shutdown();
+		}
+
+		return result;
+	}
+
+	public boolean copyFromRepair01ToRepair01Pass(String ppid) {
+		boolean result = false;
+		String query = "INSERT INTO repair1_table_pass SELECT * FROM repair1_table WHERE ppid=?";
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(query);
+			pst.setString(1, ppid);
+
+			pst.executeUpdate();
+			System.out.println("COPY TO repair1_table_pass");
+		} catch (SQLException | ClassNotFoundException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			shutdown();
+		}
+
+		return result;
+	}
+
+	public boolean deletePPIDFromRepair01(String ppid) {
+
+		boolean result = false;
+		String query = "DELETE FROM repair1_table WHERE ppid=?";
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(query);
+			pst.setString(1, ppid);
+
+			pst.executeUpdate();
+			System.out.println("DELETE in repair1_table ppid " + ppid);
+		} catch (SQLException | ClassNotFoundException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			shutdown();
+		}
+
+		return result;
+
+	}
+
+	public boolean deletePPIDFromRepair01PASS(String ppid) {
+
+		boolean result = false;
+		String query = "DELETE FROM repair1_table_pass WHERE ppid=?";
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(query);
+			pst.setString(1, ppid);
+
+			pst.executeUpdate();
+			System.out.println("DELETE in repair1_table_pass ppid " + ppid);
+		} catch (SQLException | ClassNotFoundException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			shutdown();
+		}
+
+		return result;
+
+	}
+
+	public void updateStatusInRepair01(String ppid, String status) {
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement("UPDATE repair1_table SET status=? WHERE  ppid = ?");
+			pst.setString(1, status);
+			pst.setString(2, ppid);
+			pst.executeUpdate();
+			System.out.println("UPDATED STATUS repair1_table status " + status);
+		} catch (SQLException | ClassNotFoundException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			shutdown();
+		}
+
+	}
+
+	public boolean updateRepair01(String ppid, String repair_action, String duty, String area1, String pn1_old,
+			String pn1_new, String area2, String pn2_old, String pn2_new, String area3, String pn3_old, String pn3_new,
+			String area4, String pn4_old, String pn4_new, String area5, String pn5_old, String pn5_new, String status,
+			String userId) {
+		boolean result = false;
+		String query = "UPDATE repair1_table SET repair_action=?, duty=?, " + "area1=?, pn1_old=?, pn1_new=?, "
+				+ "area2=?, pn2_old=?, pn2_new=?, " + "area3=?, pn3_old=?, pn3_new=?, "
+				+ "area4=?, pn4_old=?, pn4_new=?, " + "area5=?, pn5_old=?, pn5_new=?, " + "status=?, userId=?,  date=? "
+				+ "WHERE ppid = ?";
+
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(query);
+			pst.setString(1, repair_action);
+			pst.setString(2, duty);
+			pst.setString(3, area1);
+			pst.setString(4, pn1_old);
+			pst.setString(5, pn1_new);
+			pst.setString(6, area2);
+			pst.setString(7, pn2_old);
+			pst.setString(8, pn2_new);
+			pst.setString(9, area3);
+			pst.setString(10, pn3_old);
+			pst.setString(11, pn3_new);
+			pst.setString(12, area4);
+			pst.setString(13, pn4_old);
+			pst.setString(14, pn4_new);
+			pst.setString(15, area5);
+			pst.setString(16, pn5_old);
+			pst.setString(17, pn5_new);
+			pst.setString(18, status);
+			pst.setString(19, userId);
+			pst.setString(20, new Date().toLocaleString());
+			pst.setString(21, ppid);
+
+			pst.executeUpdate();
+			System.out.println("UPDATED repair1_table");
+			result = true;
+		} catch (SQLException | ClassNotFoundException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			shutdown();
+		}
+
+		return result;
+
+	}
+
+	public boolean addNewToRepair01Table(String ppid, String sn, String problem_code, String userId) {
+
+		// status is PASS OR FAIL
+		boolean result = false;
+		String query = "INSERT INTO repair1_table (ppid,sn,problem_code,status,userId,date) VALUES(?,?,?,?,?,?)";
+		userId = " DELETE ME LATER 377";
+		// Status is FAIL at beginning
+
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(query);
+			pst.setString(1, ppid);
+			pst.setString(2, sn);
+			pst.setString(3, problem_code);
+			pst.setString(4, "FAIL");
+			pst.setString(5, userId);
+			pst.setString(6, new Date().toLocaleString());
+			pst.execute();
+			result = true;
+		} catch (SQLException | ClassNotFoundException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			shutdown();
+		}
+
+		return result;
+
 	}
 
 	public int fetchCurrentReceivedCount(Connection conn, String sn) throws SQLException {
@@ -532,7 +756,7 @@ public class DBHandler {
 	}
 
 	public String[] getCurrentStation(String ppid) {
-		String query = "SELECT * FROM physicalRecevingDB WHERE ppid= ?";
+		String query = "SELECT * FROM status_table WHERE ppid= ?";
 		String[] result = new String[2];
 		try {
 			dbconnection = getConnectionAWS();
@@ -554,7 +778,7 @@ public class DBHandler {
 	}
 
 	public boolean updateCurrentStation(String from, String to, String ppid) {
-		String query = "UPDATE physicalRecevingDB SET from_location=? , to_location=? WHERE ppid= ?";
+		String query = "UPDATE status_table SET from_location=? , to_location=? WHERE ppid= ?";
 		boolean result = false;
 		try {
 			dbconnection = getConnectionAWS();
@@ -586,7 +810,7 @@ public class DBHandler {
 				int[] a = pst.executeBatch();
 				System.out.println(a.length);
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
+
 				e.printStackTrace();
 			}
 		}
