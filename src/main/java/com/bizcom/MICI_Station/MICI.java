@@ -25,6 +25,7 @@ public class MICI extends HttpServlet {
 	private static final String REPAIR01_PASS = "REPAIR01_PASS";
 	private static final String REPAIR01 = "REPAIR01";
 	private static final String QC1 = "QC1";
+	private static final String START ="START";
 
 	public MICI() {
 		super();
@@ -37,7 +38,8 @@ public class MICI extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
+		
+		request.setAttribute("seterrorhiddenMICI", "hidden");
 		String page = request.getParameter("page");
 		if (page == null) {
 			miciDisplay(request, response);
@@ -84,8 +86,8 @@ public class MICI extends HttpServlet {
 
 	public void miciDisplay(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		request.setAttribute("title", "MICI");
-		request.setAttribute("sethide", "hidden");
+		request.setAttribute("titlePageMICI", "MICI");
+		request.setAttribute("sethideMICI", "hidden");
 		request.getRequestDispatcher("/WEB-INF/views/mici_station/mici.jsp").forward(request, response);
 	}
 
@@ -103,27 +105,32 @@ public class MICI extends HttpServlet {
 		ppid = request.getParameter("ppidNumber");
 		String sn = request.getParameter("serialnumber");
 		String[] miciInfo = dbHandler.getMICIInfo(ppid);
-
+		
 		request.setAttribute("problemcode", miciInfo[0]);
 		request.setAttribute("problemdecription", miciInfo[1]);
 
 		// fetch information...
 		if (ppid != null) {
-			request.setAttribute("sethide", "");
+			request.setAttribute("sethideMICI", "");
 			String[] currenStaions = dbHandler.getCurrentStation(ppid);
 			System.out.println("From: " + currenStaions[0] + "====");
 			System.out.println("To: " + currenStaions[1] + "====");
-			if (currenStaions[0].equalsIgnoreCase(PHYSICAL_RECEIVING) && currenStaions[1].equalsIgnoreCase(MICI)) {
+			request.setAttribute("ppidCheckAtMICI", ppid);
+			request.setAttribute("snCheckAtMICI", sn);
+			if (currenStaions[0].equalsIgnoreCase(START) && currenStaions[1].equalsIgnoreCase(PHYSICAL_RECEIVING)) {
 				// no information here
-
+				request.setAttribute("currentStatusAtMICI", "This Item Is Received From Physical Receiving Station!");
 			} else if (currenStaions[0].equalsIgnoreCase(REPAIR01)
 					&& currenStaions[1].equalsIgnoreCase(REPAIR01_PASS)) {
 				// print repair infomation
 				// change from REPAIR01 -> MICI
+				request.setAttribute("currentStatusAtMICI", "This Item Is Returned back From Repair 01 Station!");
 				dbHandler.updateCurrentStation(REPAIR01_PASS, MICI, ppid);
 			} else {
 				System.out.println("SOME THING ELSE");
-				// show errror
+				request.setAttribute("currentStatusAtMICI", "Invalid Access This Item At This Station!");
+				request.setAttribute("sethideMICI", "hidden");
+				request.setAttribute("seterrorhiddenMICI", "");
 			}
 		}
 		request.getRequestDispatcher("/WEB-INF/views/mici_station/mici.jsp").forward(request, response);
