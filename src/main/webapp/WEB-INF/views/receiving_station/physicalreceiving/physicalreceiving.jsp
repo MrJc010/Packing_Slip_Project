@@ -1,6 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <jsp:include page="/WEB-INF/common/header.jsp" />
-<c:param name="title" value="Physical Receiving"></c:param>
+<%-- <c:param name="title" value="Physical Receiving"></c:param> --%>
 
 <section>
 
