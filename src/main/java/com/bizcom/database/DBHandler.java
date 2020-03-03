@@ -531,14 +531,13 @@ public class DBHandler {
 
 	}
 
-	public String[] getCurrentStation(String ppid, String sn) {
-		String query = "SELECT * FROM physicalRecevingDB WHERE ppid= ? and sn = ?";
+	public String[] getCurrentStation(String ppid) {
+		String query = "SELECT * FROM physicalRecevingDB WHERE ppid= ?";
 		String[] result = new String[2];
 		try {
 			dbconnection = getConnectionAWS();
 			pst = dbconnection.prepareStatement(query);
 			pst.setString(1, ppid);
-			pst.setString(2, sn);
 			rs = pst.executeQuery();
 
 			while (rs.next()) {
@@ -547,6 +546,26 @@ public class DBHandler {
 			}
 		} catch (Exception e) {
 			System.out.println("FAIL getCurrentStation" + e.getMessage());
+
+		} finally {
+			shutdown();
+		}
+		return result;
+	}
+
+	public boolean updateCurrentStation(String from, String to, String ppid) {
+		String query = "UPDATE physicalRecevingDB SET from_location=? , to_location=? WHERE ppid= ?";
+		boolean result = false;
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(query);
+			pst.setString(1, from);
+			pst.setString(2, to);
+			pst.setString(3, ppid);
+			pst.executeUpdate();
+			result = true;
+		} catch (Exception e) {
+			System.out.println("FAIL updateCurrentStation" + e.getMessage());
 
 		} finally {
 			shutdown();
