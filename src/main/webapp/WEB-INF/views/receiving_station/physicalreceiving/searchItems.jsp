@@ -21,8 +21,6 @@
 					</div>
 				</div>
 
-
-
 				<div class="row justify-content-center">
 					<button type="submit" class="btn btn-primary">
 						<strong>Search Item</strong>

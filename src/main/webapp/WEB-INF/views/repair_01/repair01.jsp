@@ -1,73 +1,74 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <jsp:include page="/WEB-INF/common/header.jsp" />
 
+
 <section>
 
 	<div class="container">
 
 		<H1>Repair 01</H1>
+		
 
+<script>
+myFunction(3);
+function myFunction(count) {
 
-		<div class="row">
-			<form>
-				<div class="form-group">
-					<label for="errorCode">Error Code</label> <input type="text"
-						class="form-control" id="errorCode" aria-describedby="errorCode"
-						value="${errorCode}">
-				</div>
-				<div class="form-group">
-					<label for="desciption">Password</label>
-					<textarea name="desciption" class="form-control" id="desciption"
-						rows="4" cols="100"></textarea>
+	while(count > 0){
+		var temp = "";
+		if(count === 10) temp = "Ten";
+		else if(count === 9) temp = "Nine";
+		else if(count === 8) temp = "Eight";
+		else if(count === 7) temp = "Seven";
+		else if(count === 6) temp = "Six";
+		else if(count === 5) temp = "Five";
+		else if(count === 4) temp = "Four";
+		else if(count === 3) temp = "Three";
+		else if(count === 2) temp = "Two";
+		else if(count === 1) temp = "One";
+		document.write( '<div class=\"accordion\" id=\"accordionExample\">\n' );
+		document.write( '			<div class=\"card\">\n' );
+		document.write( '				<div class=\"card-header\" id=\"heading'+temp+'\">\n' );
+		document.write( '					<h5 class=\"mb-0\">\n' );
+		document.write( '						<button class=\"btn btn-link\" type=\"button\" data-toggle=\"collapse\"\n' );
+		document.write( '							data-target=\"#collapse'+temp+'\" aria-expanded=\"true\"\n' );
+		document.write( '							aria-controls=\"collapse'+temp+'\">Error Code '+temp+'</button>\n' );
+		document.write( '					</h5>\n' );
+		document.write( '				</div>\n' );
+		document.write( '\n' );
+		document.write( '				<div id=\"collapse'+temp+'\" class=\"collapse show\"\n' );
+		document.write( '					aria-labelledby=\"heading'+temp+'\" data-parent=\"#accordionExample\">\n' );
+		document.write( '					<div class=\"card-body\">\n' );
+		document.write( '						<button name=\"edit'+temp+'\" onclick=\"enableForm()\">Edit</button>\n' );
+		document.write( '						<form>\n' );
+		
+		document.write( '							<fieldset id = \"disable'+temp+'\" disabled>\n' );
+		document.write( '								<div class=\"form-row\">\n' );
+		document.write( '									<div class=\"form-group col-md-6\">\n' );
+		document.write( '										<label for=\"inputEmail'+temp+'\">Email</label> <input type=\"email\"\n' );
+		document.write( '											class=\"form-control\" name=\"inputEmail'+temp+'\" id=\"inputEmail'+temp+'\" placeholder=\"Email\">\n' );
+		document.write( '									</div>\n' );
+		document.write( '									<div class=\"form-group col-md-6\">\n' );
+		document.write( '										<label for=\"inputPassword'+temp+'\">Password</label> <input\n' );
+		document.write( '											type=\"password\" name=\"inputPassword'+temp+'\" class=\"form-control\" id=\"inputPassword'+temp+'\"\n' );
+		document.write( '											placeholder=\"Password\">\n' );
+		document.write( '									</div>\n' );
+		document.write( '								</div>\n' );
+		document.write( '								<button type=\"submit\" name = \"submit'+temp+'\" class=\"btn btn-primary\">Sign in</button>\n' );
+		document.write( '							</fieldset>\n' );
+		document.write( '						</form>\n' );
+		document.write( '					</div>\n' );
+		document.write( '				</div>\n' );
+		document.write( '			</div>' );
+		count--;
+	}
+}
 
-
-
-				</div>
-
-				<div class="form-group">
-					<label for="action">Password</label>
-					<textarea name="action" class="form-control" id="action" rows="4"
-						cols="100"></textarea>
-
-
-				</div>
-
-				<select class="custom-select" id="duty" name="duty">
-					<option value="0" selected>Choose...</option>
-					<option value="1">One</option>
-					<option value="2">Two</option>
-					<option value="3">Three</option>
-				</select>
-
-				<div class="form-group">
-					<label for="pn">Part Number</label> <input type="text"
-						class="form-control" id="pn" aria-describedby="part_number"
-						name="pn">
-				</div>
-
-				<div class="form-group">
-					<label for="old_pn">Old Part Number</label> <input type="text"
-						class="form-control" id="old_pn"
-						aria-describedby="old_part_number" name="old_pn">
-				</div>
-
-				<div class="form-group">
-					<label for="location">Location on board</label> <input type="text"
-						class="form-control" id="location"
-						aria-describedby="localtion_on_board" name="location">
-				</div>
-
-
-
-				<button type="submit" class="btn btn-primary">Submit</button>
-			</form>
-
-
-
-		</div>
-
-
-
+function enableForm() {
+	var res = event.target.name.substring(4);
+	console.log(res);
+	document.getElementById("disable"+res).disabled = false;	
+}
+</script>
 	</div>
 
 

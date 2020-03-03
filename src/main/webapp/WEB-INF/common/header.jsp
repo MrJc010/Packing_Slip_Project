@@ -55,7 +55,7 @@
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                     <li><a class="dropdown-item" href="<%=request.getContextPath()%>/pre_alert">Pre-Alert</a></li>
                     <li><a class="dropdown-item" href="<%=request.getContextPath()%>/searchitem">Physical Receiving</a></li>
-                    <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="http://google.com">Reports</a>
+                    <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Reports</a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="<%=request.getContextPath()%>/shortitem">Short Item</a></li>
                             <li><a class="dropdown-item" href="<%=request.getContextPath()%>/extraitem">Extra Item</a></li>
