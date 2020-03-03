@@ -44,42 +44,7 @@
 				data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown"
 				aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
-			</button>
-			<%-- <div class="collapse navbar-collapse justify-content-center"
-				id="navbarNavDropdown">
-				<ul class="nav ">
-					<li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true"> <span class="nav-label">Receiving</span> <span class="caret"></span></a>
-					<ul class="dropdown-menu">
-						<li>
-							<a class="dropdown-item" href="<%=request.getContextPath()%>/pre_alert">Pre-Alert</a>
-						</li>
-						<li>
-							<a class="dropdown-item" href="<%=request.getContextPath()%>/searchitem">Physical Receving</a>
-						</li>
-						<li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Reports</a>
-						                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Submenu</a></li>
-                            <li><a class="dropdown-item" href="#">Submenu0</a></li>
-                            <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Submenu 1</a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="#">Subsubmenu1</a></li>
-                                    <li><a class="dropdown-item" href="#">Subsubmenu1</a></li>
-                                </ul>
-                            </li>
-                            <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Submenu 2</a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="#">Subsubmenu2</a></li>
-                                    <li><a class="dropdown-item" href="#">Subsubmenu2</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-						</li>										
-					</ul>
-					</li>
-				</ul>
-			</div> --%>
-			
+			</button>			
 			<div class="collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav">
             <li class="nav-item">
@@ -100,7 +65,7 @@
                 </ul>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
+                <a class="nav-link" href="<%=request.getContextPath()%>/mici?page=display">MICI</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">Link</a>

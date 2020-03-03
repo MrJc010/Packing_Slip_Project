@@ -27,7 +27,7 @@
 					</button>
 				</div>
 			</form>
-			
+
 			<c:if test="${Successfull == \"Successfull\"}">
 				<script type="text/javascript">
 					var msg = "Item received succcessfully. Move to IQC.";
