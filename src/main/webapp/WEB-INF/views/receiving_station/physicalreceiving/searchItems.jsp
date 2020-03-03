@@ -21,15 +21,6 @@
 					</div>
 				</div>
 
-				<div class="form-group row">
-					<label for="input-3"
-						class="col-sm-2 col-form-label col-form-label-lg"><strong>DPS</strong></label>
-					<div class="col-sm-10">
-						<input id="input-3" class="form-control form-control-lg"
-							name="dps" placeholder="Enter DPS number" type="text" required />
-					</div>
-				</div>
-
 				<div class="row justify-content-center">
 					<button type="submit" class="btn btn-primary">
 						<strong>Search Item</strong>

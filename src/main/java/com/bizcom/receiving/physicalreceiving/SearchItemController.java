@@ -44,8 +44,7 @@ public class SearchItemController extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		String ppid = request.getParameter("ppid");
-		String dps = request.getParameter("dps");
-		String url = request.getContextPath() + "/physicalreceiving?ppid=" + ppid + "&dps=" + dps;
+		String url = request.getContextPath() + "/physicalreceiving?ppid=" + ppid;
 		response.sendRedirect(url);
 	}
 
