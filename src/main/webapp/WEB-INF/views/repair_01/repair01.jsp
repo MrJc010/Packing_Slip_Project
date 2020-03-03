@@ -7,9 +7,9 @@
 	<div class="container">
 
 		<H1>Repair 01</H1>
-		
 
-<script>
+
+		<script>
 myFunction(3);
 function myFunction(count) {
 
@@ -29,31 +29,66 @@ function myFunction(count) {
 		document.write( '			<div class=\"card\">\n' );
 		document.write( '				<div class=\"card-header\" id=\"heading'+temp+'\">\n' );
 		document.write( '					<h5 class=\"mb-0\">\n' );
-		document.write( '						<button class=\"btn btn-link\" type=\"button\" data-toggle=\"collapse\"\n' );
-		document.write( '							data-target=\"#collapse'+temp+'\" aria-expanded=\"true\"\n' );
+		document.write( '						<button class=\"btn btn-link\ collapsed" type=\"button\" data-toggle=\"collapse\"\n' );
+		document.write( '							data-target=\"#collapse'+temp+'\" aria-expanded=\"false\"\n' );
 		document.write( '							aria-controls=\"collapse'+temp+'\">Error Code '+temp+'</button>\n' );
 		document.write( '					</h5>\n' );
 		document.write( '				</div>\n' );
 		document.write( '\n' );
-		document.write( '				<div id=\"collapse'+temp+'\" class=\"collapse show\"\n' );
+		document.write( '				<div id=\"collapse'+temp+'\" class=\"collapse\"\n' );
 		document.write( '					aria-labelledby=\"heading'+temp+'\" data-parent=\"#accordionExample\">\n' );
 		document.write( '					<div class=\"card-body\">\n' );
-		document.write( '						<button name=\"edit'+temp+'\" onclick=\"enableForm()\">Edit</button>\n' );
+		document.write( '						<button class="my-5 btn btn-primary"name=\"edit'+temp+'\" onclick=\"enableForm()\">Edit</button>\n' );
 		document.write( '						<form>\n' );
 		
 		document.write( '							<fieldset id = \"disable'+temp+'\" disabled>\n' );
-		document.write( '								<div class=\"form-row\">\n' );
-		document.write( '									<div class=\"form-group col-md-6\">\n' );
-		document.write( '										<label for=\"inputEmail'+temp+'\">Email</label> <input type=\"email\"\n' );
-		document.write( '											class=\"form-control\" name=\"inputEmail'+temp+'\" id=\"inputEmail'+temp+'\" placeholder=\"Email\">\n' );
-		document.write( '									</div>\n' );
-		document.write( '									<div class=\"form-group col-md-6\">\n' );
-		document.write( '										<label for=\"inputPassword'+temp+'\">Password</label> <input\n' );
-		document.write( '											type=\"password\" name=\"inputPassword'+temp+'\" class=\"form-control\" id=\"inputPassword'+temp+'\"\n' );
-		document.write( '											placeholder=\"Password\">\n' );
-		document.write( '									</div>\n' );
-		document.write( '								</div>\n' );
-		document.write( '								<button type=\"submit\" name = \"submit'+temp+'\" class=\"btn btn-primary\">Sign in</button>\n' );
+		
+		document.write( '   <div class=\"input-group mb-3\">\n' );
+		document.write( '            <div class=\"input-group-prepend\">\n' );
+		document.write( '              <label class=\"input-group-text\" for=\"duty\">Select\n' );
+		document.write( '                Duty: </label>\n' );
+		document.write( '            </div>\n' );
+		document.write( '            <select class=\"custom-select\" id=\"duty\" name=\"duty'+temp+'\">\n' );
+		document.write( '              <option value=\"0\" selected>Choose a duty</option>\n' );
+		document.write( '              <option value=\"1\">duty 01</option>\n' );
+		document.write( '              <option value=\"2\">duty 02</option>\n' );
+		document.write( '              <option value=\"3\">duty 03</option>\n' );
+		document.write( '            </select>\n' );
+		document.write( '          </div>\n' );
+		document.write( '\n' );
+		document.write( '          <br />' );
+
+		document.write( '\n' );
+		document.write( '          <div class=\"form-group\">\n' );
+		document.write( '            <label for=\"oldPN\">OLD PN</label>\n' );
+		document.write( '            <input type=\"text\" class=\"form-control\" name=\"oldPN'+temp+'\" placeholder=\"Enter Old PN\">\n' );
+		document.write( '          </div>\n' );
+		document.write( '\n' );
+		document.write( '\n' );
+		document.write( '          <br />\n' );
+		document.write( '\n' );
+		document.write( '          <div class=\"form-group\">\n' );
+		document.write( '            <label for=\"oldPN\">NEW PN</label>\n' );
+		document.write( '            <input type=\"text\" class=\"form-control\" name=\"newPN'+temp+'\" placeholder=\"Enter new PN\">\n' );
+		document.write( '          </div>\n' );
+		document.write( '\n' );
+		document.write( '          <br />\n' );
+		document.write( '\n' );
+		document.write( '          <div class=\"form-group\">\n' );
+		document.write( '            <label for=\"oldPN\">AREA</label>\n' );
+		document.write( '            <input type=\"text\" class=\"form-control\" name=\"area'+temp+'\" placeholder=\"Enter area\">\n' );
+		document.write( '          </div>\n' );
+		document.write( '\n' );
+		document.write( '\n' );
+		document.write( '          <br />\n' );
+		document.write( '          <div class=\"form-group\">\n' );
+		document.write( '            <label for=\"actionInput\">Action</label>\n' );
+		document.write( '            <textarea type=\"text\" class=\"form-control\" name=\"action'+temp+'\" rows=\"4\" id=\"actionInput\" aria-describedby=\"emailHelp\"\n' );
+		document.write( '              placeholder=\"Enter action\">');
+		
+		
+		document.write( '</textarea>	');
+		document.write( '								<button type=\"submit\" value=\"submit'+temp+'\"  name = \"submit'+temp+'\" class=\"btn btn-primary\ my-5 text-center mx-auto">Submit</button>\n' );
 		document.write( '							</fieldset>\n' );
 		document.write( '						</form>\n' );
 		document.write( '					</div>\n' );
@@ -62,6 +97,10 @@ function myFunction(count) {
 		count--;
 	}
 }
+
+
+
+
 
 function enableForm() {
 	var res = event.target.name.substring(4);
