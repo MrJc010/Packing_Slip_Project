@@ -33,8 +33,8 @@
 			<div class="col-md-2 col-sm-0"></div>
 			<div class="col-md-8 col-sm-2 text-center">
 
-				<form method="get" action="<%=request.getContextPath()%>/mici">
-					
+				<form method="GET" action="<%=request.getContextPath()%>/mici">
+
 					<div class="form-group">
 						<label for="PPID">Enter PPID: </label> <input type="text"
 							class="form-control" id="PPID" aria-describedby="emailHelp"
@@ -58,10 +58,21 @@
 
 
 	</div>
+	
+	<div ${seterrorhiddenMICI}><label>${currentStatusAtMICI}</label></div>
 
-	<div class="container mt-5 text-center" ${sethide}>
+	<div class="container mt-5 text-center" ${sethideMICI}>
 
 		<form method="POST" action="<%=request.getContextPath()%>/mici">
+			<div>
+				<label for="PPID">PPID#: ${ppidCheckAtMICI}</label>
+			</div>
+			<div>
+				<label for="SN">SN#: ${snCheckAtMICI}</label>
+			</div>
+			<div>
+				<label for="statusAtMICI">${currentStatusAtMICI}</label>
+			</div>
 			<div class="input-group mb-3">
 				<div class="input-group-prepend">
 					<label class="input-group-text" for="inputGroupSelect01">Select
@@ -74,6 +85,9 @@
 					<option value="3">Three</option>
 				</select>
 			</div>
+			<button>
+				<span class="display-3">Add Error Code</span>
+			</button>
 			<button type="submit" class="btn btn-success mr-5" name="action"
 				value="passButton" ${disable}>
 				<span class="display-3">PASS</span>

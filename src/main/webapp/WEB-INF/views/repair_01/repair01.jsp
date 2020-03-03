@@ -30,7 +30,7 @@ function myFunction(count) {
 		document.write( '				<div class=\"card-header\" id=\"heading'+temp+'\">\n' );
 		document.write( '					<h5 class=\"mb-0\">\n' );
 		document.write( '						<button class=\"btn btn-link\" type=\"button\" data-toggle=\"collapse\"\n' );
-		document.write( '							data-target=\"#collapse'+temp+'\" aria-expanded=\"true\"\n' );
+		document.write( '							data-target=\"#collapse'+temp+'\"\n' );
 		document.write( '							aria-controls=\"collapse'+temp+'\">Error Code '+temp+'</button>\n' );
 		document.write( '					</h5>\n' );
 		document.write( '				</div>\n' );
