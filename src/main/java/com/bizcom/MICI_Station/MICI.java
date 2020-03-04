@@ -2,6 +2,7 @@ package com.bizcom.MICI_Station;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -19,6 +20,7 @@ import com.bizcom.database.DBHandler;
 public class MICI extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private String ppid;
+	private String sn;
 	DBHandler dbHandler = new DBHandler();
 
 	private static final String PHYSICAL_RECEIVING = "PHYSICAL_RECEIVING";
@@ -86,8 +88,20 @@ public class MICI extends HttpServlet {
 					errorCodeSet.add(temp);
 			}
 			System.out.println(errorCodeSet.toString());
-			System.out.println("OPTION: " + errorCode);
-			System.out.println("RESULT : " + dbHandler.updateCurrentStation(MICI, REPAIR01_FAIL, ppid));
+			
+	
+
+			dbHandler.updateCurrentStation(MICI, REPAIR01_FAIL, ppid);
+//			dbHandler.addNewToRepair01Table(ppid, "UserID");
+			dbHandler.addToMICITable(ppid,sn,"A USER FROM MICI");
+			
+			
+			Iterator<String> tempErrorCode = errorCodeSet.iterator(); 
+			int i =1;
+			 while(tempErrorCode.hasNext()) {
+				 dbHandler.updateErrorCodeMICI(ppid,tempErrorCode.next(), i);
+				 i++;
+			 }
 
 		} else {
 			System.out.println("ERROR");
@@ -114,10 +128,10 @@ public class MICI extends HttpServlet {
 
 		String page = request.getParameter("page");
 		ppid = request.getParameter("ppidNumber");
-		String sn = request.getParameter("serialnumber");
+		sn = request.getParameter("serialnumber");
 
 		String[] miciInfo = dbHandler.getMICIInfo(ppid);
-		System.out.println(miciInfo[0] + "==" + miciInfo[1]);
+
 		if (miciInfo[0] != null && miciInfo[1] != null) {
 			request.setAttribute("problemcode", miciInfo[0]);
 			request.setAttribute("problemdecription", miciInfo[1]);

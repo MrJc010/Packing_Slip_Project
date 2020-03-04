@@ -28,9 +28,10 @@ public class RepairStaion01 extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+
 		// TODO Auto-generated method stub
 		String ppid = request.getParameter("inputppid");
-		
+		System.out.println(ppid);
 		
 		request.getRequestDispatcher("/WEB-INF/views/repair_01/repair01.jsp").forward(request, response);
 

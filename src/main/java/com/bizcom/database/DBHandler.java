@@ -21,7 +21,6 @@ public class DBHandler {
 	public DBHandler() {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			
 
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -49,14 +48,14 @@ public class DBHandler {
 			dbconnection = DriverManager.getConnection(
 					"jdbc:mysql://" + Configs.dbHost + ":" + Configs.dbPort + "/" + Configs.dbName, Configs.dbUsername,
 					Configs.dbPassword);
-			
+
 		} catch (SQLException e) {
 
 			System.out.println(e);
 		}
 
 		if (dbconnection != null) {
-			 System.out.println("SUCCESS!");
+			System.out.println("SUCCESS!");
 		} else {
 			System.out.println("Fail to connect to AWS at GetConnection");
 		}
@@ -495,20 +494,67 @@ public class DBHandler {
 
 	}
 
-	public boolean addNewToRepair01Table(String ppid, String sn, String problem_code, String userId) {
+	public String[] addRepair01Helper(String ppid) {
+		String query = "SELECT sn, problemCode FROM physicalrecevingdb WHERE ppid=?";
+		String[] phy = new String[2];
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(query);
+			pst.setString(1, ppid);
+			rs = pst.executeQuery();
+			while (rs.next()) {
+				phy[0] = rs.getString("sn");
+				phy[1] = rs.getString("problemCode");
+			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		} finally {
+			shutdown();
+		}
 
-		// status is PASS OR FAIL
+		return phy;
+	}
+
+	public boolean addToMICITable(String ppid, String sn,String user) {
 		boolean result = false;
-		String query = "INSERT INTO repair1_table (ppid,sn,problem_code,status,userId,date) VALUES(?,?,?,?,?,?)";
-		userId = " DELETE ME LATER 377";
-		// Status is FAIL at beginning
-
+		String query =" INSERT INTO mici_table (ppid,sn,date,userId) VALUES(?,?,?,?)";
 		try {
 			dbconnection = getConnectionAWS();
 			pst = dbconnection.prepareStatement(query);
 			pst.setString(1, ppid);
 			pst.setString(2, sn);
-			pst.setString(3, problem_code);
+			pst.setString(3, new Date().toLocaleString());
+			pst.setString(4, user);
+			
+			pst.execute();
+			result = true;
+			
+		}catch (Exception e) {
+			System.out.println("addToMICITable : " + e.getMessage());
+		}finally {
+			shutdown();
+		}
+	
+		return result;
+	}
+	
+	public boolean addNewToRepair01Table(String ppid, String userId) {
+
+		// status is PASS OR FAIL
+		boolean result = false;
+		String query = "INSERT INTO repair1_table (ppid,sn,problemCode,currentStatus,userId,receivedDate) VALUES(?,?,?,?,?,?)";
+//		"INSERT INTO repair1_table (ppid, sn, problem_code, status, userId, date) VALUES(?,?,?,?,?,?)";
+		userId = " DELETE ME LATER 377";
+		// Status is FAIL at beginning
+	
+		String[] support = addRepair01Helper(ppid);
+		
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(query);
+			pst.setString(1, ppid);
+			pst.setString(2, support[0]);
+			pst.setString(3, support[1]);
 			pst.setString(4, "FAIL");
 			pst.setString(5, userId);
 			pst.setString(6, new Date().toLocaleString());
@@ -564,6 +610,34 @@ public class DBHandler {
 
 	}
 
+	public boolean updateErrorCodeMICI(String ppid, String errorCode, int location) {
+		boolean result = false;
+
+		String query = "UPDATE mici_table SET error" + location + "=? WHERE ppid=?";
+		System.out.println("QUERY addErrorCode" + query);
+
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(query);
+
+			pst.setString(1, errorCode);
+			pst.setString(2, ppid);
+			pst.executeUpdate();
+			result = true;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("Cannot getRecordCount");
+		} finally {
+			shutdown();
+		}
+
+		return result;
+	}
+
+	
+	
+	
 	public void addToRecord(Connection conn, String sn, String pn, String ppid, String dps) throws SQLException {
 
 		String INSERT_INTO_RECORD = "INSERT INTO sn_record VALUES(?,?,?,?,?)";
