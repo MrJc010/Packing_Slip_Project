@@ -59,4 +59,16 @@ public class ExcelValidation {
 		return mapPL.equals(mapPPIDs);
 	}
 
+	
+	public Map<String, Integer> getError(String pathFile) throws IOException{
+		if(!prealertValidation(pathFile)) {
+			// Create an ExcelService to read file
+			excel.read(pathFile);
+			return null;
+			
+		}else {
+			return null;
+		}
+	}
+
 }

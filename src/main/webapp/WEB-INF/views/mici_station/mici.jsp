@@ -153,8 +153,6 @@
     	if(count <= 10){
     	      var node = document.getElementById("selectionMICI");
     	      var last = document.getElementById("errorDiv"+count);
-    	      console.log("errorDiv"+count);
-    	      console.log(last);
     	      var x = document.createElement('div');
     	      x.className = 'input-group mb-3';
     	      x.id = 'errorDiv' + count;

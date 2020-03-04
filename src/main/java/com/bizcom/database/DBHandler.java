@@ -21,6 +21,8 @@ public class DBHandler {
 	public DBHandler() {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
+			
+
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -43,18 +45,18 @@ public class DBHandler {
 	 * @throws ClassNotFoundException
 	 */
 	public Connection getConnectionAWS() throws ClassNotFoundException {
-		// Class.forName("com.mysql.jdbc.Driver");
 		try {
 			dbconnection = DriverManager.getConnection(
 					"jdbc:mysql://" + Configs.dbHost + ":" + Configs.dbPort + "/" + Configs.dbName, Configs.dbUsername,
 					Configs.dbPassword);
+			
 		} catch (SQLException e) {
 
 			System.out.println(e);
 		}
 
 		if (dbconnection != null) {
-			// System.out.println("SUCCESS!");
+			 System.out.println("SUCCESS!");
 		} else {
 			System.out.println("Fail to connect to AWS at GetConnection");
 		}
