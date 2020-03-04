@@ -1,16 +1,37 @@
 package com.bizcom.database;
 
-import java.util.Arrays;
-
-import com.bizcom.ppid.PPID;
-
 public class test {
 
 	public static void main(String[] args) throws ClassNotFoundException {
-		Class.forName("com.mysql.jdbc.Driver");
+		Class.forName("com.mysql.cj.jdbc.Driver");
 		DBHandler db = new DBHandler();
+db.getConnectionAWS();
+System.out.println(db.testConnection());
 		
-//		db.PhysicalReceive("BZM123", "012345", "CN0J8CVMCMK007BD00AA", "CMP-PMH0T", "123456789", "Rev.056", "12345", "456343434", "12", "SR Online : networkconnection:Windows 10:", "PB3I", "654656565");
+//		//map 1 has 3 keys
+//		HashMap<Integer, String> map1 = new HashMap<>();
+//		 
+//		map1.put(1, "A");
+//		map1.put(2, "B");
+//		map1.put(3, "C");
+//		 
+//		//map 2 has 4 keys
+//		HashMap<Integer, String> map2 = new HashMap<>();
+//		 
+//		map2.put(1, "A");
+//		map2.put(2, "B");
+//		map2.put(3, "C");
+//		map2.put(4, "C");
+		 
+		//Union of keys from both maps
+//		HashMap<Integer, String> def = new HashMap<>();
+//		unionKeys.addAll(map2.keySet());
+//		 
+//		unionKeys.removeAll(map1.keySet());
+//		 
+//		System.out.println(unionKeys);
+		
+		db.PhysicalReceive("BZM123", "012345", "CN0J8CVMCMK007BD00QQ", "CMP-PMH0T", "123456789", "Rev.056", "12345", "456343434", "12", "SR Online : networkconnection:Windows 10:", "PB3I", "654656565");
 //		db.addMICI("CN0J8CVMCMK007BD00AA", "123456789");
 //		db.addToStatusTable("CN0J8CVMCMK007BD00AA", "CN0J8CVMCMK007BD00AA", "A", "B");
 		
@@ -27,7 +48,7 @@ public class test {
 //		db.deletePPIDFromRepair01("CN0J8CVMCMK007BD00AA");
 //		db.deletePPIDFromRepair01PASS("CN0J8CVMCMK007BD00AA");
 	
-		db.updateCurrentStation("aaa", "abb", "11111");
+//		db.updateCurrentStation("aaa", "abb", "11111");
 	}
 
 }

@@ -8,7 +8,11 @@
 
 		<H1>Repair 01</H1>
 
-
+		<form action="<%=request.getContextPath() %>/repair01" method="GET">
+			<input type="text" name="inputppid" placeHolder="Enter PPID" required>
+			<input type="submit" value="Submit">
+		
+		</form>
 		<script>
 			myFunction(3);
 

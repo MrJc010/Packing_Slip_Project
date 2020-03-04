@@ -248,9 +248,9 @@ public class FileUploadServlet extends HttpServlet {
 						item.write(storeFile);
 						
 						if (validation.prealertValidation(filePath)) {
-							System.out.println("=====test ginsfn sdf============");
+							System.out.println("=====excel file is good=========");
 						} else {
-							System.out.println(" ==== erroor not match ====");
+							System.out.println(" ==== excel file does not match ====");
 						}
 
 					}
