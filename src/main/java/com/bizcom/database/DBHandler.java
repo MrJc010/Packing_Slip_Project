@@ -56,7 +56,6 @@ public class DBHandler {
 		}
 
 		if (dbconnection != null) {
-			 System.out.println("SUCCESS!");
 		} else {
 			System.out.println("Fail to connect to AWS at GetConnection");
 		}
@@ -732,7 +731,7 @@ public class DBHandler {
 
 	// ====== MICI ======
 
-	public String[] getMICIInfo(String ppid) {
+	public String[] getPhysicalInfor(String ppid) {
 		String query = "SELECT * FROM physicalRecevingDB WHERE ppid=?";
 		String[] result = new String[3];
 
