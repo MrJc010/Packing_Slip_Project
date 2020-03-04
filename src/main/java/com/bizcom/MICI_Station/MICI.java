@@ -1,13 +1,15 @@
 package com.bizcom.MICI_Station;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.amazonaws.Request;
 import com.bizcom.database.DBHandler;
 
 /**
@@ -26,6 +28,7 @@ public class MICI extends HttpServlet {
 	private static final String REPAIR01 = "REPAIR01";
 	private static final String QC1 = "QC1";
 	private static final String START ="START";
+	private static Set<String> errorCodeSet;
 
 	public MICI() {
 		super();
@@ -38,7 +41,7 @@ public class MICI extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
+		errorCodeSet = new HashSet<String>();
 		request.setAttribute("seterrorhiddenMICI", "hidden");
 		request.setAttribute("currentCountMICI", 2);
 		String page = request.getParameter("page");
@@ -74,7 +77,13 @@ public class MICI extends HttpServlet {
 			// go to QC1
 			System.out.println("PASSSS");
 		} else if (action.equalsIgnoreCase("failButton")) {
+			System.out.println(request.getAttribute("currentCountMICI"));
 			String errorCode = request.getParameter("errorCode");
+			for(int i = 1; i < 10; i++) {
+				String temp = request.getParameter("errorCode"+i);
+				if(temp != null && !temp.contentEquals("0")) errorCodeSet.add(temp);
+			}
+			System.out.println(errorCodeSet.toString());
 			System.out.println("OPTION: " + errorCode);
 			System.out.println("RESULT : " + dbHandler.updateCurrentStation(MICI, REPAIR01_FAIL, ppid));
 

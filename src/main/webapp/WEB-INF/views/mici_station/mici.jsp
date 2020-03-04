@@ -150,39 +150,42 @@
     }
 
     function functionx() {
-      var node = document.getElementById("selectionMICI");
-      var last = document.getElementById("errorDiv"+count);
-      console.log("errorDiv"+count);
-      console.log(last);
-      var x = document.createElement('div');
-      x.className = 'input-group mb-3';
-      x.id = 'errorDiv' + count;
-      x.innerHTML =
-        // '<div class=\" input-group mb-3\" id=\"errorDiv' + count + '\">' +
-        '<div class=\"input-group-prepend\">' +
-        '<label class=\"input-group-text\" for=\"inputGroupSelect01\">Select Error Code: </label>' +
-        '</div>' +
-        '<select class=\"custom-select\" id=\"errorCode' + count + '\" name=\"errorCode' + count + '\">' +
-        '<option value=\"0\" selected>Choose...</option> ' +
-        '< /select> ';
-      // '< /div>';
-      node.appendChild(x);
-      var selectX = document.getElementById("errorCode" + count);
-      var divError = document.getElementById("errorDiv" + count);
+    	if(count <= 10){
+    	      var node = document.getElementById("selectionMICI");
+    	      var last = document.getElementById("errorDiv"+count);
+    	      console.log("errorDiv"+count);
+    	      console.log(last);
+    	      var x = document.createElement('div');
+    	      x.className = 'input-group mb-3';
+    	      x.id = 'errorDiv' + count;
+    	      x.innerHTML =
+    	        // '<div class=\" input-group mb-3\" id=\"errorDiv' + count + '\">' +
+    	        '<div class=\"input-group-prepend\">' +
+    	        '<label class=\"input-group-text\" for=\"inputGroupSelect01\">Select Error Code: </label>' +
+    	        '</div>' +
+    	        '<select class=\"custom-select\" id=\"errorCode' + count + '\" name=\"errorCode' + count + '\">' +
+    	        '<option value=\"0\" selected>Choose...</option> ' +
+    	        '< /select> ';
+    	      // '< /div>';
+    	      node.appendChild(x);
+    	      var selectX = document.getElementById("errorCode" + count);
+    	      var divError = document.getElementById("errorDiv" + count);
 
-      var btn = document.createElement('a');
-      btn.value = "errorDiv" + count;
-      btn.onclick = deleteErrorDiv;
-      btn.innerHTML = "Delete";
-      divError.appendChild(btn);
-      for (var i = 0; i < list.length; i++) {
-        var op = document.createElement('option');
-        op.appendChild(document.createTextNode(list[i]));
-        op.value = list[i];
-        selectX.appendChild(op);
+    	      var btn = document.createElement('a');
+    	      btn.value = "errorDiv" + count;
+    	      btn.onclick = deleteErrorDiv;
+    	      btn.innerHTML = "Delete";
+    	      divError.appendChild(btn);
+    	      for (var i = 0; i < list.length; i++) {
+    	        var op = document.createElement('option');
+    	        op.appendChild(document.createTextNode(list[i]));
+    	        op.value = list[i];
+    	        selectX.appendChild(op);
 
-      }
-      count++;
+    	      }
+    	      count++;
+    	}
+
     }
   </script>
 
