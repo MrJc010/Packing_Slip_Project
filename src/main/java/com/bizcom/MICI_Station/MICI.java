@@ -40,6 +40,7 @@ public class MICI extends HttpServlet {
 			throws ServletException, IOException {
 		
 		request.setAttribute("seterrorhiddenMICI", "hidden");
+		request.setAttribute("currentCountMICI", 2);
 		String page = request.getParameter("page");
 		if (page == null) {
 			miciDisplay(request, response);

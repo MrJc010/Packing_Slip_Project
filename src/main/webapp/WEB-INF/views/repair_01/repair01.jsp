@@ -111,7 +111,7 @@
 
 			function enableForm() {
 				var res = event.target.name.substring(4);
-				console.log(res);
+				
 				document.getElementById("disable" + res).disabled = false;
 			}
 		</script>
@@ -120,20 +120,4 @@
 
 </section>
 
-<script type='text/javascript'>
-	var counter = 1;
-	var limit = 3;
-
-	function addInput(divName) {
-		if (counter == limit) {
-			alert("You have reached the limit of adding " + counter + " inputs");
-		} else {
-			var newdiv = document.createElement('div');
-			newdiv.innerHTML = "Entry " + (counter + 1) +
-				" <br><input type='text' name='name" + counter + "'>";
-			document.getElementById(divName).appendChild(newdiv);
-			counter++;
-		}
-	}
-</script>
 <jsp:include page="/WEB-INF/common/footer.jsp" />

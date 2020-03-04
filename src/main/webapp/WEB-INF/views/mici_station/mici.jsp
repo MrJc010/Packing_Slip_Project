@@ -58,8 +58,10 @@
 
 
 	</div>
-	
-	<div ${seterrorhiddenMICI}><label>${currentStatusAtMICI}</label></div>
+
+	<div ${seterrorhiddenMICI}>
+		<label>${currentStatusAtMICI}</label>
+	</div>
 
 	<div class="container mt-5 text-center" ${sethideMICI}>
 
@@ -73,21 +75,29 @@
 			<div>
 				<label for="statusAtMICI">${currentStatusAtMICI}</label>
 			</div>
-			<div class="input-group mb-3">
-				<div class="input-group-prepend">
-					<label class="input-group-text" for="inputGroupSelect01">Select
-						Error Code: </label>
+
+
+			<div id="selectionMICI">
+
+				<div class=" input-group mb-3" id="errorDiv1">
+
+					<div class="input-group-prepend">
+						<label class="input-group-text" for="inputGroupSelect01">Select
+							Error Code: </label>
+					</div>
+					<select class="custom-select" id="errorCode1" name="errorCode1">
+
+					</select>
 				</div>
-				<select class="custom-select" id="errorCode" name="errorCode">
-					<option value="0" selected>Choose...</option>
-					<option value="1">One</option>
-					<option value="2">Two</option>
-					<option value="3">Three</option>
-				</select>
+
 			</div>
-			<button>
-				<span class="display-3">Add Error Code</span>
-			</button>
+			<a onClick=functionx()> <span
+				class="btn btn-outline-primary border my-4">
+					<H3>Add Error Code</H3>
+			</span>
+			</a><br />
+
+
 			<button type="submit" class="btn btn-success mr-5" name="action"
 				value="passButton" ${disable}>
 				<span class="display-3">PASS</span>
@@ -97,10 +107,84 @@
 				<span class="display-3">FAIL</span>
 			</button>
 		</form>
-
+		
 
 	</div>
 	<hr />
+
+
+
+	<script type="text/javascript">
+    var list = [1, 2, 3];
+    var count = ${currentCountMICI};
+
+    var selectX = document.getElementById("errorCode1");
+    var divError = document.getElementById("errorDiv1");
+    var op = document.createElement('option');
+    op.appendChild(document.createTextNode('Choose...'));
+    op.value = '0';
+    selectX.appendChild(op);
+
+    var btn = document.createElement('span');
+    btn.value = "errorDiv1";
+    btn.onclick = deleteErrorDiv;
+    btn.innerHTML = "Delete";
+    divError.appendChild(btn);
+
+    for (var i = 0; i < list.length; i++) {
+      var divError = document.getElementById("errorDiv" + i);
+      var op = document.createElement('option');
+      op.appendChild(document.createTextNode(list[i]));
+      op.value = list[i];
+      selectX.appendChild(op);
+    }
+
+    function deleteErrorDiv() {
+    
+      var aID = event;
+      console.log(aID.target.value);
+      var node = document.getElementById("selectionMICI");
+      console.log(node);
+      node.removeChild(document.getElementById(aID.target.value));
+
+    }
+
+    function functionx() {
+      var node = document.getElementById("selectionMICI");
+      var last = document.getElementById("errorDiv"+count);
+      console.log("errorDiv"+count);
+      console.log(last);
+      var x = document.createElement('div');
+      x.className = 'input-group mb-3';
+      x.id = 'errorDiv' + count;
+      x.innerHTML =
+        // '<div class=\" input-group mb-3\" id=\"errorDiv' + count + '\">' +
+        '<div class=\"input-group-prepend\">' +
+        '<label class=\"input-group-text\" for=\"inputGroupSelect01\">Select Error Code: </label>' +
+        '</div>' +
+        '<select class=\"custom-select\" id=\"errorCode' + count + '\" name=\"errorCode' + count + '\">' +
+        '<option value=\"0\" selected>Choose...</option> ' +
+        '< /select> ';
+      // '< /div>';
+      node.appendChild(x);
+      var selectX = document.getElementById("errorCode" + count);
+      var divError = document.getElementById("errorDiv" + count);
+
+      var btn = document.createElement('a');
+      btn.value = "errorDiv" + count;
+      btn.onclick = deleteErrorDiv;
+      btn.innerHTML = "Delete";
+      divError.appendChild(btn);
+      for (var i = 0; i < list.length; i++) {
+        var op = document.createElement('option');
+        op.appendChild(document.createTextNode(list[i]));
+        op.value = list[i];
+        selectX.appendChild(op);
+
+      }
+      count++;
+    }
+  </script>
 
 </section>
 <jsp:include page="/WEB-INF/common/footer.jsp" />
