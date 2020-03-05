@@ -51,14 +51,14 @@ public class MICI extends HttpServlet {
 			miciDisplay(request, response);
 		} else {
 			switch (page) {
-			case "display":
-				miciDisplay(request, response);
-				break;
-			case "check":
-				checkMICI(request, response);
-				break;
-			default:
-				errorPage(request, response);
+				case "display":
+					miciDisplay(request, response);
+					break;
+				case "check":
+					checkMICI(request, response);
+					break;
+				default:
+					errorPage(request, response);
 			}
 			System.out.println(request.getParameter("errorCode"));
 		}
@@ -73,40 +73,50 @@ public class MICI extends HttpServlet {
 
 		String action = request.getParameter("action");
 
-		//
+		System.out.println(ppid + " on post method");
+		if (checkStatus(ppid)) {
+			if (validate(ppid, request, dbHandler.getPhysicalInfor(ppid))) {
+				if (action.equalsIgnoreCase("passButton")) {
+					// go to QC1
+					System.out.println("GoTo QC1 PASS");
+				} else if (action.equalsIgnoreCase("failButton")) {
+					System.out.println(request.getAttribute("currentCountMICI"));
+					String errorCode = request.getParameter("errorCode");
+					for (int i = 1; i < 10; i++) {
+						String temp = request.getParameter("errorCode" + i);
+						if (temp != null && !temp.contentEquals("0"))
+							errorCodeSet.add(temp);
+					}
+					System.out.println("Error Code Set:" + errorCodeSet.toString());
+					System.out.println("Result Update Station Status : "
+							+ dbHandler.updateCurrentStation(MICI, REPAIR01_FAIL, ppid));
 
-		if (action.equalsIgnoreCase("passButton")) {
-			// go to QC1
-			System.out.println("PASSSS");
-		} else if (action.equalsIgnoreCase("failButton")) {
-			System.out.println(request.getAttribute("currentCountMICI"));
-
-			String errorCode = request.getParameter("errorCode");
-			for (int i = 1; i < 10; i++) {
-				String temp = request.getParameter("errorCode" + i);
-				if (temp != null && !temp.contentEquals("0"))
-					errorCodeSet.add(temp);
+				}
+			} else {
+				request.getRequestDispatcher("/WEB-INF/views/mici_station/mici.jsp").forward(request, response);
+				System.out.println("Redirect to currentpage on Post Method from inner if");
 			}
 			System.out.println(errorCodeSet.toString());
-			
-	
 
 			dbHandler.updateCurrentStation(MICI, REPAIR01_FAIL, ppid);
-//			dbHandler.addNewToRepair01Table(ppid, "UserID");
-			dbHandler.addToMICITable(ppid,sn,"A USER FROM MICI");
-			
-			
-			Iterator<String> tempErrorCode = errorCodeSet.iterator(); 
-			int i =1;
-			 while(tempErrorCode.hasNext()) {
-				 dbHandler.updateErrorCodeMICI(ppid,tempErrorCode.next(), i);
-				 i++;
-			 }
+			// dbHandler.addNewToRepair01Table(ppid, "UserID");
+			dbHandler.addToMICITable(ppid, sn, "A USER FROM MICI");
+
+			Iterator<String> tempErrorCode = errorCodeSet.iterator();
+			int i = 1;
+			while (tempErrorCode.hasNext()) {
+				dbHandler.updateErrorCodeMICI(ppid, tempErrorCode.next(), i);
+				i++;
+			}
 
 		} else {
-			System.out.println("ERROR");
-		}
+			request.setAttribute("sethideMICI", "hidden");
+			request.setAttribute("seterrorhiddenMICI", "");
+			request.setAttribute("currentStatusAtMICI", "This PPID is invalid at this station. ");
+			request.getRequestDispatcher("/WEB-INF/views/mici_station/mici.jsp").forward(request, response);
+			System.out.println("Redirect to currentpage on Post Method from outer if");
 
+		}
 	}
 
 	public void miciDisplay(HttpServletRequest request, HttpServletResponse response)
@@ -130,12 +140,8 @@ public class MICI extends HttpServlet {
 		ppid = request.getParameter("ppidNumber");
 		sn = request.getParameter("serialnumber");
 
-		String[] miciInfo = dbHandler.getMICIInfo(ppid);
-
-		if (miciInfo[0] != null && miciInfo[1] != null) {
-			request.setAttribute("problemcode", miciInfo[0]);
-			request.setAttribute("problemdecription", miciInfo[1]);
-
+		String[] miciInfo = dbHandler.getPhysicalInfor(ppid);
+		if (validate(ppid, request, miciInfo)) {
 			// fetch information...
 			if (ppid != null) {
 				request.setAttribute("sethideMICI", "");
@@ -159,17 +165,35 @@ public class MICI extends HttpServlet {
 					request.setAttribute("sethideMICI", "hidden");
 					request.setAttribute("seterrorhiddenMICI", "");
 				}
-			} else {
-
 			}
+			request.getRequestDispatcher("/WEB-INF/views/mici_station/mici.jsp").forward(request, response);
+		} else {
+			request.getRequestDispatcher("/WEB-INF/views/mici_station/mici.jsp").forward(request, response);
+			System.out.println("Redirect to currentpage on check!");
+		}
+	}
 
+	public boolean validate(String ppid, HttpServletRequest request, String[] miciInfo) {
+
+		if (miciInfo[0] != null && miciInfo[1] != null) {
+			request.setAttribute("problemcode", miciInfo[0]);
+			request.setAttribute("problemdecription", miciInfo[1]);
+			return true;
 		} else {
 			request.setAttribute("sethideMICI", "hidden");
 			request.setAttribute("seterrorhiddenMICI", "");
-			request.setAttribute("currentStatusAtMICI", "This PPID is invalid at this station. ");
-
+			request.setAttribute("currentStatusAtMICI", "This PPID Is Not At Physical Receiving Station!");
+			return false;
 		}
+	}
 
-		request.getRequestDispatcher("/WEB-INF/views/mici_station/mici.jsp").forward(request, response);
+	public boolean checkStatus(String ppid) {
+		String[] status = dbHandler.getCurrentStation(ppid);
+		if ((status[0].equalsIgnoreCase(START) || status[0].equalsIgnoreCase(REPAIR01))
+				&& (status[1].equalsIgnoreCase(PHYSICAL_RECEIVING) || status[1].equalsIgnoreCase(REPAIR01_PASS))) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }
