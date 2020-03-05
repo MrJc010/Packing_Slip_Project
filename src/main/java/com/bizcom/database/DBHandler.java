@@ -228,6 +228,37 @@ public class DBHandler {
 		return result;
 	}
 
+	public List<String> fetchErrorForRepair01FromMICI(String ppid){
+		String query = "SELECT * FROM mici_table WHERE ppid = ?";
+		List<String> result = new ArrayList<>();
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(query);
+			pst.setString(1, ppid);
+			rs = pst.executeQuery();
+			
+			
+			while(rs.next()) {
+				int i =1;
+				while(i<11) {
+					String temp = rs.getString("error"+i);
+
+					if( temp != null) {
+						result.add(temp);
+					}
+					i++;
+				}
+			}
+			
+		}catch (Exception e) {
+			System.out.println("Error fetchErrorForRepair01FromMICI: " + e.getMessage());
+		}finally {
+			shutdown();
+		}
+		
+		
+		return result;
+	}
 	public void deleteAPPID(Connection conn, String ppid) throws SQLException {
 		String DELETE_A_PPID = "DELETE FROM pre_alert WHERE ppid=?";
 
