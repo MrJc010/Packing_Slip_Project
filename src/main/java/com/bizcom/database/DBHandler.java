@@ -228,7 +228,7 @@ public class DBHandler {
 		return result;
 	}
 
-	public List<String> fetchErrorForRepair01FromMICI(String ppid){
+	public List<String> fetchErrorForRepair01FromMICI(String ppid) {
 		String query = "SELECT * FROM mici_table WHERE ppid = ?";
 		List<String> result = new ArrayList<>();
 		try {
@@ -236,29 +236,28 @@ public class DBHandler {
 			pst = dbconnection.prepareStatement(query);
 			pst.setString(1, ppid);
 			rs = pst.executeQuery();
-			
-			
-			while(rs.next()) {
-				int i =1;
-				while(i<11) {
-					String temp = rs.getString("error"+i);
 
-					if( temp != null) {
+			while (rs.next()) {
+				int i = 1;
+				while (i < 11) {
+					String temp = rs.getString("error" + i);
+
+					if (temp != null) {
 						result.add(temp);
 					}
 					i++;
 				}
 			}
-			
-		}catch (Exception e) {
+
+		} catch (Exception e) {
 			System.out.println("Error fetchErrorForRepair01FromMICI: " + e.getMessage());
-		}finally {
+		} finally {
 			shutdown();
 		}
-		
-		
+
 		return result;
 	}
+
 	public void deleteAPPID(Connection conn, String ppid) throws SQLException {
 		String DELETE_A_PPID = "DELETE FROM pre_alert WHERE ppid=?";
 
@@ -545,9 +544,9 @@ public class DBHandler {
 		return phy;
 	}
 
-	public boolean addToMICITable(String ppid, String sn,String user) {
+	public boolean addToMICITable(String ppid, String sn, String user) {
 		boolean result = false;
-		String query =" INSERT INTO mici_table (ppid,sn,date,userId) VALUES(?,?,?,?)";
+		String query = " INSERT INTO mici_table (ppid,sn,date,userId) VALUES(?,?,?,?)";
 		try {
 			dbconnection = getConnectionAWS();
 			pst = dbconnection.prepareStatement(query);
@@ -555,39 +554,60 @@ public class DBHandler {
 			pst.setString(2, sn);
 			pst.setString(3, new Date().toLocaleString());
 			pst.setString(4, user);
-			
+
 			pst.execute();
 			result = true;
-			
-		}catch (Exception e) {
+
+		} catch (Exception e) {
 			System.out.println("addToMICITable : " + e.getMessage());
-		}finally {
+		} finally {
 			shutdown();
 		}
-	
+
 		return result;
 	}
-	
+
+	public boolean isExistInRepair01Table(String ppid) {
+		boolean result = false;
+		String query = "SELECT COUNT(*) FROM repair1_table WHERE ppid = ?";
+
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(query);
+			pst.setString(1, ppid);
+			rs = pst.executeQuery();
+
+			if (rs.next()) {
+				result = true;
+			}
+		} catch (SQLException | ClassNotFoundException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			shutdown();
+		}
+
+		return result;
+	}
+
 	public boolean addNewToRepair01Table(String ppid, String userId) {
 
 		// status is PASS OR FAIL
 		boolean result = false;
-		String query = "INSERT INTO repair1_table (ppid,sn,problemCode,currentStatus,userId,receivedDate) VALUES(?,?,?,?,?,?)";
+		String query = "INSERT INTO repair1_table (ppid,sn,currentStatus,userId,receivedDate) VALUES(?,?,?,?,?)";
 //		"INSERT INTO repair1_table (ppid, sn, problem_code, status, userId, date) VALUES(?,?,?,?,?,?)";
 		userId = " DELETE ME LATER 377";
 		// Status is FAIL at beginning
-	
+
 		String[] support = addRepair01Helper(ppid);
-		
+
 		try {
 			dbconnection = getConnectionAWS();
 			pst = dbconnection.prepareStatement(query);
 			pst.setString(1, ppid);
 			pst.setString(2, support[0]);
-			pst.setString(3, support[1]);
-			pst.setString(4, "FAIL");
-			pst.setString(5, userId);
-			pst.setString(6, new Date().toLocaleString());
+			pst.setString(3, "FAIL");
+			pst.setString(4, userId);
+			pst.setString(5, new Date().toLocaleString());
 			pst.execute();
 			result = true;
 		} catch (SQLException | ClassNotFoundException e) {
@@ -665,9 +685,6 @@ public class DBHandler {
 		return result;
 	}
 
-	
-	
-	
 	public void addToRecord(Connection conn, String sn, String pn, String ppid, String dps) throws SQLException {
 
 		String INSERT_INTO_RECORD = "INSERT INTO sn_record VALUES(?,?,?,?,?)";

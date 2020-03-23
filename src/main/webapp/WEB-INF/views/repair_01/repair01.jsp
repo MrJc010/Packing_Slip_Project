@@ -44,8 +44,9 @@
 		<div class="my-3" ${setRepair01HiddenError }>${setErrorMessage }
 		</div>
 		<div ${setRepair01Hidden}>
-
+			<c:set var="indexValue" value="${0}" scope="page"/>
 			<c:forEach items="${errorList}" var="aError">
+			<c:set var="indexValue" value="${indexValue +1}" scope="page"/>
 				<div class="accordion" id="accordionExample">
 					<div class="card">
 						<div class="card-header" id="headingOne">
@@ -63,7 +64,8 @@
 						<div id="xx${aError}" class="collapse"
 							aria-labelledby="headingOne" data-parent="#accordionExample">
 							<div class="card-body">
-								<form action="">
+								<form method="POST" action="<%=request.getContextPath()%>/repair01">
+								<input type="hidden"  name="actionForm" value="${indexValue}" />
 									<fieldset id="disable${aError}" disabled>
 										<div class="input-group mb-3">
 											<div class="input-group-prepend">
@@ -109,7 +111,7 @@
 											<textarea type="text" class="form-control" name="action${aError}"
 												rows="4" id="actionInput" aria-describedby="emailHelp"
 												placeholder="Enter action"></textarea>
-											<button type="submit" value="submit${aError}" name="submitThree"
+											<button type="submit" value="${aError}" name="submitButton"
 												class="btn btn-primary my-5 text-center mx-auto">Submit</button>
 										</div>
 									</fieldset>

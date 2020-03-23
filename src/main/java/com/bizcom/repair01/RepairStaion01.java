@@ -37,27 +37,29 @@ public class RepairStaion01 extends HttpServlet {
 		ppid = request.getParameter("inputppid");
 		request.setAttribute("setRepair01Hidden", "hidden");
 		request.setAttribute("setRepair01HiddenError", "hidden");
-		
+
 		String actionClick = request.getParameter("actionSubmitRepair01");
 		if (actionClick != null) {
-			
+
 			if (ppid != null) {
-				
+
 				List<String> errorList = db.fetchErrorForRepair01FromMICI(ppid);
-				
-				if(errorList.size()==0) {
+
+				if (errorList.size() == 0) {
 					request.setAttribute("setRepair01HiddenError", "");
 					request.setAttribute("setErrorMessage", ppid + " not found at this station.");
-				}else {
+				} else {
 					// List all error
 					request.setAttribute("sizeErrorList", errorList.size());
 					request.setAttribute("setRepair01Hidden", "");
-					
+
 					request.setAttribute("errorList", errorList);
-					
-					db.addNewToRepair01Table(ppid, "UserID");
-					
-					
+
+					// Check if don't have in repair table 1 then add into it
+					if (!db.isExistInRepair01Table(ppid)) {
+						db.addNewToRepair01Table(ppid, "UserID");
+					}
+
 				}
 			} else {
 				request.setAttribute("setRepair01HiddenError", "");
@@ -75,8 +77,14 @@ public class RepairStaion01 extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		String buttonAction = request.getParameter("submitButton").toString();
+		//String indexValue = 
+		System.out.println("buttonAction: " + buttonAction);
 		
-//		
+		
+		
+		//reload to repair staion when done
+		request.getRequestDispatcher("/WEB-INF/views/repair_01/repair01.jsp").forward(request, response);
 	}
 
 }

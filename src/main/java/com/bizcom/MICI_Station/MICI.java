@@ -47,6 +47,7 @@ public class MICI extends HttpServlet {
 		request.setAttribute("seterrorhiddenMICI", "hidden");
 		request.setAttribute("currentCountMICI", 2);
 		String page = request.getParameter("page");
+
 		if (page == null) {
 			miciDisplay(request, response);
 		} else {
@@ -60,7 +61,6 @@ public class MICI extends HttpServlet {
 				default:
 					errorPage(request, response);
 			}
-			System.out.println(request.getParameter("errorCode"));
 		}
 	}
 
@@ -108,6 +108,7 @@ public class MICI extends HttpServlet {
 				dbHandler.updateErrorCodeMICI(ppid, tempErrorCode.next(), i);
 				i++;
 			}
+			request.getRequestDispatcher("/WEB-INF/views/mici_station/mici.jsp").forward(request, response);
 
 		} else {
 			request.setAttribute("sethideMICI", "hidden");
@@ -167,8 +168,10 @@ public class MICI extends HttpServlet {
 				}
 			}
 			request.getRequestDispatcher("/WEB-INF/views/mici_station/mici.jsp").forward(request, response);
+//			response.sendRedirect(request.getContextPath()+"/mici?page=display");
 		} else {
 			request.getRequestDispatcher("/WEB-INF/views/mici_station/mici.jsp").forward(request, response);
+//			response.sendRedirect(request.getContextPath()+"/mici?page=display");
 			System.out.println("Redirect to currentpage on check!");
 		}
 	}

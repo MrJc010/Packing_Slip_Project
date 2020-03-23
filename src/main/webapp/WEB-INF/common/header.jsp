@@ -68,7 +68,7 @@
                 <a class="nav-link" href="<%=request.getContextPath()%>/mici?page=display">MICI</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
+                <a class="nav-link" href="<%=request.getContextPath()%>/repair01">REPAIR01 STATION</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">Link</a>
