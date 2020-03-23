@@ -43,8 +43,7 @@ public class PhysicalReceiving extends HttpServlet {
 			request.getSession().setAttribute("Alert_More_Than_5", "More Than 5");
 			System.out.println("MORE THAN 5 detected");
 			flag = true;
-		}
-		
+		}	
 		if (!ppid.isEmpty()) {
 
 			myList.addAll(dbhandler.fetchRMA(ppid));

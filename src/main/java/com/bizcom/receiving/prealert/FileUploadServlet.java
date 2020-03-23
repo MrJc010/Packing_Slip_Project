@@ -105,7 +105,17 @@ public class FileUploadServlet extends HttpServlet {
 				}
 
 				saveRMA(pathFile, newRMA);
-				//dbHandler.createNewRMA(newRMA);
+				dbHandler.createNewRMA(newRMA,"userID");
+				try {
+					dbHandler.addToPre_PPID(newRMA,list);
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
 			} else {
 //				System.out.println("uploaded show uppp");
 			}

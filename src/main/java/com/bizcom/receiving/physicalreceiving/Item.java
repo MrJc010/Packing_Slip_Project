@@ -1,7 +1,6 @@
 package com.bizcom.receiving.physicalreceiving;
 
 public class Item {
-	private String CPO_SN;
 	private String ppid;
 	private String pn;
 	private String sn;
@@ -17,11 +16,9 @@ public class Item {
 	private String userId;
 	private String date;
 
-	public Item(String cPO_SN, String ppid, String pn, String sn, String revision, String description,
+	public Item(String ppid, String pn, String sn, String revision, String description,
 			String specialInstruction, String co, String lot, String problemCode, String rma, String dps, String mfgPN,
 			String userId, String date) {
-
-		CPO_SN = cPO_SN;
 		this.ppid = ppid;
 		this.pn = pn;
 		this.sn = sn;
@@ -41,7 +38,6 @@ public class Item {
 	public Item(String CPO_SN, String ppid, String pn, String sn, String revision, String description,
 			String specialInstruction, String co, String lot, String problemCode, String rma, String dps, String mfgPN) {
 		super();
-		this.CPO_SN = CPO_SN;
 		this.ppid = ppid;
 		this.pn = pn;
 		this.sn = sn;
@@ -104,10 +100,6 @@ public class Item {
 		this.rma = rma;
 	}
 
-	public void setCPO_SN(String cPO_SN) {
-		CPO_SN = cPO_SN;
-	}
-
 	public void setPpid(String ppid) {
 		this.ppid = ppid;
 	}
@@ -130,10 +122,6 @@ public class Item {
 
 	public void setSpecialInstruction(String specialInstruction) {
 		this.specialInstruction = specialInstruction;
-	}
-
-	public String getCPO_SN() {
-		return CPO_SN;
 	}
 
 	public String getPpid() {
@@ -164,7 +152,7 @@ public class Item {
 
 	@Override
 	public String toString() {
-		return "Item [CPO_SN=" + CPO_SN + ", ppid=" + ppid + ", pn=" + pn + ", sn=" + sn + ", revision=" + revision
+		return "Item [ppid=" + ppid + ", pn=" + pn + ", sn=" + sn + ", revision=" + revision
 				+ ", description=" + description + ", specialInstruction=" + specialInstruction + ", co=" + co
 				+ ", lot=" + lot + ", problemCode=" + problemCode + ", rma=" + rma + ", dps=" + dps + ", mfgPN=" + mfgPN
 				+ "]";
@@ -174,7 +162,6 @@ public class Item {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((CPO_SN == null) ? 0 : CPO_SN.hashCode());
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + ((pn == null) ? 0 : pn.hashCode());
 		result = prime * result + ((ppid == null) ? 0 : ppid.hashCode());
@@ -193,11 +180,6 @@ public class Item {
 		if (getClass() != obj.getClass())
 			return false;
 		Item other = (Item) obj;
-		if (CPO_SN == null) {
-			if (other.CPO_SN != null)
-				return false;
-		} else if (!CPO_SN.equals(other.CPO_SN))
-			return false;
 		if (description == null) {
 			if (other.description != null)
 				return false;

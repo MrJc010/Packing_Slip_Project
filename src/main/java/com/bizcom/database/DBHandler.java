@@ -153,23 +153,29 @@ public class DBHandler {
 
 	
 
-	public boolean checkArray(int[] a) {
-		if (a.length == 0)
-			return false;
-		if (a.length == 1)
-			return a[0] == 1;
-		if (a[0] == 0)
-			return false;
-		for (int i = 1; i < a.length; i++) {
-			if (a[0] != a[i])
-				return false;
-		}
-		return true;
-	}
+//	public boolean checkArray(int[] a) {
+//		if (a.length == 0)
+//			return false;
+//		if (a.length == 1)
+//			return a[0] == 1;
+//		if (a[0] == 0)
+//			return false;
+//		for (int i = 1; i < a.length; i++) {
+//			if (a[0] != a[i])
+//				return false;
+//		}
+//		return true;
+//	}
 
+	
+	//***********************************************************
+	//*                            Physical Receiving           *
+	//***********************************************************
 	public List<Item> fetchRMA(String ppidN) {
 		List<Item> result = new ArrayList<>();
-		String FETCH_RMA_QUERY = "SELECT * FROM pre_alert WHERE ppid = ?";
+		String FETCH_RMA_QUERY = "SELECT pre_ppid.rma, pre_item.ppid, pre_item.pn, pre_item.co, pre_item.lot,"
+		+ "pre_item.dps, pre_item.pro_code, pre_item.code_descp"
+		+ " FROM pre_item INNER JOIN pre_ppid ON pre_item.ppid = pre_ppid.ppid AND pre_item.ppid = ?";
 
 		try {
 			dbconnection = getConnectionAWS();
@@ -178,24 +184,23 @@ public class DBHandler {
 			rs = pst.executeQuery();
 			while (rs.next()) {
 				String rma = rs.getString("rma");
-				String CPO_SN = "";
 				String ppid = rs.getString("ppid");
 				String pn = rs.getString("pn");
 				String co = rs.getString("co");
 				String sn = "";
 				String revision = "";
-				String description = rs.getString("problem_desc");
+				String description = rs.getString("code_descp");
 				String specialInstruction = "";
 				String lot = rs.getString("lot");
-				String problemCode = rs.getString("problem_code");
+				String problemCode = rs.getString("pro_code");
 				String dps = rs.getString("dps");
 				String mfgPN = "";
 
-				result.add(new Item(CPO_SN, ppid, pn, sn, revision, description, specialInstruction, co, lot,
-						problemCode, rma, dps, mfgPN));
+				result.add(new Item(ppid, pn, sn, revision, description, specialInstruction, co, lot, problemCode, rma, dps, mfgPN, "userID", new Date().toString()));
 			}
 
 		} catch (Exception e) {
+			System.out.println(e.getMessage());
 			System.out.println("ERROR fetchRMA");
 		} finally {
 			shutdown();
@@ -251,28 +256,20 @@ public class DBHandler {
 
 	public boolean PhysicalReceive(String rmaNum, String mac, String ppid, String pn, String sn, String revision,
 			String cpu_sn, String mfgPN, String lot, String description, String problemCode, String dps) {
-		String FETCH_RMA_QUERY = "INSERT INTO physicalRecevingDB VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,? ,?)";
+		String FETCH_RMA_QUERY = "INSERT INTO physical_station VALUES (?, ?, ?, ?, ?, ?, ?)";
 		boolean result = false;
 		try {
 			dbconnection = getConnectionAWS();
 			dbconnection.setAutoCommit(false);
 			pst = dbconnection.prepareStatement(FETCH_RMA_QUERY);
-			pst.setString(1, rmaNum);
-			pst.setString(2, ppid);
-			pst.setString(3, pn);
-			pst.setString(4, sn);
+			pst.setString(1, ppid);
+			pst.setString(2, mac);
+			pst.setString(3, cpu_sn);
+			pst.setString(4, revision);
 
-			pst.setString(5, mac);
-			pst.setString(6, cpu_sn);
-			pst.setString(7, revision);
-
-			pst.setString(8, mfgPN);
-			pst.setString(9, lot);
-			pst.setString(10, description);
-			pst.setString(11, problemCode);
-			pst.setString(12, dps);
-			pst.setString(13, "User ID");
-			pst.setString(14, new Date().toLocaleString());
+			pst.setString(5, mfgPN);
+			pst.setString(6, "User ID");
+			pst.setString(7, new Date().toLocaleString());
 
 			pst.executeUpdate();
 			// delete record in pre_alert table
@@ -650,7 +647,7 @@ public class DBHandler {
 	 * This function used for getting number of record base on ppid on sn_record table
 	 */
 	public int getRecordCount(String ppid) {
-		String GET_COUNT_IN_RECORD = "SELECT count_recevied FROM sn_record WHERE ppid = ?";
+		String GET_COUNT_IN_RECORD = "SELECT count_recevied FROM pre_sn_record WHERE ppid = ?";
 		int result = -1;
 
 		try {
@@ -774,7 +771,7 @@ public class DBHandler {
 			rs = pst.executeQuery();
 
 			while (rs.next()) {
-				result = rs.getString("rma");
+				result = rs.getString("ppid");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -783,6 +780,31 @@ public class DBHandler {
 			shutdown();
 		}
 		
+		return result;
+	}
+	
+	public boolean addToPre_PPID(String rma,List<PPID> list) throws SQLException, ClassNotFoundException {
+		boolean result = false;
+		String query = "INSERT INTO pre_ppid VALUES (?,?,?)";
+		dbconnection = getConnectionAWS();
+		// dbconnection.setAutoCommit(false);
+		pst = dbconnection.prepareStatement(query);
+		int i = 0;
+		for (PPID aa : list) {
+			pst.setString(1, aa.getPpidNumber());
+			pst.setString(2, rma);
+			pst.setString(3, "UnRecevied");
+			pst.addBatch();
+			i++;
+			if (i == list.size()) {
+				multi m = new multi(pst);
+				m.start();
+				result = true;
+				// dbconnection.commit();
+			}
+		}
+		// pst.executeBatch();
+
 		return result;
 	}
 	//*********************************************************************************
@@ -879,26 +901,6 @@ public class DBHandler {
 
 		} catch (Exception e) {
 			System.out.println(e);
-		} finally {
-			shutdown();
-		}
-
-		return result;
-	}
-
-	public boolean createNewRMA(String rma) {
-		String query = "INSERT INTO rma_table VALUES(?,?)";
-		boolean result = false;
-		try {
-			dbconnection = getConnectionAWS();
-			pst = dbconnection.prepareStatement(query);
-			pst.setString(1, null);
-			pst.setString(2, rma);
-			pst.executeUpdate();
-			result = true;
-		} catch (Exception e) {
-			System.out.println("FAIL createNewRMA" + e.getMessage());
-
 		} finally {
 			shutdown();
 		}
