@@ -68,7 +68,10 @@ public class FileUploadServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		pathFile = "";
+		request.setAttribute("setHideInfo", "hidden");
+		request.setAttribute("setErrorHidden", "hidden");
 		if (request.getSession().getAttribute("PathFile") != null) {
+			request.setAttribute("setHideInfo", "x");
 			pathFile = request.getSession().getAttribute("PathFile").toString();
 			request.setAttribute("urll", pathFile);
 			String rmaPara = request.getParameter("RMA Number");
@@ -229,6 +232,7 @@ public class FileUploadServlet extends HttpServlet {
 		}
 		String filePath = "";
 		String fileName = "";
+		request.getSession().setAttribute("PathFile", null);
 		try {
 			// parses the request's content to extract file data
 			List<FileItem> formItems = upload.parseRequest(request);
@@ -246,11 +250,15 @@ public class FileUploadServlet extends HttpServlet {
 						request.getSession().setAttribute("Name", fileName);
 						ExcelValidation validation = new ExcelValidation();
 						item.write(storeFile);
-						
+
 						if (validation.prealertValidation(filePath)) {
+							request.setAttribute("setHideInfo", "x");
 							System.out.println("=====excel file is good=========");
 						} else {
-							System.out.println(" ==== excel file does not match ====");
+							System.out.println("=====excel file is no good=========");
+							request.setAttribute("setHideInfo", "x");
+							request.setAttribute("setErrorHidden", "x");
+
 						}
 
 					}

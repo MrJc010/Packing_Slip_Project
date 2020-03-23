@@ -18,6 +18,9 @@
 			<div class="input-group-append justify-content-center">
 				<input type="submit" class="btn btn-primary btn-md my-4"
 					value="UPLOAD" />
+				<div class="alert alert-danger" role="alert" ${setErrorHidden}>
+					<strong>Error!!!</strong> Your Excel File is not Validated!
+				</div>
 			</div>
 
 			<script>
@@ -36,9 +39,9 @@
 		</form>
 	</div>
 
-	<div class="container-fluid p-5" ${setHide}>
+	<div class="container-fluid p-5" ${setHideInfo}>
 
-		<ul class="nav nav-tabs nav-pills" id="myTab" role="tablist">
+		<ul class="nav nav-tabs " id="myTab" role="tablist">
 			<li class="nav-item"><a class="nav-link active"
 				id="packingslip-tab" data-toggle="tab" href="#packingslip"
 				role="tab" aria-controls="packingslip" aria-selected="true"><strong>Packing
@@ -57,18 +60,18 @@
 				<div class="container-fluid" ${setHidden}>
 
 					<div>
-						<h3>Packing Slip</h3>
-						<form method="GET" action="<%=request.getContextPath()%>/pre_alert" enctype=multipart/form-data>
-							<br> <input type="text" name="RMA Number" required/>
-							<input type="submit" class="btn btn-md btn-primary" value="Save RMA" />
+						<h3>Click button to get RMA number</h3>
+						<form method="GET"
+							action="<%=request.getContextPath()%>/pre_alert"
+							enctype=multipart/form-data>
+							<!-- <br> <input type="text" name="RMA Number" required/> -->
+							<input type="submit" class="btn btn-md btn-primary my-4"
+								value="GET RMA" />
 						</form>
-						
-
-
 
 					</div>
 					<div class="row p5">
-						<table class="table table-striped">
+						<table class="table table-striped table-responsive">
 							<thead>
 								<tr>
 									<th scope="col" class="text-left">PN#</th>
@@ -112,7 +115,7 @@
 						<h3>List PPID Read From Excel</h3>
 					</div>
 					<div class="row p5">
-						<table class="table table-striped">
+						<table class="table table-striped table-responsive">
 							<thead>
 								<tr>
 									<th scope="col" class="text-left">ROW #</th>
@@ -127,7 +130,9 @@
 								</tr>
 							</thead>
 							<tbody>
-							<%int count = 1; %>
+								<%
+									int count = 1;
+								%>
 								<c:forEach items="${rows2}" var="aRow">
 									<tr>
 										<td><%=count%></td>
@@ -141,7 +146,9 @@
 										<td>${aRow.problemDescription}</td>
 									</tr>
 
-								<%count++;%>
+									<%
+										count++;
+									%>
 								</c:forEach>
 								<tr>
 
@@ -155,13 +162,10 @@
 
 			</div>
 
-			
+
 			<div class="tab-pane" id="export" role="tabpanel"
 				aria-labelledby="export-tab">
-				${urll}
-
-				<a class="btn btn-primary"
-					href="File_DownLoad"
+				${urll} <a class="btn btn-primary" href="File_DownLoad"
 					role="button"
 					onclick="if(!confirm('Are you sure to export?')) return false">Export</a>
 			</div>

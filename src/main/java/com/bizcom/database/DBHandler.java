@@ -20,7 +20,7 @@ public class DBHandler {
 
 	public DBHandler() {
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver");
 
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -709,6 +709,13 @@ public class DBHandler {
 		pst.executeUpdate();
 	}
 
+	/**
+	 * Check If ppid is exist in the current database
+	 * @param ppid
+	 * @param pn
+	 * @param lot
+	 * @return
+	 */
 	public String isRecordPreAlertExist(String ppid, String pn, String lot) {
 		String result = "";
 		String CHECK_PRE_ALERT_RECORD = "SELECT * FROM pre_alert WHERE pn = ? and lot = ? and ppid=? ";
@@ -726,11 +733,11 @@ public class DBHandler {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("===cannot find rma=====");
+			
 		} finally {
 			shutdown();
 		}
-		System.out.println("RMA : " + result);
+		
 		return result;
 	}
 
@@ -832,7 +839,7 @@ public class DBHandler {
 	}
 
 	public boolean createNewRMA(String rma) {
-		String query = "INSERT INTO rmaTable VALUES(?,?)";
+		String query = "INSERT INTO rma_table VALUES(?,?)";
 		boolean result = false;
 		try {
 			dbconnection = getConnectionAWS();
