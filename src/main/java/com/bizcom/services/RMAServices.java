@@ -27,9 +27,9 @@ public class RMAServices {
 		return result + (count + 1);
 	}
 
-	public boolean addRMAToDB(String rma) {
+	public boolean addRMAToDB(String rma,String userId) {
 		DBHandler db = new DBHandler();
-		return db.createNewRMA(rma);
+		return db.createNewRMA(rma,userId);
 	}
 
 }

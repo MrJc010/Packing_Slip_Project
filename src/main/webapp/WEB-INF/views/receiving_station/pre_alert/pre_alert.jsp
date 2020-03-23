@@ -11,7 +11,6 @@
 			enctype="multipart/form-data">
 
 			<div class="custom-file">
-				<input type="file" name="uploadFile" class="custom-file-input"
 					id="customFile1" required> <label class="custom-file-label"
 					for="customFile">Choose file</label>
 			</div>
@@ -65,7 +64,7 @@
 							action="<%=request.getContextPath()%>/pre_alert"
 							enctype=multipart/form-data>
 							<!-- <br> <input type="text" name="RMA Number" required/> -->
-							<input type="submit" class="btn btn-md btn-primary my-4"
+							<input type="submit" name="rmaButton" class="btn btn-md btn-primary my-4"
 								value="GET RMA" />
 						</form>
 

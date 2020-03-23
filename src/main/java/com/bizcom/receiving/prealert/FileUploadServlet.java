@@ -31,6 +31,7 @@ import com.bizcom.excel.ExcelService;
 import com.bizcom.packingslip.PackingSlip;
 import com.bizcom.ppid.PPID;
 import com.bizcom.services.ExcelValidation;
+import com.bizcom.services.RMAServices;
 
 /**
  * A Java servlet that handles file upload from client.
@@ -70,11 +71,15 @@ public class FileUploadServlet extends HttpServlet {
 		pathFile = "";
 		request.setAttribute("setHideInfo", "hidden");
 		request.setAttribute("setErrorHidden", "hidden");
+		
+		//generate new rma number
+		
+		
 		if (request.getSession().getAttribute("PathFile") != null) {
 			request.setAttribute("setHideInfo", "x");
 			pathFile = request.getSession().getAttribute("PathFile").toString();
 			request.setAttribute("urll", pathFile);
-			String rmaPara = request.getParameter("RMA Number");
+			String rmaButton = request.getParameter("rmaButton");
 			// excelService.read(pathFile);
 
 			excelService.read(pathFile);
@@ -90,21 +95,23 @@ public class FileUploadServlet extends HttpServlet {
 			String lotTest = tempPPID.getLotNumber();
 			isExported = dbHandler.isRecordPreAlertExist(ppidTest, pnTest, lotTest);
 
-			if (rmaPara != null && isExported.isEmpty()) {
+			if (rmaButton.equals("GET RMA") && isExported.isEmpty()) {
 
-				System.out.println("RUN NEW RMA");
+				RMAServices rma = new RMAServices();
+				String newRMA = rma.generatorRMA();
+				
 
 //				Multi thread = new Multi(list, rmaPara, excelService, dbHandler);
 //				thread.start();
 
 				try {
-					dbHandler.ppidToDB(excelService.appendRMAForPPID(list, rmaPara));
+					dbHandler.ppidToDB(excelService.appendRMAForPPID(list, newRMA));
 				} catch (ClassNotFoundException | SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
-				saveRMA(pathFile, rmaPara);
+				saveRMA(pathFile, newRMA);
 
 			} else {
 //				System.out.println("uploaded show uppp");

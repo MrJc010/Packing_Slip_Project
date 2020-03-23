@@ -751,6 +751,38 @@ public class DBHandler {
 		return result;
 	}
 	
+	
+	/**
+	 * Check If ppid is exist in the current database
+	 * @param ppid
+	 * @param pn
+	 * @param lot
+	 * @return
+	 */
+	public String isRecordPreAlertExist(String ppid, String pn, String lot) {
+		String result = "";
+		String CHECK_PRE_ALERT_RECORD = "SELECT * FROM pre_item WHERE pn = ? and lot = ? and ppid=? ";
+
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(CHECK_PRE_ALERT_RECORD);
+			pst.setString(1, pn);
+			pst.setString(2, lot);
+			pst.setString(3, ppid);
+			rs = pst.executeQuery();
+
+			while (rs.next()) {
+				result = rs.getString("rma");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+		} finally {
+			shutdown();
+		}
+		
+		return result;
+	}
 	//*********************************************************************************
 	//*                   End pre-alert functions                                     *
 	//*********************************************************************************
@@ -809,37 +841,7 @@ public class DBHandler {
 		pst.executeUpdate();
 	}
 
-	/**
-	 * Check If ppid is exist in the current database
-	 * @param ppid
-	 * @param pn
-	 * @param lot
-	 * @return
-	 */
-	public String isRecordPreAlertExist(String ppid, String pn, String lot) {
-		String result = "";
-		String CHECK_PRE_ALERT_RECORD = "SELECT * FROM pre_alert WHERE pn = ? and lot = ? and ppid=? ";
 
-		try {
-			dbconnection = getConnectionAWS();
-			pst = dbconnection.prepareStatement(CHECK_PRE_ALERT_RECORD);
-			pst.setString(1, pn);
-			pst.setString(2, lot);
-			pst.setString(3, ppid);
-			rs = pst.executeQuery();
-
-			while (rs.next()) {
-				result = rs.getString("rma");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			
-		} finally {
-			shutdown();
-		}
-		
-		return result;
-	}
 
 	public boolean MoveToScrap01(String rmaNum, String mac, String ppid, String pn, String sn, String revision,
 			String cpu_sn, String mfgPN, String lot, String description, String problemCode, String dps) {
@@ -875,62 +877,6 @@ public class DBHandler {
 
 		} catch (Exception e) {
 			System.out.println(e);
-		} finally {
-			shutdown();
-		}
-
-		return result;
-	}
-
-	public List<PreAlertItem> fetchPreAlert(String byRMA) {
-		List<PreAlertItem> result = new ArrayList<>();
-		String FETCH_ALL_PREALERT = "SELECT * FROM pre_alert";
-		String FETCH_ALL_PREALERT_BY_RMA = "SELECT * FROM pre_alert WHERE rma=?";
-
-		String finalQuery = byRMA.isEmpty() ? FETCH_ALL_PREALERT : FETCH_ALL_PREALERT_BY_RMA;
-		try {
-			dbconnection = getConnectionAWS();
-			pst = dbconnection.prepareStatement(finalQuery);
-			if (!byRMA.isEmpty()) {
-				pst.setString(1, byRMA);
-			}
-			rs = pst.executeQuery();
-			while (rs.next()) {
-
-				String ppid = rs.getString("ppid");
-				String pn = rs.getString("pn");
-				String co = rs.getString("co");
-				String date_received = rs.getString("date_received");
-				String lot = rs.getString("lot");
-				String dps = rs.getString("dps");
-				String problem_code = rs.getString("problem_code");
-				String problem_desc = rs.getString("problem_desc");
-				String rma = rs.getString("rma");
-				result.add(new PreAlertItem(ppid, pn, co, date_received, lot, dps, problem_code, problem_desc, rma));
-			}
-
-		} catch (Exception e) {
-
-		} finally {
-			shutdown();
-		}
-		return result;
-	}
-
-	public int getRMACount(String pattern) {
-		String query = "SELECT COUNT(*)  FROM rmaTable WHERE rma LIKE '" + pattern + "%'";
-		int result = 0;
-
-		try {
-			dbconnection = getConnectionAWS();
-			pst = dbconnection.prepareStatement(query);
-			rs = pst.executeQuery();
-			while (rs.next()) {
-				result = rs.getInt(1);
-			}
-		} catch (Exception e) {
-			System.out.println("FAIL getRMACount" + e.getMessage());
-
 		} finally {
 			shutdown();
 		}
