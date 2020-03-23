@@ -151,36 +151,7 @@ public class DBHandler {
 	// return result;
 	// }
 
-	public boolean ppidToDB(List<PPID> listPPID) throws SQLException, ClassNotFoundException {
-		boolean result = false;
-		String INSERT_PPID = "INSERT INTO pre_alert VALUES(?,?,?,?,?,?,?,?,?)";
-		dbconnection = getConnectionAWS();
-		// dbconnection.setAutoCommit(false);
-		pst = dbconnection.prepareStatement(INSERT_PPID);
-		int i = 0;
-		for (PPID aa : listPPID) {
-			pst.setString(1, aa.getPpidNumber());
-			pst.setString(2, aa.getPnNumber());
-			pst.setString(3, aa.getCoNumber());
-			pst.setString(4, aa.getDateReceived());
-			pst.setString(5, aa.getLotNumber());
-			pst.setString(6, aa.getDpsNumber());
-			pst.setString(7, aa.getProblemCode());
-			pst.setString(8, aa.getProblemDescription());
-			pst.setString(9, aa.getRma());
-			pst.addBatch();
-			i++;
-			if (i == listPPID.size()) {
-				multi m = new multi(pst);
-				m.start();
-				result = true;
-				// dbconnection.commit();
-			}
-		}
-		// pst.executeBatch();
-
-		return result;
-	}
+	
 
 	public boolean checkArray(int[] a) {
 		if (a.length == 0)
@@ -635,6 +606,37 @@ public class DBHandler {
 			result = rs.getInt("count_recevied");
 
 		}
+		return result;
+	}
+	
+	public boolean ppidToDB(List<PPID> listPPID) throws SQLException, ClassNotFoundException {
+		boolean result = false;
+		String INSERT_PPID = "INSERT INTO pre_item VALUES(?,?,?,?,?,?,?,?,?)";
+		dbconnection = getConnectionAWS();
+		// dbconnection.setAutoCommit(false);
+		pst = dbconnection.prepareStatement(INSERT_PPID);
+		int i = 0;
+		for (PPID aa : listPPID) {
+			pst.setString(1, aa.getPpidNumber());
+			pst.setString(2, aa.getPnNumber());
+			pst.setString(3, aa.getCoNumber());
+			pst.setString(4, aa.getLotNumber());
+			pst.setString(5, aa.getDpsNumber());
+			pst.setString(6, aa.getProblemCode());
+			pst.setString(7, aa.getProblemDescription());
+			pst.setString(8, "userId");
+			pst.setString(9, aa.getDateReceived());
+			pst.addBatch();
+			i++;
+			if (i == listPPID.size()) {
+				multi m = new multi(pst);
+				m.start();
+				result = true;
+				// dbconnection.commit();
+			}
+		}
+		// pst.executeBatch();
+
 		return result;
 	}
 

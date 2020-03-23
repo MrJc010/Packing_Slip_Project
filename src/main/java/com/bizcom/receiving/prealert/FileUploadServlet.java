@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -69,17 +70,10 @@ public class FileUploadServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		pathFile = "";
-		request.setAttribute("setHideInfo", "hidden");
-		request.setAttribute("setErrorHidden", "hidden");
-		
-		//generate new rma number
-		
-		
 		if (request.getSession().getAttribute("PathFile") != null) {
-			request.setAttribute("setHideInfo", "x");
 			pathFile = request.getSession().getAttribute("PathFile").toString();
 			request.setAttribute("urll", pathFile);
-			String rmaButton = request.getParameter("rmaButton");
+			String rmaPara = request.getParameter("rmaButton");
 			// excelService.read(pathFile);
 
 			excelService.read(pathFile);
@@ -95,12 +89,11 @@ public class FileUploadServlet extends HttpServlet {
 			String lotTest = tempPPID.getLotNumber();
 			isExported = dbHandler.isRecordPreAlertExist(ppidTest, pnTest, lotTest);
 
-			if (rmaButton.equals("GET RMA") && isExported.isEmpty()) {
+			if (rmaPara != null && isExported.isEmpty()) {
 
+				System.out.println("RUN NEW RMA");
 				RMAServices rma = new RMAServices();
 				String newRMA = rma.generatorRMA();
-				
-
 //				Multi thread = new Multi(list, rmaPara, excelService, dbHandler);
 //				thread.start();
 
@@ -112,7 +105,7 @@ public class FileUploadServlet extends HttpServlet {
 				}
 
 				saveRMA(pathFile, newRMA);
-
+				//dbHandler.createNewRMA(newRMA);
 			} else {
 //				System.out.println("uploaded show uppp");
 			}
@@ -239,7 +232,6 @@ public class FileUploadServlet extends HttpServlet {
 		}
 		String filePath = "";
 		String fileName = "";
-		request.getSession().setAttribute("PathFile", null);
 		try {
 			// parses the request's content to extract file data
 			List<FileItem> formItems = upload.parseRequest(request);
@@ -257,15 +249,11 @@ public class FileUploadServlet extends HttpServlet {
 						request.getSession().setAttribute("Name", fileName);
 						ExcelValidation validation = new ExcelValidation();
 						item.write(storeFile);
-
+						
 						if (validation.prealertValidation(filePath)) {
-							request.setAttribute("setHideInfo", "x");
 							System.out.println("=====excel file is good=========");
 						} else {
-							System.out.println("=====excel file is no good=========");
-							request.setAttribute("setHideInfo", "x");
-							request.setAttribute("setErrorHidden", "x");
-
+							System.out.println(" ==== excel file does not match ====");
 						}
 
 					}

@@ -9,18 +9,21 @@
 		<h1 class="text-center mb-4">Upload Excel File</h1>
 		<form method="POST" action="<%=request.getContextPath()%>/pre_alert"
 			enctype="multipart/form-data">
-
+			
+			
 			<div class="custom-file">
+				<input type="file" name="uploadFile" class="custom-file-input"
 					id="customFile1" required> <label class="custom-file-label"
 					for="customFile">Choose file</label>
 			</div>
 			<div class="input-group-append justify-content-center">
 				<input type="submit" class="btn btn-primary btn-md my-4"
 					value="UPLOAD" />
-				<div class="alert alert-danger" role="alert" ${setErrorHidden}>
+								<%--<div class="alert alert-danger" role="alert" ${setErrorHidden}>
 					<strong>Error!!!</strong> Your Excel File is not Validated!
-				</div>
+				</div> --%>
 			</div>
+
 
 			<script>
 				document
