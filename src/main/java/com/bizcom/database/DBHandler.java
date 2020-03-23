@@ -8,7 +8,9 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.bizcom.ppid.PPID;
 import com.bizcom.receiving.physicalreceiving.Item;
@@ -125,51 +127,20 @@ public class DBHandler {
 
 		return flag;
 	}
-
-	// public boolean ppidToDB(List<PPID> listPPID) throws ClassNotFoundException {
-	// boolean result = false;
-	// String INSERT_PPID = "INSERT INTO pre_alert VALUES";
-	// for (PPID aa : listPPID) {
-	// INSERT_PPID += " ('" + aa.getPpidNumber() + "','" + aa.getPnNumber() + "','"
-	// + aa.getCoNumber() + "','"
-	// + aa.getDateReceived() + "','" + aa.getLotNumber() + "','" +
-	// aa.getDpsNumber() + "','"
-	// + aa.getProblemCode() + "','" + aa.getProblemDescription() + "','" +
-	// aa.getRma() + "'),";
-	// }
-	// dbconnection = getConnectionAWS();
-	// INSERT_PPID = INSERT_PPID.substring(0, INSERT_PPID.length() - 1);
-	// INSERT_PPID += ";";
-	// try {
-	// pst = dbconnection.prepareStatement(INSERT_PPID);
-	// pst.executeUpdate();
-	// result = true;
-	// } catch (SQLException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
-	// return result;
-	// }
-
-	
-
-//	public boolean checkArray(int[] a) {
-//		if (a.length == 0)
-//			return false;
-//		if (a.length == 1)
-//			return a[0] == 1;
-//		if (a[0] == 0)
-//			return false;
-//		for (int i = 1; i < a.length; i++) {
-//			if (a[0] != a[i])
-//				return false;
-//		}
-//		return true;
-//	}
-
 	
 	//***********************************************************
+	//***********************************************************
+	//***********************************************************
+	//***********************************************************
+	//***********************************************************
 	//*                            Physical Receiving           *
+	//***********************************************************
+	//***********************************************************
+	//***********************************************************
+	//***********************************************************
+	//***********************************************************
+	//***********************************************************
+	//***********************************************************
 	//***********************************************************
 	public List<Item> fetchRMA(String ppidN) {
 		List<Item> result = new ArrayList<>();
@@ -207,6 +178,80 @@ public class DBHandler {
 		}
 		return result;
 	}
+	
+	public int fetchCurrentReceivedCount(Connection conn, String sn) throws SQLException {
+		int result = 0;
+		String FETCH_CURRENT_COUNT_RECEIVED = "SELECT * FROM pre_sn_record WHERE serial_number=?";
+
+		pst = conn.prepareStatement(FETCH_CURRENT_COUNT_RECEIVED);
+		pst.setString(1, sn);
+		rs = pst.executeQuery();
+		while (rs.next()) {
+			result = rs.getInt("count_recevied");
+
+		}
+		return result;
+	}
+	
+	public void updateAPPID(Connection conn, String ppid) throws SQLException {
+		String DELETE_A_PPID = "UPDATE pre_ppid SET status = 'Received' WHERE ppid=?";
+		pst = conn.prepareStatement(DELETE_A_PPID);
+		pst.setString(1, ppid);
+		pst.executeUpdate();
+	}
+	
+	
+	public boolean PhysicalReceive(String mac, String ppid, String sn, String revision,
+			String cpu_sn, String mfgPN, String userId) {
+		String FETCH_RMA_QUERY = "INSERT INTO physical_station VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+		boolean result = false;
+		try {
+			dbconnection = getConnectionAWS();
+			dbconnection.setAutoCommit(false);
+			pst = dbconnection.prepareStatement(FETCH_RMA_QUERY);
+			pst.setString(1, ppid);
+			pst.setString(2, sn);
+			pst.setString(3, mac);
+			pst.setString(4, cpu_sn);
+
+			pst.setString(5, revision);
+			pst.setString(6, mfgPN);
+			pst.setString(7, "User ID");
+			pst.setString(8, new Date().toLocaleString());
+
+			pst.executeUpdate();
+			// delete record in pre_alert table
+			updateAPPID(dbconnection, ppid);
+			// add to record table
+			addToRecord(dbconnection, sn, ppid);
+
+			dbconnection.commit();
+			result = true;
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		} finally {
+			shutdown();
+		}
+
+		return result;
+	}
+	
+	
+	//***********************************************************
+	//***********************************************************
+	//***********************************************************
+	//***********************************************************
+	//***********************************************************
+	//*                           END Physical Receiving        *
+	//***********************************************************
+	//***********************************************************
+	//***********************************************************
+	//***********************************************************
+	//***********************************************************
+	//***********************************************************
+	//***********************************************************
+	//***********************************************************
 
 	public List<String> fetchErrorForRepair01FromMICI(String ppid) {
 		String query = "SELECT * FROM mici_table WHERE ppid = ?";
@@ -238,13 +283,6 @@ public class DBHandler {
 		return result;
 	}
 
-	public void deleteAPPID(Connection conn, String ppid) throws SQLException {
-		String DELETE_A_PPID = "DELETE FROM pre_alert WHERE ppid=?";
-
-		pst = conn.prepareStatement(DELETE_A_PPID);
-		pst.setString(1, ppid);
-		pst.executeUpdate();
-	}
 
 	public void deletaPhysicalRecord(Connection conn, String ppid) throws SQLException {
 		String DELETE_A_PPID = "DELETE FROM physicalRecevingDB WHERE ppid=?";
@@ -254,40 +292,7 @@ public class DBHandler {
 		pst.executeUpdate();
 	}
 
-	public boolean PhysicalReceive(String rmaNum, String mac, String ppid, String pn, String sn, String revision,
-			String cpu_sn, String mfgPN, String lot, String description, String problemCode, String dps) {
-		String FETCH_RMA_QUERY = "INSERT INTO physical_station VALUES (?, ?, ?, ?, ?, ?, ?)";
-		boolean result = false;
-		try {
-			dbconnection = getConnectionAWS();
-			dbconnection.setAutoCommit(false);
-			pst = dbconnection.prepareStatement(FETCH_RMA_QUERY);
-			pst.setString(1, ppid);
-			pst.setString(2, mac);
-			pst.setString(3, cpu_sn);
-			pst.setString(4, revision);
-
-			pst.setString(5, mfgPN);
-			pst.setString(6, "User ID");
-			pst.setString(7, new Date().toLocaleString());
-
-			pst.executeUpdate();
-			// delete record in pre_alert table
-			deleteAPPID(dbconnection, ppid);
-			// add to record table
-			addToRecord(dbconnection, sn, pn, ppid, dps);
-
-			dbconnection.commit();
-			result = true;
-
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		} finally {
-			shutdown();
-		}
-
-		return result;
-	}
+	
 
 	public boolean addMICI(String ppid, String sn) {
 
@@ -516,28 +521,7 @@ public class DBHandler {
 		return phy;
 	}
 
-	public boolean addToMICITable(String ppid, String sn, String user) {
-		boolean result = false;
-		String query = " INSERT INTO mici_table (ppid,sn,date,userId) VALUES(?,?,?,?)";
-		try {
-			dbconnection = getConnectionAWS();
-			pst = dbconnection.prepareStatement(query);
-			pst.setString(1, ppid);
-			pst.setString(2, sn);
-			pst.setString(3, new Date().toLocaleString());
-			pst.setString(4, user);
-
-			pst.execute();
-			result = true;
-
-		} catch (Exception e) {
-			System.out.println("addToMICITable : " + e.getMessage());
-		} finally {
-			shutdown();
-		}
-
-		return result;
-	}
+	
 
 	public boolean isExistInRepair01Table(String ppid) {
 		boolean result = false;
@@ -592,54 +576,20 @@ public class DBHandler {
 
 	}
 
-	public int fetchCurrentReceivedCount(Connection conn, String sn) throws SQLException {
-		int result = 0;
-		String FETCH_CURRENT_COUNT_RECEIVED = "SELECT * FROM sn_record WHERE serial_number=?";
-
-		pst = conn.prepareStatement(FETCH_CURRENT_COUNT_RECEIVED);
-		pst.setString(1, sn);
-		rs = pst.executeQuery();
-		while (rs.next()) {
-			result = rs.getInt("count_recevied");
-
-		}
-		return result;
-	}
 	
-	public boolean ppidToDB(List<PPID> listPPID) throws SQLException, ClassNotFoundException {
-		boolean result = false;
-		String INSERT_PPID = "INSERT INTO pre_item VALUES(?,?,?,?,?,?,?,?,?)";
-		dbconnection = getConnectionAWS();
-		// dbconnection.setAutoCommit(false);
-		pst = dbconnection.prepareStatement(INSERT_PPID);
-		int i = 0;
-		for (PPID aa : listPPID) {
-			pst.setString(1, aa.getPpidNumber());
-			pst.setString(2, aa.getPnNumber());
-			pst.setString(3, aa.getCoNumber());
-			pst.setString(4, aa.getLotNumber());
-			pst.setString(5, aa.getDpsNumber());
-			pst.setString(6, aa.getProblemCode());
-			pst.setString(7, aa.getProblemDescription());
-			pst.setString(8, "userId");
-			pst.setString(9, aa.getDateReceived());
-			pst.addBatch();
-			i++;
-			if (i == listPPID.size()) {
-				multi m = new multi(pst);
-				m.start();
-				result = true;
-				// dbconnection.commit();
-			}
-		}
-		// pst.executeBatch();
-
-		return result;
-	}
-
 	
+
+	//*******************************START*************************************
+	//*********************************************************************************
+	//*********************************************************************************
+	//*********************************************************************************
 	//*********************************************************************************
 	//*                   These methods are for pre-alert functions                   *
+	//*********************************************************************************
+	//*********************************************************************************
+	//*********************************************************************************
+	//*********************************************************************************
+	//*********************************************************************************
 	//*********************************************************************************
 	
 	
@@ -807,54 +757,68 @@ public class DBHandler {
 
 		return result;
 	}
-	//*********************************************************************************
-	//*                   End pre-alert functions                                     *
-	//*********************************************************************************
 	
-	//*********************************************************************************
-	//*                   End pre-alert functions                                     *
-	//*********************************************************************************
-	
-
-	public boolean updateErrorCodeMICI(String ppid, String errorCode, int location) {
+	public boolean ppidToDB(List<PPID> listPPID) throws SQLException, ClassNotFoundException {
 		boolean result = false;
-
-		String query = "UPDATE mici_table SET error" + location + "=? WHERE ppid=?";
-		System.out.println("QUERY addErrorCode" + query);
-
-		try {
-			dbconnection = getConnectionAWS();
-			pst = dbconnection.prepareStatement(query);
-
-			pst.setString(1, errorCode);
-			pst.setString(2, ppid);
-			pst.executeUpdate();
-			result = true;
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("Cannot getRecordCount");
-		} finally {
-			shutdown();
+		String INSERT_PPID = "INSERT INTO pre_item VALUES(?,?,?,?,?,?,?,?,?)";
+		dbconnection = getConnectionAWS();
+		// dbconnection.setAutoCommit(false);
+		pst = dbconnection.prepareStatement(INSERT_PPID);
+		int i = 0;
+		for (PPID aa : listPPID) {
+			pst.setString(1, aa.getPpidNumber());
+			pst.setString(2, aa.getPnNumber());
+			pst.setString(3, aa.getCoNumber());
+			pst.setString(4, aa.getLotNumber());
+			pst.setString(5, aa.getDpsNumber());
+			pst.setString(6, aa.getProblemCode());
+			pst.setString(7, aa.getProblemDescription());
+			pst.setString(8, "userId");
+			pst.setString(9, aa.getDateReceived());
+			pst.addBatch();
+			i++;
+			if (i == listPPID.size()) {
+				multi m = new multi(pst);
+				m.start();
+				result = true;
+				// dbconnection.commit();
+			}
 		}
+		// pst.executeBatch();
 
 		return result;
 	}
 
-	public void addToRecord(Connection conn, String sn, String pn, String ppid, String dps) throws SQLException {
+	
+	//*********************************END*********************************************
+	//*********************************************************************************
+	//*********************************************************************************
+	//*********************************************************************************
+	//*********************************************************************************
+	//*                   End pre-alert functions                                     *
+	//*********************************************************************************
+	//*********************************************************************************
+	//*********************************************************************************
+	//*********************************************************************************
+	//*********************************************************************************
+	//*********************************************************************************
+	
+	
 
-		String INSERT_INTO_RECORD = "INSERT INTO sn_record VALUES(?,?,?,?,?)";
-		String UPDATE_RECORD = "UPDATE sn_record set count_recevied= ? where serial_number=?";
+	
+
+	public void addToRecord(Connection conn, String sn, String ppid) throws SQLException {
+
+		String INSERT_INTO_RECORD = "INSERT INTO pre_sn_record VALUES(?,?,?)";
+		String UPDATE_RECORD = "UPDATE pre_sn_record set count_recevied= ? where serial_number=?";
 		String query = "";
 		int newCount = fetchCurrentReceivedCount(conn, sn) + 1;
 		if (newCount == 1) {
 			query = INSERT_INTO_RECORD;
 			pst = conn.prepareStatement(query);
 			pst.setString(1, sn);
-			pst.setString(2, pn);
-			pst.setInt(3, newCount);
-			pst.setString(4, ppid);
-			pst.setString(5, dps);
+			pst.setInt(2, newCount);
+			pst.setString(3, ppid);
 		} else {
 			query = UPDATE_RECORD;
 			pst = conn.prepareStatement(query);
@@ -895,7 +859,7 @@ public class DBHandler {
 			// delete record in pre_alert table
 			deletaPhysicalRecord(dbconnection, ppid);
 			// add to record table
-			addToRecord(dbconnection, sn, pn, ppid, dps);
+			addToRecord(dbconnection, sn, ppid);
 			dbconnection.commit();
 			result = true;
 
@@ -908,10 +872,20 @@ public class DBHandler {
 		return result;
 	}
 
-	// ====== MICI ======
-
+	//*******************************START*********************************************
+	//*********************************************************************************
+	//*********************************************************************************
+	//*********************************************************************************
+	//*********************************************************************************
+	//*                   These methods are for MICI                                  *
+	//*********************************************************************************
+	//*********************************************************************************
+	//*********************************************************************************
+	//*********************************************************************************
+	//*********************************************************************************
+	//*********************************************************************************
 	public String[] getPhysicalInfor(String ppid) {
-		String query = "SELECT * FROM physicalRecevingDB WHERE ppid=?";
+		String query = "SELECT * FROM pre_item WHERE ppid=?";
 		String[] result = new String[3];
 
 		try {
@@ -920,12 +894,14 @@ public class DBHandler {
 			pst.setString(1, ppid);
 			rs = pst.executeQuery();
 			while (rs.next()) {
-				result[0] = rs.getString("problemCode");
-				result[1] = rs.getString("desc");
-				result[2] = rs.getString("sn");
+				String pro_code = rs.getString("pro_code");
+				String desc_code = rs.getString("code_descp");
+				result[0] = pro_code.length() > 1?pro_code:"N/A";
+				result[1] = desc_code.length() > 1?desc_code:"N/A";
+				result[2] = ppid;
 			}
 		} catch (Exception e) {
-			System.out.println("FAIL getMICIInfo" + e.getMessage());
+			System.out.println("FAIL getPhysicalInfor " + e.getMessage());
 
 		} finally {
 			shutdown();
@@ -935,6 +911,45 @@ public class DBHandler {
 
 	}
 
+	public boolean addToMICITable(String ppid, String sn,Set<String> errors, String user) throws ClassNotFoundException, SQLException {
+		boolean result = false;
+		String query = " INSERT INTO mici_station (count,ppid,error,userId,time) VALUES(?,?,?,?,?)";
+		dbconnection = getConnectionAWS();
+		pst = dbconnection.prepareStatement(query);
+		int i = 0;
+		for (String e : errors) {
+			pst.setString(1, null);
+			pst.setString(2, ppid);
+			pst.setString(3, e);
+			pst.setString(4, user);
+			pst.setString(5, new Date().toLocaleString());
+			i++;
+			if (i == errors.size()) {
+				multi m = new multi(pst);
+				m.start();
+				result = true;
+				// dbconnection.commit();
+			}
+		}
+		return result;
+	}
+	
+	
+	//*********************************END*********************************************
+	//*********************************************************************************
+	//*********************************************************************************
+	//*********************************************************************************
+	//*********************************************************************************
+	//*                   End pre-alert functions                                     *
+	//*********************************************************************************
+	//*********************************************************************************
+	//*********************************************************************************
+	//*********************************************************************************
+	//*********************************************************************************
+	//*********************************************************************************
+	
+	
+	
 	public String[] getCurrentStation(String ppid) {
 		String query = "SELECT * FROM status_table WHERE ppid= ?";
 		String[] result = new String[2];

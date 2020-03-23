@@ -69,8 +69,13 @@
 			<div>
 				<label for="PPID">PPID#: ${ppidCheckAtMICI}</label>
 			</div>
+			<div ${seterrorhiddenproblemMICI}>
 			<div>
-				<label for="SN">SN#: ${snCheckAtMICI}</label>
+				<label>Problem Code: ${problemcodeAtMICI}</label>
+			</div>
+			<div>
+				<label>Problem Description:#: ${problemDescpAtMICI}</label>
+			</div>
 			</div>
 			<div>
 				<label for="statusAtMICI">${currentStatusAtMICI}</label>

@@ -1,6 +1,7 @@
 package com.bizcom.MICI_Station;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -90,23 +91,16 @@ public class MICI extends HttpServlet {
 					System.out.println("Error Code Set:" + errorCodeSet.toString());
 					System.out.println("Result Update Station Status : "
 							+ dbHandler.updateCurrentStation(MICI, REPAIR01_FAIL, ppid));
-
+					try {
+						dbHandler.addToMICITable(ppid, sn,errorCodeSet, "A USER FROM MICI");
+					} catch (ClassNotFoundException | SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			} else {
 				request.getRequestDispatcher("/WEB-INF/views/mici_station/mici.jsp").forward(request, response);
 				System.out.println("Redirect to currentpage on Post Method from inner if");
-			}
-			System.out.println(errorCodeSet.toString());
-
-			dbHandler.updateCurrentStation(MICI, REPAIR01_FAIL, ppid);
-			// dbHandler.addNewToRepair01Table(ppid, "UserID");
-			dbHandler.addToMICITable(ppid, sn, "A USER FROM MICI");
-
-			Iterator<String> tempErrorCode = errorCodeSet.iterator();
-			int i = 1;
-			while (tempErrorCode.hasNext()) {
-				dbHandler.updateErrorCodeMICI(ppid, tempErrorCode.next(), i);
-				i++;
 			}
 			request.getRequestDispatcher("/WEB-INF/views/mici_station/mici.jsp").forward(request, response);
 
@@ -136,13 +130,13 @@ public class MICI extends HttpServlet {
 
 	public void checkMICI(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
+		request.setAttribute("problemcodeAtMICI","");
+		request.setAttribute("problemDescpAtMICI","");
 		String page = request.getParameter("page");
 		ppid = request.getParameter("ppidNumber");
-		sn = request.getParameter("serialnumber");
-
 		String[] miciInfo = dbHandler.getPhysicalInfor(ppid);
 		if (validate(ppid, request, miciInfo)) {
+			
 			// fetch information...
 			if (ppid != null) {
 				request.setAttribute("sethideMICI", "");
@@ -152,15 +146,24 @@ public class MICI extends HttpServlet {
 				request.setAttribute("snCheckAtMICI", sn);
 				if (currenStaions[0].equalsIgnoreCase(START) && currenStaions[1].equalsIgnoreCase(PHYSICAL_RECEIVING)) {
 					// no information here
+					request.setAttribute("problemcodeAtMICI",miciInfo[0]);
+					request.setAttribute("problemDescpAtMICI",miciInfo[1]);
 					request.setAttribute("currentStatusAtMICI",
 							"This Item Is Received From Physical Receiving Station!");
+					System.out.println("Result Update Station Status : "
+							+ dbHandler.updateCurrentStation(PHYSICAL_RECEIVING, MICI, ppid));
 				} else if (currenStaions[0].equalsIgnoreCase(REPAIR01)
 						&& currenStaions[1].equalsIgnoreCase(REPAIR01_PASS)) {
 					// print repair infomation
 					// change from REPAIR01 -> MICI
 					request.setAttribute("currentStatusAtMICI", "This Item Is Returned back From Repair 01 Station!");
 					dbHandler.updateCurrentStation(REPAIR01_PASS, MICI, ppid);
-				} else {
+				} else if(currenStaions[0].equalsIgnoreCase(PHYSICAL_RECEIVING) && currenStaions[1].equalsIgnoreCase(MICI)){
+					request.setAttribute("problemcodeAtMICI",miciInfo[0]);
+					request.setAttribute("problemDescpAtMICI",miciInfo[1]);
+					request.setAttribute("currentStatusAtMICI",
+							"This Item Is Received From Physical Receiving Station!");
+				}else {
 					System.out.println("SOME THING ELSE");
 					request.setAttribute("currentStatusAtMICI", "Invalid Access This Item At This Station!");
 					request.setAttribute("sethideMICI", "hidden");
@@ -181,6 +184,9 @@ public class MICI extends HttpServlet {
 		if (miciInfo[0] != null && miciInfo[1] != null) {
 			request.setAttribute("problemcode", miciInfo[0]);
 			request.setAttribute("problemdecription", miciInfo[1]);
+			if(miciInfo[0].equals("N/A")) {
+				request.setAttribute("seterrorhiddenproblemMICI", "hidden");
+			}
 			return true;
 		} else {
 			request.setAttribute("sethideMICI", "hidden");
@@ -192,8 +198,8 @@ public class MICI extends HttpServlet {
 
 	public boolean checkStatus(String ppid) {
 		String[] status = dbHandler.getCurrentStation(ppid);
-		if ((status[0].equalsIgnoreCase(START) || status[0].equalsIgnoreCase(REPAIR01))
-				&& (status[1].equalsIgnoreCase(PHYSICAL_RECEIVING) || status[1].equalsIgnoreCase(REPAIR01_PASS))) {
+		if ((status[0].equalsIgnoreCase(PHYSICAL_RECEIVING) || status[0].equalsIgnoreCase(REPAIR01))
+				&& (status[1].equalsIgnoreCase(MICI) || status[1].equalsIgnoreCase(REPAIR01_PASS))) {
 			return true;
 		} else {
 			return false;

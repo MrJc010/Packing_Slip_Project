@@ -76,7 +76,7 @@ public class PhysicalReceiving extends HttpServlet {
 				request.setAttribute("title", "Search Item");
 
 				request.getRequestDispatcher("/WEB-INF/views/receiving_station/physicalreceiving/physicalreceiving.jsp")
-						.forward(request, response);
+				.forward(request, response);
 			}
 
 		} else {
@@ -106,15 +106,24 @@ public class PhysicalReceiving extends HttpServlet {
 			String mac = request.getParameter("mac");
 			String cpu_sn = request.getParameter("cpu_sn");
 
-			dbhandler.PhysicalReceive(rmaNum, mac, ppid, pn, sn, revision, cpu_sn, mfgPN, lot,
-					description, problemCode, dps);
-			dbhandler.addToStatusTable(ppid, sn, "START", "PHYSICAL_RECEIVING");
 			if (flag) {
 				dbhandler.MoveToScrap01(rmaNum, mac, ppid,pn, sn, revision,
-						 cpu_sn, mfgPN, lot, description, problemCode, dps);
+						cpu_sn, mfgPN, lot, description, problemCode, dps);
 			} else {
-				System.out.println("Successfull");
-				request.getSession().setAttribute("Successfull", "Successfull");
+				boolean physical = dbhandler.PhysicalReceive(mac, ppid, sn, revision, cpu_sn, mfgPN, "userId");
+				boolean updateStatus = false;
+				if(physical) {
+					updateStatus = dbhandler.addToStatusTable(ppid, sn, "START", "PHYSICAL_RECEIVING");
+					if(!updateStatus) {
+						System.out.println("Cannot update item status");
+					}else {
+						System.out.println("Successfull");
+						request.getSession().setAttribute("Successfull", "Successfull");
+					}
+				}else {
+					System.out.println("Cannot add record to physical table");
+
+				}
 			}
 
 			response.sendRedirect(request.getContextPath() + "/searchitem");
@@ -122,7 +131,7 @@ public class PhysicalReceiving extends HttpServlet {
 		} else {
 			System.out.println("Duplicate Information");
 		}
-		
+
 
 	}
 }
