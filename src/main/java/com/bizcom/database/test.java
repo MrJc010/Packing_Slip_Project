@@ -6,19 +6,11 @@ import java.util.Set;
 public class test {
 
 	public static void main(String[] args) throws ClassNotFoundException {
-		Class.forName("com.mysql.cj.jdbc.Driver");
+		//Class.forName("com.mysql.cj.jdbc.Driver");
 		DBHandler db = new DBHandler();
-
+		db.getConnectionAWS();
+		db.testConnection();
 		
-		Set<String> testss = new HashSet<>();
-		testss.add("1");
-		testss.add("2");
-		testss.add("3");
-		testss.add("4");
-		
-		testss.forEach(v -> {
-			System.out.println(v);
-		});
 //		//map 1 has 3 keys
 //		HashMap<Integer, String> map1 = new HashMap<>();
 //		 

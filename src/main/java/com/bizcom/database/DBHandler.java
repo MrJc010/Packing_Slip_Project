@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,10 +18,11 @@ public class DBHandler {
 	private Connection dbconnection;
 	private PreparedStatement pst;
 	private ResultSet rs;
+	private static final SimpleDateFormat sdf = new SimpleDateFormat("MM:dd:yyy-HH.mm.ss");
 
 	public DBHandler() {
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver");
 
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -48,6 +50,7 @@ public class DBHandler {
 			dbconnection = DriverManager.getConnection(
 					"jdbc:mysql://" + Configs.dbHost + ":" + Configs.dbPort + "/" + Configs.dbName, Configs.dbUsername,
 					Configs.dbPassword);
+
 
 		} catch (SQLException e) {
 
@@ -113,6 +116,7 @@ public class DBHandler {
 			}
 
 		} catch (Exception e) {
+			System.out.println(e);
 			System.out.println("Fail to connect");
 		} finally {
 			// close database resources
@@ -634,6 +638,15 @@ public class DBHandler {
 		return result;
 	}
 
+	
+	//*********************************************************************************
+	//*                   These methods are for pre-alert functions                   *
+	//*********************************************************************************
+	
+	
+	/*
+	 * This function used for getting number of record base on ppid on sn_record table
+	 */
 	public int getRecordCount(String ppid) {
 		String GET_COUNT_IN_RECORD = "SELECT count_recevied FROM sn_record WHERE ppid = ?";
 		int result = -1;
@@ -659,6 +672,93 @@ public class DBHandler {
 		return result;
 
 	}
+	
+	
+	public List<PreAlertItem> fetchPreAlert(String byRMA) {
+		List<PreAlertItem> result = new ArrayList<>();
+		String FETCH_ALL_PREALERT = "SELECT * FROM pre_alert";
+		String FETCH_ALL_PREALERT_BY_RMA = "SELECT * FROM pre_alert WHERE rma=?";
+
+		String finalQuery = byRMA.isEmpty() ? FETCH_ALL_PREALERT : FETCH_ALL_PREALERT_BY_RMA;
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(finalQuery);
+			if (!byRMA.isEmpty()) {
+				pst.setString(1, byRMA);
+			}
+			rs = pst.executeQuery();
+			while (rs.next()) {
+
+				String ppid = rs.getString("ppid");
+				String pn = rs.getString("pn");
+				String co = rs.getString("co");
+				String date_received = rs.getString("date_received");
+				String lot = rs.getString("lot");
+				String dps = rs.getString("dps");
+				String problem_code = rs.getString("problem_code");
+				String problem_desc = rs.getString("problem_desc");
+				String rma = rs.getString("rma");
+				result.add(new PreAlertItem(ppid, pn, co, date_received, lot, dps, problem_code, problem_desc, rma));
+			}
+
+		} catch (Exception e) {
+
+		} finally {
+			shutdown();
+		}
+		return result;
+	}
+	
+	public int getRMACount(String pattern) {
+		String query = "SELECT COUNT(*)  FROM rma_table WHERE rma LIKE '" + pattern + "%'";
+		int result = 0;
+
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(query);
+			rs = pst.executeQuery();
+			while (rs.next()) {
+				result = rs.getInt(1);
+			}
+		} catch (Exception e) {
+			System.out.println("FAIL getRMACount" + e.getMessage());
+
+		} finally {
+			shutdown();
+		}
+
+		return result;
+	}
+	
+	public boolean createNewRMA(String rma,String userId) {
+		String query = "INSERT INTO rma_table VALUES(?,?,?)";
+		boolean result = false;
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(query);
+			pst.setString(1, rma);
+			pst.setString(2, userId);
+			pst.setString(3,new Date().toLocaleString());
+			pst.executeUpdate();
+			result = true;
+		} catch (Exception e) {
+			System.out.println("FAIL createNewRMA" + e.getMessage());
+
+		} finally {
+			shutdown();
+		}
+
+		return result;
+	}
+	
+	//*********************************************************************************
+	//*                   End pre-alert functions                                     *
+	//*********************************************************************************
+	
+	//*********************************************************************************
+	//*                   End pre-alert functions                                     *
+	//*********************************************************************************
+	
 
 	public boolean updateErrorCodeMICI(String ppid, String errorCode, int location) {
 		boolean result = false;
@@ -775,81 +875,6 @@ public class DBHandler {
 		return result;
 	}
 
-	public List<PreAlertItem> fetchPreAlert(String byRMA) {
-		List<PreAlertItem> result = new ArrayList<>();
-		String FETCH_ALL_PREALERT = "SELECT * FROM pre_alert";
-		String FETCH_ALL_PREALERT_BY_RMA = "SELECT * FROM pre_alert WHERE rma=?";
-
-		String finalQuery = byRMA.isEmpty() ? FETCH_ALL_PREALERT : FETCH_ALL_PREALERT_BY_RMA;
-		try {
-			dbconnection = getConnectionAWS();
-			pst = dbconnection.prepareStatement(finalQuery);
-			if (!byRMA.isEmpty()) {
-				pst.setString(1, byRMA);
-			}
-			rs = pst.executeQuery();
-			while (rs.next()) {
-
-				String ppid = rs.getString("ppid");
-				String pn = rs.getString("pn");
-				String co = rs.getString("co");
-				String date_received = rs.getString("date_received");
-				String lot = rs.getString("lot");
-				String dps = rs.getString("dps");
-				String problem_code = rs.getString("problem_code");
-				String problem_desc = rs.getString("problem_desc");
-				String rma = rs.getString("rma");
-				result.add(new PreAlertItem(ppid, pn, co, date_received, lot, dps, problem_code, problem_desc, rma));
-			}
-
-		} catch (Exception e) {
-
-		} finally {
-			shutdown();
-		}
-		return result;
-	}
-
-	public int getRMACount(String pattern) {
-		String query = "SELECT COUNT(*)  FROM rmaTable WHERE rma LIKE '" + pattern + "%'";
-		int result = 0;
-
-		try {
-			dbconnection = getConnectionAWS();
-			pst = dbconnection.prepareStatement(query);
-			rs = pst.executeQuery();
-			while (rs.next()) {
-				result = rs.getInt(1);
-			}
-		} catch (Exception e) {
-			System.out.println("FAIL getRMACount" + e.getMessage());
-
-		} finally {
-			shutdown();
-		}
-
-		return result;
-	}
-
-	public boolean createNewRMA(String rma) {
-		String query = "INSERT INTO rmaTable VALUES(?,?)";
-		boolean result = false;
-		try {
-			dbconnection = getConnectionAWS();
-			pst = dbconnection.prepareStatement(query);
-			pst.setString(1, null);
-			pst.setString(2, rma);
-			pst.executeUpdate();
-			result = true;
-		} catch (Exception e) {
-			System.out.println("FAIL createNewRMA" + e.getMessage());
-
-		} finally {
-			shutdown();
-		}
-
-		return result;
-	}
 
 	// ====== MICI ======
 
