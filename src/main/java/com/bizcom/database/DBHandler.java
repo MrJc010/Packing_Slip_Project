@@ -179,6 +179,7 @@ public class DBHandler {
 		return result;
 	}
 
+	
 	public int fetchCurrentReceivedCount(Connection conn, String sn) throws SQLException {
 		int result = 0;
 		String FETCH_CURRENT_COUNT_RECEIVED = "SELECT * FROM pre_sn_record WHERE serial_number=?";
@@ -275,9 +276,25 @@ public class DBHandler {
 	// ***********************************************************
 	// ***********************************************************
 	// ***********************************************************
+	
+	
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// *                  REPAIR 01                              *
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
 
 	public List<String> fetchErrorForRepair01FromMICI(String ppid) {
-		String query = "SELECT * FROM mici_table WHERE ppid = ?";
+		String query = "SELECT error FROM mici_station WHERE ppid = ?";
 		List<String> result = new ArrayList<>();
 		try {
 			dbconnection = getConnectionAWS();
@@ -287,8 +304,8 @@ public class DBHandler {
 
 			while (rs.next()) {
 				int i = 1;
-				while (i < 11) {
-					String temp = rs.getString("error" + i);
+				while (i < 6) {
+					String temp = rs.getString("error");
 
 					if (temp != null) {
 						result.add(temp);

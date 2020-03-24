@@ -43,7 +43,7 @@ min-width: 800px;
 
 	<header>
 		<nav class="navbar navbar-expand-lg navbar-light bg-light">
-			<a class="navbar-brand" href="______"><strong>Bizcom</strong></a>
+			<a class="navbar-brand" href=""><strong>Bizcom</strong></a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse"
 				data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown"
 				aria-expanded="false" aria-label="Toggle navigation">
@@ -72,7 +72,7 @@ min-width: 800px;
                 <a class="nav-link" href="<%=request.getContextPath()%>/mici?page=display">MICI</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="<%=request.getContextPath()%>/repair01">REPAIR01 STATION</a>
+                <a class="nav-link" href="<%=request.getContextPath()%>/repair01">REPAIR01</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">Link</a>
