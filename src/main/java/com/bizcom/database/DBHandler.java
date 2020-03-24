@@ -276,36 +276,6 @@ public class DBHandler {
 	// ***********************************************************
 	// ***********************************************************
 
-	public List<String> fetchErrorForRepair01FromMICI(String ppid) {
-		String query = "SELECT * FROM mici_table WHERE ppid = ?";
-		List<String> result = new ArrayList<>();
-		try {
-			dbconnection = getConnectionAWS();
-			pst = dbconnection.prepareStatement(query);
-			pst.setString(1, ppid);
-			rs = pst.executeQuery();
-
-			while (rs.next()) {
-				int i = 1;
-				while (i < 11) {
-					String temp = rs.getString("error" + i);
-
-					if (temp != null) {
-						result.add(temp);
-					}
-					i++;
-				}
-			}
-
-		} catch (Exception e) {
-			System.out.println("Error fetchErrorForRepair01FromMICI: " + e.getMessage());
-		} finally {
-			shutdown();
-		}
-
-		return result;
-	}
-
 	public void deletaPhysicalRecord(Connection conn, String ppid) throws SQLException {
 		String DELETE_A_PPID = "DELETE FROM physicalRecevingDB WHERE ppid=?";
 
@@ -319,7 +289,7 @@ public class DBHandler {
 		boolean result = false;
 		try {
 			dbconnection = getConnectionAWS();
-			pst = dbconnection.prepareStatement("INSERT INTO mici_table VALUES(?,?,?,?)");
+			pst = dbconnection.prepareStatement("INSERT INTO mici_station VALUES(?,?,?,?)");
 			pst.setString(1, ppid);
 			pst.setString(2, sn);
 			pst.setString(3, "User ID");
@@ -339,11 +309,11 @@ public class DBHandler {
 		boolean result = false;
 		try {
 			dbconnection = getConnectionAWS();
-			pst = dbconnection.prepareStatement("DELETE FROM mici_table WHERE ppid = ?");
+			pst = dbconnection.prepareStatement("DELETE FROM mici_station WHERE ppid = ?");
 			pst.setString(1, ppid);
 			pst.executeUpdate();
 			result = true;
-			System.out.println("DELETE FROM mici_table ppid " + ppid);
+			System.out.println("DELETE FROM mici_station ppid " + ppid);
 		} catch (SQLException | ClassNotFoundException e) {
 			System.out.println(e.getMessage());
 		} finally {
@@ -966,6 +936,32 @@ public class DBHandler {
 		return result;
 	}
 
+	public List<String> fetchErrorForRepair01FromMICI(String ppid) {
+
+		String query = "SELECT description FROM mici_errorcode WHERE errorCode IN (SELECT error FROM mici_station WHERE ppid=?)";
+		List<String> result = new ArrayList<>();
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(query);
+			pst.setString(1, ppid);
+			rs = pst.executeQuery();
+
+			while (rs.next()) {
+				String temp = rs.getString("description");
+				if (temp != null) {
+					result.add(temp);
+				}
+			}
+
+		} catch (Exception e) {
+			System.out.println("Error fetchErrorForRepair01FromMICI: " + e.getMessage());
+		} finally {
+			shutdown();
+		}
+
+		return result;
+	}
+
 	// *********************************END*********************************************
 	// *********************************************************************************
 	// *********************************************************************************
@@ -979,6 +975,74 @@ public class DBHandler {
 	// *********************************************************************************
 	// *********************************************************************************
 
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// * Physical Receiving *
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***************************************************
+	public String getCurrentRev(String ppid) {
+		String result = "";
+
+		String query = "SELECT revision FROM physical_station WHERE ppid=?";
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(query);
+			pst.setString(1, ppid);
+			rs = pst.executeQuery();
+			if (rs.next()) {
+				result = rs.getString("revision");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			shutdown();
+		}
+
+		return result;
+
+	}
+
+	public void updateRevision(String ppid, String newRev) {
+		String query = "UPDATE physical_station SET revision=? WHERE ppid = ?";
+
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(query);
+			pst.setString(1, newRev);
+			pst.setString(2, ppid);
+			pst.execute();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			shutdown();
+		}
+
+	}
+
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// * END Physical Receiving *
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***************************************************
 	public String[] getCurrentStation(String ppid) {
 		String query = "SELECT * FROM status_table WHERE ppid= ?";
 		String[] result = new String[2];
