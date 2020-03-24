@@ -945,7 +945,7 @@ public class DBHandler {
 	public boolean addToMICITable(String ppid, String sn, Set<String> errors, String user)
 			throws ClassNotFoundException, SQLException {
 		boolean result = false;
-		String query = " INSERT INTO mici_station (ppid,error,userId,time) VALUES(?,?,?,?,?)";
+		String query = "INSERT INTO mici_station (ppid,error,userId,time) VALUES(?,?,?,?)";
 		dbconnection = getConnectionAWS();
 		pst = dbconnection.prepareStatement(query);
 		int i = 0;
@@ -1029,10 +1029,10 @@ public class DBHandler {
 		}
 
 		public void run() {
-
+			System.out.println("running...");
 			try {
 				int[] a = pst.executeBatch();
-
+				System.out.println(a.length);
 			} catch (SQLException e) {
 
 				e.printStackTrace();

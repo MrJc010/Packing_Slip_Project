@@ -30,9 +30,8 @@ public class PhysicalReceiving extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 //		HttpSession session = request.getSession();
-
+		request.getSession().removeAttribute("Successfull");
 		request.getSession().setAttribute("Successfull", "");
-
 		myList = new ArrayList<>();
 		String ppid = request.getParameter("ppid");
 		int count = dbhandler.getRecordCount(ppid);
@@ -118,8 +117,9 @@ public class PhysicalReceiving extends HttpServlet {
 				System.out.println("Cannot add record to physical table");
 
 			}
-
+			
 			response.sendRedirect(request.getContextPath() + "/searchitem");
+			//request.getSession().setAttribute("Successfull", "");
 
 		} else {
 			System.out.println("Duplicate Information");
