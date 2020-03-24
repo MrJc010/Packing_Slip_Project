@@ -92,9 +92,11 @@ public class MICI extends HttpServlet {
 					System.out.println("Result Update Station Status : "
 							+ dbHandler.updateCurrentStation(MICI, REPAIR01_FAIL, ppid));
 					try {
-						dbHandler.addToMICITable(ppid, sn,errorCodeSet, "A USER FROM MICI");
+						boolean test = dbHandler.addToMICITable(ppid, sn,errorCodeSet, "A USER FROM MICI");
+						System.out.println(test);
 					} catch (ClassNotFoundException | SQLException e) {
-						// TODO Auto-generated catch block
+						//here
+						System.out.println(e.getMessage());
 						e.printStackTrace();
 					}
 				}
@@ -137,7 +139,7 @@ public class MICI extends HttpServlet {
 		String[] miciInfo = dbHandler.getPhysicalInfor(ppid);
 		if (validate(ppid, request, miciInfo)) {
 			
-			// fetch information...
+			// fetch information
 			if (ppid != null) {
 				request.setAttribute("sethideMICI", "");
 				String[] currenStaions = dbHandler.getCurrentStation(ppid);
