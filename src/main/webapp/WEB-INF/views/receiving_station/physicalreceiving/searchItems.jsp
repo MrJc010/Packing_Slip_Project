@@ -1,8 +1,10 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<jsp:include page="/WEB-INF/common/header.jsp" />
 
+<c:import url="/WEB-INF/common/header.jsp">
+	<c:param name="title" value="Searching Item"></c:param>
+</c:import>
 
-<section style="height: 59vh;">
+<section>
 
 	<div class="container">
 		<h1 class="display-3 text-primary text-center">
@@ -13,9 +15,9 @@
 			<form action="<%=request.getContextPath()%>/searchitem" method="POST">
 				<div class="form-group row">
 					<label for="input-2"
-						class="col-sm-2 col-form-label col-form-label-lg"><strong>PPID</strong></label>
+						class="col-md-2 col-form-label col-form-label-lg"><strong>PPID</strong></label>
 
-					<div class="col-sm-10">
+					<div class="col-md-10">
 						<input id="input-2" class="form-control form-control-lg"
 							name="ppid" placeholder="Enter PPID number" type="text" required />
 					</div>
@@ -27,6 +29,7 @@
 					</button>
 				</div>
 			</form>
+
 
 			<c:if test="${Successfull == \"Successfull\"}">
 				<script type="text/javascript">
@@ -40,12 +43,15 @@
 					var msg = "Cannot Find Item With Your Info!";
 					alert(msg);
 				</script>
-			</c:if>
+			</c:if> 
 
 		</div>
+		<div class="row justify-content-center my-5" ${setHiddenError}>
+			<div class="alert alert-danger" role="alert">
+				<strong>PPID is not valid at this station. Please check with manager.</strong>
 
-	</div>
-
+			</div>
+		</div>
 </section>
 
 

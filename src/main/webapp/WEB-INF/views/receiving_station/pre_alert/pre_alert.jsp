@@ -4,13 +4,25 @@
 
 
 <section>
+	<div class="container-fluid p-3">
+		<div class="float-right mx-5">
+			<form class="float-right" method="GET"
+				action="<%=request.getContextPath()%>/pre_alert">
+				<input type="hidden" name="resetButton" value="resetPage" />
+				<button type="submit" class="btn btn-danger">
+					<strong>Reset Page</strong>
+				</button>
 
+			</form>
+		</div>
+
+	</div>
 	<div class="container border mt-5 ">
 		<h1 class="text-center mb-4">Upload Excel File</h1>
 		<form method="POST" action="<%=request.getContextPath()%>/pre_alert"
 			enctype="multipart/form-data">
-			
-			
+
+
 			<div class="custom-file">
 				<input type="file" name="uploadFile" class="custom-file-input"
 					id="customFile1" required> <label class="custom-file-label"
@@ -19,11 +31,16 @@
 			<div class="input-group-append justify-content-center">
 				<input type="submit" class="btn btn-primary btn-md my-4"
 					value="UPLOAD" />
-								<%--<div class="alert alert-danger" role="alert" ${setErrorHidden}>
-					<strong>Error!!!</strong> Your Excel File is not Validated!
-				</div> --%>
+
+
+			</div>
+			<div class="alert alert-danger" role="alert" ${setErrorHidden}>
+				<strong>${message }</strong>
 			</div>
 
+			<div class="alert alert-success" role="alert" ${setSuccesHidden}>
+				<strong>Excel file was loaded successfully</strong>
+			</div>
 
 			<script>
 				document
@@ -51,9 +68,15 @@
 			<li class="nav-item"><a class="nav-link" id="ppids-tab"
 				data-toggle="tab" href="#ppids" role="tab" aria-controls="ppids"
 				aria-selected="false"><strong>PPIDs</strong></a></li>
-			<li class="nav-item"><a class="nav-link" id="export-tab"
+			<li class="nav-item">
+				<!-- <a class="nav-link" id="export-tab"
 				data-toggle="tab" href="#export" role="tab" aria-controls="export"
-				aria-selected="false"><strong>Export Data</strong></a></li>
+				aria-selected="false"><strong>Export Data</strong></a> --> <a
+				class="nav-link" href="File_DownLoad" role="button"
+				onclick="if(!confirm('Are you sure to export?')) return false"
+				${setHiddenExport}><strong>Export</strong></a>
+
+			</li>
 		</ul>
 
 		<div class="tab-content p-4">
@@ -67,13 +90,13 @@
 							action="<%=request.getContextPath()%>/pre_alert"
 							enctype=multipart/form-data>
 							<!-- <br> <input type="text" name="RMA Number" required/> -->
-							<input type="submit" name="rmaButton" class="btn btn-md btn-primary my-4"
-								value="GET RMA" />
+							<input type="submit" name="rmaButton"
+								class="btn btn-md btn-primary my-4" value="GET RMA" />
 						</form>
 
 					</div>
-					<div class="row p5">
-						<table class="table table-striped table-responsive">
+					<div class="row p5 table-responsive">
+						<table class="table table-striped ">
 							<thead>
 								<tr>
 									<th scope="col" class="text-left">PN#</th>
@@ -116,8 +139,8 @@
 					<div class="row">
 						<h3>List PPID Read From Excel</h3>
 					</div>
-					<div class="row p5">
-						<table class="table table-striped table-responsive">
+					<div class="row p5 table-responsive">
+						<table class="table table-striped">
 							<thead>
 								<tr>
 									<th scope="col" class="text-left">ROW #</th>
@@ -165,12 +188,12 @@
 			</div>
 
 
-			<div class="tab-pane" id="export" role="tabpanel"
+			<!-- <div class="tab-pane" id="export" role="tabpanel"
 				aria-labelledby="export-tab">
-				${urll} <a class="btn btn-primary" href="File_DownLoad"
+				<a class="btn btn-primary" href="File_DownLoad"
 					role="button"
 					onclick="if(!confirm('Are you sure to export?')) return false">Export</a>
-			</div>
+			</div> -->
 
 		</div>
 

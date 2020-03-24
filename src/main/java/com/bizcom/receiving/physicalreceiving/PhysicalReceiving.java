@@ -25,59 +25,54 @@ public class PhysicalReceiving extends HttpServlet {
 	private static final long serialVersionUID = 1365646760784374827L;
 	private DBHandler dbhandler = new DBHandler();
 	private List<Item> myList;
-	private boolean flag = false;
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		HttpSession session = request.getSession();
-		request.getSession().setAttribute("Alert_More_Than_5", "");
+//		HttpSession session = request.getSession();
+
 		request.getSession().setAttribute("Successfull", "");
-		flag = false;
 
 		myList = new ArrayList<>();
 		String ppid = request.getParameter("ppid");
 		int count = dbhandler.getRecordCount(ppid);
 		if (count >= 5) {
-			// alert show up
-			request.getSession().setAttribute("Alert_More_Than_5", "More Than 5");
-			System.out.println("MORE THAN 5 detected");
-			flag = true;
-		}	
-		if (!ppid.isEmpty()) {
-
+			response.sendRedirect(request.getContextPath() + "/morethanfive?ppid=" + ppid);
+			return;
+		}
+		if (ppid != null) {
 			myList.addAll(dbhandler.fetchRMA(ppid));
 
-			if (myList.size() == 0) {
-				notFound = "Cannot Find Item With Your Info!";
-				session.setAttribute("re", notFound);
-				response.sendRedirect(request.getContextPath() + "/searchitem");
-			} else {
-				notFound = "";
-				session.setAttribute("re", notFound);
-				Item temp = myList.get(0);
-				String rma = temp.getRma();
-				String ppid2 = temp.getPpid();
-				String pn = temp.getPn();
-				String co = temp.getCo();
-				String problemDescription = temp.getDescription();
-				String lotNum = temp.getLot();
-				String problemCode = temp.getProblemCode();
-				String dpsNumer = temp.getDps();
+//			if (myList.size() == 0) {
+//				notFound = "Cannot Find Item With Your Info!";
+//				session.setAttribute("re", notFound);
+//				response.sendRedirect(request.getContextPath() + "/searchitem");
+//			} else {
+//				notFound = "";
+//				session.setAttribute("re", notFound);
+			Item temp = myList.get(0);
+			String rma = temp.getRma();
+			String ppid2 = temp.getPpid();
+			String pn = temp.getPn();
+			String co = temp.getCo();
+			String problemDescription = temp.getDescription();
+			String lotNum = temp.getLot();
+			String problemCode = temp.getProblemCode();
+			String dpsNumer = temp.getDps();
 
-				request.setAttribute("rma_Number", rma);
-				request.setAttribute("ppid_Number", ppid2);
-				request.setAttribute("pn_Number", pn);
-				request.setAttribute("co_Number", co);
-				request.setAttribute("problem_desc", problemDescription);
-				request.setAttribute("lot", lotNum);
-				request.setAttribute("problem_code", problemCode);
-				request.setAttribute("dps", dpsNumer);
-				request.setAttribute("title", "Search Item");
+			request.setAttribute("rma_Number", rma);
+			request.setAttribute("ppid_Number", ppid2);
+			request.setAttribute("pn_Number", pn);
+			request.setAttribute("co_Number", co);
+			request.setAttribute("problem_desc", problemDescription);
+			request.setAttribute("lot", lotNum);
+			request.setAttribute("problem_code", problemCode);
+			request.setAttribute("dps", dpsNumer);
+			request.setAttribute("title", "Search Item");
 
-				request.getRequestDispatcher("/WEB-INF/views/receiving_station/physicalreceiving/physicalreceiving.jsp")
-				.forward(request, response);
-			}
+			request.getRequestDispatcher("/WEB-INF/views/receiving_station/physicalreceiving/physicalreceiving.jsp")
+					.forward(request, response);
+//			}
 
 		} else {
 			response.sendRedirect(request.getContextPath() + "/searchitem");
@@ -106,24 +101,19 @@ public class PhysicalReceiving extends HttpServlet {
 			String mac = request.getParameter("mac");
 			String cpu_sn = request.getParameter("cpu_sn");
 
-			if (flag) {
-				dbhandler.MoveToScrap01(rmaNum, mac, ppid,pn, sn, revision,
-						cpu_sn, mfgPN, lot, description, problemCode, dps);
-			} else {
-				boolean physical = dbhandler.PhysicalReceive(mac, ppid, sn, revision, cpu_sn, mfgPN, "userId");
-				boolean updateStatus = false;
-				if(physical) {
-					updateStatus = dbhandler.addToStatusTable(ppid, sn, "START", "PHYSICAL_RECEIVING");
-					if(!updateStatus) {
-						System.out.println("Cannot update item status");
-					}else {
-						System.out.println("Successfull");
-						request.getSession().setAttribute("Successfull", "Successfull");
-					}
-				}else {
-					System.out.println("Cannot add record to physical table");
-
+			boolean physical = dbhandler.PhysicalReceive(mac, ppid, sn, revision, cpu_sn, mfgPN, "userId");
+			boolean updateStatus = false;
+			if (physical) {
+				updateStatus = dbhandler.addToStatusTable(ppid, sn, "START", "PHYSICAL_RECEIVING");
+				if (!updateStatus) {
+					System.out.println("Cannot update item status");
+				} else {
+					System.out.println("Successfull");
+					request.getSession().setAttribute("Successfull", "Successfull");
 				}
+			} else {
+				System.out.println("Cannot add record to physical table");
+
 			}
 
 			response.sendRedirect(request.getContextPath() + "/searchitem");
@@ -131,7 +121,6 @@ public class PhysicalReceiving extends HttpServlet {
 		} else {
 			System.out.println("Duplicate Information");
 		}
-
 
 	}
 }

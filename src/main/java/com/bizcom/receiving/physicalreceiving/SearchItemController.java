@@ -7,12 +7,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.bizcom.database.DBHandler;
+
 /**
  * Servlet implementation class PhysicalReceivingController
  */
 @WebServlet("/searchitem")
 public class SearchItemController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+
+	private DBHandler dbHandler = new DBHandler();
 
 	public SearchItemController() {
 		super();
@@ -25,14 +29,15 @@ public class SearchItemController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		
 		// Load Search Item Page
+		request.setAttribute("setHiddenError", "hidden");
 		searchItem(request, response);
 
 	}
 
 	private void searchItem(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		request.setAttribute("title", "Search Item");
 		request.getRequestDispatcher("/WEB-INF/views/receiving_station/physicalreceiving/searchItems.jsp")
 				.forward(request, response);
 	}
@@ -43,9 +48,29 @@ public class SearchItemController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		request.getSession().removeAttribute("Successfull");
 		String ppid = request.getParameter("ppid");
-		String url = request.getContextPath() + "/physicalreceiving?ppid=" + ppid;
-		response.sendRedirect(url);
+
+		if (ppid != null && ppid.length() > 0) {
+
+			boolean flag = dbHandler.isExistInPrePPID(ppid);
+			if (flag) {
+
+				request.setAttribute("setHiddenError", "hidden");
+				String url = request.getContextPath() + "/physicalreceiving?ppid=" + ppid;
+				response.sendRedirect(url);
+			} else {
+
+				request.setAttribute("setHiddenError", "show");
+				searchItem(request, response);
+			}
+
+		} else {
+
+			request.setAttribute("setHiddenError", "show");
+			searchItem(request, response);
+		}
+
 	}
 
 }

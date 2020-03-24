@@ -7,15 +7,12 @@
 
 <section>
 
-
-
-
-	<div class="container">
+	<div class="container p-2">
 
 
 		<form method="POST"
 			action="<%=request.getContextPath()%>/physicalreceiving">
-			<a id="alert" target="${Alert_More_Than_5}"></a>
+			<%-- <a id="alert" target="${Alert_More_Than_5}"></a>
 			<script type="text/javascript">
 				function confirmation() {
 					var x = document.getElementById("alert").getAttribute(
@@ -26,7 +23,7 @@
 						}
 					}
 				}
-			</script>
+			</script> --%>
 
 			<div class="form-group row">
 				<label for="SN#" class="col-sm-2 col-form-label">SN#</label>
@@ -48,7 +45,8 @@
 				<div class="col-sm-8">
 					<input type="text" id="manufactoring" class="form-control"
 						name="manufactoring" placeholder="Manufactoring PN"
-						pattern="46+[A-Za-z0-9]{9}|45+[A-Za-z0-9]{9}" required>
+						pattern="46+[A-Za-z0-9]{9}|45+[A-Za-z0-9]{9}"
+						 required>
 				</div>
 			</div>
 

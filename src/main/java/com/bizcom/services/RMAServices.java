@@ -20,10 +20,8 @@ public class RMAServices {
 		Date date = new Date();
 		SimpleDateFormat format = new SimpleDateFormat("yyMMdd");
 		String result = "BZM" + format.format(date);
-		System.out.println("pattern  " + result);
 		DBHandler db = new DBHandler();		
 		int count = db.getRMACount(result);
-		System.out.println("Count : " + count);
 		return result + (count + 1);
 	}
 

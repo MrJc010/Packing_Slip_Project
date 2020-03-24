@@ -53,7 +53,6 @@ public class DBHandler {
 					"jdbc:mysql://" + Configs.dbHost + ":" + Configs.dbPort + "/" + Configs.dbName, Configs.dbUsername,
 					Configs.dbPassword);
 
-
 		} catch (SQLException e) {
 
 			System.out.println(e);
@@ -127,26 +126,26 @@ public class DBHandler {
 
 		return flag;
 	}
-	
-	//***********************************************************
-	//***********************************************************
-	//***********************************************************
-	//***********************************************************
-	//***********************************************************
-	//*                            Physical Receiving           *
-	//***********************************************************
-	//***********************************************************
-	//***********************************************************
-	//***********************************************************
-	//***********************************************************
-	//***********************************************************
-	//***********************************************************
-	//***********************************************************
+
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// * Physical Receiving *
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
 	public List<Item> fetchRMA(String ppidN) {
 		List<Item> result = new ArrayList<>();
 		String FETCH_RMA_QUERY = "SELECT pre_ppid.rma, pre_item.ppid, pre_item.pn, pre_item.co, pre_item.lot,"
-		+ "pre_item.dps, pre_item.pro_code, pre_item.code_descp"
-		+ " FROM pre_item INNER JOIN pre_ppid ON pre_item.ppid = pre_ppid.ppid AND pre_item.ppid = ?";
+				+ "pre_item.dps, pre_item.pro_code, pre_item.code_descp"
+				+ " FROM pre_item INNER JOIN pre_ppid ON pre_item.ppid = pre_ppid.ppid AND pre_item.ppid = ?";
 
 		try {
 			dbconnection = getConnectionAWS();
@@ -167,7 +166,8 @@ public class DBHandler {
 				String dps = rs.getString("dps");
 				String mfgPN = "";
 
-				result.add(new Item(ppid, pn, sn, revision, description, specialInstruction, co, lot, problemCode, rma, dps, mfgPN, "userID", new Date().toString()));
+				result.add(new Item(ppid, pn, sn, revision, description, specialInstruction, co, lot, problemCode, rma,
+						dps, mfgPN, "userID", new Date().toString()));
 			}
 
 		} catch (Exception e) {
@@ -178,7 +178,7 @@ public class DBHandler {
 		}
 		return result;
 	}
-	
+
 	public int fetchCurrentReceivedCount(Connection conn, String sn) throws SQLException {
 		int result = 0;
 		String FETCH_CURRENT_COUNT_RECEIVED = "SELECT * FROM pre_sn_record WHERE serial_number=?";
@@ -192,17 +192,16 @@ public class DBHandler {
 		}
 		return result;
 	}
-	
+
 	public void updateAPPID(Connection conn, String ppid) throws SQLException {
 		String DELETE_A_PPID = "UPDATE pre_ppid SET status = 'Received' WHERE ppid=?";
 		pst = conn.prepareStatement(DELETE_A_PPID);
 		pst.setString(1, ppid);
 		pst.executeUpdate();
 	}
-	
-	
-	public boolean PhysicalReceive(String mac, String ppid, String sn, String revision,
-			String cpu_sn, String mfgPN, String userId) {
+
+	public boolean PhysicalReceive(String mac, String ppid, String sn, String revision, String cpu_sn, String mfgPN,
+			String userId) {
 		String FETCH_RMA_QUERY = "INSERT INTO physical_station VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 		boolean result = false;
 		try {
@@ -236,22 +235,46 @@ public class DBHandler {
 
 		return result;
 	}
-	
-	
-	//***********************************************************
-	//***********************************************************
-	//***********************************************************
-	//***********************************************************
-	//***********************************************************
-	//*                           END Physical Receiving        *
-	//***********************************************************
-	//***********************************************************
-	//***********************************************************
-	//***********************************************************
-	//***********************************************************
-	//***********************************************************
-	//***********************************************************
-	//***********************************************************
+
+	public boolean isExistInPrePPID(String ppid) {
+		boolean result = false;
+		String query = "SELECT * FROM pre_ppid WHERE ppid=? AND status=?";
+
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(query);
+			pst.setString(1, ppid);
+			pst.setString(2, "UnRecevied");
+			rs = pst.executeQuery();
+
+			if (rs.next()) {
+				result = true;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			shutdown();
+		}
+
+		return result;
+
+	}
+
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// * END Physical Receiving *
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
 
 	public List<String> fetchErrorForRepair01FromMICI(String ppid) {
 		String query = "SELECT * FROM mici_table WHERE ppid = ?";
@@ -283,7 +306,6 @@ public class DBHandler {
 		return result;
 	}
 
-
 	public void deletaPhysicalRecord(Connection conn, String ppid) throws SQLException {
 		String DELETE_A_PPID = "DELETE FROM physicalRecevingDB WHERE ppid=?";
 
@@ -291,8 +313,6 @@ public class DBHandler {
 		pst.setString(1, ppid);
 		pst.executeUpdate();
 	}
-
-	
 
 	public boolean addMICI(String ppid, String sn) {
 
@@ -521,8 +541,6 @@ public class DBHandler {
 		return phy;
 	}
 
-	
-
 	public boolean isExistInRepair01Table(String ppid) {
 		boolean result = false;
 		String query = "SELECT COUNT(*) FROM repair1_table WHERE ppid = ?";
@@ -576,25 +594,22 @@ public class DBHandler {
 
 	}
 
-	
-	
+	// *******************************START*************************************
+	// *********************************************************************************
+	// *********************************************************************************
+	// *********************************************************************************
+	// *********************************************************************************
+	// * These methods are for pre-alert functions *
+	// *********************************************************************************
+	// *********************************************************************************
+	// *********************************************************************************
+	// *********************************************************************************
+	// *********************************************************************************
+	// *********************************************************************************
 
-	//*******************************START*************************************
-	//*********************************************************************************
-	//*********************************************************************************
-	//*********************************************************************************
-	//*********************************************************************************
-	//*                   These methods are for pre-alert functions                   *
-	//*********************************************************************************
-	//*********************************************************************************
-	//*********************************************************************************
-	//*********************************************************************************
-	//*********************************************************************************
-	//*********************************************************************************
-	
-	
 	/*
-	 * This function used for getting number of record base on ppid on sn_record table
+	 * This function used for getting number of record base on ppid on sn_record
+	 * table
 	 */
 	public int getRecordCount(String ppid) {
 		String GET_COUNT_IN_RECORD = "SELECT count_recevied FROM pre_sn_record WHERE ppid = ?";
@@ -621,8 +636,7 @@ public class DBHandler {
 		return result;
 
 	}
-	
-	
+
 	public List<PreAlertItem> fetchPreAlert(String byRMA) {
 		List<PreAlertItem> result = new ArrayList<>();
 		String FETCH_ALL_PREALERT = "SELECT * FROM pre_alert";
@@ -657,7 +671,7 @@ public class DBHandler {
 		}
 		return result;
 	}
-	
+
 	public int getRMACount(String pattern) {
 		String query = "SELECT COUNT(*)  FROM rma_table WHERE rma LIKE '" + pattern + "%'";
 		int result = 0;
@@ -678,8 +692,8 @@ public class DBHandler {
 
 		return result;
 	}
-	
-	public boolean createNewRMA(String rma,String userId) {
+
+	public boolean createNewRMA(String rma, String userId) {
 		String query = "INSERT INTO rma_table VALUES(?,?,?)";
 		boolean result = false;
 		try {
@@ -687,7 +701,7 @@ public class DBHandler {
 			pst = dbconnection.prepareStatement(query);
 			pst.setString(1, rma);
 			pst.setString(2, userId);
-			pst.setString(3,new Date().toLocaleString());
+			pst.setString(3, new Date().toLocaleString());
 			pst.executeUpdate();
 			result = true;
 		} catch (Exception e) {
@@ -699,10 +713,10 @@ public class DBHandler {
 
 		return result;
 	}
-	
-	
+
 	/**
 	 * Check If ppid is exist in the current database
+	 * 
 	 * @param ppid
 	 * @param pn
 	 * @param lot
@@ -725,15 +739,39 @@ public class DBHandler {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			
+
 		} finally {
 			shutdown();
 		}
-		
+
 		return result;
 	}
-	
-	public boolean addToPre_PPID(String rma,List<PPID> list) throws SQLException, ClassNotFoundException {
+
+	public boolean isRecordPreAlertExist(List<PPID> ppids) throws SQLException, ClassNotFoundException {
+		boolean result = false;
+		String CHECK_PRE_ALERT_RECORD = "SELECT * FROM pre_item WHERE ppid=? ";
+		dbconnection = getConnectionAWS();
+		pst = dbconnection.prepareStatement(CHECK_PRE_ALERT_RECORD);
+		for (PPID p : ppids) {
+			try {
+				pst.setString(1, p.getPpidNumber());
+				rs = pst.executeQuery();
+
+				if (rs.next()) {
+					result = true;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+
+			}
+		}
+
+		shutdown();
+
+		return result;
+	}
+
+	public boolean addToPre_PPID(String rma, List<PPID> list) throws SQLException, ClassNotFoundException {
 		boolean result = false;
 		String query = "INSERT INTO pre_ppid VALUES (?,?,?)";
 		dbconnection = getConnectionAWS();
@@ -757,7 +795,7 @@ public class DBHandler {
 
 		return result;
 	}
-	
+
 	public boolean ppidToDB(List<PPID> listPPID) throws SQLException, ClassNotFoundException {
 		boolean result = false;
 		String INSERT_PPID = "INSERT INTO pre_item VALUES(?,?,?,?,?,?,?,?,?)";
@@ -789,23 +827,18 @@ public class DBHandler {
 		return result;
 	}
 
-	
-	//*********************************END*********************************************
-	//*********************************************************************************
-	//*********************************************************************************
-	//*********************************************************************************
-	//*********************************************************************************
-	//*                   End pre-alert functions                                     *
-	//*********************************************************************************
-	//*********************************************************************************
-	//*********************************************************************************
-	//*********************************************************************************
-	//*********************************************************************************
-	//*********************************************************************************
-	
-	
-
-	
+	// *********************************END*********************************************
+	// *********************************************************************************
+	// *********************************************************************************
+	// *********************************************************************************
+	// *********************************************************************************
+	// * End pre-alert functions *
+	// *********************************************************************************
+	// *********************************************************************************
+	// *********************************************************************************
+	// *********************************************************************************
+	// *********************************************************************************
+	// *********************************************************************************
 
 	public void addToRecord(Connection conn, String sn, String ppid) throws SQLException {
 
@@ -828,8 +861,6 @@ public class DBHandler {
 
 		pst.executeUpdate();
 	}
-
-
 
 	public boolean MoveToScrap01(String rmaNum, String mac, String ppid, String pn, String sn, String revision,
 			String cpu_sn, String mfgPN, String lot, String description, String problemCode, String dps) {
@@ -872,18 +903,18 @@ public class DBHandler {
 		return result;
 	}
 
-	//*******************************START*********************************************
-	//*********************************************************************************
-	//*********************************************************************************
-	//*********************************************************************************
-	//*********************************************************************************
-	//*                   These methods are for MICI                                  *
-	//*********************************************************************************
-	//*********************************************************************************
-	//*********************************************************************************
-	//*********************************************************************************
-	//*********************************************************************************
-	//*********************************************************************************
+	// *******************************START*********************************************
+	// *********************************************************************************
+	// *********************************************************************************
+	// *********************************************************************************
+	// *********************************************************************************
+	// * These methods are for MICI *
+	// *********************************************************************************
+	// *********************************************************************************
+	// *********************************************************************************
+	// *********************************************************************************
+	// *********************************************************************************
+	// *********************************************************************************
 	public String[] getPhysicalInfor(String ppid) {
 		String query = "SELECT * FROM pre_item WHERE ppid=?";
 		String[] result = new String[3];
@@ -896,8 +927,8 @@ public class DBHandler {
 			while (rs.next()) {
 				String pro_code = rs.getString("pro_code");
 				String desc_code = rs.getString("code_descp");
-				result[0] = pro_code.length() > 1?pro_code:"N/A";
-				result[1] = desc_code.length() > 1?desc_code:"N/A";
+				result[0] = pro_code.length() > 1 ? pro_code : "N/A";
+				result[1] = desc_code.length() > 1 ? desc_code : "N/A";
 				result[2] = ppid;
 			}
 		} catch (Exception e) {
@@ -911,7 +942,8 @@ public class DBHandler {
 
 	}
 
-	public boolean addToMICITable(String ppid, String sn,Set<String> errors, String user) throws ClassNotFoundException, SQLException {
+	public boolean addToMICITable(String ppid, String sn, Set<String> errors, String user)
+			throws ClassNotFoundException, SQLException {
 		boolean result = false;
 		String query = " INSERT INTO mici_station (count,ppid,error,userId,time) VALUES(?,?,?,?,?)";
 		dbconnection = getConnectionAWS();
@@ -933,23 +965,20 @@ public class DBHandler {
 		}
 		return result;
 	}
-	
-	
-	//*********************************END*********************************************
-	//*********************************************************************************
-	//*********************************************************************************
-	//*********************************************************************************
-	//*********************************************************************************
-	//*                   End pre-alert functions                                     *
-	//*********************************************************************************
-	//*********************************************************************************
-	//*********************************************************************************
-	//*********************************************************************************
-	//*********************************************************************************
-	//*********************************************************************************
-	
-	
-	
+
+	// *********************************END*********************************************
+	// *********************************************************************************
+	// *********************************************************************************
+	// *********************************************************************************
+	// *********************************************************************************
+	// * End pre-alert functions *
+	// *********************************************************************************
+	// *********************************************************************************
+	// *********************************************************************************
+	// *********************************************************************************
+	// *********************************************************************************
+	// *********************************************************************************
+
 	public String[] getCurrentStation(String ppid) {
 		String query = "SELECT * FROM status_table WHERE ppid= ?";
 		String[] result = new String[2];
@@ -1000,10 +1029,10 @@ public class DBHandler {
 		}
 
 		public void run() {
-			System.out.println("running...");
+
 			try {
 				int[] a = pst.executeBatch();
-				System.out.println(a.length);
+
 			} catch (SQLException e) {
 
 				e.printStackTrace();
