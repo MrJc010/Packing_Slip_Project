@@ -945,16 +945,16 @@ public class DBHandler {
 	public boolean addToMICITable(String ppid, String sn, Set<String> errors, String user)
 			throws ClassNotFoundException, SQLException {
 		boolean result = false;
-		String query = " INSERT INTO mici_station (count,ppid,error,userId,time) VALUES(?,?,?,?,?)";
+		String query = " INSERT INTO mici_station (ppid,error,userId,time) VALUES(?,?,?,?,?)";
 		dbconnection = getConnectionAWS();
 		pst = dbconnection.prepareStatement(query);
 		int i = 0;
 		for (String e : errors) {
-			pst.setString(1, null);
-			pst.setString(2, ppid);
-			pst.setString(3, e);
-			pst.setString(4, user);
-			pst.setString(5, new Date().toLocaleString());
+			pst.setString(1, ppid);
+			pst.setString(2, e);
+			pst.setString(3, user);
+			pst.setString(4, new Date().toLocaleString());
+			pst.addBatch();
 			i++;
 			if (i == errors.size()) {
 				multi m = new multi(pst);

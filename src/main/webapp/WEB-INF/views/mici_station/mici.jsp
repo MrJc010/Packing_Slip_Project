@@ -66,23 +66,34 @@
 	<div class="container mt-5 text-center" ${sethideMICI}>
 
 		<form method="POST" action="<%=request.getContextPath()%>/mici">
-			<div>
-				<label for="PPID">PPID#: ${ppidCheckAtMICI}</label>
-			</div>
-			<div ${seterrorhiddenproblemMICI}>
-			<div>
-				<label>Problem Code: ${problemcodeAtMICI}</label>
-			</div>
-			<div>
-				<label>Problem Description:#: ${problemDescpAtMICI}</label>
-			</div>
-			</div>
-			<div>
-				<label for="statusAtMICI">${currentStatusAtMICI}</label>
+
+			<div ${setHidenInfo}>
+
+				<div>
+					<label for="PPID">PPID#: ${ppidCheckAtMICI}</label>
+				</div>
+				<div ${seterrorhiddenproblemMICI}>
+					<div>
+						<label>Problem Code: ${problemcodeAtMICI}</label>
+					</div>
+					<div>
+						<label>Problem Description:#: ${problemDescpAtMICI}</label>
+					</div>
+				</div>
+				<div>
+					<label for="statusAtMICI">${currentStatusAtMICI}</label>
+				</div>
+
 			</div>
 
+	<%-- 		<div${setHidenResult}>
+				<span class="badge badge-success mb-5">
+					<h3 class="display-5">Successful!</h3>
+				</span>
+			</div> --%>
 
-			<div id="selectionMICI">
+
+			<div id="selectionMICI" class="row justify-content-center">
 
 				<div class=" input-group mb-3" id="errorDiv1">
 
@@ -112,7 +123,7 @@
 				<span class="display-3">FAIL</span>
 			</button>
 		</form>
-		
+
 
 	</div>
 	<hr />

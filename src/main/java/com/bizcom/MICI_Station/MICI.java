@@ -46,6 +46,7 @@ public class MICI extends HttpServlet {
 			throws ServletException, IOException {
 		errorCodeSet = new HashSet<String>();
 		request.setAttribute("seterrorhiddenMICI", "hidden");
+//		request.setAttribute("setHidenResult", "hidden");
 		request.setAttribute("currentCountMICI", 2);
 		String page = request.getParameter("page");
 
@@ -53,14 +54,14 @@ public class MICI extends HttpServlet {
 			miciDisplay(request, response);
 		} else {
 			switch (page) {
-				case "display":
-					miciDisplay(request, response);
-					break;
-				case "check":
-					checkMICI(request, response);
-					break;
-				default:
-					errorPage(request, response);
+			case "display":
+				miciDisplay(request, response);
+				break;
+			case "check":
+				checkMICI(request, response);
+				break;
+			default:
+				errorPage(request, response);
 			}
 		}
 	}
@@ -92,7 +93,7 @@ public class MICI extends HttpServlet {
 					System.out.println("Result Update Station Status : "
 							+ dbHandler.updateCurrentStation(MICI, REPAIR01_FAIL, ppid));
 					try {
-						dbHandler.addToMICITable(ppid, sn,errorCodeSet, "A USER FROM MICI");
+						dbHandler.addToMICITable(ppid, sn, errorCodeSet, "A USER FROM MICI");
 					} catch (ClassNotFoundException | SQLException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -130,24 +131,27 @@ public class MICI extends HttpServlet {
 
 	public void checkMICI(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		request.setAttribute("problemcodeAtMICI","");
-		request.setAttribute("problemDescpAtMICI","");
+		request.setAttribute("problemcodeAtMICI", "");
+		request.setAttribute("problemDescpAtMICI", "");
 		String page = request.getParameter("page");
 		ppid = request.getParameter("ppidNumber");
 		String[] miciInfo = dbHandler.getPhysicalInfor(ppid);
 		if (validate(ppid, request, miciInfo)) {
-			
+
 			// fetch information...
 			if (ppid != null) {
 				request.setAttribute("sethideMICI", "");
+				request.setAttribute("setHidenInfo", "show");
+//				request.setAttribute("setHidenResult", "hidden");
+
 				String[] currenStaions = dbHandler.getCurrentStation(ppid);
 
 				request.setAttribute("ppidCheckAtMICI", ppid);
 				request.setAttribute("snCheckAtMICI", sn);
 				if (currenStaions[0].equalsIgnoreCase(START) && currenStaions[1].equalsIgnoreCase(PHYSICAL_RECEIVING)) {
 					// no information here
-					request.setAttribute("problemcodeAtMICI",miciInfo[0]);
-					request.setAttribute("problemDescpAtMICI",miciInfo[1]);
+					request.setAttribute("problemcodeAtMICI", miciInfo[0]);
+					request.setAttribute("problemDescpAtMICI", miciInfo[1]);
 					request.setAttribute("currentStatusAtMICI",
 							"This Item Is Received From Physical Receiving Station!");
 					System.out.println("Result Update Station Status : "
@@ -158,12 +162,13 @@ public class MICI extends HttpServlet {
 					// change from REPAIR01 -> MICI
 					request.setAttribute("currentStatusAtMICI", "This Item Is Returned back From Repair 01 Station!");
 					dbHandler.updateCurrentStation(REPAIR01_PASS, MICI, ppid);
-				} else if(currenStaions[0].equalsIgnoreCase(PHYSICAL_RECEIVING) && currenStaions[1].equalsIgnoreCase(MICI)){
-					request.setAttribute("problemcodeAtMICI",miciInfo[0]);
-					request.setAttribute("problemDescpAtMICI",miciInfo[1]);
+				} else if (currenStaions[0].equalsIgnoreCase(PHYSICAL_RECEIVING)
+						&& currenStaions[1].equalsIgnoreCase(MICI)) {
+					request.setAttribute("problemcodeAtMICI", miciInfo[0]);
+					request.setAttribute("problemDescpAtMICI", miciInfo[1]);
 					request.setAttribute("currentStatusAtMICI",
 							"This Item Is Received From Physical Receiving Station!");
-				}else {
+				} else {
 					System.out.println("SOME THING ELSE");
 					request.setAttribute("currentStatusAtMICI", "Invalid Access This Item At This Station!");
 					request.setAttribute("sethideMICI", "hidden");
@@ -184,7 +189,7 @@ public class MICI extends HttpServlet {
 		if (miciInfo[0] != null && miciInfo[1] != null) {
 			request.setAttribute("problemcode", miciInfo[0]);
 			request.setAttribute("problemdecription", miciInfo[1]);
-			if(miciInfo[0].equals("N/A")) {
+			if (miciInfo[0].equals("N/A")) {
 				request.setAttribute("seterrorhiddenproblemMICI", "hidden");
 			}
 			return true;

@@ -29,7 +29,7 @@ public class SearchItemController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
+		request.getSession().removeAttribute("Successfull");
 		// Load Search Item Page
 		request.setAttribute("setHiddenError", "hidden");
 		searchItem(request, response);
@@ -49,6 +49,7 @@ public class SearchItemController extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		request.getSession().removeAttribute("Successfull");
+		request.setAttribute("setHiddenError", "hidden");
 		String ppid = request.getParameter("ppid");
 
 		if (ppid != null && ppid.length() > 0) {

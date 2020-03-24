@@ -45,8 +45,9 @@
 				<div class="col-sm-8">
 					<input type="text" id="manufactoring" class="form-control"
 						name="manufactoring" placeholder="Manufactoring PN"
-						pattern="46+[A-Za-z0-9]{9}|45+[A-Za-z0-9]{9}"
+						
 						 required>
+<!-- 						 pattern="46+[A-Za-z0-9]{9}|45+[A-Za-z0-9]{9}" -->
 				</div>
 			</div>
 

@@ -31,7 +31,7 @@
 			</form>
 
 
-			<c:if test="${Successfull == \"Successfull\"}">
+			<c:if test="${Successfull == 'Successfull'}">
 				<script type="text/javascript">
 					var msg = "Item received succcessfully. Move to Physical Station.";
 					alert(msg);

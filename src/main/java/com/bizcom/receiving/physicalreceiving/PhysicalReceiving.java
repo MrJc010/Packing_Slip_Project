@@ -108,8 +108,11 @@ public class PhysicalReceiving extends HttpServlet {
 				if (!updateStatus) {
 					System.out.println("Cannot update item status");
 				} else {
-					System.out.println("Successfull");
 					request.getSession().setAttribute("Successfull", "Successfull");
+					request.setAttribute("setHiddenError", "hidden");
+					request.getRequestDispatcher("/WEB-INF/views/receiving_station/physicalreceiving/searchItems.jsp")
+					.forward(request, response);
+					return;
 				}
 			} else {
 				System.out.println("Cannot add record to physical table");
