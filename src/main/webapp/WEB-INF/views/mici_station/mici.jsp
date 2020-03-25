@@ -25,7 +25,7 @@
 </style>
 
 <section>
-
+ ${listErrorCodes}
 	<div class="container" ${hidden}>
 		<h1 class="text-center mt-4 my-4">This is MICI</h1>
 
@@ -137,7 +137,9 @@
 
 
 	<script type="text/javascript">
-    var list = [1, 2, 3];
+	var tempList = "${listErrorCodes}"";
+    var list = tempList.splip(";")
+    console.log(list);
     var count = ${currentCountMICI};
 
     var selectX = document.getElementById("errorCode1");

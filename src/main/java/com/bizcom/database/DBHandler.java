@@ -8,10 +8,10 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.bizcom.MICI_Station.ErrorCode;
 import com.bizcom.ppid.PPID;
 import com.bizcom.receiving.physicalreceiving.Item;
 import com.bizcom.receiving.physicalreceiving.PreAlertItem;
@@ -901,6 +901,31 @@ public class DBHandler {
 	// *********************************************************************************
 	// *********************************************************************************
 	// *********************************************************************************
+	
+	
+	public List<ErrorCode> getAllErrorCodes(){
+		List<ErrorCode> result = new ArrayList<>();
+		String query = "SELECT * FROM mici_errorcode";
+		
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(query);
+			rs = pst.executeQuery();
+			while (rs.next()) {
+				String errorCode = rs.getString("errorCode");
+				String description = rs.getString("description");
+				result.add(new ErrorCode(errorCode, description));
+			}
+		} catch (Exception e) {
+			System.out.println("FAIL getPhysicalInfor " + e.getMessage());
+
+		} finally {
+			shutdown();
+		}
+		
+		return result;
+	}
+	
 	public String[] getPhysicalInfor(String ppid) {
 		String query = "SELECT * FROM pre_item WHERE ppid=?";
 		String[] result = new String[3];
