@@ -292,33 +292,6 @@ public class DBHandler {
 	// ***********************************************************
 	// ***********************************************************
 	// ***********************************************************
-
-	public List<String> fetchErrorForRepair01FromMICI(String ppid) {
-		String query = "SELECT error FROM mici_station WHERE ppid = ?";
-		List<String> result = new ArrayList<>();
-		try {
-			dbconnection = getConnectionAWS();
-			pst = dbconnection.prepareStatement(query);
-			pst.setString(1, ppid);
-			rs = pst.executeQuery();
-
-			while (rs.next()) {
-					String temp = rs.getString("error");
-
-					if (temp != null) {
-						result.add(temp);
-					}
-			}
-
-		} catch (Exception e) {
-			System.out.println("Error fetchErrorForRepair01FromMICI: " + e.getMessage());
-		} finally {
-			shutdown();
-		}
-
-		return result;
-	}
-
 	public void deletaPhysicalRecord(Connection conn, String ppid) throws SQLException {
 		String DELETE_A_PPID = "DELETE FROM physicalRecevingDB WHERE ppid=?";
 
