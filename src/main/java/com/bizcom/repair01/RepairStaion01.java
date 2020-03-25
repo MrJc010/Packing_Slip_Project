@@ -61,7 +61,7 @@ public class RepairStaion01 extends HttpServlet {
 				}
 				break;
 			case "updateRevision":
-				System.out.println("updateRevision");
+
 				updateRevision(request, response, ppid);
 				break;
 			}

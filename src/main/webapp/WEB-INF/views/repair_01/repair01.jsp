@@ -186,7 +186,6 @@
 					</c:forEach>
 					<script>
 						function enableForm(errorCode) {
-							console.log("called");
 							document.getElementById("disable" + errorCode).disabled = false;
 						}
 					</script>
