@@ -25,7 +25,7 @@
 </style>
 
 <section>
- ${listErrorCodes}
+	${listErrorCodes}
 	<div class="container" ${hidden}>
 		<h1 class="text-center mt-4 my-4">This is MICI</h1>
 
@@ -56,8 +56,8 @@
 		</div>
 
 		<div class="container text-center" ${setHiddenResultSucess}>
-			<div class="alert alert-success" role="alert">${ppid}is
-				updated successfully!</div>
+			<div class="alert alert-success" role="alert">${ppid}isupdated
+				successfully!</div>
 		</div>
 
 	</div>
@@ -137,10 +137,6 @@
 
 
 	<script type="text/javascript">
-// 	var tempList = "${listErrorCodes}";
-//     var list = tempList.split(";")
-
-    
     var list = ${listErrorCodes};
     var count = ${currentCountMICI};
 
@@ -157,13 +153,25 @@
     btn.innerHTML = "Delete";
     divError.appendChild(btn);
 
-    for (var i = 0; i < list.length; i++) {
+/*     for (var i = 0; i < list.length; i++) {
       var divError = document.getElementById("errorDiv" + i);
       var op = document.createElement('option');
       op.appendChild(document.createTextNode(list[i]));
       op.value = list[i];
       selectX.appendChild(op);
-    }
+    } */
+    var i = 0;
+    for (var key in list) {
+    	if (list.hasOwnProperty(key)) {
+    		console.log(key + " -> " + list[key]);
+     	    var divError = document.getElementById("errorDiv" + i);
+    	    var op = document.createElement('option');
+    	    op.appendChild(document.createTextNode(key + " -> " + list[key]));
+    	    op.value = key;
+    	    selectX.appendChild(op);
+    	    i+=1;
+    	}
+      }
 
     function deleteErrorDiv() {
     
@@ -200,13 +208,18 @@
     	      btn.onclick = deleteErrorDiv;
     	      btn.innerHTML = "Delete";
     	      divError.appendChild(btn);
-    	      for (var i = 0; i < list.length; i++) {
-    	        var op = document.createElement('option');
-    	        op.appendChild(document.createTextNode(list[i]));
-    	        op.value = list[i];
-    	        selectX.appendChild(op);
-
-    	      }
+    	      var i = 0;
+    	      for (var key in list) {
+    	      	if (list.hasOwnProperty(key)) {
+    	      		console.log(key + " -> " + list[key]);
+    	       	    var divError = document.getElementById("errorDiv" + i);
+    	      	    var op = document.createElement('option');
+    	      	    op.appendChild(document.createTextNode(key + " -> " + list[key]));
+    	      	    op.value = key;
+    	      	    selectX.appendChild(op);
+    	      	    i+=1;
+    	      	}
+    	     	}
     	      count++;
     	}
 

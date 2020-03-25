@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONObject;
+
 import com.bizcom.database.DBHandler;
 
 /**
@@ -38,13 +40,15 @@ public class MICI extends HttpServlet {
 	private static Set<String> errorCodeSet;
 	private static List<ErrorCode> listErrorCodes = new ArrayList<>();
 	private String stringError = "";
-	private Map<String, String> mapErrorCodes = new HashMap<>();
-
+	private Map<String, Object> mapErrorCodes = new HashMap<>();
+	private JSONObject jsonMap;
 	public MICI() {
 		listErrorCodes = dbHandler.getAllErrorCodes();
 		for (ErrorCode e : listErrorCodes) {
-			mapErrorCodes.put(e.getErrorCode(), e.getDescription());
+			mapErrorCodes.put(e.getErrorCode(), (Object)e.getDescription());
 		}
+		jsonMap= new JSONObject(mapErrorCodes);
+		
 	}
 
 	/**
@@ -58,7 +62,7 @@ public class MICI extends HttpServlet {
 		// ErrorCode ( errocode , description)
 
 //		System.out.println(stringError);
-		request.setAttribute("listErrorCodes", mapErrorCodes);
+		request.setAttribute("listErrorCodes", jsonMap);
 
 		/// END ==============
 
