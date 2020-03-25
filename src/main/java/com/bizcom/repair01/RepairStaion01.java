@@ -34,9 +34,8 @@ public class RepairStaion01 extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
 		String action = request.getParameter("action01");
-
+		System.out.println("go in "+ action);
 		request.setAttribute("setRepair01Hidden", "hidden");
 		request.setAttribute("setRepair01HiddenError", "hidden");
 
@@ -47,7 +46,6 @@ public class RepairStaion01 extends HttpServlet {
 				if (!ppid.isEmpty()) {
 					request.setAttribute("setPPID", ppid);
 					String curRev = db.getCurrentRev(ppid);
-
 					currentRev = Integer.parseInt(curRev.substring(curRev.length() - 2, curRev.length()));
 
 					System.out.println("currentRev : " + currentRev);
@@ -68,25 +66,8 @@ public class RepairStaion01 extends HttpServlet {
 				System.out.println("updateRevision");
 				updateRevision(request, response, ppid);
 				break;
-			default:
-//				if (currentRev >= maxRev) {
-//
-//					request.setAttribute("setRepair01Hidden", "hidden");
-//					request.getRequestDispatcher("/WEB-INF/views/repair_01/repair01.jsp").forward(request, response);
-//				} else {
-//					updateRevision(request, response, ppid);
-//				}
-				request.getRequestDispatcher("/WEB-INF/views/repair_01/repair01.jsp").forward(request, response);
-				break;
 			}
 		} else {
-//			if (currentRev >= maxRev) {
-//
-//				request.setAttribute("setRepair01Hidden", "hidden");
-//				request.getRequestDispatcher("/WEB-INF/views/repair_01/repair01.jsp").forward(request, response);
-//			} else {
-//				updateRevision(request, response, ppid);
-//			}
 			request.getRequestDispatcher("/WEB-INF/views/repair_01/repair01.jsp").forward(request, response);
 		}
 
@@ -111,21 +92,18 @@ public class RepairStaion01 extends HttpServlet {
 		}
 	}
 
+
 	public void updateRevision(HttpServletRequest request, HttpServletResponse response, String ppid)
 			throws ServletException, IOException {
-
-//		currentRev = db.getCurrentRev(ppid);
-
 		request.setAttribute("setRepair01Hidden", "hidden");
 
 		request.setAttribute("setRepair01HiddenError", "hidden");
-
 		String curRev = db.getCurrentRev(ppid);
-		if (!curRev.isEmpty()) {
+		if(curRev.isEmpty()) currentRev = -1;
+		else{
 			currentRev = Integer.parseInt(curRev.substring(curRev.length() - 2, curRev.length()));
 		}
 		getErrors(request, response, ppid);
-
 		// Do logic Here
 		if (currentRev != -1) {
 
@@ -135,8 +113,9 @@ public class RepairStaion01 extends HttpServlet {
 				// Fetch data base on currentNum
 				RevesionUpgrade temp = new RevesionUpgrade("1233", "middle", "abbb", "ecoAction", "122233", "9999",
 						"12345678", currentRev);
+				System.out.println("here "+currentRev+" "+(temp.getCurrentRev() + 1));
 				request.setAttribute("curRevNumber", temp.getCurrentRev());
-				request.setAttribute("nextRevNumber", temp.getCurrentRev() + 1);
+				request.setAttribute("nextRevNumber", (temp.getCurrentRev() + 1));
 				request.setAttribute("partNumber", temp.getPn());
 				request.setAttribute("location", temp.getLocation());
 				request.setAttribute("desc", temp.getDesc());
@@ -146,11 +125,8 @@ public class RepairStaion01 extends HttpServlet {
 				request.setAttribute("shortcut", temp.getShortcut());
 				request.getRequestDispatcher("/WEB-INF/views/repair_01/repair01.jsp").forward(request, response);
 
-			} else {
-
-				request.setAttribute("setRepair01Hidden", "hidden");
-
-				
+			}
+			else {
 				request.getRequestDispatcher("/WEB-INF/views/repair_01/repair01.jsp").forward(request, response);
 			}
 			// error code
