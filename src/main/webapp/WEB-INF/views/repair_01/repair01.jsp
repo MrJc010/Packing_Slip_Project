@@ -119,7 +119,7 @@
 											${aError}</button>
 									</h2>
 									<button class="float-right my-2 btn btn-primary"
-										name="edit${aError}" onclick="enableForm(${aError})">Edit</button>
+										name="edit${aError}" onclick=enableForm("${aError}")>Edit</button>
 								</div>
 
 								<div id="xx${aError}" class="collapse"
@@ -179,37 +179,20 @@
 												</div>
 											</fieldset>
 										</form>
-
-
-
 									</div>
 								</div>
 							</div>
 						</div>
 					</c:forEach>
-
-
 					<script>
-			
-
-
-
-
-			function enableForm(errorCode) {
-				console.log("====");
-
-				document.getElementById("disable" + errorCode).disabled = false;
-			}
-		</script>
-
+						function enableForm(errorCode) {
+							//console.log("====");
+							document.getElementById("disable" + errorCode).disabled = false;
+						}
+					</script>
 				</div>
-
-
 			</div>
-
 		</div>
-
-
 	</div>
 
 
