@@ -154,6 +154,7 @@ public class RepairStaion01 extends HttpServlet {
 
 			} else {
 				request.setAttribute("setRepair01Hidden", "hidden");
+
 				request.getRequestDispatcher("/WEB-INF/views/repair_01/repair01.jsp").forward(request, response);
 			}
 			// error code
