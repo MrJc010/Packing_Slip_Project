@@ -3,9 +3,11 @@ package com.bizcom.MICI_Station;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -34,9 +36,15 @@ public class MICI extends HttpServlet {
 	private static final String QC1 = "QC1";
 	private static final String START = "START";
 	private static Set<String> errorCodeSet;
-	private static List<ErrorCode> listErrorCodes = new ArrayList<>();;
+	private static List<ErrorCode> listErrorCodes = new ArrayList<>();
+	private String stringError = "";
+	private Map<String, String> mapErrorCodes = new HashMap<>();
+
 	public MICI() {
 		listErrorCodes = dbHandler.getAllErrorCodes();
+		for (ErrorCode e : listErrorCodes) {
+			mapErrorCodes.put(e.getErrorCode(), e.getDescription());
+		}
 	}
 
 	/**
@@ -45,22 +53,15 @@ public class MICI extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
+
 		// listErrorCodes have List Object ErrorCode
 		// ErrorCode ( errocode , description)
-		List<String> test = new ArrayList<String>(){
-			{
-				add("a1");
-				add("a2");
-				add("a3");
-			}
-		} ;
-		request.setAttribute("listErrorCodes", "a1;a2;a3");
-		
-		
-		
+
+//		System.out.println(stringError);
+		request.setAttribute("listErrorCodes", mapErrorCodes);
+
 		/// END ==============
-		
+
 		errorCodeSet = new HashSet<String>();
 		request.setAttribute("seterrorhiddenMICI", "hidden");
 		request.setAttribute("setHiddenResultSucess", "hidden");

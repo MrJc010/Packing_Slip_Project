@@ -137,9 +137,11 @@
 
 
 	<script type="text/javascript">
-	var tempList = "${listErrorCodes}"";
-    var list = tempList.splip(";")
-    console.log(list);
+// 	var tempList = "${listErrorCodes}";
+//     var list = tempList.split(";")
+
+    
+    var list = ${listErrorCodes};
     var count = ${currentCountMICI};
 
     var selectX = document.getElementById("errorCode1");
