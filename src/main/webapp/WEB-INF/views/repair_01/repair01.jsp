@@ -114,21 +114,21 @@
 
 									<h2 class="mb-0">
 										<button class="btn btn-link" type="button"
-											data-toggle="collapse" data-target="#xx${aError}"
-											aria-expanded="false" aria-controls="xx${aError}">
+											data-toggle="collapse" data-target="#xx${indexValue}"
+											aria-expanded="false" aria-controls="xx${indexValue}">
 											${aError}</button>
 									</h2>
 									<button class="float-right my-2 btn btn-primary"
-										name="edit${aError}" onclick=enableForm("${aError}")>Edit</button>
+										name="edit${aError}" onclick="enableForm(${indexValue})">Edit</button>
 								</div>
 
-								<div id="xx${aError}" class="collapse"
+								<div id="xx${indexValue}" class="collapse"
 									aria-labelledby="headingOne" data-parent="#accordionExample">
 									<div class="card-body">
 										<form method="POST"
 											action="<%=request.getContextPath()%>/repair01">
 											<input type="hidden" name="actionForm" value="${indexValue}" />
-											<fieldset id="disable${aError}" disabled>
+											<fieldset id="disable${indexValue}" disabled>
 												<div class="input-group mb-3">
 													<div class="input-group-prepend">
 														<label class="input-group-text" for="duty">Select
@@ -186,7 +186,7 @@
 					</c:forEach>
 					<script>
 						function enableForm(errorCode) {
-							//console.log("====");
+							console.log("called");
 							document.getElementById("disable" + errorCode).disabled = false;
 						}
 					</script>

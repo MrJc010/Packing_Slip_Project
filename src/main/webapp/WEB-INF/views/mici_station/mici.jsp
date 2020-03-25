@@ -25,7 +25,6 @@
 </style>
 
 <section>
-	${listErrorCodes}
 	<div class="container" ${hidden}>
 		<h1 class="text-center mt-4 my-4">This is MICI</h1>
 
@@ -55,8 +54,8 @@
 			<div class="col-md-2 col-sm-0"></div>
 		</div>
 
-		<div class="container text-center" ${setHiddenResultSucess}>
-			<div class="alert alert-success" role="alert">${ppid}isupdated
+		<div class="container text-center mt-5" ${setHiddenResultSucess}>
+			<div class="alert alert-success" role="alert">${ppid} is updated
 				successfully!</div>
 		</div>
 
@@ -163,7 +162,6 @@
     var i = 0;
     for (var key in list) {
     	if (list.hasOwnProperty(key)) {
-    		console.log(key + " -> " + list[key]);
      	    var divError = document.getElementById("errorDiv" + i);
     	    var op = document.createElement('option');
     	    op.appendChild(document.createTextNode(key + " -> " + list[key]));
@@ -176,9 +174,9 @@
     function deleteErrorDiv() {
     
       var aID = event;
-      console.log(aID.target.value);
+
       var node = document.getElementById("selectionMICI");
-      console.log(node);
+
       node.removeChild(document.getElementById(aID.target.value));
 
     }
@@ -211,7 +209,7 @@
     	      var i = 0;
     	      for (var key in list) {
     	      	if (list.hasOwnProperty(key)) {
-    	      		console.log(key + " -> " + list[key]);
+    
     	       	    var divError = document.getElementById("errorDiv" + i);
     	      	    var op = document.createElement('option');
     	      	    op.appendChild(document.createTextNode(key + " -> " + list[key]));

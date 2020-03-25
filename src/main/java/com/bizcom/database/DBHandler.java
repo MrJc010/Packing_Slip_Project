@@ -979,7 +979,7 @@ public class DBHandler {
 
 	public List<String> fetchErrorForRepair01FromMICI(String ppid) {
 
-		String query = "SELECT description FROM mici_errorcode WHERE errorCode IN (SELECT error FROM mici_station WHERE ppid=?)";
+		String query = "SELECT * FROM mici_errorcode WHERE errorCode IN (SELECT error FROM mici_station WHERE ppid=?)";
 		List<String> result = new ArrayList<>();
 		try {
 			dbconnection = getConnectionAWS();
@@ -988,9 +988,10 @@ public class DBHandler {
 			rs = pst.executeQuery();
 
 			while (rs.next()) {
-				String temp = rs.getString("description");
-				if (temp != null) {
-					result.add(temp);
+				String errorCode = rs.getString("errorCode");
+				String description = rs.getString("description");
+				if (errorCode != null && description != null) {
+					result.add(errorCode + " --> "+description);
 				}
 			}
 

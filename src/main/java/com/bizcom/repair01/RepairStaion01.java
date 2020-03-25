@@ -33,7 +33,7 @@ public class RepairStaion01 extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		String action = request.getParameter("action01");
-		System.out.println("go in "+ action);
+		System.out.println("go in " + action);
 		request.setAttribute("setRepair01Hidden", "hidden");
 		request.setAttribute("setRepair01HiddenError", "hidden");
 
@@ -90,15 +90,15 @@ public class RepairStaion01 extends HttpServlet {
 		}
 	}
 
-
 	public void updateRevision(HttpServletRequest request, HttpServletResponse response, String ppid)
 			throws ServletException, IOException {
 		request.setAttribute("setRepair01Hidden", "hidden");
 
 		request.setAttribute("setRepair01HiddenError", "hidden");
 		String curRev = db.getCurrentRev(ppid);
-		if(curRev.isEmpty()) currentRev = -1;
-		else{
+		if (curRev.isEmpty())
+			currentRev = -1;
+		else {
 			currentRev = Integer.parseInt(curRev.substring(curRev.length() - 2, curRev.length()));
 		}
 		getErrors(request, response, ppid);
@@ -111,7 +111,7 @@ public class RepairStaion01 extends HttpServlet {
 				// Fetch data base on currentNum
 				RevesionUpgrade temp = new RevesionUpgrade("1233", "middle", "abbb", "ecoAction", "122233", "9999",
 						"12345678", currentRev);
-				System.out.println("here "+currentRev+" "+(temp.getCurrentRev() + 1));
+
 				request.setAttribute("curRevNumber", temp.getCurrentRev());
 				request.setAttribute("nextRevNumber", (temp.getCurrentRev() + 1));
 				request.setAttribute("partNumber", temp.getPn());
@@ -123,8 +123,8 @@ public class RepairStaion01 extends HttpServlet {
 				request.setAttribute("shortcut", temp.getShortcut());
 				request.getRequestDispatcher("/WEB-INF/views/repair_01/repair01.jsp").forward(request, response);
 
-			}
-			else {
+			} else {
+				request.setAttribute("setRepair01Hidden", "hidden");
 				request.getRequestDispatcher("/WEB-INF/views/repair_01/repair01.jsp").forward(request, response);
 			}
 			// error code
