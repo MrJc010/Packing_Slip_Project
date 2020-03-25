@@ -55,12 +55,18 @@
 			<div class="col-md-2 col-sm-0"></div>
 		</div>
 
-
+		<div class="container text-center" ${setHiddenResultSucess}>
+			<div class="alert alert-success" role="alert">${ppid}is
+				updated successfully!</div>
+		</div>
 
 	</div>
 
-	<div ${seterrorhiddenMICI}>
-		<label>${currentStatusAtMICI}</label>
+	<div class="container  text-center" ${seterrorhiddenMICI}>
+		<div class="alert alert-danger mt-5" role="alert">
+			<label>${currentStatusAtMICI}</label>
+		</div>
+
 	</div>
 
 	<div class="container mt-5 text-center" ${sethideMICI}>
@@ -86,7 +92,7 @@
 
 			</div>
 
-	<%-- 		<div${setHidenResult}>
+			<%-- 		<div${setHidenResult}>
 				<span class="badge badge-success mb-5">
 					<h3 class="display-5">Successful!</h3>
 				</span>
@@ -201,6 +207,7 @@
     	}
 
     }
+    
   </script>
 
 </section>

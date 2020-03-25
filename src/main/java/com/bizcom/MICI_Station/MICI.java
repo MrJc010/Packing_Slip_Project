@@ -46,6 +46,7 @@ public class MICI extends HttpServlet {
 			throws ServletException, IOException {
 		errorCodeSet = new HashSet<String>();
 		request.setAttribute("seterrorhiddenMICI", "hidden");
+		request.setAttribute("setHiddenResultSucess", "hidden");
 //		request.setAttribute("setHidenResult", "hidden");
 		request.setAttribute("currentCountMICI", 2);
 		String page = request.getParameter("page");
@@ -93,13 +94,20 @@ public class MICI extends HttpServlet {
 					System.out.println("Result Update Station Status : "
 							+ dbHandler.updateCurrentStation(MICI, REPAIR01_FAIL, ppid));
 					try {
-						boolean test = dbHandler.addToMICITable(ppid, sn,errorCodeSet, "A USER FROM MICI");
+						boolean test = dbHandler.addToMICITable(ppid, sn, errorCodeSet, "A USER FROM MICI");
 						// System.out.println(test);
 					} catch (ClassNotFoundException | SQLException e) {
-						//here
+						// here
 						System.out.println(e.getMessage());
 						e.printStackTrace();
 					}
+
+					request.setAttribute("setHiddenResultSucess", "show");
+					request.setAttribute("ppid", ppid);
+					request.setAttribute("seterrorhiddenMICI", "hidden");
+					request.setAttribute("sethideMICI", "hidden");
+					request.getRequestDispatcher("/WEB-INF/views/mici_station/mici.jsp").forward(request, response);
+					return;
 				}
 			} else {
 				request.getRequestDispatcher("/WEB-INF/views/mici_station/mici.jsp").forward(request, response);
@@ -139,7 +147,7 @@ public class MICI extends HttpServlet {
 		ppid = request.getParameter("ppidNumber");
 		String[] miciInfo = dbHandler.getPhysicalInfor(ppid);
 		if (validate(ppid, request, miciInfo)) {
-			
+
 			// fetch information
 			if (ppid != null) {
 				request.setAttribute("sethideMICI", "");
