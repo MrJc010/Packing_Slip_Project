@@ -9,6 +9,11 @@ public class RevesionUpgrade {
 	private String newMaterial;
 	private String shortcut;
 	private int currentRev;
+	
+	public RevesionUpgrade() {
+		
+	}
+	
 	public RevesionUpgrade(String pn, String location, String desc, String ecoAction, String oldMaterial,
 			String newMaterial, String shortcut, int currentRev) {
 		super();
@@ -68,6 +73,13 @@ public class RevesionUpgrade {
 	}
 	public void setCurrentRev(int currentRev) {
 		this.currentRev = currentRev;
+	}
+
+	@Override
+	public String toString() {
+		return "RevesionUpgrade [pn=" + pn + ", location=" + location + ", desc=" + desc + ", ecoAction=" + ecoAction
+				+ ", oldMaterial=" + oldMaterial + ", newMaterial=" + newMaterial + ", shortcut=" + shortcut
+				+ ", currentRev=" + currentRev + "]";
 	}
 	
 	

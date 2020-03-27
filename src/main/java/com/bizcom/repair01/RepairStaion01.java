@@ -2,13 +2,19 @@ package com.bizcom.repair01;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONObject;
+
+import com.bizcom.MICI_Station.ErrorCode;
 import com.bizcom.database.DBHandler;
 
 /**
@@ -37,41 +43,72 @@ public class RepairStaion01 extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+
+		// TODO: DELETE ME
+		System.out.println("doGet called");
+
 		String action = request.getParameter("action01");
 
 		request.setAttribute("setRepair01Hidden", "hidden");
 		request.setAttribute("setRepair01HiddenError", "hidden");
 
+//		displayInitialView(request,response,true);
+		
 		if (action != null) {
 			switch (action) {
 			case "findPPID":
 
+				// TODO: DELETE ME
+				System.out.println("doGet findPPID");
+
 				ppid = request.getParameter("inputppid");
 				if (!ppid.isEmpty() && db.isPPIDExistInMICI(ppid)) {
+
+					// TODO: DELETE ME
+					System.out.println("doGet ppid valid");
 
 					String[] stationIndo = db.getCurrentStation(ppid);
 
 					// Check If PPID stay at corrected station
 					// FROM : MICI TO : REPAIR01_FAIL
 					if (stationIndo[0].equalsIgnoreCase("MICI") && stationIndo[1].equalsIgnoreCase(REPAIR01_FAIL)) {
+
+						// TODO: DELETE ME
+						System.out.println("doGet ppid valid generate new record");
+
 						boolean updateFlag = db.generateErrorRecord(ppid);
 
 						if (updateFlag) {
+
+							// TODO: DELETE ME
+							System.out.println("doGet ppid valid generate new record OK");
+
 							// Update status also
-							db.updateCurrentStation(MICI, REPAIR01, ppid);
+							db.updateCurrentStation(REPAIR01_FAIL, REPAIR01, ppid);
 							updateUI(request, response, ppid);
 
 						} else {
+
+							// TODO: DELETE ME
+							System.out.println("doGet ppid valid generate new record NOT OK");
+
 							displayError(request, response, ppid, "Error system! We cannot upload error to system.");
 						}
 
 					} else {
+
+						// TODO: DELETE ME
+						System.out.println("doGet ppid stay some where");
+
 						getErrors(request, response, ppid);
 						updateUI(request, response, ppid);
 					}
 
 				} else {
+					// TODO: DELETE ME
+					System.out.println("doGet ppid invalid");
 					displayError(request, response, ppid, "PPID is Empty or Not Found!");
+					// HIDE body Error
 				}
 				break;
 			case "updateRevision":
@@ -80,6 +117,11 @@ public class RepairStaion01 extends HttpServlet {
 				break;
 			}
 		} else {
+
+			// TODO: DELETE ME
+			System.out.println("NO ACTION DETECT");
+			// Hidden everything
+			displayInitialView(request, response,true);
 			request.getRequestDispatcher("/WEB-INF/views/repair_01/repair01.jsp").forward(request, response);
 		}
 
@@ -122,7 +164,6 @@ public class RepairStaion01 extends HttpServlet {
 	public void updateRevision(HttpServletRequest request, HttpServletResponse response, String ppid)
 			throws ServletException, IOException {
 		request.setAttribute("setRepair01Hidden", "hidden");
-
 		request.setAttribute("setRepair01HiddenError", "hidden");
 		String curRev = db.getCurrentRev(ppid);
 		if (curRev.isEmpty())
@@ -138,8 +179,13 @@ public class RepairStaion01 extends HttpServlet {
 				request.setAttribute("setRepair01Hidden", "show");
 
 				// Fetch data base on currentNum
-				RevesionUpgrade temp = new RevesionUpgrade("1233", "middle", "abbb", "ecoAction", "122233", "9999",
-						"12345678", currentRev);
+				String partNumber = db.getPartNumber(ppid);
+				db.createInstruction();
+
+				// TODO if PART NUMBER DOES NOT EXIST
+
+				RevesionUpgrade temp = db.getInstruction(partNumber, generatorRev(currentRev),
+						generatorRev(currentRev + 1));
 
 				request.setAttribute("curRevNumber", temp.getCurrentRev());
 				request.setAttribute("nextRevNumber", (temp.getCurrentRev() + 1));
@@ -174,37 +220,27 @@ public class RepairStaion01 extends HttpServlet {
 		}
 	}
 
+	// scan ppid : x ->
+
 	public void getErrors(HttpServletRequest request, HttpServletResponse response, String ppid) {
-		// improve later
-		List<String> errorList = db.fetchErrorForRepair01FromMICI(ppid);
-		// try to fetch in
-		List<String> undoneList = db.getAllUndoneErrorCode(ppid);
-		List<String> errorListModifed = new ArrayList<>();
-		if (undoneList.isEmpty()) {
-			errorList.clear();
-			errorListModifed.clear();
-		}
-
-		if (errorList.size() > 0) {
-			for (String s : errorList) {
-				String tempErroCode = s.split(" --> ")[0];
-
-				if (undoneList.contains(tempErroCode)) {
-					errorListModifed.add(s);
-				}
-			}
-		}
+		HashMap<String, String> result = db.fetchErrorFromRepair01(ppid);
 
 		request.setAttribute("setRepair01HiddenFix", "show");
-		if (errorListModifed.size() == 0) {
+		if (result.size() == 0) {
 			request.setAttribute("setRepair01HiddenError", "");
 			request.setAttribute("setSuccessMessage",
 					ppid + " has NO ERROR! Please check REVESION UPGRADE IF REQUIRE!");
+			// no error ccheck revision....
 		} else {
 			// List all error
-			request.setAttribute("sizeErrorList", errorListModifed.size());
+			request.setAttribute("sizeErrorList", result.size());
 			request.setAttribute("setRepair01Hidden", "");
-			request.setAttribute("errorList", errorListModifed);
+			request.setAttribute("currentErrorNumber", result.size());
+			List<String> listErrorStr = new ArrayList<>();
+			result.forEach((k, v) -> {
+				listErrorStr.add(k + " --> " + v);
+			});
+			request.setAttribute("errorList", listErrorStr);
 
 		}
 	}
@@ -230,5 +266,20 @@ public class RepairStaion01 extends HttpServlet {
 		request.setAttribute("setPPID", ppid);
 		request.setAttribute("setErrorMessage", message);
 		request.getRequestDispatcher("/WEB-INF/views/repair_01/repair01.jsp").forward(request, response);
+	}
+
+	public void setPPIDDetails(HttpServletRequest request, HttpServletResponse response, boolean idDisplay) {
+
+	}
+
+	public void displayInitialView(HttpServletRequest request, HttpServletResponse response, boolean isBegin) {
+		if (isBegin) {
+			request.setAttribute("setInfoPPIDetails", "hidden");
+			request.setAttribute("setHiddenBodyRepair01", "hidden");
+		} else {
+			request.setAttribute("setInfoPPIDetails", "show");
+			request.setAttribute("setHiddenBodyRepair01", "show");
+		}
+
 	}
 }

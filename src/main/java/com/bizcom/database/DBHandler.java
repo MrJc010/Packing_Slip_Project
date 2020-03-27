@@ -8,14 +8,18 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.bizcom.MICI_Station.ErrorCode;
 import com.bizcom.ppid.PPID;
 import com.bizcom.receiving.physicalreceiving.Item;
 import com.bizcom.receiving.physicalreceiving.PreAlertItem;
+import com.bizcom.repair01.RevesionUpgrade;
 
 public class DBHandler {
 	private Connection dbconnection;
@@ -1044,10 +1048,10 @@ public class DBHandler {
 		return result;
 	}
 
-	public List<String> fetchErrorForRepair01FromMICI(String ppid) {
+	public HashMap<String, String> fetchErrorFromRepair01(String ppid) {
 
-		String query = "SELECT * FROM mici_errorcode WHERE errorCode IN (SELECT error FROM mici_station WHERE ppid=?)";
-		List<String> result = new ArrayList<>();
+		String query = "SELECT * FROM mici_errorcode WHERE errorCode IN (SELECT errorCode FROM reapir01_action WHERE ppid=? AND repair_action_id IS NULL)";
+		HashMap<String, String> result = new HashMap<>();
 		try {
 			dbconnection = getConnectionAWS();
 			pst = dbconnection.prepareStatement(query);
@@ -1058,7 +1062,7 @@ public class DBHandler {
 				String errorCode = rs.getString("errorCode");
 				String description = rs.getString("description");
 				if (errorCode != null && description != null) {
-					result.add(errorCode + " --> " + description);
+					result.put(errorCode, description);
 				}
 			}
 
@@ -1094,7 +1098,7 @@ public class DBHandler {
 		return result;
 	}
 
-	public void updateRepair01Action(Connection conn,String errorCode, String ppid, int recordID) throws SQLException {
+	public void updateRepair01Action(Connection conn, String errorCode, String ppid, int recordID) throws SQLException {
 		String query = "UPDATE reapir01_action SET repair_action_id = ? WHERE ppid=? AND errorCode=?";
 		pst = conn.prepareStatement(query);
 		pst.setInt(1, recordID);
@@ -1121,8 +1125,8 @@ public class DBHandler {
 
 	}
 
-	public void updateRepair01RecordAction(String errorCode,String ppid, String duty, String oldPN, String newPN, String area,
-			String actionJob) {
+	public void updateRepair01RecordAction(String errorCode, String ppid, String duty, String oldPN, String newPN,
+			String area, String actionJob) {
 		String queryInsert = "INSERT INTO repair01_action_record VALUES(?,?,?,?,?,?)";
 		int recordID = -1;
 		try {
@@ -1139,7 +1143,7 @@ public class DBHandler {
 			if (rs != null && rs.next()) {
 				recordID = rs.getInt(1);
 				if (recordID != -1) {
-					updateRepair01Action(dbconnection,errorCode, ppid, recordID);
+					updateRepair01Action(dbconnection, errorCode, ppid, recordID);
 				}
 			} else {
 				return;
@@ -1151,6 +1155,182 @@ public class DBHandler {
 			shutdown();
 		}
 
+	}
+
+	public String getPartNumber(String ppid) {
+		String result = "";
+		String query = "SELECT pn FROM pre_item WHERE ppid = ?";
+
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(query);
+			pst.setString(1, ppid);
+			rs = pst.executeQuery();
+			while (rs.next()) {				
+				result = rs.getString("pn").split("-")[1];
+			}
+		} catch (Exception e) {
+			System.out.println("Error isPassedAtRepair01: " + e.getMessage());
+		} finally {
+			shutdown();
+		}
+
+		return result;
+	}
+
+	// *****************************************************************
+	// Getting Instruction
+	// Each of the List is the instruction for upgrading revision base on part
+	// number
+	// *****************************************************************
+	private List<List<String>> instruction;
+
+	public List<List<String>> createInstruction() {
+		instruction = new ArrayList<List<String>>();
+		List<String> list1 = Arrays.asList("PU610/PU612/PU613", "to avoid no-power failures",
+				"Change PU610/PU612/PU613 from SA0000AHX00 to SA0000AHX10 or SA0000C4800", "SA0000AHX00",
+				"SA0000AHX10 SA0000C4800", "https://image.prntscr.com/image/9uUfNxHtSLGQZm4BGmum-Q.png");
+
+		List<String> list2 = Arrays.asList("UT2",
+				"Improved the stability of power states/ Improved device compatibility", "TBT FW Upgrade", "NA", "NA",
+				"https://image.prntscr.com/image/9uUfNxHtSLGQZm4BGmum-Q.png");
+
+		List<String> list3 = Arrays.asList("PC308/PC309/PC310/PC311", "fix WHEA BSOD issue",
+				"Change PC308, PC309,PC310,PC311 from SE0000M00(22uF) to SE000015500 /add CC221(SE000001120)",
+				"SE0000M00", "SE000015500 SE000001120", "https://image.prntscr.com/image/9uUfNxHtSLGQZm4BGmum-Q.png");
+
+		List<String> list4 = Arrays.asList("PU610/PU612/PU613",
+				"Fairchild DrMOS FDMF3035 UIS testing criteria improvement",
+				"Change PU610/PU612/PU613 fromSA0000AHX00 / SA0000AHX10 to  SA0000AHX20 or SA0000C4800",
+				"SA0000AHX00/SA0000AHX10", "SA0000AHX20 or SA0000C4800",
+				"https://image.prntscr.com/image/9uUfNxHtSLGQZm4BGmum-Q.png");
+
+		List<String> list5 = Arrays.asList("PU610/PU612/PU613",
+				"Fairchild DrMOS FDMF3035 UIS testing criteria improvement",
+				"Change PU610/PU612/PU613 fromSA0000AHX00 / SA0000AHX10", "SA0000AHX00/SA0000AHX10",
+				"SA0000AHX20 or SA0000C4800", "https://image.prntscr.com/image/9uUfNxHtSLGQZm4BGmum-Q.png");
+
+		List<String> list6 = Arrays.asList("NA", "To fix issue cut in new Thunderbolt FW NVM41",
+				"Thunderbolt FW upgrade to NVM41 (cover by testing operation)", "NA", "NA",
+				"https://image.prntscr.com/image/9uUfNxHtSLGQZm4BGmum-Q.png");
+
+		List<String> list7 = Arrays.asList("RC417 , RC418 , RC419 , RC420",
+				"Cut in HW workaround can get further immunity of Kirkwood MLK flicker issue (BITS410252& BITS423117) if any unproper manual assembly process to cause the thermal module deformation. ",
+				"Non-AR U42 Replace RC417/ RC418 Change SD028000080 to SD028330A80,Non-AR U22 Replace RC419; RC420 Change SD028000080 to SD028330A80",
+				"SD028000080", "SD028330A80", "https://image.prntscr.com/image/9uUfNxHtSLGQZm4BGmum-Q.png");
+
+		instruction.add(list1);
+		instruction.add(list2);
+		instruction.add(list3);
+		instruction.add(list4);
+		instruction.add(list5);
+		instruction.add(list6);
+		instruction.add(list7);
+
+		return instruction;
+
+	}
+
+	public RevesionUpgrade getInstruction(String part, String oldR, String newR) {
+		part = part.toUpperCase();
+		oldR = oldR.toUpperCase();
+		newR = newR.toUpperCase();
+
+		// Line 1
+		if ((part.equals("N6W51") || part.equals("JXP99") || part.equals("XMNM2") || part.equals("C4VVY")
+				|| part.equals("71V71") || part.equals("MH7C0") || part.equals("JFGFN") || part.equals("W4DYC")
+				|| part.equals("41M0M") || part.equals("1DMJH") || part.equals("2WCVJ") || part.equals("PHP7P"))
+				&& oldR.equals("A00") && newR.equals("A01")) {
+			List<String> list = instruction.get(0);
+			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4),
+					list.get(5), 0);
+		}
+
+		// Line2
+		else if ((part.equals("JFGFN") || part.equals("W4DYC") || part.equals("41M0M") || part.equals("1DMJH")
+				|| part.equals("2WCVJ") || part.equals("PHP7P")) && oldR.equals("A01") && newR.equals("A02")) {
+			List<String> list = instruction.get(1);
+			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4),
+					list.get(5), 1);
+		}
+
+		// line3.1
+		else if ((part.equals("71V71") || part.equals("C4VVY") || part.equals("JXP99") || part.equals("MH7C0")
+				|| part.equals("N6W51") || part.equals("XMNM2")) && oldR.equals("A02") && newR.equals("A03")) {
+			List<String> list = instruction.get(2);
+			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4),
+					list.get(5), 2);
+		}
+
+		// line3.2
+		else if ((part.equals("1DMJH") || part.equals("2WCVJ") || part.equals("41M0M") || part.equals("JFGFN")
+				|| part.equals("PHP7P") || part.equals("W4DYC")) && oldR.equals("A03") && newR.equals("A04")) {
+			List<String> list = instruction.get(2);
+			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4),
+					list.get(5), 3);
+		}
+
+		// line5
+		else if ((part.equals("07RYD") || part.equals("2PK0W") || part.equals("441WF") || part.equals("5FXXY")
+				|| part.equals("C35PP") || part.equals("CM3RM") || part.equals("TGTM2") || part.equals("TR16P")
+				|| part.equals("HVW90") || part.equals("JK58T") || part.equals("JT36N") || part.equals("NGHF1")
+				|| part.equals("P79TK") || part.equals("P86NJ") || part.equals("V0P2N") || part.equals("YNMMF"))
+				&& oldR.equals("A02") && newR.equals("A03")) {
+			List<String> list = instruction.get(4);
+			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4),
+					list.get(5), 2);
+		}
+
+		// line6
+		else if ((part.equals("71V71") || part.equals("C4VVY") || part.equals("JXP99") || part.equals("MH7C0")
+				|| part.equals("N6W51") || part.equals("XMNM2")) && oldR.equals("A05") && newR.equals("A06")) {
+			List<String> list = instruction.get(4);
+			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4),
+					list.get(5), 5);
+		}
+
+		// line7
+		else if ((part.equals("1DMJH") || part.equals("2WCVJ") || part.equals("41M0M") || part.equals("JFGFN")
+				|| part.equals("PHP7P") || part.equals("W4DYC")) && oldR.equals("A06") && newR.equals("A07")) {
+			List<String> list = instruction.get(4);
+			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4),
+					list.get(5), 6);
+		}
+
+		// line 8
+		else if ((part.equals("2PK0W") || part.equals("C35PP") || part.equals("CM3RM") || part.equals("JK58T")
+				|| part.equals("JT36N") || part.equals("NGHF1") || part.equals("P86NJ") || part.equals("TGTM2")
+				|| part.equals("V0P2N") || part.equals("YNMMF")) && oldR.equals("A01") && newR.equals("A02")) {
+			List<String> list = instruction.get(5);
+			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4),
+					list.get(5), 1);
+		}
+
+		// line 9
+		else if ((part.equals("1DMJH") || part.equals("2WCVJ") || part.equals("41M0M") || part.equals("JFGFN")
+				|| part.equals("PHP7P") || part.equals("W4DYC")) && oldR.equals("A05") && newR.equals("A06")) {
+			List<String> list = instruction.get(5);
+			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4),
+					list.get(5), 5);
+		}
+
+		// line 10
+		else if ((part.equals("441WF") || part.equals("HVW90") || part.equals("5FXXY") || part.equals("TR16P")
+				|| part.equals("P79TK") || part.equals("07RYD")) && oldR.equals("A01") && newR.equals("A02")) {
+			List<String> list = instruction.get(6);
+			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4),
+					list.get(5), 1);
+		}
+
+		// line 11
+		else if ((part.equals("N6W51") || part.equals("JXP99") || part.equals("XMNM2") || part.equals("C4VVY")
+				|| part.equals("71V71") || part.equals("MH7C0")) && oldR.equals("A04") && newR.equals("A05")) {
+			List<String> list = instruction.get(6);
+			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4),
+					list.get(5), 4);
+		} else {
+			return new RevesionUpgrade();
+		}
 	}
 
 	// ***********************************************************
@@ -1295,4 +1475,5 @@ public class DBHandler {
 			}
 		}
 	}
+
 }
