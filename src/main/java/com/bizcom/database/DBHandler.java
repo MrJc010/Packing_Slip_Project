@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -181,7 +182,6 @@ public class DBHandler {
 		return result;
 	}
 
-	
 	public int fetchCurrentReceivedCount(Connection conn, String sn) throws SQLException {
 		int result = 0;
 		String FETCH_CURRENT_COUNT_RECEIVED = "SELECT * FROM pre_sn_record WHERE serial_number=?";
@@ -278,14 +278,13 @@ public class DBHandler {
 	// ***********************************************************
 	// ***********************************************************
 	// ***********************************************************
-	
-	
+
 	// ***********************************************************
 	// ***********************************************************
 	// ***********************************************************
 	// ***********************************************************
 	// ***********************************************************
-	// *                  REPAIR 01                              *
+	// * REPAIR 01 *
 	// ***********************************************************
 	// ***********************************************************
 	// ***********************************************************
@@ -1058,12 +1057,34 @@ public class DBHandler {
 	// *********************************************************************************
 	// *********************************************************************************
 	// *********************************************************************************
-	
-	
-	public List<ErrorCode> getAllErrorCodes(){
+	public boolean isPPIDExistInMICI(String ppid) {
+		boolean result = false;
+
+		String query = "SELECT * FROM mici_station WHERE ppid=?";
+
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(query);
+			pst.setString(1, ppid);
+			rs = pst.executeQuery();
+
+			if (rs.next()) {
+				result = true;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			shutdown();
+		}
+
+		return result;
+	}
+
+	public List<ErrorCode> getAllErrorCodes() {
 		List<ErrorCode> result = new ArrayList<>();
 		String query = "SELECT * FROM mici_errorcode";
-		
+
 		try {
 			dbconnection = getConnectionAWS();
 			pst = dbconnection.prepareStatement(query);
@@ -1079,10 +1100,10 @@ public class DBHandler {
 		} finally {
 			shutdown();
 		}
-		
+
 		return result;
 	}
-	
+
 	public String[] getPhysicalInfor(String ppid) {
 		String query = "SELECT * FROM pre_item WHERE ppid=?";
 		String[] result = new String[3];
@@ -1134,6 +1155,52 @@ public class DBHandler {
 		return result;
 	}
 
+	// *********************************END*********************************************
+	// *********************************************************************************
+	// *********************************************************************************
+	// *********************************************************************************
+	// *********************************************************************************
+	// * End pre-alert functions *
+	// *********************************************************************************
+	// *********************************************************************************
+	// *********************************************************************************
+	// *********************************************************************************
+	// *********************************************************************************
+	// *********************************************************************************
+
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// * REPAIR01 START *
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***************************************************
+	public boolean generateErrorRecord(String ppid) {
+		boolean result = false;
+		String query = "INSERT INTO reapir01_action (ppid,errorCode) SELECT ppid,error FROM mici_station  WHERE ppid=?";
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(query);
+			pst.setString(1, ppid);
+
+			pst.execute();
+			result = true;
+		} catch (SQLException | ClassNotFoundException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			shutdown();
+		}
+
+		return result;
+	}
+
 	public List<String> fetchErrorForRepair01FromMICI(String ppid) {
 
 		String query = "SELECT * FROM mici_errorcode WHERE errorCode IN (SELECT error FROM mici_station WHERE ppid=?)";
@@ -1148,7 +1215,7 @@ public class DBHandler {
 				String errorCode = rs.getString("errorCode");
 				String description = rs.getString("description");
 				if (errorCode != null && description != null) {
-					result.add(errorCode + ": "+description);
+					result.add(errorCode + " --> " + description);
 				}
 			}
 
@@ -1161,19 +1228,102 @@ public class DBHandler {
 		return result;
 	}
 
-	// *********************************END*********************************************
-	// *********************************************************************************
-	// *********************************************************************************
-	// *********************************************************************************
-	// *********************************************************************************
-	// * End pre-alert functions *
-	// *********************************************************************************
-	// *********************************************************************************
-	// *********************************************************************************
-	// *********************************************************************************
-	// *********************************************************************************
-	// *********************************************************************************
+	public List<String> getAllUndoneErrorCode(String ppid) {
+		List<String> result = new ArrayList<>();
+		String query = "SELECT * FROM reapir01_action WHERE ppid =? AND repair_action_id IS NULL";
 
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(query);
+			pst.setString(1, ppid);
+			rs = pst.executeQuery();
+
+			while (rs.next()) {
+				result.add(rs.getString("errorCode"));
+			}
+
+		} catch (Exception e) {
+			System.out.println("Error isPassedAtRepair01: " + e.getMessage());
+		} finally {
+			shutdown();
+		}
+
+		return result;
+	}
+
+	public void updateRepair01Action(Connection conn,String errorCode, String ppid, int recordID) throws SQLException {
+		String query = "UPDATE reapir01_action SET repair_action_id = ? WHERE ppid=? AND errorCode=?";
+		pst = conn.prepareStatement(query);
+		pst.setInt(1, recordID);
+		pst.setString(2, ppid);
+		pst.setString(3, errorCode);
+		pst.execute();
+		if (rs != null) {
+			try {
+				rs.close();
+			} catch (SQLException e) {
+				System.out.println("FAILLL");
+			}
+			rs = null;
+		}
+
+		if (pst != null) {
+			try {
+				pst.close();
+			} catch (SQLException e) {
+				System.out.println("FAILLL");
+			}
+			pst = null;
+		}
+
+	}
+
+	public void updateRepair01RecordAction(String errorCode,String ppid, String duty, String oldPN, String newPN, String area,
+			String actionJob) {
+		String queryInsert = "INSERT INTO repair01_action_record VALUES(?,?,?,?,?,?)";
+		int recordID = -1;
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(queryInsert, Statement.RETURN_GENERATED_KEYS);
+			pst.setString(1, null);
+			pst.setString(2, duty);
+			pst.setString(3, oldPN);
+			pst.setString(4, newPN);
+			pst.setString(5, area);
+			pst.setString(6, actionJob);
+			recordID = pst.executeUpdate();
+			rs = pst.getGeneratedKeys();
+			if (rs != null && rs.next()) {
+				recordID = rs.getInt(1);
+				if (recordID != -1) {
+					updateRepair01Action(dbconnection,errorCode, ppid, recordID);
+				}
+			} else {
+				return;
+			}
+
+		} catch (Exception e) {
+			System.out.println("Error updateRepair01RecordAction: " + e.getMessage());
+		} finally {
+			shutdown();
+		}
+
+	}
+
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// * REPAIR01 END *
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***********************************************************
+	// ***************************************************
 	// ***********************************************************
 	// ***********************************************************
 	// ***********************************************************

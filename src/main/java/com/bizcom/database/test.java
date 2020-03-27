@@ -11,6 +11,8 @@ public class test {
 		db.getConnectionAWS();
 		db.testConnection();
 		
+//		db.updateRepair01RecordAction("111", "1111", "1111", "1111", "1111", "1111");
+		
 //		//map 1 has 3 keys
 //		HashMap<Integer, String> map1 = new HashMap<>();
 //		 

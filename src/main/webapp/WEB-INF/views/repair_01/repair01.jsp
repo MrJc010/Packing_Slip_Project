@@ -41,9 +41,17 @@
 		</div>
 		<div class="my-3 container text-center" ${setRepair01HiddenError }>
 
-			<div class="alert alert-danger" role="alert">
+			<div class="alert alert-danger" role="alert" ${setErrosTempMessage }>
 				<strong><span class="display-3">${setErrorMessage }</span></strong>
+				
 			</div>
+			
+			<div class="alert alert-success" role="alert">
+				<strong><span class="display-4">${setSuccessMessage }</span></strong>
+				
+			</div>
+			
+			
 		</div>
 
 
@@ -63,11 +71,7 @@
 			<!-- update revision -->
 			<div class="tab-pane fade show active" id="home" role="tabpanel"
 				aria-labelledby="home-tab">
-				<div class="container" ${setRepair01Hidden}>
-					<div class="row p-5">
-						<h2>Update revision</h2>
-
-					</div>
+				<div class="container p-5" ${setRepair01Hidden}>					
 					<form method="POST" action="<%=request.getContextPath()%>/repair01">
 						<input type="hidden" name="action01" value="updateRevision">
 						<div class="card">
@@ -88,7 +92,7 @@
 									<li class="list-group-item">New Material PN: <strong>${newMaterialPN}</strong></li>
 									<li class="list-group-item">Shortcut: <strong>${shortcut}</strong></li>
 								</ul>
-								<input type="submit" class="btn btn-success" value="DONE" />
+								<input type="submit" class="btn btn-success mt-2" value="DONE" />
 							</div>
 						</div>
 					</form>
@@ -103,7 +107,7 @@
 
 
 
-				<div ${setRepair01HiddenFix}>
+				<div class="p-5" ${setRepair01HiddenFix}>
 					<c:set var="indexValue" value="${0}" scope="page" />
 					<c:forEach items="${errorList}" var="aError">
 						<c:set var="indexValue" value="${indexValue +1}" scope="page" />
@@ -127,7 +131,8 @@
 									<div class="card-body">
 										<form method="POST"
 											action="<%=request.getContextPath()%>/repair01">
-											<input type="hidden" name="actionForm" value="${indexValue}" />
+											<input type="hidden" name="action01" value="SubmitAction" />
+											<input type="hidden" name="errorValueAction" value="${aError}" />
 											<fieldset id="disable${indexValue}" disabled>
 												<div class="input-group mb-3">
 													<div class="input-group-prepend">
@@ -135,19 +140,20 @@
 															Duty: </label>
 													</div>
 													<select class="custom-select" id="duty"
-														name="duty${aError}">
+														name="duty${aError}" required>
 														<option value="0" selected="">Choose a duty</option>
-														<option value="1">duty 01</option>
-														<option value="2">duty 02</option>
-														<option value="3">duty 03</option>
+														<option value="duty 01">duty 01</option>
+														<option value="duty 02">duty 02</option>
+														<option value="duty 03">duty 03</option>
 													</select>
 												</div>
 
 												<br>
 												<div class="form-group">
-													<label for="oldPN">OLD PN</label> <input type="text"
+													<label for="oldPN">OLD PN</label> 
+													<input type="text"
 														class="form-control" name="oldPN${aError}"
-														placeholder="Enter Old PN">
+														placeholder="Enter Old PN"  required>
 												</div>
 
 
@@ -156,7 +162,7 @@
 												<div class="form-group">
 													<label for="oldPN">NEW PN</label> <input type="text"
 														class="form-control" name="newPN${aError}"
-														placeholder="Enter new PN">
+														placeholder="Enter new PN" required>
 												</div>
 
 												<br>
@@ -164,7 +170,7 @@
 												<div class="form-group">
 													<label for="oldPN">AREA</label> <input type="text"
 														class="form-control" name="area${aError}"
-														placeholder="Enter area">
+														placeholder="Enter area" required>
 												</div>
 
 
@@ -173,9 +179,9 @@
 													<label for="actionInput">Action</label>
 													<textarea type="text" class="form-control"
 														name="action${aError}" rows="4" id="actionInput"
-														aria-describedby="emailHelp" placeholder="Enter action"></textarea>
+														aria-describedby="emailHelp" placeholder="Enter action" required></textarea>
 													<button type="submit" value="${aError}" name="submitButton"
-														class="btn btn-primary my-5 text-center mx-auto">Submit</button>
+														class="btn btn-primary my-5 text-center mx-auto">Submit-${aError}</button>
 												</div>
 											</fieldset>
 										</form>
