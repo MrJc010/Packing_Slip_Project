@@ -12,7 +12,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import com.bizcom.MICI_Station.ErrorCode;
@@ -132,20 +131,18 @@ public class DBHandler {
 		return flag;
 	}
 
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
 	// ***********************************************************
+	// *                    Physical Receiving                   *
 	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// * Physical Receiving *
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
+	
 	public List<Item> fetchRMA(String ppidN) {
 		List<Item> result = new ArrayList<>();
 		String FETCH_RMA_QUERY = "SELECT pre_ppid.rma, pre_item.ppid, pre_item.pn, pre_item.co, pre_item.lot,"
@@ -266,490 +263,30 @@ public class DBHandler {
 
 	}
 
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
 	// ***********************************************************
+	// *                   END Physical Receiving                *
 	// ***********************************************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+
+
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
 	// ***********************************************************
+	// *                    Pre-Aler Function                  *
 	// ***********************************************************
-	// ***********************************************************
-	// * END Physical Receiving *
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// * REPAIR 01 *
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	
-	//*****************************************************************
-	//Getting Instruction 
-	//Each of the List is the instruction for upgrading revision base on part number 
-	
-	//*****************************************************************
-	public List<List<String>> createInstruction(){
-			instruction = new ArrayList<List<String>>();
-			List<String> list1 = Arrays.asList("PU610/PU612/PU613","to avoid no-power failures",
-			"Change PU610/PU612/PU613 from SA0000AHX00 to SA0000AHX10 or SA0000C4800",
-			"SA0000AHX00","SA0000AHX10 SA0000C4800","https://image.prntscr.com/image/9uUfNxHtSLGQZm4BGmum-Q.png"); 
-			
-			List<String> list2 = Arrays.asList("UT2","Improved the stability of power states/ Improved device compatibility",
-			"TBT FW Upgrade",
-			"NA","NA","https://image.prntscr.com/image/9uUfNxHtSLGQZm4BGmum-Q.png");
-			
-			List<String> list3 = Arrays.asList("PC308/PC309/PC310/PC311","fix WHEA BSOD issue",
-			"Change PC308, PC309,PC310,PC311 from SE0000M00(22uF) to SE000015500 /add CC221(SE000001120)",
-			"SE0000M00","SE000015500 SE000001120","https://image.prntscr.com/image/9uUfNxHtSLGQZm4BGmum-Q.png");
-			
-			List<String> list4 = Arrays.asList("PU610/PU612/PU613","Fairchild DrMOS FDMF3035 UIS testing criteria improvement",
-			"Change PU610/PU612/PU613 fromSA0000AHX00 / SA0000AHX10 to  SA0000AHX20 or SA0000C4800",
-			"SA0000AHX00/SA0000AHX10","SA0000AHX20 or SA0000C4800","https://image.prntscr.com/image/9uUfNxHtSLGQZm4BGmum-Q.png");
-			
-			List<String> list5 = Arrays.asList("PU610/PU612/PU613","Fairchild DrMOS FDMF3035 UIS testing criteria improvement",
-			"Change PU610/PU612/PU613 fromSA0000AHX00 / SA0000AHX10",
-			"SA0000AHX00/SA0000AHX10","SA0000AHX20 or SA0000C4800","https://image.prntscr.com/image/9uUfNxHtSLGQZm4BGmum-Q.png");
-			
-			List<String> list6 = Arrays.asList("NA","To fix issue cut in new Thunderbolt FW NVM41",
-			"Thunderbolt FW upgrade to NVM41 (cover by testing operation)",
-			"NA","NA","https://image.prntscr.com/image/9uUfNxHtSLGQZm4BGmum-Q.png");
-			
-			List<String> list7 = Arrays.asList("RC417 , RC418 , RC419 , RC420","Cut in HW workaround can get further immunity of Kirkwood MLK flicker issue (BITS410252& BITS423117) if any unproper manual assembly process to cause the thermal module deformation. ",
-			"Non-AR U42 Replace RC417/ RC418 Change SD028000080 to SD028330A80,Non-AR U22 Replace RC419; RC420 Change SD028000080 to SD028330A80",
-			"SD028000080","SD028330A80","https://image.prntscr.com/image/9uUfNxHtSLGQZm4BGmum-Q.png");
-			
-			instruction.add(list1);instruction.add(list2);instruction.add(list3);instruction.add(list4);
-			instruction.add(list5);instruction.add(list6);instruction.add(list7);
-			
-			return instruction;
-			
-		}
-	
- 	public RevesionUpgrade getInstruction(String part,String oldR,String newR){
-		part = part.toUpperCase();
-		oldR = oldR.toUpperCase();
-		newR = newR.toUpperCase();
-		
-		//Line 1
-		if((part.equals("N6W51") || part.equals("JXP99") || part.equals("XMNM2") || part.equals("C4VVY") || part.equals("71V71") || part.equals("MH7C0") ||
-		part.equals("JFGFN") || part.equals("W4DYC") || part.equals("41M0M") || part.equals("1DMJH") || part.equals("2WCVJ") || part.equals("PHP7P")) &&
-		oldR.equals("A00") && newR.equals("A01")) {
-			List<String> list = instruction.get(0);
-			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4), list.get(5), 0);
-		}
-		
-		
-		//Line2
-		else if((part.equals("JFGFN") || part.equals("W4DYC") || part.equals("41M0M") || part.equals("1DMJH") || part.equals("2WCVJ") || part.equals("PHP7P")) &&
-		oldR.equals("A01") && newR.equals("A02")) {
-			List<String> list = instruction.get(1);
-			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4), list.get(5), 1);
-		}
-		
-		
-		//line3.1
-		else if((part.equals("71V71") || part.equals("C4VVY") || part.equals("JXP99") || part.equals("MH7C0") || part.equals("N6W51") || part.equals("XMNM2")) &&
-		oldR.equals("A02") && newR.equals("A03")) {
-			List<String> list = instruction.get(2);
-			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4), list.get(5), 2);
-		}
-		
-		
-		//line3.2
-		else if((part.equals("1DMJH") || part.equals("2WCVJ") || part.equals("41M0M") || part.equals("JFGFN") || part.equals("PHP7P") || part.equals("W4DYC")) &&
-		oldR.equals("A03") && newR.equals("A04")) {
-			List<String> list = instruction.get(2);
-			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4), list.get(5), 3);
-		}
-		
-		
-		//line5
-		else if((part.equals("07RYD") || part.equals("2PK0W") || part.equals("441WF") || part.equals("5FXXY") || part.equals("C35PP") || part.equals("CM3RM") ||
-		part.equals("TGTM2") || part.equals("TR16P") || part.equals("HVW90") || part.equals("JK58T") || part.equals("JT36N") || part.equals("NGHF1")
-		|| part.equals("P79TK") || part.equals("P86NJ") || part.equals("V0P2N") || part.equals("YNMMF")) && oldR.equals("A02") && newR.equals("A03")) {
-			List<String> list = instruction.get(4);
-			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4), list.get(5), 2);
-		}
-		
-		
-		//line6
-		else if((part.equals("71V71") || part.equals("C4VVY") || part.equals("JXP99") || part.equals("MH7C0") || part.equals("N6W51") || part.equals("XMNM2")) &&
-		oldR.equals("A05") && newR.equals("A06")) {
-			List<String> list = instruction.get(4);
-			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4), list.get(5), 5);
-		}
-		
-		
-		//line7
-		else if((part.equals("1DMJH") || part.equals("2WCVJ") || part.equals("41M0M") || part.equals("JFGFN") || part.equals("PHP7P") || part.equals("W4DYC")) &&
-		oldR.equals("A06") && newR.equals("A07")) {
-			List<String> list = instruction.get(4);
-			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4), list.get(5), 6);
-		}
-		
-		
-		//line 8
-		else if((part.equals("2PK0W") || part.equals("C35PP") || part.equals("CM3RM") || part.equals("JK58T") || part.equals("JT36N") || part.equals("NGHF1") ||
-		part.equals("P86NJ") || part.equals("TGTM2") || part.equals("V0P2N") || part.equals("YNMMF")) && oldR.equals("A01") && newR.equals("A02")) {
-			List<String> list = instruction.get(5);
-			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4), list.get(5), 1);
-		}
-		
-		
-		//line 9
-		else if((part.equals("1DMJH") || part.equals("2WCVJ") || part.equals("41M0M") || part.equals("JFGFN") || part.equals("PHP7P") || part.equals("W4DYC")) 
-		&& oldR.equals("A05") && newR.equals("A06")) {
-			List<String> list = instruction.get(5);
-			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4), list.get(5), 5);
-		}
-		
-		//line 10
-		else if((part.equals("441WF") || part.equals("HVW90") || part.equals("5FXXY") || part.equals("TR16P") || part.equals("P79TK") || part.equals("07RYD")) 
-		&& oldR.equals("A01") && newR.equals("A02")) {
-			List<String> list = instruction.get(6);
-			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4), list.get(5), 1);
-		}
-		
-		//line 11
-		else if((part.equals("N6W51") || part.equals("JXP99") || part.equals("XMNM2") || part.equals("C4VVY") || part.equals("71V71") || part.equals("MH7C0")) 
-		&& oldR.equals("A04") && newR.equals("A05")) {
-			List<String> list = instruction.get(6);
-			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4), list.get(5), 4);
-		}
-		else {
-			return new RevesionUpgrade();
-		}
-	}
-	
-	
-	
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// *                 END REPAIR 01                              *
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
- 	public void deletaPhysicalRecord(Connection conn, String ppid) throws SQLException {
-		String DELETE_A_PPID = "DELETE FROM physicalRecevingDB WHERE ppid=?";
-
-		pst = conn.prepareStatement(DELETE_A_PPID);
-		pst.setString(1, ppid);
-		pst.executeUpdate();
-	}
-
-	public boolean addMICI(String ppid, String sn) {
-
-		boolean result = false;
-		try {
-			dbconnection = getConnectionAWS();
-			pst = dbconnection.prepareStatement("INSERT INTO mici_station VALUES(?,?,?,?)");
-			pst.setString(1, ppid);
-			pst.setString(2, sn);
-			pst.setString(3, "User ID");
-			pst.setString(4, new Date().toLocaleString());
-			pst.execute();
-		} catch (SQLException | ClassNotFoundException e) {
-			System.out.println(e.getMessage());
-		} finally {
-			shutdown();
-		}
-
-		return result;
-	}
-
-	public boolean deleteFromMICI(String ppid) {
-
-		boolean result = false;
-		try {
-			dbconnection = getConnectionAWS();
-			pst = dbconnection.prepareStatement("DELETE FROM mici_station WHERE ppid = ?");
-			pst.setString(1, ppid);
-			pst.executeUpdate();
-			result = true;
-			System.out.println("DELETE FROM mici_station ppid " + ppid);
-		} catch (SQLException | ClassNotFoundException e) {
-			System.out.println(e.getMessage());
-		} finally {
-			shutdown();
-		}
-
-		return result;
-	}
-
-	public boolean addToStatusTable(String ppid, String sn, String from, String to) {
-
-		boolean result = false;
-		try {
-			dbconnection = getConnectionAWS();
-			pst = dbconnection.prepareStatement("INSERT INTO status_table VALUES(?,?,?,?,?,?)");
-			pst.setString(1, ppid);
-			pst.setString(2, sn);
-			pst.setString(3, from);
-			pst.setString(4, to);
-			pst.setString(5, "USER ID");
-			pst.setString(6, new Date().toLocaleString());
-			pst.execute();
-			result = true;
-		} catch (SQLException | ClassNotFoundException e) {
-			System.out.println(e.getMessage());
-		} finally {
-			shutdown();
-		}
-
-		return result;
-	}
-
-	public boolean deleteFromStatusTable(String ppid) {
-
-		boolean result = false;
-		try {
-			dbconnection = getConnectionAWS();
-			pst = dbconnection.prepareStatement("DELETE FROM status_table WHERE ppid = ?");
-			pst.setString(1, ppid);
-			pst.executeUpdate();
-			result = true;
-			System.out.println("DELETE FROM status_table ppid " + ppid);
-		} catch (SQLException | ClassNotFoundException e) {
-			System.out.println(e.getMessage());
-		} finally {
-			shutdown();
-		}
-
-		return result;
-	}
-
-	public boolean copyFromRepair01ToRepair01Pass(String ppid) {
-		boolean result = false;
-		String query = "INSERT INTO repair1_table_pass SELECT * FROM repair1_table WHERE ppid=?";
-		try {
-			dbconnection = getConnectionAWS();
-			pst = dbconnection.prepareStatement(query);
-			pst.setString(1, ppid);
-
-			pst.executeUpdate();
-			System.out.println("COPY TO repair1_table_pass");
-		} catch (SQLException | ClassNotFoundException e) {
-			System.out.println(e.getMessage());
-		} finally {
-			shutdown();
-		}
-
-		return result;
-	}
-
-	public boolean deletePPIDFromRepair01(String ppid) {
-
-		boolean result = false;
-		String query = "DELETE FROM repair1_table WHERE ppid=?";
-		try {
-			dbconnection = getConnectionAWS();
-			pst = dbconnection.prepareStatement(query);
-			pst.setString(1, ppid);
-
-			pst.executeUpdate();
-			System.out.println("DELETE in repair1_table ppid " + ppid);
-		} catch (SQLException | ClassNotFoundException e) {
-			System.out.println(e.getMessage());
-		} finally {
-			shutdown();
-		}
-
-		return result;
-
-	}
-
-	public boolean deletePPIDFromRepair01PASS(String ppid) {
-
-		boolean result = false;
-		String query = "DELETE FROM repair1_table_pass WHERE ppid=?";
-		try {
-			dbconnection = getConnectionAWS();
-			pst = dbconnection.prepareStatement(query);
-			pst.setString(1, ppid);
-
-			pst.executeUpdate();
-			System.out.println("DELETE in repair1_table_pass ppid " + ppid);
-		} catch (SQLException | ClassNotFoundException e) {
-			System.out.println(e.getMessage());
-		} finally {
-			shutdown();
-		}
-
-		return result;
-
-	}
-
-	public void updateStatusInRepair01(String ppid, String status) {
-		try {
-			dbconnection = getConnectionAWS();
-			pst = dbconnection.prepareStatement("UPDATE repair1_table SET status=? WHERE  ppid = ?");
-			pst.setString(1, status);
-			pst.setString(2, ppid);
-			pst.executeUpdate();
-			System.out.println("UPDATED STATUS repair1_table status " + status);
-		} catch (SQLException | ClassNotFoundException e) {
-			System.out.println(e.getMessage());
-		} finally {
-			shutdown();
-		}
-
-	}
-
-	public boolean updateRepair01(String ppid, String repair_action, String duty, String area1, String pn1_old,
-			String pn1_new, String area2, String pn2_old, String pn2_new, String area3, String pn3_old, String pn3_new,
-			String area4, String pn4_old, String pn4_new, String area5, String pn5_old, String pn5_new, String status,
-			String userId) {
-		boolean result = false;
-		String query = "UPDATE repair1_table SET repair_action=?, duty=?, " + "area1=?, pn1_old=?, pn1_new=?, "
-				+ "area2=?, pn2_old=?, pn2_new=?, " + "area3=?, pn3_old=?, pn3_new=?, "
-				+ "area4=?, pn4_old=?, pn4_new=?, " + "area5=?, pn5_old=?, pn5_new=?, " + "status=?, userId=?,  date=? "
-				+ "WHERE ppid = ?";
-
-		try {
-			dbconnection = getConnectionAWS();
-			pst = dbconnection.prepareStatement(query);
-			pst.setString(1, repair_action);
-			pst.setString(2, duty);
-			pst.setString(3, area1);
-			pst.setString(4, pn1_old);
-			pst.setString(5, pn1_new);
-			pst.setString(6, area2);
-			pst.setString(7, pn2_old);
-			pst.setString(8, pn2_new);
-			pst.setString(9, area3);
-			pst.setString(10, pn3_old);
-			pst.setString(11, pn3_new);
-			pst.setString(12, area4);
-			pst.setString(13, pn4_old);
-			pst.setString(14, pn4_new);
-			pst.setString(15, area5);
-			pst.setString(16, pn5_old);
-			pst.setString(17, pn5_new);
-			pst.setString(18, status);
-			pst.setString(19, userId);
-			pst.setString(20, new Date().toLocaleString());
-			pst.setString(21, ppid);
-
-			pst.executeUpdate();
-			System.out.println("UPDATED repair1_table");
-			result = true;
-		} catch (SQLException | ClassNotFoundException e) {
-			System.out.println(e.getMessage());
-		} finally {
-			shutdown();
-		}
-
-		return result;
-
-	}
-
-	public String[] addRepair01Helper(String ppid) {
-		String query = "SELECT sn, problemCode FROM physicalrecevingdb WHERE ppid=?";
-		String[] phy = new String[2];
-		try {
-			dbconnection = getConnectionAWS();
-			pst = dbconnection.prepareStatement(query);
-			pst.setString(1, ppid);
-			rs = pst.executeQuery();
-			while (rs.next()) {
-				phy[0] = rs.getString("sn");
-				phy[1] = rs.getString("problemCode");
-			}
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		} finally {
-			shutdown();
-		}
-
-		return phy;
-	}
-
-	public boolean isExistInRepair01Table(String ppid) {
-		boolean result = false;
-		String query = "SELECT COUNT(*) FROM repair1_table WHERE ppid = ?";
-
-		try {
-			dbconnection = getConnectionAWS();
-			pst = dbconnection.prepareStatement(query);
-			pst.setString(1, ppid);
-			rs = pst.executeQuery();
-
-			if (rs.next()) {
-				result = true;
-			}
-		} catch (SQLException | ClassNotFoundException e) {
-			System.out.println(e.getMessage());
-		} finally {
-			shutdown();
-		}
-
-		return result;
-	}
-
-	public boolean addNewToRepair01Table(String ppid, String userId) {
-
-		// status is PASS OR FAIL
-		boolean result = false;
-		String query = "INSERT INTO repair1_table (ppid,sn,currentStatus,userId,receivedDate) VALUES(?,?,?,?,?)";
-//		"INSERT INTO repair1_table (ppid, sn, problem_code, status, userId, date) VALUES(?,?,?,?,?,?)";
-		userId = " DELETE ME LATER 377";
-		// Status is FAIL at beginning
-
-		String[] support = addRepair01Helper(ppid);
-
-		try {
-			dbconnection = getConnectionAWS();
-			pst = dbconnection.prepareStatement(query);
-			pst.setString(1, ppid);
-			pst.setString(2, support[0]);
-			pst.setString(3, "FAIL");
-			pst.setString(4, userId);
-			pst.setString(5, new Date().toLocaleString());
-			pst.execute();
-			result = true;
-		} catch (SQLException | ClassNotFoundException e) {
-			System.out.println(e.getMessage());
-		} finally {
-			shutdown();
-		}
-
-		return result;
-
-	}
-
-	// *******************************START*************************************
-	// *********************************************************************************
-	// *********************************************************************************
-	// *********************************************************************************
-	// *********************************************************************************
-	// * These methods are for pre-alert functions *
-	// *********************************************************************************
-	// *********************************************************************************
-	// *********************************************************************************
-	// *********************************************************************************
-	// *********************************************************************************
-	// *********************************************************************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
 
 	/*
 	 * This function used for getting number of record base on ppid on sn_record
@@ -971,94 +508,32 @@ public class DBHandler {
 		return result;
 	}
 
-	// *********************************END*********************************************
-	// *********************************************************************************
-	// *********************************************************************************
-	// *********************************************************************************
-	// *********************************************************************************
-	// * End pre-alert functions *
-	// *********************************************************************************
-	// *********************************************************************************
-	// *********************************************************************************
-	// *********************************************************************************
-	// *********************************************************************************
-	// *********************************************************************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***********************************************************
+	// *                   END Pre-Aler Function               *
+	// ***********************************************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
 
-	public void addToRecord(Connection conn, String sn, String ppid) throws SQLException {
-
-		String INSERT_INTO_RECORD = "INSERT INTO pre_sn_record VALUES(?,?,?)";
-		String UPDATE_RECORD = "UPDATE pre_sn_record set count_recevied= ? where serial_number=?";
-		String query = "";
-		int newCount = fetchCurrentReceivedCount(conn, sn) + 1;
-		if (newCount == 1) {
-			query = INSERT_INTO_RECORD;
-			pst = conn.prepareStatement(query);
-			pst.setString(1, sn);
-			pst.setInt(2, newCount);
-			pst.setString(3, ppid);
-		} else {
-			query = UPDATE_RECORD;
-			pst = conn.prepareStatement(query);
-			pst.setInt(1, newCount);
-			pst.setString(2, sn);
-		}
-
-		pst.executeUpdate();
-	}
-
-	public boolean MoveToScrap01(String rmaNum, String mac, String ppid, String pn, String sn, String revision,
-			String cpu_sn, String mfgPN, String lot, String description, String problemCode, String dps) {
-		String FETCH_RMA_QUERY = "INSERT INTO scrap01_table VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
-		boolean result = false;
-		try {
-			dbconnection = getConnectionAWS();
-			dbconnection.setAutoCommit(false);
-			pst = dbconnection.prepareStatement(FETCH_RMA_QUERY);
-			pst.setString(1, rmaNum);
-			pst.setString(2, ppid);
-			pst.setString(3, pn);
-			pst.setString(4, sn);
-
-			pst.setString(5, mac);
-			pst.setString(6, cpu_sn);
-			pst.setString(7, revision);
-
-			pst.setString(8, mfgPN);
-			pst.setString(9, lot);
-			pst.setString(10, description);
-			pst.setString(11, problemCode);
-			pst.setString(12, dps);
-			pst.setString(13, "User ID");
-			pst.setString(14, new Date().toLocaleString());
-			pst.executeUpdate();
-			// delete record in pre_alert table
-			deletaPhysicalRecord(dbconnection, ppid);
-			// add to record table
-			addToRecord(dbconnection, sn, ppid);
-			dbconnection.commit();
-			result = true;
-
-		} catch (Exception e) {
-			System.out.println(e);
-		} finally {
-			shutdown();
-		}
-
-		return result;
-	}
-
-	// *******************************START*********************************************
-	// *********************************************************************************
-	// *********************************************************************************
-	// *********************************************************************************
-	// *********************************************************************************
-	// * These methods are for MICI *
-	// *********************************************************************************
-	// *********************************************************************************
-	// *********************************************************************************
-	// *********************************************************************************
-	// *********************************************************************************
-	// *********************************************************************************
+	
+	
+	
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***********************************************************
+	// *                        MICI STATION                     *
+	// ***********************************************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
 	public boolean isPPIDExistInMICI(String ppid) {
 		boolean result = false;
 
@@ -1157,33 +632,53 @@ public class DBHandler {
 		return result;
 	}
 
-	// *********************************END*********************************************
-	// *********************************************************************************
-	// *********************************************************************************
-	// *********************************************************************************
-	// *********************************************************************************
-	// * End pre-alert functions *
-	// *********************************************************************************
-	// *********************************************************************************
-	// *********************************************************************************
-	// *********************************************************************************
-	// *********************************************************************************
-	// *********************************************************************************
+	public boolean addMICI(String ppid, String sn) {
 
+		boolean result = false;
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement("INSERT INTO mici_station VALUES(?,?,?,?)");
+			pst.setString(1, ppid);
+			pst.setString(2, sn);
+			pst.setString(3, "User ID");
+			pst.setString(4, new Date().toLocaleString());
+			pst.execute();
+		} catch (SQLException | ClassNotFoundException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			shutdown();
+		}
+
+		return result;
+	}
+
+
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
 	// ***********************************************************
+	// *                     MICI STATION                        *
 	// ***********************************************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+
+	
+	
+	
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
 	// ***********************************************************
+	// *                       REPAIR01 STATION                  *
 	// ***********************************************************
-	// ***********************************************************
-	// * REPAIR01 START *
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***************************************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
 	public boolean generateErrorRecord(String ppid) {
 		boolean result = false;
 		String query = "INSERT INTO reapir01_action (ppid,errorCode) SELECT ppid,error FROM mici_station  WHERE ppid=?";
@@ -1333,13 +828,11 @@ public class DBHandler {
 		return result;
 	}
 
-	// *****************************************************************
+	/*****************************************************************
 	// Getting Instruction
 	// Each of the List is the instruction for upgrading revision base on part
 	// number
-	// *****************************************************************
-	private List<List<String>> instruction;
-
+	*****************************************************************/
 	public List<List<String>> createInstruction() {
 		instruction = new ArrayList<List<String>>();
 		List<String> list1 = Arrays.asList("PU610/PU612/PU613", "to avoid no-power failures",
@@ -1385,6 +878,26 @@ public class DBHandler {
 		return instruction;
 
 	}
+	
+	public String getMaxRevision(String part) {
+		String query = "SELECT max_ver FROM repair01_part_number WHERE part_number = ?";
+		String result = "";
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(query);
+			pst.setString(1, part);
+			rs = pst.executeQuery();
+			if (rs.next()) {
+				result = rs.getString("max_ver");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			shutdown();
+		}
+				
+		return result.toUpperCase();
+	}
 
 	public RevesionUpgrade getInstruction(String part, String oldR, String newR) {
 		part = part.toUpperCase();
@@ -1395,7 +908,7 @@ public class DBHandler {
 		if ((part.equals("N6W51") || part.equals("JXP99") || part.equals("XMNM2") || part.equals("C4VVY")
 				|| part.equals("71V71") || part.equals("MH7C0") || part.equals("JFGFN") || part.equals("W4DYC")
 				|| part.equals("41M0M") || part.equals("1DMJH") || part.equals("2WCVJ") || part.equals("PHP7P"))
-				&& oldR.equals("A00") && newR.equals("A01")) {
+				&& oldR.equals("A00") && newR.equals("A01")) {			
 			List<String> list = instruction.get(0);
 			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4),
 					list.get(5), 0);
@@ -1488,34 +1001,6 @@ public class DBHandler {
 		}
 	}
 
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// * REPAIR01 END *
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// * Physical Receiving *
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***************************************************
 	public String getCurrentRev(String ppid) {
 		String result = "";
 
@@ -1555,21 +1040,33 @@ public class DBHandler {
 		}
 
 	}
+	
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***********************************************************
+	// *                     REPAIR01 STATION                    *
+	// ***********************************************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	
+	
+	
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***********************************************************
+	// *                       GENERAL STATION                   *
+	// ***********************************************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
 
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// * END Physical Receiving *
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***********************************************************
-	// ***************************************************
 	public String[] getCurrentStation(String ppid) {
 		String query = "SELECT * FROM status_table WHERE ppid= ?";
 		String[] result = new String[2];
@@ -1611,6 +1108,64 @@ public class DBHandler {
 		}
 		return result;
 	}
+	
+	public void addToRecord(Connection conn, String sn, String ppid) throws SQLException {
+
+		String INSERT_INTO_RECORD = "INSERT INTO pre_sn_record VALUES(?,?,?)";
+		String UPDATE_RECORD = "UPDATE pre_sn_record set count_recevied= ? where serial_number=?";
+		String query = "";
+		int newCount = fetchCurrentReceivedCount(conn, sn) + 1;
+		if (newCount == 1) {
+			query = INSERT_INTO_RECORD;
+			pst = conn.prepareStatement(query);
+			pst.setString(1, sn);
+			pst.setInt(2, newCount);
+			pst.setString(3, ppid);
+		} else {
+			query = UPDATE_RECORD;
+			pst = conn.prepareStatement(query);
+			pst.setInt(1, newCount);
+			pst.setString(2, sn);
+		}
+
+		pst.executeUpdate();
+	}
+
+	public boolean addToStatusTable(String ppid, String sn, String from, String to) {
+
+		boolean result = false;
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement("INSERT INTO status_table VALUES(?,?,?,?,?,?)");
+			pst.setString(1, ppid);
+			pst.setString(2, sn);
+			pst.setString(3, from);
+			pst.setString(4, to);
+			pst.setString(5, "USER ID");
+			pst.setString(6, new Date().toLocaleString());
+			pst.execute();
+			result = true;
+		} catch (SQLException | ClassNotFoundException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			shutdown();
+		}
+
+		return result;
+	}
+
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***********************************************************
+	// *                     GENERAL STATION                     *
+	// ***********************************************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+
 	
 	public class multi extends Thread {
 		PreparedStatement pst;

@@ -9,7 +9,12 @@ public class test {
 		//Class.forName("com.mysql.cj.jdbc.Driver");
 		DBHandler db = new DBHandler();
 		db.getConnectionAWS();
-		db.testConnection();
+		db.createInstruction();
+		
+		String maxRevesion = db.getMaxRevision("1DMJH");
+		int maxRev = -1;
+		maxRev= 	Integer.parseInt(maxRevesion.substring(maxRevesion.length()-(maxRevesion.length()-1)));
+		System.out.println("maxRev" + maxRev);
 		
 //		db.updateRepair01RecordAction("111", "1111", "1111", "1111", "1111", "1111");
 		
