@@ -54,7 +54,7 @@
 						</h4>
 					</div>
 					<div class="col-8  pl-3">
-						<h4>-${curRevNumber}
+						<h4>${curRevNumber}
 							<span class="text-${iconColor} }"> <i
 								class="fas fa-exclamation-triangle" data-toggle="tooltip" data-placement="top" title="${messageIcon}"></i>
 							</span>
@@ -69,7 +69,7 @@
 						</h4>
 					</div>
 					<div class="col-8 pl-3">
-						<span class="badge badge-danger"><h5 class="p-1">
+						<span class="badge badge-${setErrorColor}"><h5 class="p-1">
 								<strong>${currentErrorNumber}</strong>
 							</h5></span>
 
@@ -99,7 +99,7 @@
 		<!-- Modal -->
 		<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
 			aria-labelledby="myModalLabel" aria-hidden="true">
-			<div class="modal-dialog">
+			<div class="modal-dialog modal-lg modal-dialog-centered">
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal"
@@ -107,7 +107,7 @@
 						<h4 class="modal-title" id="myModalLabel"></h4>
 					</div>
 					<div class="modal-body">
-						<img class="img-responsive img-thumbnail" id="mimg" src="">
+						<img class="img-fluid" id="mimg" src="">
 					</div>
 				</div>
 				<!-- /.modal-content -->
@@ -136,9 +136,9 @@
 
 				<!-- update revision -->
 				<div class="row tab-pane fade show active" id="home" role="tabpanel"
-					aria-labelledby="home-tab" ${setRepair01Hidden}>
+					aria-labelledby="home-tab" >
 
-					<div class="row">
+					<div class="row" ${setRepair01Hidden}>
 						<div class="col-8">
 
 							<div class=" p-2" >
@@ -190,7 +190,7 @@
 													</h3></li>
 											</ul>
 											<input type="submit" class="btn btn-success mt-2"
-												value="DONE" />
+												value="UPDATE" />
 										</div>
 									</div>
 								</form>
