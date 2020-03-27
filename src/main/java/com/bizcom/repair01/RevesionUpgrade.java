@@ -1,5 +1,7 @@
 package com.bizcom.repair01;
 
+import com.bizcom.database.DBHandler;
+
 public class RevesionUpgrade {
 	private String pn;
 	private String location;
@@ -74,15 +76,11 @@ public class RevesionUpgrade {
 	public void setCurrentRev(int currentRev) {
 		this.currentRev = currentRev;
 	}
-
 	@Override
 	public String toString() {
 		return "RevesionUpgrade [pn=" + pn + ", location=" + location + ", desc=" + desc + ", ecoAction=" + ecoAction
 				+ ", oldMaterial=" + oldMaterial + ", newMaterial=" + newMaterial + ", shortcut=" + shortcut
 				+ ", currentRev=" + currentRev + "]";
 	}
-	
-	
-	
-	
+		
 }
