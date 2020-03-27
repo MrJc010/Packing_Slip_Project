@@ -54,9 +54,9 @@
 						</h4>
 					</div>
 					<div class="col-8  pl-3">
-						<h4>${curRevNumber}
-							<span class="text-danger"> <i
-								class="fas fa-exclamation-triangle"> </i>
+						<h4>-${curRevNumber}
+							<span class="text-${iconColor} }"> <i
+								class="fas fa-exclamation-triangle" data-toggle="tooltip" data-placement="top" title="${messageIcon}"></i>
 							</span>
 						</h4>
 					</div>
@@ -69,7 +69,7 @@
 						</h4>
 					</div>
 					<div class="col-8 pl-3">
-						<span class="badge badge-danger"><h5>
+						<span class="badge badge-danger"><h5 class="p-1">
 								<strong>${currentErrorNumber}</strong>
 							</h5></span>
 
@@ -84,12 +84,12 @@
 		<div class="my-3 container text-center" ${setRepair01HiddenError }>
 
 			<div class="alert alert-danger" role="alert" ${setErrorMessageHidden }>
-				sssss <strong><span class="display-3">${setErrorMessage }</span></strong>
+				<strong><span class="display-3">${setErrorMessage }</span></strong>
 
 			</div>
 
 			<div class="alert alert-success" role="alert" ${setSuccessMessageHidden }>
-				sssss <strong><span class="display-4">${setSuccessMessage }</span></strong>
+				<strong><span class="display-4">${setSuccessMessage }</span></strong>
 
 			</div>
 
@@ -138,7 +138,7 @@
 				<div class="row tab-pane fade show active" id="home" role="tabpanel"
 					aria-labelledby="home-tab" ${setRepair01Hidden}>
 
-					<div class="row ">
+					<div class="row">
 						<div class="col-8">
 
 							<div class=" p-2" >
@@ -149,7 +149,7 @@
 									<div class="card">
 										<h2 class="card-header text-center">
 											<strong class="text-primary">Introduction to update
-												<span class="badge badge-primary">A${curRevNumber }-A${nextRevNumber}</span>
+												<span class="badge badge-primary">${curRevNumber }-${nextRevNumber}</span>
 											</strong>
 										</h2>
 										<div class="card-body">
@@ -161,7 +161,7 @@
 
 													<h3>
 														<span class="badge badge-info">Current Revision:</span><strong>
-															A${curRevNumber}</strong>
+															${curRevNumber}</strong>
 													</h3>
 												</li>
 												<li class="list-group-item"><h3>
@@ -202,11 +202,11 @@
 							<div>
 
 								<img
-									src="https://image.prntscr.com/image/9uUfNxHtSLGQZm4BGmum-Q.png"
+									src="https://i.ibb.co/gvbJGDL/Yk3-S935-ORSey-REs-OG6o-LIw.png"
 									class="rounded mx-auto d-block img-responsive img-thumbnail"
 									alt="Introduction_Shortcut"
 									style="min-height: 300px; height: 300px;"
-									onclick=imgClickHandler('https://image.prntscr.com/image/9uUfNxHtSLGQZm4BGmum-Q.png')>
+									onclick=imgClickHandler("https://i.ibb.co/gvbJGDL/Yk3-S935-ORSey-REs-OG6o-LIw.png")>
 
 							</div>
 

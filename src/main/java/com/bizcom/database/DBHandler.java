@@ -12,7 +12,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import com.bizcom.MICI_Station.ErrorCode;
@@ -879,6 +878,26 @@ public class DBHandler {
 		return instruction;
 
 	}
+	
+	public String getMaxRevision(String part) {
+		String query = "SELECT max_ver FROM repair01_part_number WHERE part_number = ?";
+		String result = "";
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(query);
+			pst.setString(1, part);
+			rs = pst.executeQuery();
+			if (rs.next()) {
+				result = rs.getString("max_ver");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			shutdown();
+		}
+				
+		return result.toUpperCase();
+	}
 
 	public RevesionUpgrade getInstruction(String part, String oldR, String newR) {
 		part = part.toUpperCase();
@@ -889,7 +908,7 @@ public class DBHandler {
 		if ((part.equals("N6W51") || part.equals("JXP99") || part.equals("XMNM2") || part.equals("C4VVY")
 				|| part.equals("71V71") || part.equals("MH7C0") || part.equals("JFGFN") || part.equals("W4DYC")
 				|| part.equals("41M0M") || part.equals("1DMJH") || part.equals("2WCVJ") || part.equals("PHP7P"))
-				&& oldR.equals("A00") && newR.equals("A01")) {
+				&& oldR.equals("A00") && newR.equals("A01")) {			
 			List<String> list = instruction.get(0);
 			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4),
 					list.get(5), 0);
