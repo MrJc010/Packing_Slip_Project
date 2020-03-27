@@ -1006,7 +1006,6 @@ public class DBHandler {
 
 	public void updateRevision(String ppid, String newRev) {
 		String query = "UPDATE physical_station SET revision=? WHERE ppid = ?";
-
 		try {
 			dbconnection = getConnectionAWS();
 			pst = dbconnection.prepareStatement(query);
@@ -1020,6 +1019,25 @@ public class DBHandler {
 			shutdown();
 		}
 
+	}
+	
+	public String getMaxRevision(String part) {
+		String query = "SELECT max_ver FROM repair01_part_number WHERE part_number = ?";
+		String result = "";
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(query);
+			pst.setString(1, part);
+			rs = pst.executeQuery();
+			if (rs.next()) {
+				result = rs.getString("max_ver");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			shutdown();
+		}
+		return result.toUpperCase().split("-")[1];
 	}
 	
 	// ***************************END*****************************
