@@ -33,6 +33,8 @@ public class RepairStaion01 extends HttpServlet {
 	private final String REPAIR01_FAIL = "REPAIR01_FAIL";
 	private final String REPAIR01_PASS = "REPAIR01_PASS";
 	private final String REPAIR01 = "REPAIR01";
+	private boolean errorCodeFlag = false;
+	private boolean updateRevisionFlag = false;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -45,8 +47,8 @@ public class RepairStaion01 extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		String action = request.getParameter("action01");
-		displayInitialView(request,response,true);
-		
+		displayInitialView(request, response, true);
+
 		if (action != null) {
 			switch (action) {
 			case "findPPID":
@@ -59,7 +61,7 @@ public class RepairStaion01 extends HttpServlet {
 					if (stationIndo[0].equalsIgnoreCase("MICI") && stationIndo[1].equalsIgnoreCase(REPAIR01_FAIL)) {
 						boolean updateFlag = db.generateErrorRecord(ppid);
 						if (updateFlag) {
-							displayInitialView(request, response,false);
+							displayInitialView(request, response, false);
 							// Update status also
 							db.updateCurrentStation(REPAIR01_FAIL, REPAIR01, ppid);
 							updateUI(request, response, ppid);
@@ -68,12 +70,12 @@ public class RepairStaion01 extends HttpServlet {
 							System.out.println("doGet ppid valid generate new record NOT OK");
 
 //							displayError(request, response, ppid, "Error system! We cannot upload error to system.");
-						} 
+						}
 					} else {
 						request.setAttribute("setPPID", ppid);
-						displayInitialView(request, response,false);						
-						updateRevision(request,response,ppid);
-						
+						displayInitialView(request, response, false);
+						updateRevision(request, response, ppid);
+
 					}
 
 				} else {
@@ -85,12 +87,12 @@ public class RepairStaion01 extends HttpServlet {
 				updateRevision(request, response, ppid);
 				break;
 			case "TransferAction":
-				displayInitialView(request, response,true);
+				displayInitialView(request, response, true);
 				request.getRequestDispatcher("/WEB-INF/views/repair_01/repair01.jsp").forward(request, response);
 				break;
 			}
 		} else {
-			displayInitialView(request, response,true);
+			displayInitialView(request, response, true);
 			request.getRequestDispatcher("/WEB-INF/views/repair_01/repair01.jsp").forward(request, response);
 		}
 
@@ -123,10 +125,11 @@ public class RepairStaion01 extends HttpServlet {
 				getErrors(request, response, ppid);
 				updateUI(request, response, ppid);
 				break;
-				
+
 			case "TransferAction":
-				db.updateCurrentStation(REPAIR01,REPAIR01_PASS,ppid);
-				doGet(request, response);
+				db.updateCurrentStation(REPAIR01, REPAIR01_PASS, ppid);
+				displayInitialView(request, response, true);
+				request.getRequestDispatcher("/WEB-INF/views/repair_01/repair01.jsp").forward(request, response);
 				break;
 			}
 
@@ -137,7 +140,7 @@ public class RepairStaion01 extends HttpServlet {
 			throws ServletException, IOException {
 
 		String curRev = db.getCurrentRev(ppid);
-
+		request.setAttribute("setHiddenTransfer", "hidden");
 		System.out.println("getCurrentRev" + db.getCurrentRev(ppid));
 		if (curRev.isEmpty())
 			currentRev = -1;
@@ -147,8 +150,9 @@ public class RepairStaion01 extends HttpServlet {
 		getErrors(request, response, ppid);
 		// Do logic Here
 		if (currentRev != -1) {
-			System.out.println("currentRev is valid " + currentRev);
+
 			String partNumber = db.getPartNumber(ppid);
+
 			// If not part number
 			if (partNumber.length() == 0) {
 				request.setAttribute("setHiddenBodyRepair01 ", "show");
@@ -156,59 +160,87 @@ public class RepairStaion01 extends HttpServlet {
 			} else {
 
 				String maxRevesion = db.getMaxRevision(partNumber);
-				maxRev = Integer.parseInt(maxRevesion.substring(maxRevesion.length() - (maxRevesion.length() - 1)));
-				if (currentRev < maxRev) {
-					System.out.println("currentRev is need to update");
-					request.setAttribute("setRepair01Hidden", "show");
+				if (maxRevesion.length() > 0) {
 
-					// Fetch data base on currentNum
+					maxRev = Integer.parseInt(maxRevesion.substring(maxRevesion.length() - (maxRevesion.length() - 1)));
+					if (currentRev < maxRev) {
 
-					db.createInstruction();
+						System.out.println("currentRev is need to update");
+						request.setAttribute("setRepair01Hidden", "show");
+						updateRevisionFlag = false;
+						// Fetch data base on currentNum
 
-					// TODO if PART NUMBER DOES NOT EXIST
+						db.createInstruction();
 
-					RevesionUpgrade temp = db.getInstruction(partNumber, generatorRev(currentRev),
-							generatorRev(currentRev + 1));
-					if (temp.getOldMaterial() == null) {
+						// TODO if PART NUMBER DOES NOT EXIST
 
-						request.setAttribute("curRevNumber", generatorRev(currentRev));
-						request.setAttribute("iconColor", "warning");
-						request.setAttribute("messageIcon", "You must to upgrade revision to pass");
-						request.setAttribute("nextRevNumber", generatorRev(currentRev + 1));
-						request.setAttribute("partNumber", "NA");
-						request.setAttribute("location", "NA");
-						request.setAttribute("desc", "NA");
-						request.setAttribute("ecoAction", "NA");
-						request.setAttribute("oldMaterialPN", "NA");
-						request.setAttribute("newMaterialPN", "NA");
-						request.setAttribute("shortcut", "NA");
-						request.setAttribute("setPPID", ppid);
+						RevesionUpgrade temp = db.getInstruction(partNumber, generatorRev(currentRev),
+								generatorRev(currentRev + 1));
+						if (temp.getOldMaterial() == null) {
+
+							request.setAttribute("curRevNumber", generatorRev(currentRev));
+							request.setAttribute("iconColor", "warning");
+							request.setAttribute("messageIcon", "You must to upgrade revision to pass");
+							request.setAttribute("nextRevNumber", generatorRev(currentRev + 1));
+							request.setAttribute("partNumber", "NA");
+							request.setAttribute("location", "NA");
+							request.setAttribute("desc", "NA");
+							request.setAttribute("ecoAction", "NA");
+							request.setAttribute("oldMaterialPN", "NA");
+							request.setAttribute("newMaterialPN", "NA");
+							request.setAttribute("shortcut", "NA");
+							request.setAttribute("setPPID", ppid);
+
+						} else {
+
+							request.setAttribute("curRevNumber", generatorRev(temp.getCurrentRev()));
+							request.setAttribute("iconColor", "warning");
+							request.setAttribute("messageIcon", "You must to upgrade revision to pass");
+							request.setAttribute("nextRevNumber", generatorRev(temp.getCurrentRev() + 1));
+							request.setAttribute("partNumber", temp.getPn());
+							request.setAttribute("location", temp.getLocation());
+							request.setAttribute("desc", temp.getDesc());
+							request.setAttribute("ecoAction", temp.getEcoAction());
+							request.setAttribute("oldMaterialPN", temp.getOldMaterial());
+							request.setAttribute("newMaterialPN", temp.getNewMaterial());
+							request.setAttribute("shortcut", temp.getShortcut());
+							request.setAttribute("setPPID", ppid);
+						}
+
+						displayInitialView(request, response, false);
+						request.setAttribute("setRepair01HiddenError", "hidden");
+
+						request.getRequestDispatcher("/WEB-INF/views/repair_01/repair01.jsp").forward(request,
+								response);
 
 					} else {
+						System.out.println("currentRev does not to update");
+						ppidUpdatedOk(request, response);
 
-						request.setAttribute("curRevNumber", generatorRev(temp.getCurrentRev()));
-						request.setAttribute("iconColor", "warning");
-						request.setAttribute("messageIcon", "You must to upgrade revision to pass");
-						request.setAttribute("nextRevNumber", generatorRev(temp.getCurrentRev() + 1));
-						request.setAttribute("partNumber", temp.getPn());
-						request.setAttribute("location", temp.getLocation());
-						request.setAttribute("desc", temp.getDesc());
-						request.setAttribute("ecoAction", temp.getEcoAction());
-						request.setAttribute("oldMaterialPN", temp.getOldMaterial());
-						request.setAttribute("newMaterialPN", temp.getNewMaterial());
-						request.setAttribute("shortcut", temp.getShortcut());
-						request.setAttribute("setPPID", ppid);
+						updateRevisionFlag = true;
+						if (errorCodeFlag && updateRevisionFlag) {
+							request.setAttribute("setHiddenTransfer", "show");
+							request.setAttribute("setInfoPPIDetails ", "hidden");
+							request.setAttribute("setRepair01HiddenError ", "hidden");
+							request.setAttribute("setHiddenBodyRepair01 ", "hidden");
+						}
+
 					}
-
-					displayInitialView(request, response, false);
-					request.setAttribute("setRepair01HiddenError", "hidden");
-
-					request.getRequestDispatcher("/WEB-INF/views/repair_01/repair01.jsp").forward(request, response);
-
 				} else {
-					System.out.println("currentRev does not to update");
-					ppidUpdatedOk(request, response);
+//					updateRevisionFlag = true;
+
+					request.setAttribute("curRevNumber", generatorRev(currentRev));
+					request.setAttribute("iconColor", "success");
+					request.setAttribute("messageIcon", "Your ppid is updated");
+					request.setAttribute("setHiddenBodyRepair01", "show");
+					request.setAttribute("setRepair01Hidden", "hidden");
+					request.setAttribute("setRepair01HiddenError", "hidden");
+					request.setAttribute("setErrorMessageHidden", "hidden");
+					request.setAttribute("setSuccessMessageHidden", "hidden");
+					request.setAttribute("setHiddenBodyRepair01", "show");
+					request.getRequestDispatcher("/WEB-INF/views/repair_01/repair01.jsp").forward(request, response);
 				}
+
 				// error code
 
 			}
@@ -228,18 +260,27 @@ public class RepairStaion01 extends HttpServlet {
 			return "A" + x;
 		}
 	}
+
 	public void getErrors(HttpServletRequest request, HttpServletResponse response, String ppid) {
 		HashMap<String, String> result = db.fetchErrorFromRepair01(ppid);
-		
+
 		request.setAttribute("setRepair01HiddenFix", "show");
 		if (result.size() == 0) {
+			errorCodeFlag = true;
+			if (errorCodeFlag && updateRevisionFlag) {
+				request.setAttribute("setHiddenTransfer", "show");
+				request.setAttribute("setInfoPPIDetails ", "hidden");
+				request.setAttribute("setRepair01HiddenError ", "hidden");
+				request.setAttribute("setHiddenBodyRepair01 ", "hidden");
+			}
 			request.setAttribute("setPPID", ppid);
-			request.setAttribute("setErrorColor","success");
+			request.setAttribute("setErrorColor", "success");
 			request.setAttribute("setRepair01HiddenError", "");
 			request.setAttribute("setSuccessMessage",
 					ppid + " has NO ERROR! Please check REVESION UPGRADE IF REQUIRE!");
 			// no error ccheck revision....
 		} else {
+			errorCodeFlag = false;
 			// List all error
 			request.setAttribute("setPPID", ppid);
 			request.setAttribute("setErrorColor", "warning");
@@ -287,7 +328,7 @@ public class RepairStaion01 extends HttpServlet {
 
 	public void displayInitialView(HttpServletRequest request, HttpServletResponse response, boolean isBegin) {
 		if (isBegin) {
-
+			request.setAttribute("setHiddenTransfer", "hidden");
 			request.setAttribute("setInfoPPIDetails", "hidden");
 			request.setAttribute("setHiddenBodyRepair01", "hidden");
 			request.setAttribute("setRepair01HiddenError", "hidden");

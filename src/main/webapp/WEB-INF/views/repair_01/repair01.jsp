@@ -32,6 +32,16 @@
 
 
 		</div>
+
+		<div class="row justify-content-center p-5" ${setHiddenTransfer}>
+			<form action="<%=request.getContextPath()%>/repair01" method="POST">
+				<input type="hidden" name="action01" value="TransferAction">
+				<button class="btn btn-success btn-xl" type="submit">
+					<h2>TRANSFER TO MICI</h2>
+				</button>
+			</form>
+		</div>
+
 		<%-- Information Details --%>
 		<div class="row p-4 justify-content-center" ${setInfoPPIDetails}>
 
@@ -56,7 +66,8 @@
 					<div class="col-8  pl-3">
 						<h4>${curRevNumber}
 							<span class="text-${iconColor} }"> <i
-								class="fas fa-exclamation-triangle" data-toggle="tooltip" data-placement="top" title="${messageIcon}"></i>
+								class="fas fa-exclamation-triangle" data-toggle="tooltip"
+								data-placement="top" title="${messageIcon}"></i>
 							</span>
 						</h4>
 					</div>
@@ -83,12 +94,14 @@
 
 		<div class="my-3 container text-center" ${setRepair01HiddenError }>
 
-			<div class="alert alert-danger" role="alert" ${setErrorMessageHidden }>
+			<div class="alert alert-danger" role="alert"
+				${setErrorMessageHidden }>
 				<strong><span class="display-3">${setErrorMessage }</span></strong>
 
 			</div>
 
-			<div class="alert alert-success" role="alert" ${setSuccessMessageHidden }>
+			<div class="alert alert-success" role="alert"
+				${setSuccessMessageHidden }>
 				<strong><span class="display-4">${setSuccessMessage }</span></strong>
 
 			</div>
@@ -136,12 +149,12 @@
 
 				<!-- update revision -->
 				<div class="row tab-pane fade show active" id="home" role="tabpanel"
-					aria-labelledby="home-tab" >
+					aria-labelledby="home-tab">
 
 					<div class="row" ${setRepair01Hidden}>
 						<div class="col-8">
 
-							<div class=" p-2" >
+							<div class=" p-2">
 
 								<form method="POST"
 									action="<%=request.getContextPath()%>/repair01">
@@ -206,7 +219,8 @@
 									class="rounded mx-auto d-block img-responsive img-thumbnail"
 									alt="Introduction_Shortcut"
 									style="min-height: 300px; height: 300px;"
-									onclick=imgClickHandler("https://i.ibb.co/gvbJGDL/Yk3-S935-ORSey-REs-OG6o-LIw.png")>
+									onclick=imgClickHandler(
+									"https://i.ibb.co/gvbJGDL/Yk3-S935-ORSey-REs-OG6o-LIw.png")>
 
 							</div>
 
@@ -226,7 +240,7 @@
 
 
 
-					<div class="p-5" >
+					<div class="p-5">
 						<c:set var="indexValue" value="${0}" scope="page" />
 						<c:forEach items="${errorList}" var="aError">
 							<c:set var="indexValue" value="${indexValue +1}" scope="page" />
@@ -238,8 +252,7 @@
 													data-toggle="collapse" data-target="#xx${indexValue}"
 													aria-expanded="false" aria-controls="xx${indexValue}">
 													${aError}</button>
-										</span> 
-										</strong>
+										</span> </strong>
 										<button class="float-right btn btn-primary"
 											name="edit${aError}" onclick="enableForm(${indexValue})">Edit</button>
 									</div>
