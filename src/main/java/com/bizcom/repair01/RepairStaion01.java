@@ -31,6 +31,7 @@ public class RepairStaion01 extends HttpServlet {
 
 	private final String MICI = "MICI";
 	private final String REPAIR01_FAIL = "REPAIR01_FAIL";
+	private final String REPAIR01_PASS = "REPAIR01_PASS";
 	private final String REPAIR01 = "REPAIR01";
 
 	/**
@@ -43,93 +44,53 @@ public class RepairStaion01 extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
-		// TODO: DELETE ME
-		System.out.println("doGet called");
-
 		String action = request.getParameter("action01");
-
-//		request.setAttribute("setRepair01Hidden", "hidden");
-//		request.setAttribute("setRepair01HiddenError", "hidden");
-
-		displayInitialView(request, response, true);
-
+		displayInitialView(request,response,true);
+		
 		if (action != null) {
 			switch (action) {
 			case "findPPID":
-
-				// TODO: DELETE ME
-				System.out.println("doGet findPPID");
-
 				ppid = request.getParameter("inputppid").trim().toUpperCase();
-
 				if (!ppid.isEmpty() && db.isPPIDExistInMICI(ppid)) {
-
-					// TODO: DELETE ME
-					System.out.println("doGet ppid valid");
-//					displayInitialView(request,response,false);
-
 					String[] stationIndo = db.getCurrentStation(ppid);
 
 					// Check If PPID stay at corrected station
 					// FROM : MICI TO : REPAIR01_FAIL
 					if (stationIndo[0].equalsIgnoreCase("MICI") && stationIndo[1].equalsIgnoreCase(REPAIR01_FAIL)) {
-
-						// TODO: DELETE ME
-						System.out.println("doGet ppid valid generate new record");
-
 						boolean updateFlag = db.generateErrorRecord(ppid);
-
 						if (updateFlag) {
-
-							// TODO: DELETE ME
-							System.out.println("doGet ppid valid generate new record OK");
-							displayInitialView(request, response, false);
+							displayInitialView(request, response,false);
 							// Update status also
 							db.updateCurrentStation(REPAIR01_FAIL, REPAIR01, ppid);
 							updateUI(request, response, ppid);
-
 						} else {
-
 							// TODO: DELETE ME
 							System.out.println("doGet ppid valid generate new record NOT OK");
 
 //							displayError(request, response, ppid, "Error system! We cannot upload error to system.");
-						}
-
+						} 
 					} else {
-
-						// TODO: DELETE ME
-						System.out.println("doGet ppid stay some where");
-
-						// set ppid
 						request.setAttribute("setPPID", ppid);
-						displayInitialView(request, response, false);
-//						getErrors(request, response, ppid);
-						updateRevision(request, response, ppid);
-//						updateUI(request, response, ppid);
-
+						displayInitialView(request, response,false);						
+						updateRevision(request,response,ppid);
+						
 					}
 
 				} else {
-					// TODO: DELETE ME
-
-					System.out.println("doGet ppid invalid");
-
 					displayError(request, response, ppid, "PPID is Not Found!");
-					// HIDE body Error
 				}
 				break;
 			case "updateRevision":
 
 				updateRevision(request, response, ppid);
 				break;
+			case "TransferAction":
+				displayInitialView(request, response,true);
+				request.getRequestDispatcher("/WEB-INF/views/repair_01/repair01.jsp").forward(request, response);
+				break;
 			}
 		} else {
-			// TODO: DELETE ME
-			System.out.println("NO ACTION DETECT");
-			// Hidden everything
-			displayInitialView(request, response, true);
+			displayInitialView(request, response,true);
 			request.getRequestDispatcher("/WEB-INF/views/repair_01/repair01.jsp").forward(request, response);
 		}
 
@@ -161,9 +122,12 @@ public class RepairStaion01 extends HttpServlet {
 				db.updateRepair01RecordAction(errorCode, ppid, duty, oldPN, newPN, area, actionJob);
 				getErrors(request, response, ppid);
 				updateUI(request, response, ppid);
-//				request.getRequestDispatcher("/WEB-INF/views/repair_01/repair01.jsp").forward(request, response);				
 				break;
-
+				
+			case "TransferAction":
+				db.updateCurrentStation(REPAIR01,REPAIR01_PASS,ppid);
+				doGet(request, response);
+				break;
 			}
 
 		}
@@ -264,9 +228,6 @@ public class RepairStaion01 extends HttpServlet {
 			return "A" + x;
 		}
 	}
-
-	// scan ppid : x ->
-
 	public void getErrors(HttpServletRequest request, HttpServletResponse response, String ppid) {
 		HashMap<String, String> result = db.fetchErrorFromRepair01(ppid);
 		

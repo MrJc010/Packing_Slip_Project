@@ -1025,7 +1025,6 @@ public class DBHandler {
 
 	public void updateRevision(String ppid, String newRev) {
 		String query = "UPDATE physical_station SET revision=? WHERE ppid = ?";
-
 		try {
 			dbconnection = getConnectionAWS();
 			pst = dbconnection.prepareStatement(query);
@@ -1040,6 +1039,7 @@ public class DBHandler {
 		}
 
 	}
+
 	
 	// ***************************END*****************************
 	// ***************************END*****************************
