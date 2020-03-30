@@ -683,7 +683,7 @@ public class DBHandler {
 	// ***************************START***************************
 	public boolean generateErrorRecord(String ppid) {
 		boolean result = false;
-		String query = "INSERT INTO repair01_action (ppid,errorCode) SELECT ppid,error FROM mici_station  WHERE ppid=?";
+		String query = "INSERT INTO repair01_action (ppid,errorCode) SELECT ppid,error FROM mici_station  WHERE ppid=? AND refix='YES'";
 		try {
 			dbconnection = getConnectionAWS();
 			pst = dbconnection.prepareStatement(query);
@@ -807,6 +807,22 @@ public class DBHandler {
 			shutdown();
 		}
 
+	}
+	
+	public void updateRefixMICITable(String errorCode, String ppid) {
+		String queryInsert = "UPDATE mici_station SET refix = 'NO' WHERE (ppid = ? AND error = ?)";
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(queryInsert, Statement.RETURN_GENERATED_KEYS);
+			pst.setString(1, ppid);
+			pst.setString(2, errorCode);
+			pst.execute();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			shutdown();
+		}
+		
 	}
 
 	public String getPartNumber(String ppid) {

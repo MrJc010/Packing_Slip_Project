@@ -240,8 +240,9 @@ public class MICI extends HttpServlet {
 
 	public boolean checkStatus(String ppid) {
 		String[] status = dbHandler.getCurrentStation(ppid);
-		if ((status[0].equalsIgnoreCase(PHYSICAL_RECEIVING) || status[0].equalsIgnoreCase(REPAIR01))
-				&& (status[1].equalsIgnoreCase(MICI) || status[1].equalsIgnoreCase(REPAIR01_PASS))) {
+		System.out.println(status[0]+" "+status[1]);
+		if ((status[0].equalsIgnoreCase(PHYSICAL_RECEIVING) && status[1].equalsIgnoreCase(MICI))|| ( status[0].equalsIgnoreCase(REPAIR01_PASS)
+				&& status[1].equalsIgnoreCase(MICI))) {
 			return true;
 		} else {
 			return false;

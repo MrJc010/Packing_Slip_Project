@@ -217,33 +217,23 @@
 						</div>
 						<div class="col-4">
 							<div>
-
 								<img
 									src="https://i.ibb.co/gvbJGDL/Yk3-S935-ORSey-REs-OG6o-LIw.png"
 									class="rounded mx-auto d-block img-responsive img-thumbnail"
 									alt="Introduction_Shortcut"
 									style="min-height: 300px; height: 300px;"
-									onclick=imgClickHandler(
-									"https://i.ibb.co/gvbJGDL/Yk3-S935-ORSey-REs-OG6o-LIw.png")>
+									onclick=imgClickHandler("https://i.ibb.co/gvbJGDL/Yk3-S935-ORSey-REs-OG6o-LIw.png")>
 
 							</div>
 
 						</div>
-
-
 					</div>
-
-
-
 				</div>
 
 				<!-- REPAIR ERROR  -->
 
 				<div class=" row tab-pane fade" id="profile" role="tabpanel"
 					aria-labelledby="profile-tab" ${setRepair01HiddenFix}>
-
-
-
 					<div class="p-5">
 						<c:set var="indexValue" value="${0}" scope="page" />
 						<c:forEach items="${errorList}" var="aError">
@@ -336,8 +326,6 @@
 				</div>
 
 			</div>
-
-
 		</div>
 	</div>
 </section>
