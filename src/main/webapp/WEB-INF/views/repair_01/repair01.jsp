@@ -32,7 +32,11 @@
 
 
 		</div>
-
+		<div>
+		<div class="alert alert-success" role="alert" ${setTransferMessageSuccess}>
+  			<strong>This PPID is PASSED!</strong>
+		</div>
+		</div>
 		<div class="row justify-content-center p-5" ${setHiddenTransfer}>
 			<form action="<%=request.getContextPath()%>/repair01" method="POST">
 				<input type="hidden" name="action01" value="TransferAction">
