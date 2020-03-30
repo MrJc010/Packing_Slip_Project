@@ -486,7 +486,7 @@ public class DBHandler {
 		int i = 0;
 		for (PPID aa : listPPID) {
 			pst.setString(1, aa.getPpidNumber());
-			pst.setString(2, aa.getPnNumber());
+			pst.setString(2, aa.getPnNumber().split("-")[1]);
 			pst.setString(3, aa.getCoNumber());
 			pst.setString(4, aa.getLotNumber());
 			pst.setString(5, aa.getDpsNumber());
@@ -683,7 +683,7 @@ public class DBHandler {
 	// ***************************START***************************
 	public boolean generateErrorRecord(String ppid) {
 		boolean result = false;
-		String query = "INSERT INTO reapair01_action (ppid,errorCode) SELECT ppid,error FROM mici_station  WHERE ppid=?";
+		String query = "INSERT INTO repair01_action (ppid,errorCode) SELECT ppid,error FROM mici_station  WHERE ppid=?";
 		try {
 			dbconnection = getConnectionAWS();
 			pst = dbconnection.prepareStatement(query);
@@ -702,7 +702,7 @@ public class DBHandler {
 
 	public HashMap<String, String> fetchErrorFromRepair01(String ppid) {
 
-		String query = "SELECT * FROM mici_errorcode WHERE errorCode IN (SELECT errorCode FROM reapair01_action WHERE ppid=? AND repair_action_id IS NULL)";
+		String query = "SELECT * FROM mici_errorcode WHERE errorCode IN (SELECT errorCode FROM repair01_action WHERE ppid=? AND repair_action_id IS NULL)";
 		HashMap<String, String> result = new HashMap<>();
 		try {
 			dbconnection = getConnectionAWS();
@@ -729,7 +729,7 @@ public class DBHandler {
 
 	public List<String> getAllUndoneErrorCode(String ppid) {
 		List<String> result = new ArrayList<>();
-		String query = "SELECT * FROM reapair01_action WHERE ppid =? AND repair_action_id IS NULL";
+		String query = "SELECT * FROM repair01_action WHERE ppid =? AND repair_action_id IS NULL";
 
 		try {
 			dbconnection = getConnectionAWS();
@@ -751,7 +751,7 @@ public class DBHandler {
 	}
 
 	public void updateRepair01Action(Connection conn, String errorCode, String ppid, int recordID) throws SQLException {
-		String query = "UPDATE reapair01_action SET repair_action_id = ? WHERE ppid=? AND errorCode=?";
+		String query = "UPDATE repair01_action SET repair_action_id = ? WHERE ppid=? AND errorCode=?";
 		pst = conn.prepareStatement(query);
 		pst.setInt(1, recordID);
 		pst.setString(2, ppid);

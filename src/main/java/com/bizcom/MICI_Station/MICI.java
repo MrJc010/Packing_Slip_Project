@@ -200,6 +200,11 @@ public class MICI extends HttpServlet {
 					request.setAttribute("problemDescpAtMICI", miciInfo[1]);
 					request.setAttribute("currentStatusAtMICI",
 							"This Item Is Received From Physical Receiving Station!");
+				} else if (currenStaions[0].equalsIgnoreCase(REPAIR01_PASS)
+						&& currenStaions[1].equalsIgnoreCase(MICI)) {
+					request.setAttribute("problemcodeAtMICI", miciInfo[0]);
+					request.setAttribute("problemDescpAtMICI", miciInfo[1]);
+					request.setAttribute("currentStatusAtMICI","This Item Is Returned back From Repair 01 Station!");
 				} else {
 					System.out.println("SOME THING ELSE");
 					request.setAttribute("currentStatusAtMICI", "Invalid Access This Item At This Station!");
