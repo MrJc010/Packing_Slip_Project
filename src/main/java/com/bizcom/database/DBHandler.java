@@ -810,7 +810,7 @@ public class DBHandler {
 	}
 	
 	public void updateRefixMICITable(String errorCode, String ppid, String recordID) {
-		String queryInsert = "UPDATE mici_station SET refix = ? WHERE (ppid = ? AND error = ?)";
+		String queryInsert = "UPDATE mici_station SET refix = ? WHERE (ppid = ? AND error = ? AND refix = 'YES')";
 		try {
 			dbconnection = getConnectionAWS();
 			pst = dbconnection.prepareStatement(queryInsert, Statement.RETURN_GENERATED_KEYS);
