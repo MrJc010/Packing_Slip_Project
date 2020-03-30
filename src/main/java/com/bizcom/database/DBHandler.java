@@ -623,9 +623,11 @@ public class DBHandler {
 			pst.addBatch();
 			i++;
 			if (i == errors.size()) {
-				multi m = new multi(pst);
-				m.start();
-				result = true;
+//				multi m = new multi(pst);
+//				m.start();
+				int[] a = pst.executeBatch();
+				if(a.length > 0) result = true;
+				else result = false;
 				// dbconnection.commit();
 			}
 		}
@@ -681,7 +683,7 @@ public class DBHandler {
 	// ***************************START***************************
 	public boolean generateErrorRecord(String ppid) {
 		boolean result = false;
-		String query = "INSERT INTO reapir01_action (ppid,errorCode) SELECT ppid,error FROM mici_station  WHERE ppid=?";
+		String query = "INSERT INTO reapair01_action (ppid,errorCode) SELECT ppid,error FROM mici_station  WHERE ppid=?";
 		try {
 			dbconnection = getConnectionAWS();
 			pst = dbconnection.prepareStatement(query);
@@ -700,7 +702,7 @@ public class DBHandler {
 
 	public HashMap<String, String> fetchErrorFromRepair01(String ppid) {
 
-		String query = "SELECT * FROM mici_errorcode WHERE errorCode IN (SELECT errorCode FROM reapir01_action WHERE ppid=? AND repair_action_id IS NULL)";
+		String query = "SELECT * FROM mici_errorcode WHERE errorCode IN (SELECT errorCode FROM reapair01_action WHERE ppid=? AND repair_action_id IS NULL)";
 		HashMap<String, String> result = new HashMap<>();
 		try {
 			dbconnection = getConnectionAWS();
@@ -727,7 +729,7 @@ public class DBHandler {
 
 	public List<String> getAllUndoneErrorCode(String ppid) {
 		List<String> result = new ArrayList<>();
-		String query = "SELECT * FROM reapir01_action WHERE ppid =? AND repair_action_id IS NULL";
+		String query = "SELECT * FROM reapair01_action WHERE ppid =? AND repair_action_id IS NULL";
 
 		try {
 			dbconnection = getConnectionAWS();
@@ -749,7 +751,7 @@ public class DBHandler {
 	}
 
 	public void updateRepair01Action(Connection conn, String errorCode, String ppid, int recordID) throws SQLException {
-		String query = "UPDATE reapir01_action SET repair_action_id = ? WHERE ppid=? AND errorCode=?";
+		String query = "UPDATE reapair01_action SET repair_action_id = ? WHERE ppid=? AND errorCode=?";
 		pst = conn.prepareStatement(query);
 		pst.setInt(1, recordID);
 		pst.setString(2, ppid);
@@ -817,7 +819,7 @@ public class DBHandler {
 			pst.setString(1, ppid);
 			rs = pst.executeQuery();
 			while (rs.next()) {				
-				result = rs.getString("pn").split("-")[1];
+				result = rs.getString("pn");
 			}
 		} catch (Exception e) {
 			System.out.println("Error getPartNumber: " + e.getMessage());
@@ -1125,7 +1127,7 @@ public class DBHandler {
 			pst.executeUpdate();
 			result = true;
 		} catch (Exception e) {
-			System.out.println("FAIL updateCurrentStation" + e.getMessage());
+			System.out.println("FAIL updateCurrentStation " + e.getMessage());
 
 		} finally {
 			shutdown();
@@ -1193,18 +1195,13 @@ public class DBHandler {
 	
 	public class multi extends Thread {
 		PreparedStatement pst;
-
 		public multi(PreparedStatement pst) {
 			this.pst = pst;
 		}
-
 		public void run() {
-			System.out.println("running...");
 			try {
-				int[] a = pst.executeBatch();
-				System.out.println(a.length);
+				pst.executeBatch();
 			} catch (SQLException e) {
-
 				e.printStackTrace();
 			}
 		}

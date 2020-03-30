@@ -84,7 +84,6 @@ public class PhysicalReceiving extends HttpServlet {
 			throws ServletException, IOException {
 
 		if (myList.size() == 1) {
-
 			Item temp = myList.get(0);
 			String rmaNum = temp.getRma();
 			String ppid = temp.getPpid();
