@@ -131,8 +131,13 @@ public class RepairStaion01 extends HttpServlet {
 				String newPN = request.getParameter("newPN" + err);
 				String area = request.getParameter("area" + err);
 				String actionJob = request.getParameter("action" + err);
-				db.updateRepair01RecordAction(errorCode, ppid, duty, oldPN, newPN, area, actionJob);
-				db.updateRefixMICITable(errorCode,ppid);
+				int recordID = db.updateRepair01RecordAction(errorCode, ppid, duty, oldPN, newPN, area, actionJob);
+				if(recordID!= -1) {
+					db.updateRefixMICITable(errorCode,ppid,recordID+"");
+				}else {
+					System.out.println("Cannot upload infomation to updateRepair01RecordAction");
+				}
+				
 				getErrors(request, response, ppid);
 				updateRevision(request, response, ppid);
 				break;

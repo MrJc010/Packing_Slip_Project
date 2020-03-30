@@ -777,7 +777,7 @@ public class DBHandler {
 
 	}
 
-	public void updateRepair01RecordAction(String errorCode, String ppid, String duty, String oldPN, String newPN,
+	public int updateRepair01RecordAction(String errorCode, String ppid, String duty, String oldPN, String newPN,
 			String area, String actionJob) {
 		String queryInsert = "INSERT INTO repair01_action_record VALUES(?,?,?,?,?,?)";
 		int recordID = -1;
@@ -797,25 +797,26 @@ public class DBHandler {
 				if (recordID != -1) {
 					updateRepair01Action(dbconnection, errorCode, ppid, recordID);
 				}
-			} else {
-				return;
-			}
+			} 
 
 		} catch (Exception e) {
 			System.out.println("Error updateRepair01RecordAction: " + e.getMessage());
 		} finally {
 			shutdown();
 		}
+		
+		return recordID;
 
 	}
 	
-	public void updateRefixMICITable(String errorCode, String ppid) {
-		String queryInsert = "UPDATE mici_station SET refix = 'NO' WHERE (ppid = ? AND error = ?)";
+	public void updateRefixMICITable(String errorCode, String ppid, String recordID) {
+		String queryInsert = "UPDATE mici_station SET refix = ? WHERE (ppid = ? AND error = ?)";
 		try {
 			dbconnection = getConnectionAWS();
 			pst = dbconnection.prepareStatement(queryInsert, Statement.RETURN_GENERATED_KEYS);
-			pst.setString(1, ppid);
-			pst.setString(2, errorCode);
+			pst.setString(1, recordID);
+			pst.setString(2, ppid);
+			pst.setString(3, errorCode);
 			pst.execute();
 		} catch (Exception e) {
 			e.printStackTrace();
