@@ -50,7 +50,6 @@ public class RepairStaion01 extends HttpServlet {
 
 		System.out.println("doget called");
 		String action = request.getParameter("action01");
-		isTransferButtonClicked = false;
 		if (action != null) {
 			switch (action) {
 			case "findPPID":
@@ -76,13 +75,15 @@ public class RepairStaion01 extends HttpServlet {
 					} else if (stationIndo[0].equalsIgnoreCase(REPAIR01)
 							&& stationIndo[1].equalsIgnoreCase(REPAIR01_PASS)) {
 						System.out.println("PASSED PPID");
-						displayInitialView(request, response, true);						
+						isTransferButtonClicked = true;
+						displayInitialView(request, response, true);		
+						
 						request.getRequestDispatcher("/WEB-INF/views/repair_01/repair01.jsp").forward(request,
 								response);
 					}
 
 					else {
-
+						
 						System.out.println(" ppid exist");
 						request.setAttribute("setPPID", ppid);
 						displayInitialView(request, response, false);
@@ -143,9 +144,7 @@ public class RepairStaion01 extends HttpServlet {
 
 			case "TransferAction":
 				db.updateCurrentStation(REPAIR01, REPAIR01_PASS, ppid);
-				displayInitialView(request, response, true);
-				isTransferButtonClicked = true;
-				request.getRequestDispatcher("/WEB-INF/views/repair_01/repair01.jsp").forward(request, response);
+				response.sendRedirect(request.getContextPath()+"/repair01?action01=findPPID&inputppid="+ppid+"&actionSubmitRepair01=FIND");
 				break;
 			}
 
@@ -317,7 +316,13 @@ public class RepairStaion01 extends HttpServlet {
 
 		System.out.println("displayInitialView------");
 		if (isBegin) {
-
+			
+			if (isTransferButtonClicked) {
+				request.setAttribute("setTransferMessageSuccess", "show");
+				isTransferButtonClicked = false;
+			}else {
+				request.setAttribute("setTransferMessageSuccess", "hidden");
+			}
 			request.setAttribute("setHiddenTransfer", "hidden");
 			request.setAttribute("setInfoPPIDetails", "hidden");
 			request.setAttribute("setHiddenBodyRepair01", "hidden");
@@ -325,20 +330,27 @@ public class RepairStaion01 extends HttpServlet {
 			request.setAttribute("setErrorMessageHidden", "hidden");
 			request.setAttribute("setErrorMessageHidden", "hidden");
 			request.setAttribute("setSuccessMessageHidden", "hidden");
-			request.setAttribute("setTransferMessageSuccess", "hidden");
+			
 
 		} else {
+			System.out.println("not a  begin");
 			if (errorCodeFlag && updateRevisionFlag) {
+				System.out.println("DONE!!");
+				
 				if (isTransferButtonClicked) {
 					request.setAttribute("setTransferMessageSuccess", "show");
+					isTransferButtonClicked = false;
 				}else {
 					request.setAttribute("setTransferMessageSuccess", "hidden");
 				}
 				request.setAttribute("setInfoPPIDetails", "hidden");
 				request.setAttribute("setHiddenBodyRepair01", "hidden");
 			} else {
+				
+				System.out.println("NOT DONE!!");
 				if (isTransferButtonClicked) {
 					request.setAttribute("setTransferMessageSuccess", "show");
+					isTransferButtonClicked = false;
 				}else {
 					request.setAttribute("setTransferMessageSuccess", "hidden");
 				}
