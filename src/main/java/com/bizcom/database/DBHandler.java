@@ -820,7 +820,7 @@ public class DBHandler {
 				result = rs.getString("pn").split("-")[1];
 			}
 		} catch (Exception e) {
-			System.out.println("Error isPassedAtRepair01: " + e.getMessage());
+			System.out.println("Error getPartNumber: " + e.getMessage());
 		} finally {
 			shutdown();
 		}
@@ -828,6 +828,30 @@ public class DBHandler {
 		return result;
 	}
 
+	
+	public boolean checkIfPartNumberExist(String aPartNumber) {
+		boolean result = false;
+		String query = "SELECT * FROM repair01_part_number WHERE part_number = ?";
+
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(query);
+			pst.setString(1, aPartNumber);
+			rs = pst.executeQuery();
+			
+			if(rs.next()) {
+				result = true;
+			}
+			
+		} catch (Exception e) {
+			System.out.println("Error getPartNumber: " + e.getMessage());
+		} finally {
+			shutdown();
+		}
+
+		return result;
+	}
+	
 	/*****************************************************************
 	// Getting Instruction
 	// Each of the List is the instruction for upgrading revision base on part

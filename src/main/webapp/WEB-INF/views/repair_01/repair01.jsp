@@ -92,11 +92,11 @@
 
 
 
-		<div class="my-3 container text-center" ${setRepair01HiddenError }>
+		<div class="my-3 container text-center" ${setRepair01HiddenError}>
 
 			<div class="alert alert-danger" role="alert"
 				${setErrorMessageHidden }>
-				<strong><span class="display-3">${setErrorMessage }</span></strong>
+				<strong><span class="display-3">${setErrorMessage}</span></strong>
 
 			</div>
 
