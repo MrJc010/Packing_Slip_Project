@@ -1238,11 +1238,11 @@ public class DBHandler {
 	//Test Done
 	public List<List<String>> searchByStation(String station){
 		List<List<String>> result = new ArrayList<List<String>>();
-		if(station.equalsIgnoreCase("physical station")) {
+		if(station.equalsIgnoreCase("physical")) {
 			result = searchPhysicalReceivingStation();
-		}else if(station.equalsIgnoreCase("mici station")) {
+		}else if(station.equalsIgnoreCase("mici")) {
 			result = searchMICIStation();
-		}else if(station.equalsIgnoreCase("repair01 station")) {
+		}else if(station.equalsIgnoreCase("repair01")) {
 			result = searchRepair01Station();
 		}
 		return result;
