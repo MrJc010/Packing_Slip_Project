@@ -114,7 +114,7 @@
 
 		<%-- Display PPID SEARCH Section --%>
 		<div ${set_Hidden_PPID_Case}>
-			<div class="justify-content-center bg-light" ${setError_PPID_Case}>
+			<div class="justify-content-center bg-light mt-5" ${setError_PPID_Case}>
 				<div class="alert alert-warning text-center p-5" role="alert">
 					<span class="display-2">${errorPPIDMessage}</span>
 				</div>
@@ -123,7 +123,7 @@
 
 				<table class="table table-hover table-responsive py-5">
 					<thead>
-						<tr>
+						<tr class="table-primary">
 							<th scope="col">PPID</th>
 							<th scope="col">SN</th>
 							<th scope="col">MAC</th>
@@ -137,30 +137,13 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<th>CN0J8CVMCMK007CA0084</th>
-							<td>CN0J8CVMCMK007CA0084</td>
-							<td>CN0J8CVMCMK007CA0084</td>
-							<td>CN0J8CVMCMK007CA0084</td>
-							<td>CN0J8CVMCMK007CA0084</td>
-							<td>CN0J8CVMCMK007CA0084</td>
-							<td>CN0J8CVMCMK007CA0084</td>
-							<td>CN0J8CVMCMK007CA0084</td>
-							<td>CN0J8CVMCMK007CA0084</td>
-							<td>CN0J8CVMCMK007CA0084</td>
+					<tr  class="table-secondary">
+						<c:forEach var="item" items="${ppidInfo}">
 							
-						</tr>
-						<tr>
-							<th scope="row">2</th>
-							<td>Jacob</td>
-							<td>Thornton</td>
-							<td>@fat</td>
-						</tr>
-						<tr>
-							<th scope="row">3</th>
-							<td colspan="2">Larry the Bird</td>
-							<td>@twitter</td>
-						</tr>
+								<th>${item }</th>
+							
+					</c:forEach>
+					</tr>
 					</tbody>
 				</table>
 			</div>

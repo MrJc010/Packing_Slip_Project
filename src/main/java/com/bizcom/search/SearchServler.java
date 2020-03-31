@@ -12,15 +12,14 @@ import javax.servlet.http.HttpServletResponse;
 import com.bizcom.database.DBHandler;
 
 /**
- * this is the thing I type
- * Servlet implementation class SearchServler
+ * this is the thing I type Servlet implementation class SearchServler
  */
 @WebServlet("/search")
 public class SearchServler extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	
+
 	// UI Field
-	private String ppidInput = "";
+	private String ppid = "";
 //	private String btnSearch = "";
 	private String refInput = "";
 	private String optionInput = "";
@@ -32,16 +31,16 @@ public class SearchServler extends HttpServlet {
 	private String inputFromLocaltion = "";
 	private String inputToLocaltion = "";
 	private DBHandler db = new DBHandler();
-	
-	
+
 	/**
 	 * GET
 	 */
-	
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("doGet Called");	
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		System.out.println("doGet Called");
 		try {
-			ppidInput = request.getParameter("inputppid");
+			ppid = request.getParameter("inputppid");
 			refInput = request.getParameter("refInput");
 			optionInput = request.getParameter("optionInput");
 			inputRefValue = request.getParameter("inputRefValue");
@@ -51,76 +50,77 @@ public class SearchServler extends HttpServlet {
 			fromDateInput = request.getParameter("fromDateInput");
 			inputFromLocaltion = request.getParameter("inputFromLocaltion");
 			inputToLocaltion = request.getParameter("inputToLocaltion");
-			
-		}catch(Exception e) {			
+
+		} catch (Exception e) {
 			System.out.println("Exception called");
 			e.printStackTrace();
 		}
-		setInitial(request,response);
+		setInitial(request, response);
 		int tempCaseID = searchCase();
-	
-		if(tempCaseID != -1) {
+
+		if (tempCaseID != -1) {
 			switch (tempCaseID) {
 			case 1:
 				// Get all infomation of ppid
-				List<String> ppidInfo = db.searchByPPID(ppidInput);
+				List<String> ppidInfo = db.searchByPPID(ppid);
 				// Display PPID SECTION Search View
 				request.setAttribute("set_Hidden_PPID_Case", "show");
 				request.setAttribute("setSuccess_PPID_Case", "hidden");
-				request.setAttribute("errorPPIDMessage", "hidden");
-				
-				if(ppidInfo.size() != 0) {
+				request.setAttribute("setError_PPID_Case", "hidden");
+
+				if (ppidInfo.isEmpty()) {
 					// Hide success part
-					request.setAttribute("setError_PPID_Case", "hidden");
-					
-				}else {
-					
+					request.setAttribute("setError_PPID_Case", "show");
+					request.setAttribute("errorPPIDMessage", ppid + " doesn't exist!");
+
+				} else {
+					request.setAttribute("setSuccess_PPID_Case", "show");
+					request.setAttribute("ppidInfo", ppidInfo);
 				}
 				break;
 
 			default:
 				break;
 			}
+		} else {
+			System.out.println("no thing");
 		}
 //		showInput();
 
 		request.getRequestDispatcher("/WEB-INF/views/search/search.jsp").forward(request, response);
 	}
 
-
 	/**
 	 * POST
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		System.out.println("doPost Called");
 	}
 
 	public int searchCase() {
-		int caseID =-1;
-		
-		
+		int caseID = -1;
+
 		// Case 1 : ppid input without location (all history called)
-		if(ppidInput!= null && !ppidInput.isEmpty()) {
+		if (ppid != null && !ppid.isEmpty()) {
 			caseID = 1;
 		}
-		
-		
-		
+
 		return caseID;
 	}
-	
+
 	public void showInput() {
-		String temp =  "SearchServler [ppidInput=" + ppidInput + ", refInput=" + refInput + ", optionInput=" + optionInput
+		String temp = "SearchServler [ppidInput=" + ppid + ", refInput=" + refInput + ", optionInput=" + optionInput
 				+ ", inputRefValue=" + inputRefValue + ", inputEmployee=" + inputEmployee + ", inputStationName="
 				+ inputStationName + ", fromDateInput=" + fromDateInput + ", toDateInput=" + toDateInput
 				+ ", inputFromLocaltion=" + inputFromLocaltion + ", inputToLocaltion=" + inputToLocaltion + "]";
 		System.out.println("All INPUT: " + temp);
 	}
-	
+
 	public void setInitial(HttpServletRequest request, HttpServletResponse response) {
 		// PPID Case Hidden at begin
 		request.setAttribute("set_Hidden_PPID_Case", "hidden");
-		
+
 	}
-	
+
 }
