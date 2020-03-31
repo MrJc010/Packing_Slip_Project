@@ -16,10 +16,10 @@ public class test {
 		DBHandler db = new DBHandler();
 		db.getConnectionAWS();
 		db.testConnection();
-		String fromDate = "04/1/2020";
+		String fromDate = "03/1/2020";
 		String endDate = "04/1/2020";
 		
-		System.out.println(db.searchMICIStationByDate(fromDate,endDate));
+		System.out.println(db.searchByStation("mici Station"));
 	}
 
 }
