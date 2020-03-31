@@ -9,7 +9,8 @@ public class test {
 		//Class.forName("com.mysql.cj.jdbc.Driver");
 		DBHandler db = new DBHandler();
 		db.getConnectionAWS();
-		db.testConnection();
+//		db.testConnection();
+		System.out.println(db.searchByPPID("CN00D1521296359K001C"));
 	}
 
 }

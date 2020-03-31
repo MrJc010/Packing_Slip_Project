@@ -1328,6 +1328,7 @@ public class DBHandler {
 		try {
 			dbconnection = getConnectionAWS();
 			pst = dbconnection.prepareStatement(query);
+			pst.setString(1, ppid);
 			rs = pst.executeQuery();
 			while (rs.next()) {
 				result.add(rs.getString("ppid"));
