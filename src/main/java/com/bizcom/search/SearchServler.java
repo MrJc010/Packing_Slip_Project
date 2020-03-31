@@ -78,11 +78,8 @@ public class SearchServler extends HttpServlet {
 				break;
 			case 2: // Search Station only all other null
 				System.out.println("Case 2 Active");
-//				List<List<String>> stationResultList = db.searchRepair01Station(inputStationName);
 
-				// TODO : DELETE, THis code use for test only
-				List<List<String>> stationResultList = db.searchRepair01Station();
-				// ====================
+				List<List<String>> stationResultList = db.searchByStation(inputStationName);
 
 				if (stationResultList.isEmpty()) {
 					// Cannot find any result from that station

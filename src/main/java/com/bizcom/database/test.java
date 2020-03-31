@@ -15,14 +15,14 @@ public class test {
 		String fromDate = "03/28/2020";
 		String endDate = "03/30/2020";
 		
-		List<List<String>> list = db.searchPhysicalReceivingStationByPPID("CN00D152CMK0076B000F");
+		List<List<String>> list = db.searchByStation("mici");
 		for(List<String> l:list) {
 			System.out.println(l);
 		}
 		
 
 		
-		//System.out.println(db.searchByStation("mici"));
+//		System.out.println(db.searchByStation("mici"));
 	}
 
 }
