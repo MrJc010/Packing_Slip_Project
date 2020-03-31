@@ -779,7 +779,7 @@ public class DBHandler {
 
 	public int updateRepair01RecordAction(String errorCode, String ppid, String duty, String oldPN, String newPN,
 			String area, String actionJob) {
-		String queryInsert = "INSERT INTO repair01_action_record VALUES(?,?,?,?,?,?)";
+		String queryInsert = "INSERT INTO repair01_action_record VALUES(?,?,?,?,?,?,?,?)";
 		int recordID = -1;
 		try {
 			dbconnection = getConnectionAWS();
@@ -790,6 +790,8 @@ public class DBHandler {
 			pst.setString(4, newPN);
 			pst.setString(5, area);
 			pst.setString(6, actionJob);
+			pst.setString(7, "userId");
+			pst.setString(8, new Date().toString());
 			recordID = pst.executeUpdate();
 			rs = pst.getGeneratedKeys();
 			if (rs != null && rs.next()) {
@@ -1112,7 +1114,7 @@ public class DBHandler {
 
 	public String[] getCurrentStation(String ppid) {
 		String query = "SELECT * FROM status_table WHERE ppid= ?";
-		String[] result = new String[2];
+		String[] result = new String[4];
 		try {
 			dbconnection = getConnectionAWS();
 			pst = dbconnection.prepareStatement(query);
@@ -1122,6 +1124,8 @@ public class DBHandler {
 			while (rs.next()) {
 				result[0] = rs.getString("from_location");
 				result[1] = rs.getString("to_location");
+				result[2] = rs.getString("userId");
+				result[3] = rs.getString("date");
 			}
 		} catch (Exception e) {
 			System.out.println("FAIL getCurrentStation" + e.getMessage());
@@ -1209,6 +1213,187 @@ public class DBHandler {
 	// ***************************END*****************************
 	// ***************************END*****************************
 
+	
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***********************************************************
+	// *                    Searching Function                   *
+	// ***********************************************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
+	public List<List<String>> searchByStation(String station){
+		List<List<String>> result = new ArrayList<List<String>>();
+		if(station.equalsIgnoreCase("physical station")) {
+			result = searchPhysicalReceivingStation();
+		}else if(station.equalsIgnoreCase("mici station")) {
+			result = searchMICIStation();
+		}else if(station.equalsIgnoreCase("repair01 station")) {
+			result = searchRepair01Station();
+		}
+		return result;
+	}
+	
+	
+	public List<List<String>> searchPhysicalReceivingStation(){
+		List<List<String>> result = new ArrayList<List<String>>();
+		String query = "SELECT * FROM physical_station";
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(query);
+			rs = pst.executeQuery();
+			while (rs.next()) {
+				List<String> temp = new ArrayList<String>();
+				temp.add(rs.getString("ppid"));
+				temp.add(rs.getString("sn"));
+				temp.add(rs.getString("MAC"));
+				temp.add(rs.getString("cpu_sn"));
+				temp.add(rs.getString("revision"));
+				temp.add(rs.getString("mPN"));
+				temp.add(rs.getString("userId"));
+				temp.add(rs.getString("time"));
+				result.add(temp);
+			}
+		} catch (Exception e) {
+			System.out.println("Error search physical_station: " + e.getMessage());
+		} finally {
+			shutdown();
+		}
+		return result;
+	}
+	
+	public List<List<String>> searchMICIStation(){
+		List<List<String>> result = new ArrayList<List<String>>();
+		String query = "SELECT * FROM mici_station";
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(query);
+			rs = pst.executeQuery();
+			while (rs.next()) {
+				List<String> temp = new ArrayList<String>();
+				temp.add(rs.getString("ppid"));
+				temp.add(rs.getString("error"));
+				temp.add(rs.getString("userId"));
+				temp.add(rs.getString("time"));
+				temp.add(rs.getString("refix"));
+				result.add(temp);
+			}
+		} catch (Exception e) {
+			System.out.println("Error search mici_station: " + e.getMessage());
+		} finally {
+			shutdown();
+		}
+		return result;
+	}
+
+	public List<List<String>> searchRepair01Station(){
+		List<List<String>> result = new ArrayList<List<String>>();
+		String query = "SELECT repair01_action.ppid,  repair01_action.errorCode, repair01_action_record.duty, repair01_action_record.old_part_number,"
+				+ "repair01_action_record.new_part_number, repair01_action_record.area_repair, repair01_action_record.action, repair01_action_record.userId, repair01_action_record.time "
+				+ "FROM repair01_action, repair01_action_record "
+				+ "WHERE repair01_action.repair_action_id = repair01_action_record.count";
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(query);
+			rs = pst.executeQuery();
+			while (rs.next()) {
+				List<String> temp = new ArrayList<String>();
+				temp.add(rs.getString("ppid"));
+				temp.add(rs.getString("errorCode"));
+				temp.add(rs.getString("duty"));
+				temp.add(rs.getString("old_part_number"));
+				temp.add(rs.getString("new_part_number"));
+				temp.add(rs.getString("area_repair"));
+				temp.add(rs.getString("action"));
+				temp.add(rs.getString("userId"));
+				temp.add(rs.getString("time"));
+				result.add(temp);
+			}
+		} catch (Exception e) {
+			System.out.println("Error search searchRepair01Station: " + e.getMessage());
+		} finally {
+			shutdown();
+		}
+		return result;
+	}
+	
+	
+	public List<String> searchByPPID(String ppid){
+		String[] curentStation = getCurrentStation(ppid);
+		List<String> result = new ArrayList<String>();
+		String query = "SELECT * FROM physical_station WHERE ppid = ?";
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(query);
+			rs = pst.executeQuery();
+			while (rs.next()) {
+				result.add(rs.getString("ppid"));
+				result.add(rs.getString("sn"));
+				result.add(rs.getString("MAC"));
+				result.add(rs.getString("cpu_sn"));
+				result.add(rs.getString("revision"));
+				result.add(rs.getString("mPN"));
+				result.add(curentStation[0]);
+				result.add(curentStation[1]);
+				result.add(curentStation[2]);
+				result.add(curentStation[3]);
+			}
+		} catch (Exception e) {
+			System.out.println("Error search searchByPPID: " + e.getMessage());
+		} finally {
+			shutdown();
+		}
+		return result;
+	}
+	
+	public List<List<String>> searchRepairByPPID(String ppid){
+		List<List<String>> result = new ArrayList<List<String>>();
+		String query = "SELECT  repair01_action.ppid, repair01_action.errorCode, repair01_action_record.duty, "
+		+ "repair01_action_record.old_part_number, repair01_action_record.new_part_number, repair01_action_record.area_repair, "
+		+ "repair01_action_record.action, repair01_action_record.userId, repair01_action_record.time "
+		+ "FROM repair01_action, repair01_action_record "
+		+ "WHERE repair01_action.ppid = ? AND repair01_action.repair_action_id = repair01_action_record.count";
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(query);
+			pst.setString(1, ppid);
+			rs = pst.executeQuery();
+			while (rs.next()) {
+				List<String> temp = new ArrayList<String>();
+				temp.add(rs.getString("ppid"));
+				temp.add(rs.getString("errorCode"));
+				temp.add(rs.getString("duty"));
+				temp.add(rs.getString("old_part_number"));
+				temp.add(rs.getString("new_part_number"));
+				temp.add(rs.getString("area_repair"));
+				temp.add(rs.getString("action"));
+				temp.add(rs.getString("userId"));
+				temp.add(rs.getString("time"));
+				result.add(temp);
+			}
+		} catch (Exception e) {
+			System.out.println("Error search searchRepair01Station: " + e.getMessage());
+		} finally {
+			shutdown();
+		}
+		return result;
+		
+	}
+	
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***********************************************************
+	// *                     Searching Function                  *
+	// ***********************************************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
 	
 	public class multi extends Thread {
 		PreparedStatement pst;

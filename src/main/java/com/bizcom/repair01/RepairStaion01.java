@@ -137,7 +137,6 @@ public class RepairStaion01 extends HttpServlet {
 				}else {
 					System.out.println("Cannot upload infomation to updateRepair01RecordAction");
 				}
-				
 				getErrors(request, response, ppid);
 				updateRevision(request, response, ppid);
 				break;
