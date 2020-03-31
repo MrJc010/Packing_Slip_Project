@@ -1390,6 +1390,8 @@ public class DBHandler {
 		return result;
 	}
 	
+	
+	
 	//Test Done
 	public List<String> searchByPPID(String ppid){
 		String[] curentStation = getCurrentStation(ppid);
@@ -1420,6 +1422,18 @@ public class DBHandler {
 		return result;
 	}
 	
+	// Search by PPId and Stations
+	public List<List<String>> searchByPPIDAndStation(String ppid,String station){
+		List<List<String>> result = new ArrayList<List<String>>();
+		if(station.equalsIgnoreCase("physical")) {
+			result = searchPhysicalReceivingStationByPPID(ppid);
+		}else if(station.equalsIgnoreCase("mici")) {
+			result = searchMICIStationByPPID(ppid);
+		}else if(station.equalsIgnoreCase("repair01")) {
+			result = searchRepair01ByPPID(ppid);
+		}
+		return result;
+	}
 	//Test Done
 	public List<List<String>> searchRepair01ByPPID(String ppid){
 		List<List<String>> temp = searchRepair01Station();
@@ -1451,7 +1465,9 @@ public class DBHandler {
 		return result;
 	}
 
-	//Test Done
+	
+	
+	//Test Done	
 	public List<List<String>> searchPhysicalReceivingStationByDate(String from, String to) throws ParseException{
 		List<List<String>> result = new ArrayList<List<String>>();
 		String query = "SELECT * FROM physical_station WHERE physical_station.ppid "

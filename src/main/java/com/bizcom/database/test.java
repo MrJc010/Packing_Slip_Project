@@ -14,14 +14,14 @@ public class test {
 		db.testConnection();
 		String fromDate = "03/27/2020";
 		String endDate = "03/31/2020";
-		List<List<String>> list = db.searchRepair01Station();
-		for(List<String> l:list) {
-			System.out.println(l);
-		}
+//		List<List<String>> list = db.searchRepair01Station();
+//		for(List<String> l:list) {
+//			System.out.println(l);
+//		}
 		System.out.println("-----------------------");
 		//list = db.searchRepair01ByDate(fromDate,endDate);;
 		
-		list = db.searchByStation("mici");
+		List<List<String>> list = db.searchByPPIDAndStation("CN02XPCXCMK007CQ0003","repair01");
 		for(List<String> l:list) {
 			System.out.println(l);
 		}

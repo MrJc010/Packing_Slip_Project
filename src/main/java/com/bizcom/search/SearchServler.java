@@ -52,8 +52,9 @@ public class SearchServler extends HttpServlet {
 			inputToLocaltion = request.getParameter("inputToStation").trim();
 
 		} catch (Exception e) {
+			
 			System.out.println("Exception called");
-			e.printStackTrace();
+			
 		}
 		setInitial(request, response);
 		int tempCaseID = searchCase();
@@ -104,6 +105,33 @@ public class SearchServler extends HttpServlet {
 				}
 
 				break;
+				
+			case 3 :// Search PPId and Station
+				System.out.println("Case 3 Active");
+				List<List<String>> ressults = db.searchByPPIDAndStation(ppid,inputStationName);
+				
+				if (ressults.isEmpty()) {
+					// Cannot find any result from that station
+					request.setAttribute("setError_Case", "show");
+					request.setAttribute("errorMessage", ppid + " at "+ inputStationName + " station doesn't exist!");
+				} else {
+					// Based on input to design out come table
+
+					switch (inputStationName.toUpperCase()) {
+					case "REPAIR01":						
+						request.setAttribute("stationName", "REPAIR01");
+						break;
+					case "PHYSICAL":						
+						request.setAttribute("stationName", "PHYSICAL");
+						break;
+					case "MICI":						
+						request.setAttribute("stationName", "MICI");
+						break;
+					}
+					request.setAttribute("set_Hidden_Station_Search", "show");
+					request.setAttribute("stationResultList", ressults);
+				}
+				break;
 			default:
 				break;
 			}
@@ -126,10 +154,22 @@ public class SearchServler extends HttpServlet {
 		int caseID = -1;
 		// Case 1 : ppid input without location (all history called)
 		if (ppid != null && !ppid.isEmpty()) {
-			caseID = 1;
+			
+			// Only PPID 
+			if(inputStationName.isEmpty()){				
+				caseID = 1;
+			}
+			// PPID and Station Case
+			else {
+				caseID = 3;
+			}
+			
+			
 		}
 
+		// Code will check if case 3 or not, so don't need to recheck PPID at here again
 		if (inputStationName != null && !inputStationName.isEmpty()) {
+			System.out.println(ppid);
 			caseID = 2;
 		}
 		return caseID;
