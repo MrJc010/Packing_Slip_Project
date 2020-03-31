@@ -6,7 +6,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -19,12 +21,15 @@ import com.bizcom.ppid.PPID;
 import com.bizcom.receiving.physicalreceiving.Item;
 import com.bizcom.receiving.physicalreceiving.PreAlertItem;
 import com.bizcom.repair01.RevesionUpgrade;
+import java.time.format.DateTimeFormatter;  
+import java.time.LocalDateTime;
 
 public class DBHandler {
 	private Connection dbconnection;
 	private PreparedStatement pst;
 	private ResultSet rs;
-	private static final SimpleDateFormat sdf = new SimpleDateFormat("MM:dd:yyy-HH.mm.ss");
+	private static final DateTimeFormatter sdf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss.SSS");
+	private static final SimpleDateFormat dateForSearch = new SimpleDateFormat("MM/dd/yyyy");
 	private List<List<String>> instruction;
 	public DBHandler() {
 		try {
@@ -167,9 +172,9 @@ public class DBHandler {
 				String problemCode = rs.getString("pro_code");
 				String dps = rs.getString("dps");
 				String mfgPN = "";
-
+				LocalDateTime now = LocalDateTime.now();
 				result.add(new Item(ppid, pn, sn, revision, description, specialInstruction, co, lot, problemCode, rma,
-						dps, mfgPN, "userID", new Date().toString()));
+						dps, mfgPN, "userID", sdf.format(now)));
 			}
 
 		} catch (Exception e) {
@@ -206,6 +211,7 @@ public class DBHandler {
 			String userId) {
 		String FETCH_RMA_QUERY = "INSERT INTO physical_station VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 		boolean result = false;
+		LocalDateTime now = LocalDateTime.now();
 		try {
 			dbconnection = getConnectionAWS();
 			dbconnection.setAutoCommit(false);
@@ -218,7 +224,7 @@ public class DBHandler {
 			pst.setString(5, revision);
 			pst.setString(6, mfgPN);
 			pst.setString(7, "User ID");
-			pst.setString(8, new Date().toLocaleString());
+			pst.setString(8, sdf.format(now));
 
 			pst.executeUpdate();
 			// delete record in pre_alert table
@@ -377,12 +383,13 @@ public class DBHandler {
 	public boolean createNewRMA(String rma, String userId) {
 		String query = "INSERT INTO rma_table VALUES(?,?,?)";
 		boolean result = false;
+		LocalDateTime now = LocalDateTime.now();
 		try {
 			dbconnection = getConnectionAWS();
 			pst = dbconnection.prepareStatement(query);
 			pst.setString(1, rma);
 			pst.setString(2, userId);
-			pst.setString(3, new Date().toLocaleString());
+			pst.setString(3, sdf.format(now));
 			pst.executeUpdate();
 			result = true;
 		} catch (Exception e) {
@@ -615,11 +622,12 @@ public class DBHandler {
 		dbconnection = getConnectionAWS();
 		pst = dbconnection.prepareStatement(query);
 		int i = 0;
+		LocalDateTime now = LocalDateTime.now();
 		for (String e : errors) {
 			pst.setString(1, ppid);
 			pst.setString(2, e);
 			pst.setString(3, user);
-			pst.setString(4, new Date().toLocaleString());
+			pst.setString(4, sdf.format(now));
 			pst.addBatch();
 			i++;
 			if (i == errors.size()) {
@@ -637,13 +645,14 @@ public class DBHandler {
 	public boolean addMICI(String ppid, String sn) {
 
 		boolean result = false;
+		LocalDateTime now = LocalDateTime.now();
 		try {
 			dbconnection = getConnectionAWS();
 			pst = dbconnection.prepareStatement("INSERT INTO mici_station VALUES(?,?,?,?)");
 			pst.setString(1, ppid);
 			pst.setString(2, sn);
 			pst.setString(3, "User ID");
-			pst.setString(4, new Date().toLocaleString());
+			pst.setString(4, sdf.format(now));
 			pst.execute();
 		} catch (SQLException | ClassNotFoundException e) {
 			System.out.println(e.getMessage());
@@ -781,6 +790,7 @@ public class DBHandler {
 			String area, String actionJob) {
 		String queryInsert = "INSERT INTO repair01_action_record VALUES(?,?,?,?,?,?,?,?)";
 		int recordID = -1;
+		LocalDateTime now = LocalDateTime.now();
 		try {
 			dbconnection = getConnectionAWS();
 			pst = dbconnection.prepareStatement(queryInsert, Statement.RETURN_GENERATED_KEYS);
@@ -791,7 +801,7 @@ public class DBHandler {
 			pst.setString(5, area);
 			pst.setString(6, actionJob);
 			pst.setString(7, "userId");
-			pst.setString(8, new Date().toString());
+			pst.setString(8, sdf.format(now));
 			recordID = pst.executeUpdate();
 			rs = pst.getGeneratedKeys();
 			if (rs != null && rs.next()) {
@@ -1084,7 +1094,6 @@ public class DBHandler {
 		}
 
 	}
-
 	
 	// ***************************END*****************************
 	// ***************************END*****************************
@@ -1179,7 +1188,7 @@ public class DBHandler {
 	}
 
 	public boolean addToStatusTable(String ppid, String sn, String from, String to) {
-
+		LocalDateTime now = LocalDateTime.now();
 		boolean result = false;
 		try {
 			dbconnection = getConnectionAWS();
@@ -1189,7 +1198,7 @@ public class DBHandler {
 			pst.setString(3, from);
 			pst.setString(4, to);
 			pst.setString(5, "USER ID");
-			pst.setString(6, new Date().toLocaleString());
+			pst.setString(6, sdf.format(now));
 			pst.execute();
 			result = true;
 		} catch (SQLException | ClassNotFoundException e) {
@@ -1320,7 +1329,6 @@ public class DBHandler {
 		return result;
 	}
 	
-	
 	public List<String> searchByPPID(String ppid){
 		String[] curentStation = getCurrentStation(ppid);
 		List<String> result = new ArrayList<String>();
@@ -1384,6 +1392,66 @@ public class DBHandler {
 		
 	}
 	
+	public List<List<String>> searchPhysicalReceivingStationByDate(String from, String to){
+		List<List<String>> result = new ArrayList<List<String>>();
+		String query = "SELECT * FROM physical_station WHERE physical_station.time >= ?"+" 00:00:00.000 AND mici_station.time <= ?"+" 23:59:59.999';";
+		String fromDate = dateForSearch.format(new Date(from));
+		String endDate = dateForSearch.format(new Date(to));
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(query);
+			pst.setString(1, fromDate);
+			pst.setString(2, endDate);
+			rs = pst.executeQuery();
+			while (rs.next()) {
+				List<String> temp = new ArrayList<String>();
+				temp.add(rs.getString("ppid"));
+				temp.add(rs.getString("sn"));
+				temp.add(rs.getString("MAC"));
+				temp.add(rs.getString("cpu_sn"));
+				temp.add(rs.getString("revision"));
+				temp.add(rs.getString("mPN"));
+				temp.add(rs.getString("userId"));
+				temp.add(rs.getString("time"));
+				result.add(temp);
+			}
+		} catch (Exception e) {
+			System.out.println("Error search physical_station: " + e.getMessage());
+		} finally {
+			shutdown();
+		}
+		return result;
+	}
+	
+	
+	public List<List<String>> searchMICIStationByDate(String from, String to) throws ParseException{
+		List<List<String>> result = new ArrayList<List<String>>();
+		String query = "SELECT * FROM mici_station WHERE mici_station.time >= ? AND mici_station.time <= ?";
+		if(dateForSearch.parse(to).before(dateForSearch.parse(from))) return result;
+		String fromDate = dateForSearch.format(new Date(from));
+		String endDate = dateForSearch.format(new Date(to));
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(query);
+			pst.setString(1, fromDate+" 00:00:00.000");
+			pst.setString(2, endDate+" 23:59:59.999");
+			rs = pst.executeQuery();
+			while (rs.next()) {
+				List<String> temp = new ArrayList<String>();
+				temp.add(rs.getString("ppid"));
+				temp.add(rs.getString("error"));
+				temp.add(rs.getString("userId"));
+				temp.add(rs.getString("time"));
+				temp.add(rs.getString("refix"));
+				result.add(temp);
+			}
+		} catch (Exception e) {
+			System.out.println("Error search mici_station: " + e.getMessage());
+		} finally {
+			shutdown();
+		}
+		return result;
+	}
 	// ***************************END*****************************
 	// ***************************END*****************************
 	// ***************************END*****************************
