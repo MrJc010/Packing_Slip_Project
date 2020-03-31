@@ -92,11 +92,9 @@
 						<label for="toDateInput"><strong>To Date</strong></label>
 						<div class='input-group date' id='datetimepicker6'>
 							<input type='text' class='datepicker-here form-control'
-								data-language='en' id="toDateInput" name="toDateInput" /> <label
-								for="toDateInput"> <i
+								data-language='en' id="toDateInput" name="toDateInput" /> <i
 								class="text-primary fa fa-calendar fa-lg my-auto p-1"
 								aria-hidden="true"></i>
-							</label>
 						</div>
 					</div>
 
