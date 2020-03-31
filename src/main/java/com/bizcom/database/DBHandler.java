@@ -1308,7 +1308,6 @@ public class DBHandler {
 				temp.add(rs.getString("time"));
 				result.add(temp);
 			}
-			System.out.println("done 1");
 			pst = dbconnection.prepareStatement(query2);
 			rs = pst.executeQuery();
 			while (rs.next()) {
@@ -1487,10 +1486,15 @@ public class DBHandler {
 		return result;
 	}
 	
-	//Test NOT Done
+	//Test Done
 	public List<List<String>> searchMICIStationByDate(String from, String to) throws ParseException{
 		List<List<String>> result = new ArrayList<List<String>>();
-		String query = "SELECT * FROM mici_station WHERE mici_station.time >= ? AND mici_station.time <= ?";
+		String query = "SELECT * FROM mici_station WHERE mici_station.ppid "
+				+ "IN (SELECT status_table.ppid FROM status_table WHERE (status_table.from_location ='MICI' "
+				+ "AND status_table.to_location ='REPAIR01_FAIL') "
+				+ "OR (status_table.from_location ='MICI' AND status_table.to_location ='REPAIR01_PASS') "
+				+ "OR (status_table.from_location ='REPAIR01_PASS' AND status_table.to_location ='MICI')) "
+				+ "AND mici_station.time >= ? AND mici_station.time <= ?";
 		if(dateForSearch.parse(to).before(dateForSearch.parse(from))) return result;
 		String fromDate = dateForSearch.format(new Date(from));
 		String endDate = dateForSearch.format(new Date(to));
@@ -1516,7 +1520,64 @@ public class DBHandler {
 		}
 		return result;
 	}
+
+	//Test Done
+	public List<List<String>> searchRepair01ByDate(String from, String to) throws ParseException{
+		List<List<String>> result = new ArrayList<List<String>>();
+		String query = "SELECT repair01_action.ppid,  repair01_action.errorCode, repair01_action_record.duty, "
+		+ "repair01_action_record.old_part_number, repair01_action_record.new_part_number, repair01_action_record.area_repair, "
+		+ "repair01_action_record.action, repair01_action_record.userId, repair01_action_record.time "
+		+ "FROM repair01_action, repair01_action_record "
+		+ "WHERE (repair01_action.repair_action_id = repair01_action_record.count) "
+		+ "AND repair01_action.ppid "
+		+ "IN (SELECT status_table.ppid FROM status_table "
+		+ "WHERE (status_table.from_location ='REPAIR01' "
+		+ "AND status_table.to_location ='REPAIR01_PASS') "
+		+ "OR (status_table.from_location ='REPAIR01_FAIL' AND status_table.to_location ='REPAIR01')) "
+		+ "AND repair01_action_record.time >= ? AND repair01_action_record.time <= ?";
+		if(dateForSearch.parse(to).before(dateForSearch.parse(from))) return result;
+		String fromDate = dateForSearch.format(new Date(from));
+		String endDate = dateForSearch.format(new Date(to));
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(query);
+			pst.setString(1, fromDate+" 00:00:00.000");
+			pst.setString(2, endDate+" 23:59:59.999");
+			rs = pst.executeQuery();
+			while (rs.next()) {
+				List<String> temp = new ArrayList<String>();
+				temp.add(rs.getString("ppid"));
+				temp.add(rs.getString("errorCode"));
+				temp.add(rs.getString("duty"));
+				temp.add(rs.getString("old_part_number"));
+				temp.add(rs.getString("new_part_number"));
+				temp.add(rs.getString("area_repair"));
+				temp.add(rs.getString("action"));
+				temp.add(rs.getString("userId"));
+				temp.add(rs.getString("time"));
+				result.add(temp);
+			}
+		} catch (Exception e) {
+			System.out.println("Error search searchRepair01Station: " + e.getMessage());
+		} finally {
+			shutdown();
+		}
+		return result;	
+	}
 	
+	
+	//Search by station with time
+	public List<List<String>> searchByStationAndTime(String station,String from, String to) throws ParseException{
+		List<List<String>> result = new ArrayList<List<String>>();
+		if(station.equalsIgnoreCase("physical")) {
+			result = searchPhysicalReceivingStationByDate(from,to);
+		}else if(station.equalsIgnoreCase("mici")) {
+			result = searchMICIStationByDate(from,to);
+		}else if(station.equalsIgnoreCase("repair01")) {
+			result = searchRepair01ByDate(from,to);
+		}
+		return result;
+	}
 	
 	// ***************************END*****************************
 	// ***************************END*****************************

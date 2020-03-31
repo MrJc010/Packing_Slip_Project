@@ -12,10 +12,14 @@ public class test {
 //		db.testConnection();
 		//System.out.println(db.searchByPPID("CN00D1521296359K001C"));
 		db.testConnection();
-		String fromDate = "03/28/2020";
-		String endDate = "03/30/2020";
-		
-		List<List<String>> list = db.searchPhysicalReceivingStationByPPID("CN00D152CMK0076B000F");
+		String fromDate = "03/27/2020";
+		String endDate = "03/31/2020";
+		List<List<String>> list = db.searchRepair01Station();
+		for(List<String> l:list) {
+			System.out.println(l);
+		}
+		System.out.println("-----------------------");
+		list = db.searchRepair01ByDate(fromDate,endDate);
 		for(List<String> l:list) {
 			System.out.println(l);
 		}
