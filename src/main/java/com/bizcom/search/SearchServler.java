@@ -12,15 +12,14 @@ import javax.servlet.http.HttpServletResponse;
 import com.bizcom.database.DBHandler;
 
 /**
- * this is the thing I type
- * Servlet implementation class SearchServler
+ * this is the thing I type Servlet implementation class SearchServler
  */
 @WebServlet("/search")
 public class SearchServler extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	
+
 	// UI Field
-	private String ppidInput = "";
+	private String ppid = "";
 //	private String btnSearch = "";
 	private String refInput = "";
 	private String optionInput = "";
@@ -32,8 +31,7 @@ public class SearchServler extends HttpServlet {
 	private String inputFromLocaltion = "";
 	private String inputToLocaltion = "";
 	private DBHandler db = new DBHandler();
-	
-	
+
 	/**
 	 * GET
 	 */
@@ -57,10 +55,10 @@ public class SearchServler extends HttpServlet {
 			System.out.println("Exception called");
 			e.printStackTrace();
 		}
-		setInitial(request,response);
+		setInitial(request, response);
 		int tempCaseID = searchCase();
-	
-		if(tempCaseID != -1) {
+
+		if (tempCaseID != -1) {
 			switch (tempCaseID) {
 			case 1: // SEARCH ONLY PPID other null
 				// Get all infomation of ppid
@@ -81,7 +79,6 @@ public class SearchServler extends HttpServlet {
 			case 2: // Search Station only all other null
 				System.out.println("Case 2 Active");
 				List<List<String>> stationResultList = db.searchByStation(inputStationName);
-			
 				if (stationResultList.isEmpty()) {
 					// Cannot find any result from that station
 					request.setAttribute("setError_Case", "show");
@@ -101,20 +98,19 @@ public class SearchServler extends HttpServlet {
 		request.getRequestDispatcher("/WEB-INF/views/search/search.jsp").forward(request, response);
 	}
 
-
 	/**
 	 * POST
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		System.out.println("doPost Called");
 	}
 
 	// TODO : improve all logic
 	public int searchCase() {
 		int caseID = -1;
-		
 		// Case 1 : ppid input without location (all history called)
-		if(ppidInput!= null && !ppidInput.isEmpty()) {
+		if (ppid != null && !ppid.isEmpty()) {
 			caseID = 1;
 		}
 
@@ -123,15 +119,15 @@ public class SearchServler extends HttpServlet {
 		}
 		return caseID;
 	}
-	
+
 	public void showInput() {
-		String temp =  "SearchServler [ppidInput=" + ppidInput + ", refInput=" + refInput + ", optionInput=" + optionInput
+		String temp = "SearchServler [ppidInput=" + ppid + ", refInput=" + refInput + ", optionInput=" + optionInput
 				+ ", inputRefValue=" + inputRefValue + ", inputEmployee=" + inputEmployee + ", inputStationName="
 				+ inputStationName + ", fromDateInput=" + fromDateInput + ", toDateInput=" + toDateInput
 				+ ", inputFromLocaltion=" + inputFromLocaltion + ", inputToLocaltion=" + inputToLocaltion + "]";
 		System.out.println("All INPUT: " + temp);
 	}
-	
+
 	public void setInitial(HttpServletRequest request, HttpServletResponse response) {
 		// PPID Case Hidden at begin
 		request.setAttribute("setError_Case", "hidden");
@@ -139,5 +135,5 @@ public class SearchServler extends HttpServlet {
 		request.setAttribute("set_Hidden_Station_Search", "hidden");
 
 	}
-	
+
 }

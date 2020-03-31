@@ -20,6 +20,9 @@ public class test {
 			System.out.println(l);
 		}
 		
+
+		
+		System.out.println(db.searchByStation("mici"));
 	}
 
 }
