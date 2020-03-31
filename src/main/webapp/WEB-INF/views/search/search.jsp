@@ -75,9 +75,10 @@
 
 						<div class='input-group date my-auto' id='datetimepicker6'>
 							<input type='text' class='datepicker-here form-control'
-								data-language='en' id="fromDateInput" name="fromDateInput" /> <i
-								class="text-primary fa fa-calendar fa-lg my-auto p-1"
-								aria-hidden="true"></i>
+								data-language='en' id="fromDateInput" name="fromDateInput" />
+								 <span class="input-group-addon">
+                        		<span class="glyphicon glyphicon-calendar"></span>
+                    			</span>
 
 
 						</div>

@@ -1399,9 +1399,10 @@ public class DBHandler {
 	}
 	
 	//Test Done
-	public List<List<String>> searchPhysicalReceivingStationByDate(String from, String to){
+	public List<List<String>> searchPhysicalReceivingStationByDate(String from, String to) throws ParseException{
 		List<List<String>> result = new ArrayList<List<String>>();
 		String query = "SELECT * FROM physical_station WHERE physical_station.time >= ? AND physical_station.time <= ?";
+		if(dateForSearch.parse(to).before(dateForSearch.parse(from))) return result;
 		String fromDate = dateForSearch.format(new Date(from));
 		String endDate = dateForSearch.format(new Date(to));
 		try {
