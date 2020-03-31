@@ -20,9 +20,11 @@ public class SearchServler extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		System.out.println("doGet Called");
-		
+		System.out.println("doGet Called");	
+		System.out.println(request.getParameter("inputppid"));
 		request.getRequestDispatcher("/WEB-INF/views/search/search.jsp").forward(request, response);
+		System.out.println("after");
+		System.out.println(request.getParameter("inputppid"));
 		
 	}
 
