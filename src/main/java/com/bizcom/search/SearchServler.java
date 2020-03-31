@@ -38,18 +38,18 @@ public class SearchServler extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		System.out.println("doGet Called");
+
 		try {
-			ppid = request.getParameter("inputppid");
-			refInput = request.getParameter("refInput");
-			optionInput = request.getParameter("optionInput");
-			inputRefValue = request.getParameter("inputRefValue");
-			inputEmployee = request.getParameter("inputEmployee");
-			inputStationName = request.getParameter("inputStationName");
-			toDateInput = request.getParameter("toDateInput");
-			fromDateInput = request.getParameter("fromDateInput");
-			inputFromLocaltion = request.getParameter("inputFromLocaltion");
-			inputToLocaltion = request.getParameter("inputToLocaltion");
+			ppid = request.getParameter("inputppid").trim();
+			refInput = request.getParameter("refInput").trim();
+			optionInput = request.getParameter("optionInput").trim();
+			inputRefValue = request.getParameter("inputRefValue").trim();
+			inputEmployee = request.getParameter("inputEmployee").trim();
+			inputStationName = request.getParameter("inputStationName").trim().toLowerCase();
+			toDateInput = request.getParameter("toDateInput").trim();
+			fromDateInput = request.getParameter("fromDateInput").trim();
+			inputFromLocaltion = request.getParameter("inputFromStation").trim();
+			inputToLocaltion = request.getParameter("inputToStation").trim();
 
 		} catch (Exception e) {
 			System.out.println("Exception called");
@@ -60,25 +60,36 @@ public class SearchServler extends HttpServlet {
 
 		if (tempCaseID != -1) {
 			switch (tempCaseID) {
-			case 1:
+			case 1: // SEARCH ONLY PPID other null
 				// Get all infomation of ppid
+				System.out.println("Case 1 Active");
 				List<String> ppidInfo = db.searchByPPID(ppid);
-				// Display PPID SECTION Search View
-				request.setAttribute("set_Hidden_PPID_Case", "show");
-				request.setAttribute("setSuccess_PPID_Case", "hidden");
-				request.setAttribute("setError_PPID_Case", "hidden");
 
+				// Display PPID SECTION Search View Logic
 				if (ppidInfo.isEmpty()) {
 					// Hide success part
-					request.setAttribute("setError_PPID_Case", "show");
-					request.setAttribute("errorPPIDMessage", ppid + " doesn't exist!");
+					request.setAttribute("setError_Case", "show");
+					request.setAttribute("errorMessage", ppid + " doesn't exist!");
 
 				} else {
-					request.setAttribute("setSuccess_PPID_Case", "show");
+					request.setAttribute("set_Hidden_PPID_Case", "show");
 					request.setAttribute("ppidInfo", ppidInfo);
 				}
 				break;
+			case 2: // Search Station only all other null
+				System.out.println("Case 2 Active");
+				List<List<String>> stationResultList = db.searchByStation(inputStationName);
+			
+				if (stationResultList.isEmpty()) {
+					// Cannot find any result from that station
+					request.setAttribute("setError_Case", "show");
+					request.setAttribute("errorMessage", inputStationName + " doesn't have any items!");
+				} else {
+					request.setAttribute("set_Hidden_Station_Search", "show");
+					request.setAttribute("stationResultList", stationResultList);
+				}
 
+				break;
 			default:
 				break;
 			}
@@ -98,14 +109,18 @@ public class SearchServler extends HttpServlet {
 		System.out.println("doPost Called");
 	}
 
+	// TODO : improve all logic
 	public int searchCase() {
 		int caseID = -1;
-
+		
 		// Case 1 : ppid input without location (all history called)
 		if (ppid != null && !ppid.isEmpty()) {
 			caseID = 1;
 		}
 
+		if (inputStationName != null && !inputStationName.isEmpty()) {
+			caseID = 2;
+		}
 		return caseID;
 	}
 
@@ -119,7 +134,9 @@ public class SearchServler extends HttpServlet {
 
 	public void setInitial(HttpServletRequest request, HttpServletResponse response) {
 		// PPID Case Hidden at begin
+		request.setAttribute("setError_Case", "hidden");
 		request.setAttribute("set_Hidden_PPID_Case", "hidden");
+		request.setAttribute("set_Hidden_Station_Search", "hidden");
 
 	}
 
