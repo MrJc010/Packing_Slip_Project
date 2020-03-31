@@ -1259,7 +1259,9 @@ public class DBHandler {
 	public List<List<String>> searchPhysicalReceivingStation(){
 		
 		List<List<String>> result = new ArrayList<List<String>>();
-		String query = "SELECT * FROM physical_station";
+		String query = "SELECT * FROM physical_station WHERE physical_station.ppid "
+		+ "IN (SELECT status_table.ppid FROM status_table "
+		+ "WHERE status_table.from_location ='START' AND status_table.to_location ='PHYSICAL_RECEIVING');";
 		try {
 			dbconnection = getConnectionAWS();
 			pst = dbconnection.prepareStatement(query);
@@ -1287,10 +1289,16 @@ public class DBHandler {
 	//Test Done
 	public List<List<String>> searchMICIStation(){
 		List<List<String>> result = new ArrayList<List<String>>();
-		String query = "SELECT * FROM mici_station";
+		String query1 = "SELECT * FROM mici_station WHERE mici_station.ppid "
+		+ "IN (SELECT status_table.ppid FROM status_table WHERE (status_table.from_location ='MICI' "
+		+ "AND status_table.to_location ='REPAIR01_FAIL') "
+		+ "OR (status_table.from_location ='REPAIR01_PASS' AND status_table.to_location ='MICI'))";
+		
+		String query2 = "SELECT status_table.ppid FROM status_table WHERE status_table.from_location ='PHYSICAL_RECEIVING' "
+		+ "AND status_table.to_location ='MICI';";
 		try {
 			dbconnection = getConnectionAWS();
-			pst = dbconnection.prepareStatement(query);
+			pst = dbconnection.prepareStatement(query1);
 			rs = pst.executeQuery();
 			while (rs.next()) {
 				List<String> temp = new ArrayList<String>();
@@ -1298,7 +1306,17 @@ public class DBHandler {
 				temp.add(rs.getString("error"));
 				temp.add(rs.getString("userId"));
 				temp.add(rs.getString("time"));
-				temp.add(rs.getString("refix"));
+				result.add(temp);
+			}
+			System.out.println("done 1");
+			pst = dbconnection.prepareStatement(query2);
+			rs = pst.executeQuery();
+			while (rs.next()) {
+				List<String> temp = new ArrayList<String>();
+				temp.add(rs.getString("ppid"));
+				temp.add("");
+				temp.add("");
+				temp.add("");
 				result.add(temp);
 			}
 		} catch (Exception e) {
@@ -1405,45 +1423,41 @@ public class DBHandler {
 	
 	//Test Done
 	public List<List<String>> searchRepair01ByPPID(String ppid){
-		String[] curentStation = getCurrentStation(ppid);
+		List<List<String>> temp = searchRepair01Station();
 		List<List<String>> result = new ArrayList<List<String>>();
-		if(curentStation[0].equalsIgnoreCase(REPAIR01) || curentStation[0].equalsIgnoreCase(REPAIR01)) {
-			String query = "SELECT  repair01_action.ppid, repair01_action.errorCode, repair01_action_record.duty, "
-			+ "repair01_action_record.old_part_number, repair01_action_record.new_part_number, repair01_action_record.area_repair, "
-			+ "repair01_action_record.action, repair01_action_record.userId, repair01_action_record.time "
-			+ "FROM repair01_action, repair01_action_record "
-			+ "WHERE repair01_action.ppid = ? AND repair01_action.repair_action_id = repair01_action_record.count";
-			try {
-				dbconnection = getConnectionAWS();
-				pst = dbconnection.prepareStatement(query);
-				pst.setString(1, ppid);
-				rs = pst.executeQuery();
-				while (rs.next()) {
-					List<String> temp = new ArrayList<String>();
-					temp.add(rs.getString("ppid"));
-					temp.add(rs.getString("errorCode"));
-					temp.add(rs.getString("duty"));
-					temp.add(rs.getString("old_part_number"));
-					temp.add(rs.getString("new_part_number"));
-					temp.add(rs.getString("area_repair"));
-					temp.add(rs.getString("action"));
-					temp.add(rs.getString("userId"));
-					temp.add(rs.getString("time"));
-					result.add(temp);
-				}
-			} catch (Exception e) {
-				System.out.println("Error search searchRepair01Station: " + e.getMessage());
-			} finally {
-				shutdown();
-			}
-			return result;
-		}else return result;
+		for(List<String> list: temp) {
+			if(list.get(0).equalsIgnoreCase(ppid)) result.add(list);
+		}
+		return result;
 	}
 	
+	
+	//Test Done
+	public List<List<String>> searchMICIStationByPPID(String ppid){
+		List<List<String>> temp = searchMICIStation();
+		List<List<String>> result = new ArrayList<List<String>>();
+		for(List<String> list: temp) {
+			if(list.get(0).equalsIgnoreCase(ppid)) result.add(list);
+		}
+		return result;
+	}
+
+	//Test Done
+	public List<List<String>> searchPhysicalReceivingStationByPPID(String ppid){
+		List<List<String>> temp = searchPhysicalReceivingStation();
+		List<List<String>> result = new ArrayList<List<String>>();
+		for(List<String> list: temp) {
+			if(list.get(0).equalsIgnoreCase(ppid)) result.add(list);
+		}
+		return result;
+	}
+
 	//Test Done
 	public List<List<String>> searchPhysicalReceivingStationByDate(String from, String to) throws ParseException{
 		List<List<String>> result = new ArrayList<List<String>>();
-		String query = "SELECT * FROM physical_station WHERE physical_station.time >= ? AND physical_station.time <= ?";
+		String query = "SELECT * FROM physical_station WHERE physical_station.ppid "
+		+ "IN (SELECT status_table.ppid FROM status_table WHERE status_table.from_location ='START' "
+		+ "AND status_table.to_location ='PHYSICAL_RECEIVING') AND  physical_station.time >= ? AND physical_station.time <= ?";
 		if(dateForSearch.parse(to).before(dateForSearch.parse(from))) return result;
 		String fromDate = dateForSearch.format(new Date(from));
 		String endDate = dateForSearch.format(new Date(to));
@@ -1473,7 +1487,7 @@ public class DBHandler {
 		return result;
 	}
 	
-	//Test Done
+	//Test NOT Done
 	public List<List<String>> searchMICIStationByDate(String from, String to) throws ParseException{
 		List<List<String>> result = new ArrayList<List<String>>();
 		String query = "SELECT * FROM mici_station WHERE mici_station.time >= ? AND mici_station.time <= ?";
