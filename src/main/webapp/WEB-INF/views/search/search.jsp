@@ -75,10 +75,13 @@
 
 						<div class='input-group date my-auto' id='datetimepicker6'>
 							<input type='text' class='datepicker-here form-control'
-								data-language='en' id="fromDateInput" name="fromDateInput" />
-								 <span class="input-group-addon">
-                        		<span class="glyphicon glyphicon-calendar"></span>
-                    			</span>
+								data-language='en' id="fromDateInput" name="fromDateInput" /> <label
+								for="toDateInput"> <i
+								class="text-primary fa fa-calendar fa-lg my-auto p-1"
+								aria-hidden="true"></i>
+
+
+							</label>
 
 
 						</div>
@@ -114,59 +117,75 @@
 		</div>
 
 		<%-- Display PPID SEARCH Section --%>
-		<div ${set_Hidden_PPID_Case}>
-			<div class="justify-content-center bg-light" ${setError_PPID_Case}>
-				<div class="alert alert-warning text-center p-5" role="alert">
-					<span class="display-2">${errorPPIDMessage}</span>
-				</div>
-			</div>
-			<div class="justify-content-center border" ${setSuccess_PPID_Case}>
 
-				<table class="table table-hover table-responsive py-5">
-					<thead>
-						<tr>
-							<th scope="col">PPID</th>
-							<th scope="col">SN</th>
-							<th scope="col">MAC</th>
-							<th scope="col">CPU_SN</th>
-							<th scope="col">Revision</th>
-							<th scope="col">Manf_PN</th>
-							<th scope="col">From Location</th>
-							<th scope="col">To Location</th>
-							<th scope="col">UserID</th>
-							<th scope="col">Date</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<th>CN0J8CVMCMK007CA0084</th>
-							<td>CN0J8CVMCMK007CA0084</td>
-							<td>CN0J8CVMCMK007CA0084</td>
-							<td>CN0J8CVMCMK007CA0084</td>
-							<td>CN0J8CVMCMK007CA0084</td>
-							<td>CN0J8CVMCMK007CA0084</td>
-							<td>CN0J8CVMCMK007CA0084</td>
-							<td>CN0J8CVMCMK007CA0084</td>
-							<td>CN0J8CVMCMK007CA0084</td>
-							<td>CN0J8CVMCMK007CA0084</td>
-							
-						</tr>
-						<tr>
-							<th scope="row">2</th>
-							<td>Jacob</td>
-							<td>Thornton</td>
-							<td>@fat</td>
-						</tr>
-						<tr>
-							<th scope="row">3</th>
-							<td colspan="2">Larry the Bird</td>
-							<td>@twitter</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
+		<div class="justify-content-center border" ${set_Hidden_PPID_Case}>
+
+			<table class="table table-hover py-5">
+				<thead>
+					<tr class="table-primary">
+						<th scope="col">PPID</th>
+						<th scope="col">SN</th>
+						<th scope="col">MAC</th>
+						<th scope="col">CPU_SN</th>
+						<th scope="col">Revision</th>
+						<th scope="col">Manf_PN</th>
+						<th scope="col">From Location</th>
+						<th scope="col">To Location</th>
+						<th scope="col">UserID</th>
+						<th scope="col">Date</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="table-secondary">
+						<c:forEach var="item" items="${ppidInfo}">
+
+							<th>${item }</th>
+
+						</c:forEach>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 
+
+		<%-- Display Search By Station --%>
+
+
+		<div class="justify-content-center" ${set_Hidden_Station_Search}>
+
+			<table class="table table-hover py-5">
+				<thead>
+					<tr class="table-primary">
+						<th scope="col">PPID</th>
+						<th scope="col">ErrorCode</th>
+						<th scope="col">UserID</th>
+						<th scope="col">Date</th>
+					</tr>
+				</thead>
+				<tbody>
+					<c:forEach var="itemList" items="${stationResultList}">
+						<tr class="table-secondary">
+							<c:forEach var="aItem" items="${itemList}">
+								<c:if test="${ not empty aItem}">
+									<th>${aItem}</th>
+								</c:if>
+								<c:if test="${empty aItem}">
+									<th>N/A</th>
+								</c:if>
+
+							</c:forEach>
+						</tr>
+					</c:forEach>
+				</tbody>
+			</table>
+		</div>
+
+		<%-- Display error Message --%>
+		<div class="justify-content-center bg-light mt-5" ${setError_Case}>
+			<div class="alert alert-warning text-center p-5" role="alert">
+				<span class="display-2">${errorMessage}</span>
+			</div>
+		</div>
 	</div>
 </section>
 

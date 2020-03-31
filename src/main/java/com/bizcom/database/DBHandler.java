@@ -31,6 +31,13 @@ public class DBHandler {
 	private static final DateTimeFormatter sdf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss.SSS");
 	private static final SimpleDateFormat dateForSearch = new SimpleDateFormat("MM/dd/yyyy");
 	private List<List<String>> instruction;
+	private static final String PHYSICAL_RECEIVING = "PHYSICAL_RECEIVING";
+	private static final String MICI = "MICI";
+	private static final String REPAIR01_FAIL = "REPAIR01_FAIL";
+	private static final String REPAIR01_PASS = "REPAIR01_PASS";
+	private static final String REPAIR01 = "REPAIR01";
+	private static final String QC1 = "QC1";
+	private static final String START = "START";
 	public DBHandler() {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -1250,6 +1257,7 @@ public class DBHandler {
 	
 	//Test Done
 	public List<List<String>> searchPhysicalReceivingStation(){
+		
 		List<List<String>> result = new ArrayList<List<String>>();
 		String query = "SELECT * FROM physical_station";
 		try {
@@ -1304,13 +1312,30 @@ public class DBHandler {
 	//Test Done
 	public List<List<String>> searchRepair01Station(){
 		List<List<String>> result = new ArrayList<List<String>>();
-		String query = "SELECT repair01_action.ppid,  repair01_action.errorCode, repair01_action_record.duty, repair01_action_record.old_part_number,"
-				+ "repair01_action_record.new_part_number, repair01_action_record.area_repair, repair01_action_record.action, repair01_action_record.userId, repair01_action_record.time "
-				+ "FROM repair01_action, repair01_action_record "
-				+ "WHERE repair01_action.repair_action_id = repair01_action_record.count";
+		String query1 = "SELECT repair01_action.ppid,  repair01_action.errorCode, repair01_action_record.duty, "
+		+ "repair01_action_record.old_part_number, repair01_action_record.new_part_number, repair01_action_record.area_repair, "
+		+ "repair01_action_record.action, repair01_action_record.userId, repair01_action_record.time "
+		+ "FROM repair01_action, repair01_action_record "
+		+ "WHERE (repair01_action.repair_action_id = repair01_action_record.count) "
+		+ "AND repair01_action.ppid "
+		+ "IN (SELECT status_table.ppid FROM status_table "
+		+ "WHERE (status_table.from_location ='REPAIR01' "
+		+ "AND status_table.to_location ='REPAIR01_PASS') "
+		+ "OR (status_table.from_location ='REPAIR01_FAIL' AND status_table.to_location ='REPAIR01'));";
+		
+		String query2 = "SELECT repair01_action.ppid, repair01_action.errorCode "
+		+ "FROM repair01_action "
+		+ "WHERE (repair01_action.repair_action_id IS NULL) "
+		+ "AND repair01_action.ppid "
+		+ "IN (SELECT status_table.ppid FROM status_table "
+		+ "WHERE (status_table.from_location ='REPAIR01' "
+		+ "AND status_table.to_location ='REPAIR01_PASS') "
+		+ "OR (status_table.from_location ='REPAIR01_FAIL' "
+		+ "AND status_table.to_location ='REPAIR01'));";
+		
 		try {
 			dbconnection = getConnectionAWS();
-			pst = dbconnection.prepareStatement(query);
+			pst = dbconnection.prepareStatement(query1);
 			rs = pst.executeQuery();
 			while (rs.next()) {
 				List<String> temp = new ArrayList<String>();
@@ -1323,6 +1348,21 @@ public class DBHandler {
 				temp.add(rs.getString("action"));
 				temp.add(rs.getString("userId"));
 				temp.add(rs.getString("time"));
+				result.add(temp);
+			}
+			pst = dbconnection.prepareStatement(query2);
+			rs = pst.executeQuery();
+			while (rs.next()) {
+				List<String> temp = new ArrayList<String>();
+				temp.add(rs.getString("ppid"));
+				temp.add(rs.getString("errorCode"));
+				temp.add("");
+				temp.add("");
+				temp.add("");
+				temp.add("");
+				temp.add("");
+				temp.add("");
+				temp.add("");
 				result.add(temp);
 			}
 		} catch (Exception e) {
@@ -1364,38 +1404,40 @@ public class DBHandler {
 	}
 	
 	//Test Done
-	public List<List<String>> searchRepairByPPID(String ppid){
+	public List<List<String>> searchRepair01ByPPID(String ppid){
+		String[] curentStation = getCurrentStation(ppid);
 		List<List<String>> result = new ArrayList<List<String>>();
-		String query = "SELECT  repair01_action.ppid, repair01_action.errorCode, repair01_action_record.duty, "
-		+ "repair01_action_record.old_part_number, repair01_action_record.new_part_number, repair01_action_record.area_repair, "
-		+ "repair01_action_record.action, repair01_action_record.userId, repair01_action_record.time "
-		+ "FROM repair01_action, repair01_action_record "
-		+ "WHERE repair01_action.ppid = ? AND repair01_action.repair_action_id = repair01_action_record.count";
-		try {
-			dbconnection = getConnectionAWS();
-			pst = dbconnection.prepareStatement(query);
-			pst.setString(1, ppid);
-			rs = pst.executeQuery();
-			while (rs.next()) {
-				List<String> temp = new ArrayList<String>();
-				temp.add(rs.getString("ppid"));
-				temp.add(rs.getString("errorCode"));
-				temp.add(rs.getString("duty"));
-				temp.add(rs.getString("old_part_number"));
-				temp.add(rs.getString("new_part_number"));
-				temp.add(rs.getString("area_repair"));
-				temp.add(rs.getString("action"));
-				temp.add(rs.getString("userId"));
-				temp.add(rs.getString("time"));
-				result.add(temp);
+		if(curentStation[0].equalsIgnoreCase(REPAIR01) || curentStation[0].equalsIgnoreCase(REPAIR01)) {
+			String query = "SELECT  repair01_action.ppid, repair01_action.errorCode, repair01_action_record.duty, "
+			+ "repair01_action_record.old_part_number, repair01_action_record.new_part_number, repair01_action_record.area_repair, "
+			+ "repair01_action_record.action, repair01_action_record.userId, repair01_action_record.time "
+			+ "FROM repair01_action, repair01_action_record "
+			+ "WHERE repair01_action.ppid = ? AND repair01_action.repair_action_id = repair01_action_record.count";
+			try {
+				dbconnection = getConnectionAWS();
+				pst = dbconnection.prepareStatement(query);
+				pst.setString(1, ppid);
+				rs = pst.executeQuery();
+				while (rs.next()) {
+					List<String> temp = new ArrayList<String>();
+					temp.add(rs.getString("ppid"));
+					temp.add(rs.getString("errorCode"));
+					temp.add(rs.getString("duty"));
+					temp.add(rs.getString("old_part_number"));
+					temp.add(rs.getString("new_part_number"));
+					temp.add(rs.getString("area_repair"));
+					temp.add(rs.getString("action"));
+					temp.add(rs.getString("userId"));
+					temp.add(rs.getString("time"));
+					result.add(temp);
+				}
+			} catch (Exception e) {
+				System.out.println("Error search searchRepair01Station: " + e.getMessage());
+			} finally {
+				shutdown();
 			}
-		} catch (Exception e) {
-			System.out.println("Error search searchRepair01Station: " + e.getMessage());
-		} finally {
-			shutdown();
-		}
-		return result;
-		
+			return result;
+		}else return result;
 	}
 	
 	//Test Done

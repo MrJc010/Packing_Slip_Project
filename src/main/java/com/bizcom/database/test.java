@@ -1,13 +1,7 @@
 package com.bizcom.database;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-import java.time.format.DateTimeFormatter;  
-import java.time.LocalDateTime;    
+import java.util.List;    
 
 public class test {
 
@@ -16,12 +10,16 @@ public class test {
 		DBHandler db = new DBHandler();
 		db.getConnectionAWS();
 //		db.testConnection();
-		System.out.println(db.searchByPPID("CN00D1521296359K001C"));
+		//System.out.println(db.searchByPPID("CN00D1521296359K001C"));
 		db.testConnection();
 		String fromDate = "03/1/2020";
 		String endDate = "04/1/2020";
 		
-		System.out.println(db.searchByStation("mici Station"));
+		List<List<String>> list = db.searchRepair01Station();
+		for(List<String> l:list) {
+			System.out.println(l);
+		}
+		
 	}
 
 }
