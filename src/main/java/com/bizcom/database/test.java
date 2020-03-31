@@ -18,10 +18,10 @@ public class test {
 //		db.testConnection();
 		System.out.println(db.searchByPPID("CN00D1521296359K001C"));
 		db.testConnection();
-		String fromDate = "04/1/2020";
+		String fromDate = "03/1/2020";
 		String endDate = "04/1/2020";
 		
-		System.out.println(db.searchMICIStationByDate(fromDate,endDate));
+		System.out.println(db.searchByStation("mici Station"));
 	}
 
 }

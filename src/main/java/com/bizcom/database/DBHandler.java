@@ -1234,6 +1234,8 @@ public class DBHandler {
 	// ***************************START***************************
 	// ***************************START***************************
 	// ***************************START***************************
+	
+	//Test Done
 	public List<List<String>> searchByStation(String station){
 		List<List<String>> result = new ArrayList<List<String>>();
 		if(station.equalsIgnoreCase("physical")) {
@@ -1246,7 +1248,7 @@ public class DBHandler {
 		return result;
 	}
 	
-	
+	//Test Done
 	public List<List<String>> searchPhysicalReceivingStation(){
 		List<List<String>> result = new ArrayList<List<String>>();
 		String query = "SELECT * FROM physical_station";
@@ -1274,6 +1276,7 @@ public class DBHandler {
 		return result;
 	}
 	
+	//Test Done
 	public List<List<String>> searchMICIStation(){
 		List<List<String>> result = new ArrayList<List<String>>();
 		String query = "SELECT * FROM mici_station";
@@ -1298,6 +1301,7 @@ public class DBHandler {
 		return result;
 	}
 
+	//Test Done
 	public List<List<String>> searchRepair01Station(){
 		List<List<String>> result = new ArrayList<List<String>>();
 		String query = "SELECT repair01_action.ppid,  repair01_action.errorCode, repair01_action_record.duty, repair01_action_record.old_part_number,"
@@ -1329,7 +1333,7 @@ public class DBHandler {
 		return result;
 	}
 	
-	
+	//Test Done
 	public List<String> searchByPPID(String ppid){
 		String[] curentStation = getCurrentStation(ppid);
 		List<String> result = new ArrayList<String>();
@@ -1359,6 +1363,7 @@ public class DBHandler {
 		return result;
 	}
 	
+	//Test Done
 	public List<List<String>> searchRepairByPPID(String ppid){
 		List<List<String>> result = new ArrayList<List<String>>();
 		String query = "SELECT  repair01_action.ppid, repair01_action.errorCode, repair01_action_record.duty, "
@@ -1393,16 +1398,17 @@ public class DBHandler {
 		
 	}
 	
+	//Test Done
 	public List<List<String>> searchPhysicalReceivingStationByDate(String from, String to){
 		List<List<String>> result = new ArrayList<List<String>>();
-		String query = "SELECT * FROM physical_station WHERE physical_station.time >= ?"+" 00:00:00.000 AND mici_station.time <= ?"+" 23:59:59.999';";
+		String query = "SELECT * FROM physical_station WHERE physical_station.time >= ? AND physical_station.time <= ?";
 		String fromDate = dateForSearch.format(new Date(from));
 		String endDate = dateForSearch.format(new Date(to));
 		try {
 			dbconnection = getConnectionAWS();
 			pst = dbconnection.prepareStatement(query);
-			pst.setString(1, fromDate);
-			pst.setString(2, endDate);
+			pst.setString(1, fromDate+" 00:00:00.000");
+			pst.setString(2, endDate+" 23:59:59.999");
 			rs = pst.executeQuery();
 			while (rs.next()) {
 				List<String> temp = new ArrayList<String>();
@@ -1424,7 +1430,7 @@ public class DBHandler {
 		return result;
 	}
 	
-	
+	//Test Done
 	public List<List<String>> searchMICIStationByDate(String from, String to) throws ParseException{
 		List<List<String>> result = new ArrayList<List<String>>();
 		String query = "SELECT * FROM mici_station WHERE mici_station.time >= ? AND mici_station.time <= ?";
@@ -1453,6 +1459,8 @@ public class DBHandler {
 		}
 		return result;
 	}
+	
+	
 	// ***************************END*****************************
 	// ***************************END*****************************
 	// ***************************END*****************************
