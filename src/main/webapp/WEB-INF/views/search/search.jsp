@@ -75,9 +75,13 @@
 
 						<div class='input-group date my-auto' id='datetimepicker6'>
 							<input type='text' class='datepicker-here form-control'
-								data-language='en' id="fromDateInput" name="fromDateInput" /> <i
-								class="text-primary fa fa-calendar fa-lg my-auto p-1"
+								data-language='en' id="fromDateInput" name="fromDateInput" /> 
+								<label	for="toDateInput">
+								<i class="text-primary fa fa-calendar fa-lg my-auto p-1"
 								aria-hidden="true"></i>
+
+
+								</label>
 
 
 						</div>
@@ -88,9 +92,11 @@
 						<label for="toDateInput"><strong>To Date</strong></label>
 						<div class='input-group date' id='datetimepicker6'>
 							<input type='text' class='datepicker-here form-control'
-								data-language='en' id="toDateInput" name="toDateInput" /> <i
+								data-language='en' id="toDateInput" name="toDateInput" /> <label
+								for="toDateInput"> <i
 								class="text-primary fa fa-calendar fa-lg my-auto p-1"
 								aria-hidden="true"></i>
+							</label>
 						</div>
 					</div>
 
@@ -114,7 +120,8 @@
 
 		<%-- Display PPID SEARCH Section --%>
 		<div ${set_Hidden_PPID_Case}>
-			<div class="justify-content-center bg-light mt-5" ${setError_PPID_Case}>
+			<div class="justify-content-center bg-light mt-5"
+				${setError_PPID_Case}>
 				<div class="alert alert-warning text-center p-5" role="alert">
 					<span class="display-2">${errorPPIDMessage}</span>
 				</div>
@@ -137,13 +144,13 @@
 						</tr>
 					</thead>
 					<tbody>
-					<tr  class="table-secondary">
-						<c:forEach var="item" items="${ppidInfo}">
-							
+						<tr class="table-secondary">
+							<c:forEach var="item" items="${ppidInfo}">
+
 								<th>${item }</th>
-							
-					</c:forEach>
-					</tr>
+
+							</c:forEach>
+						</tr>
 					</tbody>
 				</table>
 			</div>
