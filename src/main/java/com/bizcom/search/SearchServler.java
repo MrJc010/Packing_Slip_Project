@@ -78,12 +78,30 @@ public class SearchServler extends HttpServlet {
 				break;
 			case 2: // Search Station only all other null
 				System.out.println("Case 2 Active");
-				List<List<String>> stationResultList = db.searchByStation(inputStationName);
+//				List<List<String>> stationResultList = db.searchRepair01Station(inputStationName);
+
+				// TODO : DELETE, THis code use for test only
+				List<List<String>> stationResultList = db.searchRepair01Station();
+				// ====================
+
 				if (stationResultList.isEmpty()) {
 					// Cannot find any result from that station
 					request.setAttribute("setError_Case", "show");
 					request.setAttribute("errorMessage", inputStationName + " doesn't have any items!");
 				} else {
+					// Based on input to design out come table
+
+					switch (inputStationName.toUpperCase()) {
+					case "REPAIR01":						
+						request.setAttribute("stationName", "REPAIR01");
+						break;
+					case "PHYSICAL":						
+						request.setAttribute("stationName", "PHYSICAL");
+						break;
+					case "MICI":						
+						request.setAttribute("stationName", "MICI");
+						break;
+					}
 					request.setAttribute("set_Hidden_Station_Search", "show");
 					request.setAttribute("stationResultList", stationResultList);
 				}

@@ -156,10 +156,42 @@
 			<table class="table table-hover py-5">
 				<thead>
 					<tr class="table-primary">
-						<th scope="col">PPID</th>
-						<th scope="col">ErrorCode</th>
-						<th scope="col">UserID</th>
-						<th scope="col">Date</th>
+						<%-- Show for REPAIR01 --%>
+						<c:if test="${stationName == 'REPAIR01' }">
+							<th scope="col">PPID</th>
+							<th scope="col">ErrorCode</th>
+							<th scope="col">Duty</th>
+							<th scope="col">Old PN</th>
+							<th scope="col">New PN</th>
+							<th scope="col">Area Repair</th>
+							<th scope="col">UserID</th>
+							<th scope="col">Time</th>
+							<th scope="col">Action</th>
+
+						</c:if>
+
+						<%-- Show for PHYSICAL --%>
+						<c:if test="${stationName == 'PHYSICAL' }">
+							<th scope="col">PPID</th>
+							<th scope="col">Serial Number</th>
+							<th scope="col">MAC</th>
+							<th scope="col">CPU_SN</th>
+							<th scope="col">Revision</th>
+							<th scope="col">mPN</th>
+							<th scope="col">UserID</th>
+							<th scope="col">Time</th>
+						</c:if>
+
+						<%-- Show for MICI --%>
+						<c:if test="${stationName == 'MICI' }">
+
+							<th scope="col">PPID</th>
+							<th scope="col">Error code</th>
+							<th scope="col">User ID</th>
+							<th scope="col">Time</th>
+
+						</c:if>
+
 					</tr>
 				</thead>
 				<tbody>
