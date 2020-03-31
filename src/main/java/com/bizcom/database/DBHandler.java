@@ -1326,7 +1326,7 @@ public class DBHandler {
 		return result;
 	}
 
-	//Test Done
+	//Test Done : NAME STATION SHOULD BE repair01
 	public List<List<String>> searchRepair01Station(){
 		List<List<String>> result = new ArrayList<List<String>>();
 		String query1 = "SELECT repair01_action.ppid,  repair01_action.errorCode, repair01_action_record.duty, "
@@ -1362,9 +1362,9 @@ public class DBHandler {
 				temp.add(rs.getString("old_part_number"));
 				temp.add(rs.getString("new_part_number"));
 				temp.add(rs.getString("area_repair"));
-				temp.add(rs.getString("action"));
 				temp.add(rs.getString("userId"));
 				temp.add(rs.getString("time"));
+				temp.add(rs.getString("action"));
 				result.add(temp);
 			}
 			pst = dbconnection.prepareStatement(query2);

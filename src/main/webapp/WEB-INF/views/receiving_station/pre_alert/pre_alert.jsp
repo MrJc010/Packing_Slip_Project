@@ -207,4 +207,4 @@
 </section>
 
 
-<jsp:include page="/WEB-INF/common/footer.jsp" />
+<c:import url="/WEB-INF/common/footer.jsp"></c:import>

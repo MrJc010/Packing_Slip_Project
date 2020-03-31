@@ -19,14 +19,16 @@ public class test {
 			System.out.println(l);
 		}
 		System.out.println("-----------------------");
-		list = db.searchRepair01ByDate(fromDate,endDate);
+		//list = db.searchRepair01ByDate(fromDate,endDate);;
+		
+		list = db.searchByStation("mici");
 		for(List<String> l:list) {
 			System.out.println(l);
 		}
 		
 
 		
-		//System.out.println(db.searchByStation("mici"));
+//		System.out.println(db.searchByStation("mici"));
 	}
 
 }
