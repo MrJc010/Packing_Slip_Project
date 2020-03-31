@@ -12,17 +12,17 @@ public class test {
 //		db.testConnection();
 		//System.out.println(db.searchByPPID("CN00D1521296359K001C"));
 		db.testConnection();
-		String fromDate = "03/1/2020";
-		String endDate = "04/1/2020";
+		String fromDate = "03/28/2020";
+		String endDate = "03/30/2020";
 		
-		List<List<String>> list = db.searchRepair01Station();
+		List<List<String>> list = db.searchPhysicalReceivingStationByPPID("CN00D152CMK0076B000F");
 		for(List<String> l:list) {
 			System.out.println(l);
 		}
 		
 
 		
-//		System.out.println(db.searchByStation("mici"));
+		//System.out.println(db.searchByStation("mici"));
 	}
 
 }
