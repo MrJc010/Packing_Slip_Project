@@ -50,8 +50,7 @@
 						</select>
 					</div>
 					<div class="form-group col-md-2 px-3">
-						<label for="inputRefValue"><strong>Enter Ref
-								Value To Search</strong></label> <input type="text" class="form-control"
+						<label for="inputRefValue"><strong>Values</strong></label> <input type="text" class="form-control"
 							id="inputRefValue" name="inputRefValue" />
 					</div>
 
@@ -75,9 +74,10 @@
 
 						<div class='input-group date my-auto' id='datetimepicker6'>
 							<input type='text' class='datepicker-here form-control'
-								data-language='en' id="fromDateInput" name="fromDateInput" /> <label
-								for="toDateInput"> <i
-								class="text-primary fa fa-calendar fa-lg my-auto p-1"
+								data-language='en' id="fromDateInput" name="fromDateInput" />
+								 <label
+								for="fromDateInput"> <i
+								class="text-primary fa fa-calendar fa-lg my-auto p-1 my-1"
 								aria-hidden="true"></i>
 
 
@@ -92,9 +92,13 @@
 						<label for="toDateInput"><strong>To Date</strong></label>
 						<div class='input-group date' id='datetimepicker6'>
 							<input type='text' class='datepicker-here form-control'
-								data-language='en' id="toDateInput" name="toDateInput" /> <i
+								data-language='en' id="toDateInput" name="toDateInput" /> 
+								 <label
+								for="toDateInput"> 
+								<i
 								class="text-primary fa fa-calendar fa-lg my-auto p-1"
 								aria-hidden="true"></i>
+								</label>
 						</div>
 					</div>
 
