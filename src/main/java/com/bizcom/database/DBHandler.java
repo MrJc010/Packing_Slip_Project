@@ -26,8 +26,11 @@ import java.time.LocalDateTime;
 
 public class DBHandler {
 	private Connection dbconnection;
+	private Connection sfconnection;
 	private PreparedStatement pst;
 	private ResultSet rs;
+	private PreparedStatement pstSF;
+	private ResultSet rsSF;
 	private static final DateTimeFormatter sdf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss.SSS");
 	private static final SimpleDateFormat dateForSearch = new SimpleDateFormat("MM/dd/yyyy");
 	private List<List<String>> instruction;
@@ -47,8 +50,11 @@ public class DBHandler {
 			e.printStackTrace();
 		}
 		dbconnection = null;
+		sfconnection = null;
 		pst = null;
 		rs = null;
+		pstSF = null;
+		rsSF = null;
 	}
 
 	/**
@@ -68,7 +74,6 @@ public class DBHandler {
 			dbconnection = DriverManager.getConnection(
 					"jdbc:mysql://" + Configs.dbHost + ":" + Configs.dbPort + "/" + Configs.dbName, Configs.dbUsername,
 					Configs.dbPassword);
-
 		} catch (SQLException e) {
 
 			System.out.println(e);
@@ -81,12 +86,29 @@ public class DBHandler {
 		return dbconnection;
 
 	}
+	
+	public Connection getConnectionShopFloor() throws ClassNotFoundException {
+		try {
+			sfconnection = DriverManager.getConnection(
+					"jdbc:mysql://" + ConfigsShoopFloor.dbHost + ":" + ConfigsShoopFloor.dbPort + "/" + ConfigsShoopFloor.dbName, ConfigsShoopFloor.dbUsername,
+					ConfigsShoopFloor.dbPassword);
+		} catch (SQLException e) {
+
+			System.out.println(e);
+		}
+
+		if (sfconnection != null) {
+		} else {
+			System.out.println("Fail to connect to Shop Floor at GetConnection");
+		}
+		return sfconnection;
+
+	}
 
 	/**
 	 * shutdown method will close connection
 	 */
 	public void shutdown() {
-
 		// release resources
 		if (rs != null) {
 			try {
@@ -96,7 +118,6 @@ public class DBHandler {
 			}
 			rs = null;
 		}
-
 		if (pst != null) {
 			try {
 				pst.close();
@@ -117,11 +138,41 @@ public class DBHandler {
 
 	}
 
+	public void shutdownSF() {
+		// release resources
+		if (rsSF != null) {
+			try {
+				rsSF.close();
+			} catch (SQLException e) {
+				System.out.println("FAILLL");
+			}
+			rsSF = null;
+		}
+		if (pstSF != null) {
+			try {
+				pstSF.close();
+			} catch (SQLException e) {
+				System.out.println("FAILLL");
+			}
+			pstSF = null;
+		}
+		if (sfconnection != null) {
+			try {
+
+				sfconnection.close();
+				// LOGGER.info("====Database close====");
+			} catch (SQLException e) {
+				System.out.println("FAILLL");
+			}
+		}
+
+	}
 	/**
 	 * @param conn  connection object
 	 * @param query a query to check
 	 * @return
 	 */
+	
 	public boolean testConnection() {
 		String query = "SHOW DATABASES;";
 		boolean flag = false;
@@ -143,6 +194,27 @@ public class DBHandler {
 		return flag;
 	}
 
+	public boolean testConnectionSF() {
+		String query = "SHOW DATABASES;";
+		boolean flag = false;
+		try {
+
+			pstSF = dbconnection.prepareStatement(query);
+			if (pstSF.executeUpdate() != 0) {
+				flag = true;
+			}
+
+		} catch (Exception e) {
+			System.out.println(e);
+			System.out.println("Fail to connect");
+		} finally {
+			// close database resources
+			shutdownSF();
+		}
+
+		return flag;
+	}
+	
 	// ***************************START***************************
 	// ***************************START***************************
 	// ***************************START***************************
@@ -550,7 +622,6 @@ public class DBHandler {
 	// ***************************START***************************
 	public boolean isPPIDExistInMICI(String ppid) {
 		boolean result = false;
-
 		String query = "SELECT * FROM mici_station WHERE ppid=?";
 
 		try {
@@ -1390,8 +1461,6 @@ public class DBHandler {
 		return result;
 	}
 	
-	
-	
 	//Test Done
 	public List<String> searchByPPID(String ppid){
 		String[] curentStation = getCurrentStation(ppid);
@@ -1444,7 +1513,6 @@ public class DBHandler {
 		return result;
 	}
 	
-	
 	//Test Done
 	public List<List<String>> searchMICIStationByPPID(String ppid){
 		List<List<String>> temp = searchMICIStation();
@@ -1465,8 +1533,6 @@ public class DBHandler {
 		return result;
 	}
 
-	
-	
 	//Test Done	
 	public List<List<String>> searchPhysicalReceivingStationByDate(String from, String to) throws ParseException{
 		List<List<String>> result = new ArrayList<List<String>>();
@@ -1581,7 +1647,6 @@ public class DBHandler {
 		return result;	
 	}
 	
-	
 	//Search by station with time
 	public List<List<String>> searchByStationAndTime(String station,String from, String to) throws ParseException{
 		List<List<String>> result = new ArrayList<List<String>>();
@@ -1621,4 +1686,139 @@ public class DBHandler {
 		}
 	}
 
+	
+	// *************************SHOP FLOOR************************
+	// *************************SHOP FLOOR************************
+	// *************************SHOP FLOOR************************
+	// *************************SHOP FLOOR************************
+	// *************************SHOP FLOOR************************
+	// *                        SHOP FLOOR                       *
+	// *************************SHOP FLOOR************************
+	// *************************SHOP FLOOR************************
+	// *************************SHOP FLOOR************************
+	// *************************SHOP FLOOR************************
+	// *************************SHOP FLOOR************************
+	
+	
+	
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***********************************************************
+	// *                    CREATE NEW PART NUMBER               *
+	// ***********************************************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
+	
+	/**
+	 * This function is used for checking if part number is exist in side part_number_table or not.
+	 * If it does not exist, this function will return false, otherwise return true.
+	 * @param partnumber
+	 * @return result which is true or false.
+	 */
+	public boolean checkPartNumber(String partnumber) {
+		boolean result = false;
+		String query = "SELECT * FROM part_number_table WHERE part_number = ?";
+		try {
+			sfconnection = getConnectionShopFloor();
+			pstSF = sfconnection.prepareStatement(query);
+			pstSF.setString(1, partnumber);
+			rsSF = pstSF.executeQuery();
+			if (rsSF.next()) {
+				result = true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			shutdownSF();
+		}
+		return result;
+	}
+	
+	/**
+	 * This method is used to create new part number if the part number does not exist
+	 * This method will return TRUE if creating success, otherwise return FALSE
+	 * @param partNumber
+	 * @param descp
+	 * @param model
+	 * @param userId
+	 * @return result which is true or false.
+	 */
+	public boolean createNewPartNumber(String partNumber, String descp, String model, String userId) {
+		boolean result = false;
+		if(!checkPartNumber(partNumber)) {
+			System.out.println("Displace error for partnumber is already exist inside the database");
+			result = false;
+		}else {
+			String query = "INSERT INTO part_number_table (part_number,descp,model,userID,time) VALUES(?,?,?,?,?)";
+			LocalDateTime now = LocalDateTime.now();
+			try {
+				sfconnection = getConnectionShopFloor();
+				pstSF = sfconnection.prepareStatement(query);
+				pstSF.setString(1, partNumber);
+				pstSF.setString(2, descp);
+				pstSF.setString(3, model);
+				pstSF.setString(4, userId);
+				pstSF.setString(5, sdf.format(now));
+				rsSF = pstSF.executeQuery();
+				result = true;
+			} catch (SQLException | ClassNotFoundException e) {
+				System.out.println(e.getMessage());
+			} finally {
+				shutdownSF();
+			}
+			return result;
+		}
+		return result;
+	}
+	
+	public boolean createLocationForPartNumber(String[] location,String partNumber) {
+		boolean result = false;
+		
+		return result;
+	}
+	
+	/**
+	 * This method is checking if a locaiton is already created for a part number.
+	 * If the location is exist, the function will return TRUE, otherwise return FALSE
+	 * @param partNumber
+	 * @param location
+	 * @return result which is true or false
+	 */
+	public boolean checkLocationForPartNumber(String partNumber, String location) {
+		boolean result = false;
+		String query = "SELECT * FROM location_partnumber_table WHERE part_number = ? and location = ?";
+		try {
+			sfconnection = getConnectionShopFloor();
+			pstSF = sfconnection.prepareStatement(query);
+			pstSF.setString(1, partNumber);
+			pstSF.setString(2, location);
+			rsSF = pstSF.executeQuery();
+			if (rsSF.next()) {
+				result = true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			shutdownSF();
+		}
+		return result;
+	}
+	
+	
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***********************************************************
+	// *                    CREATE NEW PART NUMBER               *
+	// ***********************************************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	
 }
