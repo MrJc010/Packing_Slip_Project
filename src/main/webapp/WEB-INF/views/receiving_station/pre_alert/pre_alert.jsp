@@ -1,6 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <c:import url="/WEB-INF/common/header.jsp">
-	<c:param name="title" value="Pre-Alert Station"></c:param>	
+	<c:param name="title" value="Pre-Alert Station"></c:param>
 </c:import>
 <section>
 	<div class="container-fluid p-3">
@@ -21,18 +21,20 @@
 		<div class="jumbotron row">
 			<div class="col-lg-2"></div>
 			<div class="col-lg-8  col-sm-12">
-				<h1 class="text-center text-primary p-2">
+
+				<h1 class="text-center text-primary p-2 display-4">
 					<strong>Upload Your Excel File</strong>
 				</h1>
-
 				<form method="POST" action="<%=request.getContextPath()%>/pre_alert"
 					enctype="multipart/form-data" class="mt-2">
 
 
 					<div class="custom-file">
-						<input type="file" name="uploadFile" class="custom-file-input form-control-lg"
-							id="customFile1" required> <label
-							class="custom-file-label bg-light text-dark" for="customFile">Choose file</label>
+						<input type="file" name="uploadFile"
+							class="custom-file-input form-control-lg" id="customFile1"
+							required> <label
+							class="custom-file-label bg-light text-dark" for="customFile">Choose
+							file</label>
 					</div>
 					<div class="input-group-append justify-content-center">
 						<input type="submit" class="btn btn-primary btn-md my-4"

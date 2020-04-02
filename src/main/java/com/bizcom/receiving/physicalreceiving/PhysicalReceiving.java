@@ -21,7 +21,6 @@ public class PhysicalReceiving extends HttpServlet {
 	/**
 	 * 
 	 */
-	private String notFound = "";
 	private static final long serialVersionUID = 1365646760784374827L;
 	private DBHandler dbhandler = new DBHandler();
 	private List<Item> myList;
@@ -30,7 +29,6 @@ public class PhysicalReceiving extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 //		HttpSession session = request.getSession();
-		request.getSession().removeAttribute("Successfull");
 		request.getSession().setAttribute("Successfull", "");
 		myList = new ArrayList<>();
 		String ppid = request.getParameter("ppid");
@@ -84,15 +82,15 @@ public class PhysicalReceiving extends HttpServlet {
 			throws ServletException, IOException {
 
 		if (myList.size() == 1) {
+			
+//			String rmaNum = temp.getRma();			
+//			String pn = temp.getPn();
+//			String description = temp.getDescription();
+//			String lot = temp.getLot();
+//			String problemCode = temp.getProblemCode();
+//			String dps = temp.getDps();
 			Item temp = myList.get(0);
-			String rmaNum = temp.getRma();
 			String ppid = temp.getPpid();
-			String pn = temp.getPn();
-
-			String description = temp.getDescription();
-			String lot = temp.getLot();
-			String problemCode = temp.getProblemCode();
-			String dps = temp.getDps();
 			String revision = request.getParameter("revision");
 			String mfgPN = request.getParameter("manufactoring");
 			String sn = request.getParameter("snNumber");
@@ -104,21 +102,23 @@ public class PhysicalReceiving extends HttpServlet {
 			if (physical) {
 				updateStatus = dbhandler.addToStatusTable(ppid, sn, "START", "PHYSICAL_RECEIVING");
 				if (!updateStatus) {
+					request.getSession().setAttribute("Successfull", "Unsuccessfull");
 					System.out.println("Cannot update item status");
 				} else {
+
 					request.getSession().setAttribute("Successfull", "Successfull");
 					request.setAttribute("setHiddenError", "hidden");
-					request.getRequestDispatcher("/WEB-INF/views/receiving_station/physicalreceiving/searchItems.jsp")
-					.forward(request, response);
-					return;
+//					request.getRequestDispatcher("/WEB-INF/views/receiving_station/physicalreceiving/searchItems.jsp")
+//					.forward(request, response);
+
 				}
 			} else {
 				System.out.println("Cannot add record to physical table");
 
 			}
-			
-			response.sendRedirect(request.getContextPath() + "/searchitem");
-			//request.getSession().setAttribute("Successfull", "");
+
+			response.sendRedirect(request.getContextPath() + "/searchitem?ppid=" + ppid);
+			// request.getSession().setAttribute("Successfull", "");
 
 		} else {
 			System.out.println("Duplicate Information");

@@ -18,7 +18,8 @@
 					method="POST">
 
 					<input id="input-2" class="form-control form-control-lg"
-						name="ppid" placeholder="Enter PPID number" type="text" required />
+						name="ppid" placeholder="Enter PPID number" type="text" required
+						value="${ppidValue}" />
 
 
 					<div class="row justify-content-center mt-5">
@@ -32,7 +33,7 @@
 			<div class="col-lg-2"></div>
 		</div>
 
-<%-- 		<div class="row justify-content-center">
+		<%-- 		<div class="row justify-content-center">
 			<c:if test="${Successfull == 'Successfull'}">
 				<script type="text/javascript">
 					var msg = "Item received succcessfully. Move to Physical Station.";
@@ -50,16 +51,22 @@
 
 		<div class="row justify-content-center my-5" ${setHiddenError}>
 			<div class="alert alert-warning" role="alert">
-				<strong>PPID is not valid at this station. Please check
-					with manager.</strong>
+				<h1 class="display-4">
+					<strong>${errorMessage}</strong>
+				</h1>
+				<h1 class="display-4">
+					<strong>Please check with manager.</strong>
+				</h1>
 
 			</div>
 		</div>
-		
+
 		<div class="row justify-content-center my-5" ${setHiddenSuccess}>
 			<div class="alert alert-success" role="alert">
-				<strong>${successMessage}</strong>
 
+				<h1 class="display-4">
+					<strong>${successMessage}</strong>
+				</h1>
 			</div>
 		</div>
 </section>

@@ -18,6 +18,8 @@ public class SearchItemController extends HttpServlet {
 
 	private DBHandler dbHandler = new DBHandler();
 
+	private String ppid = "";
+
 	public SearchItemController() {
 		super();
 
@@ -29,17 +31,32 @@ public class SearchItemController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		String isSuccess = request.getParameter("Successfull");
-		String ppid = request.getParameter("ppid");
-		if(isSuccess != null && isSuccess.equalsIgnoreCase("Successfull")) {
-			request.setAttribute("setHiddenSuccess", "show");
-			request.setAttribute("successMessage", ppid + " updated successfully!");			
+
+		String isSuccess = "";
+
+		try {
+			isSuccess = (String) request.getSession().getAttribute("Successfull");
+			if (isSuccess.equalsIgnoreCase("Successfull")) {
+				request.setAttribute("setHiddenSuccess", "show");
+				request.setAttribute("successMessage", request.getParameter("ppid") + " updated successfully!");
+				request.getSession().setAttribute("Successfull", "");
+			} else if (isSuccess.equalsIgnoreCase("Unsuccessfull")) {
+				request.setAttribute("setHiddenSuccess", "hidden");
+				request.setAttribute("successMessage", "");
+				errorDisplay(request, response, request.getParameter("ppid") + " cannot update to database.");
+				request.getSession().setAttribute("Successfull", "");
+			} else {
+				request.setAttribute("setHiddenSuccess", "hidden");
+			}
+		} catch (Exception e) {
+			request.getSession().setAttribute("Successfull", "");
+			request.setAttribute("setHiddenSuccess", "hidden");
 		}
-		
-		request.getSession().removeAttribute("Successfull");
+
 		// Load Search Item Page
-		request.setAttribute("setHiddenSuccess", "hidden");
+
 		request.setAttribute("setHiddenError", "hidden");
+		request.setAttribute("ppidValue", "");
 		searchItem(request, response);
 
 	}
@@ -58,7 +75,7 @@ public class SearchItemController extends HttpServlet {
 			throws ServletException, IOException {
 		request.getSession().removeAttribute("Successfull");
 		request.setAttribute("setHiddenError", "hidden");
-		String ppid = request.getParameter("ppid");
+		ppid = request.getParameter("ppid");
 
 		if (ppid != null && ppid.length() > 0) {
 
@@ -69,17 +86,21 @@ public class SearchItemController extends HttpServlet {
 				String url = request.getContextPath() + "/physicalreceiving?ppid=" + ppid;
 				response.sendRedirect(url);
 			} else {
-
-				request.setAttribute("setHiddenError", "show");
-				searchItem(request, response);
+				errorDisplay(request, response, ppid + " is not valid at this station.");
 			}
 
 		} else {
-
-			request.setAttribute("setHiddenError", "show");
-			searchItem(request, response);
+			errorDisplay(request, response, ppid + " is not valid at this station.");
 		}
 
 	}
 
+	public void errorDisplay(HttpServletRequest request, HttpServletResponse response, String ppidx)
+			throws ServletException, IOException {
+		request.setAttribute("setHiddenError", "show");
+		request.setAttribute("ppidValue", ppidx);
+		request.setAttribute("errorMessage", ppidx );
+		request.setAttribute("setHiddenSuccess", "hidden");
+		searchItem(request, response);
+	}
 }

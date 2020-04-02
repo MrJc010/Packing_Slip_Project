@@ -57,7 +57,7 @@ public class MICI extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
+		
 		// listErrorCodes have List Object ErrorCode
 		// ErrorCode ( errocode , description)
 
@@ -78,6 +78,7 @@ public class MICI extends HttpServlet {
 		} else {
 			switch (page) {
 			case "display":
+				
 				miciDisplay(request, response);
 				break;
 			case "check":
@@ -149,6 +150,7 @@ public class MICI extends HttpServlet {
 
 	public void miciDisplay(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		displayPPIDAndSN(request);
 		request.setAttribute("titlePageMICI", "MICI");
 		request.setAttribute("sethideMICI", "hidden");
 		request.getRequestDispatcher("/WEB-INF/views/mici_station/mici.jsp").forward(request, response);
@@ -161,12 +163,21 @@ public class MICI extends HttpServlet {
 
 	}
 
+	public void displayPPIDAndSN(HttpServletRequest request) {
+		if(ppid!=null && !ppid.isEmpty()) {
+			request.setAttribute("ppid", ppid);
+		}
+		if(sn!=null && !sn.isEmpty()) {			
+			request.setAttribute("sn", sn);
+		}
+	}
 	public void checkMICI(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		request.setAttribute("problemcodeAtMICI", "");
 		request.setAttribute("problemDescpAtMICI", "");
 		String page = request.getParameter("page");
 		ppid = request.getParameter("ppidNumber");
+		sn = request.getParameter("serialnumber");
 		String[] miciInfo = dbHandler.getPhysicalInfor(ppid);
 		if (validate(ppid, request, miciInfo)) {
 
@@ -174,8 +185,7 @@ public class MICI extends HttpServlet {
 			if (ppid != null) {
 				request.setAttribute("sethideMICI", "");
 				request.setAttribute("setHidenInfo", "show");
-//				request.setAttribute("setHidenResult", "hidden");
-
+				displayPPIDAndSN(request);
 				String[] currenStaions = dbHandler.getCurrentStation(ppid);
 
 				request.setAttribute("ppidCheckAtMICI", ppid);
@@ -215,6 +225,7 @@ public class MICI extends HttpServlet {
 			request.getRequestDispatcher("/WEB-INF/views/mici_station/mici.jsp").forward(request, response);
 //			response.sendRedirect(request.getContextPath()+"/mici?page=display");
 		} else {
+			
 			request.getRequestDispatcher("/WEB-INF/views/mici_station/mici.jsp").forward(request, response);
 //			response.sendRedirect(request.getContextPath()+"/mici?page=display");
 			System.out.println("Redirect to currentpage on check!");
@@ -233,7 +244,8 @@ public class MICI extends HttpServlet {
 		} else {
 			request.setAttribute("sethideMICI", "hidden");
 			request.setAttribute("seterrorhiddenMICI", "");
-			request.setAttribute("currentStatusAtMICI", "This PPID Is Not At Physical Receiving Station!");
+			displayPPIDAndSN(request);
+			request.setAttribute("currentStatusAtMICI", "This PPID and Serial Number don't stay at this station!");
 			return false;
 		}
 	}
