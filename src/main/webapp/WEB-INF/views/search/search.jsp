@@ -60,8 +60,7 @@
 						</select>
 					</div>
 					<div class="form-group col-md-2 px-3">
-						<label for="inputRefValue"><strong>Enter Ref
-								Value To Search</strong></label> <input type="text" class="form-control"
+						<label for="inputRefValue"><strong>Values</strong></label> <input type="text" class="form-control"
 							id="inputRefValue" name="inputRefValue" value="${inputRefValue}" />
 					</div>
 
@@ -109,10 +108,6 @@
 							<input type='text' class='form-control'
 								data-language='en' id="toDateInput" name="toDateInput"
 								value="${toDateInput}" /> 
-								
-<!-- 								<label for="toDateInput"> <i
-								class="text-primary fa fa-calendar fa-lg px-2"
-								aria-hidden="true"> </i></label> -->
 						</div>
 					</div>
 
