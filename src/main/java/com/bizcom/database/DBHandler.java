@@ -1468,6 +1468,7 @@ public class DBHandler {
 	
 	
 	//Test Done	
+	
 	public List<List<String>> searchPhysicalReceivingStationByDate(String from, String to) throws ParseException{
 		List<List<String>> result = new ArrayList<List<String>>();
 		String query = "SELECT * FROM physical_station WHERE physical_station.ppid "
@@ -1499,6 +1500,7 @@ public class DBHandler {
 		} finally {
 			shutdown();
 		}
+		System.out.println("size: " + result.size());
 		return result;
 	}
 	
@@ -1586,6 +1588,7 @@ public class DBHandler {
 	public List<List<String>> searchByStationAndTime(String station,String from, String to) throws ParseException{
 		List<List<String>> result = new ArrayList<List<String>>();
 		if(station.equalsIgnoreCase("physical")) {
+			System.out.println("hrere");
 			result = searchPhysicalReceivingStationByDate(from,to);
 		}else if(station.equalsIgnoreCase("mici")) {
 			result = searchMICIStationByDate(from,to);

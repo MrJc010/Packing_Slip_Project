@@ -29,8 +29,16 @@ public class SearchItemController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		String isSuccess = request.getParameter("Successfull");
+		String ppid = request.getParameter("ppid");
+		if(isSuccess != null && isSuccess.equalsIgnoreCase("Successfull")) {
+			request.setAttribute("setHiddenSuccess", "show");
+			request.setAttribute("successMessage", ppid + " updated successfully!");			
+		}
+		
 		request.getSession().removeAttribute("Successfull");
 		// Load Search Item Page
+		request.setAttribute("setHiddenSuccess", "hidden");
 		request.setAttribute("setHiddenError", "hidden");
 		searchItem(request, response);
 

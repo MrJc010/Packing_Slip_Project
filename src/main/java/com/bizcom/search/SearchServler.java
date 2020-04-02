@@ -1,6 +1,8 @@
 package com.bizcom.search;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -31,6 +33,8 @@ public class SearchServler extends HttpServlet {
 	private String inputFromLocaltion = "";
 	private String inputToLocaltion = "";
 	private DBHandler db = new DBHandler();
+	private String[] listRefs = new String[] { "Ref_1", "Ref_2", "Ref_3" };
+	private String[] listOptions = new String[] { "Option_1", "Option_2", "Option_3" };
 
 	/**
 	 * GET
@@ -38,6 +42,8 @@ public class SearchServler extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		request.setAttribute("listRefs", listRefs);
+		request.setAttribute("listOptions", listOptions);
 
 		try {
 			ppid = request.getParameter("inputppid").trim();
@@ -52,10 +58,14 @@ public class SearchServler extends HttpServlet {
 			inputToLocaltion = request.getParameter("inputToStation").trim();
 
 		} catch (Exception e) {
-			
+
 			System.out.println("Exception called");
-			
+
 		}
+
+		// Function check if input is exits
+		checkAllAttribute(request, response);
+
 		setInitial(request, response);
 		int tempCaseID = searchCase();
 
@@ -90,13 +100,13 @@ public class SearchServler extends HttpServlet {
 					// Based on input to design out come table
 
 					switch (inputStationName.toUpperCase()) {
-					case "REPAIR01":						
+					case "REPAIR01":
 						request.setAttribute("stationName", "REPAIR01");
 						break;
-					case "PHYSICAL":						
+					case "PHYSICAL":
 						request.setAttribute("stationName", "PHYSICAL");
 						break;
-					case "MICI":						
+					case "MICI":
 						request.setAttribute("stationName", "MICI");
 						break;
 					}
@@ -105,31 +115,75 @@ public class SearchServler extends HttpServlet {
 				}
 
 				break;
-				
-			case 3 :// Search PPId and Station
+
+			case 3:// Search PPId and Station
 				System.out.println("Case 3 Active");
-				List<List<String>> ressults = db.searchByPPIDAndStation(ppid,inputStationName);
-				
+				List<List<String>> ressults = db.searchByPPIDAndStation(ppid, inputStationName);
+
 				if (ressults.isEmpty()) {
 					// Cannot find any result from that station
 					request.setAttribute("setError_Case", "show");
-					request.setAttribute("errorMessage", ppid + " at "+ inputStationName + " station doesn't exist!");
+					request.setAttribute("errorMessage",
+							ppid + " at " + inputStationName + " station doesn't exist!");
 				} else {
 					// Based on input to design out come table
 
 					switch (inputStationName.toUpperCase()) {
-					case "REPAIR01":						
+					case "REPAIR01":
 						request.setAttribute("stationName", "REPAIR01");
 						break;
-					case "PHYSICAL":						
+					case "PHYSICAL":
 						request.setAttribute("stationName", "PHYSICAL");
 						break;
-					case "MICI":						
+					case "MICI":
 						request.setAttribute("stationName", "MICI");
 						break;
 					}
 					request.setAttribute("set_Hidden_Station_Search", "show");
 					request.setAttribute("stationResultList", ressults);
+				}
+				break;
+				
+				// NEED TO IMPLEMENT SOOn
+				
+			case 4:// Search By date
+				System.out.println("Case 4 Active");
+				System.out.println("PROCESSING......");
+				
+				
+				break;
+				
+			case 5:
+				List<List<String>> caseReseults = new ArrayList<List<String>>();
+				try {
+					caseReseults = db.searchByStationAndTime(inputStationName,fromDateInput,toDateInput);
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				
+				if (caseReseults.isEmpty()) {
+					// Cannot find any result from that station
+					request.setAttribute("setError_Case", "show");
+					request.setAttribute("errorMessage",
+							fromDateInput + " to " + toDateInput + " at " + inputStationName +" station doesn't have any result!!");
+				} else {
+					// Based on input to design out come table
+
+					switch (inputStationName.toUpperCase()) {
+					case "REPAIR01":
+						request.setAttribute("stationName", "REPAIR01");
+						break;
+					case "PHYSICAL":
+						request.setAttribute("stationName", "PHYSICAL");
+						break;
+					case "MICI":
+						request.setAttribute("stationName", "MICI");
+						break;
+					}
+					request.setAttribute("set_Hidden_Station_Search", "show");
+					request.setAttribute("stationResultList", caseReseults);
 				}
 				break;
 			default:
@@ -154,23 +208,34 @@ public class SearchServler extends HttpServlet {
 		int caseID = -1;
 		// Case 1 : ppid input without location (all history called)
 		if (ppid != null && !ppid.isEmpty()) {
-			
-			// Only PPID 
-			if(inputStationName.isEmpty()){				
+
+			// Only PPID
+			if (inputStationName.isEmpty()) {
 				caseID = 1;
 			}
 			// PPID and Station Case
 			else {
 				caseID = 3;
 			}
-			
-			
 		}
 
-		// Code will check if case 3 or not, so don't need to recheck PPID at here again
-		if (inputStationName != null && !inputStationName.isEmpty()) {
+		else if (inputStationName != null && !inputStationName.isEmpty() && ppid.isEmpty()) {
 			System.out.println(ppid);
 			caseID = 2;
+		}
+
+		else  if (toDateInput != null && !toDateInput.isEmpty() && fromDateInput != null && !fromDateInput.isEmpty()) {
+			if (inputStationName.isEmpty()) {
+
+				// Search by date only
+				caseID = 4;
+			} else {
+
+				// serach by date and station
+				caseID = 5;
+			}
+		}else {
+			System.out.println(" NO DETECT");
 		}
 		return caseID;
 	}
@@ -189,6 +254,30 @@ public class SearchServler extends HttpServlet {
 		request.setAttribute("set_Hidden_PPID_Case", "hidden");
 		request.setAttribute("set_Hidden_Station_Search", "hidden");
 
+	}
+
+	public void checkAllAttribute(HttpServletRequest request, HttpServletResponse response) {
+
+		setAttribute(request, response, "inputppid", ppid);
+		setAttribute(request, response, "refInput", refInput);
+		setAttribute(request, response, "optionInput", optionInput);
+		setAttribute(request, response, "inputRefValue", inputRefValue);
+		setAttribute(request, response, "inputEmployee", inputEmployee);
+		setAttribute(request, response, "inputStationName", inputStationName);
+		setAttribute(request, response, "toDateInput", toDateInput);
+		setAttribute(request, response, "fromDateInput", fromDateInput);
+		setAttribute(request, response, "inputFromStation", inputFromLocaltion);
+		setAttribute(request, response, "inputToStation", inputToLocaltion);
+
+	}
+
+	public void setAttribute(HttpServletRequest request, HttpServletResponse response, String jspName, String idInput) {
+		if (!idInput.isEmpty()) {
+			request.setAttribute(jspName, idInput);
+		} else {
+			idInput = "";
+			request.setAttribute(jspName, idInput);
+		}
 	}
 
 }
