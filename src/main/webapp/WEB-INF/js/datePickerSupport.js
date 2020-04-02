@@ -18,7 +18,7 @@ console.log(pickToday);
      },
      keyboardNavigation: true,
      iconsLibrary: 'fontawesome',
-     size: 'large',
+/*     size: 'large',*/
      maxDate: today
  });
  
@@ -28,7 +28,8 @@ console.log(pickToday);
      icons: {
          rightIcon: '<i class="text-primary fa fa-calendar fa-lg"	aria-hidden="true"></i>'
      },
-     iconsLibrary: 'fontawesome',size: 'large',
+     iconsLibrary: 'fontawesome',
+     /*     size: 'large',*/
 //     value : pickToday,
      minDate: function () {
          return $('#startDate').val();
