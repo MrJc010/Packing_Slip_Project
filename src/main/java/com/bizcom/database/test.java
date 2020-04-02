@@ -14,10 +14,6 @@ public class test {
 //		db.testConnection();
 		//System.out.println(db.searchByPPID("CN00D1521296359K001C"));
 		db.testConnection();
-		byte[] array = new byte[7]; // length is bounded by 7
-	    new Random().nextBytes(array);
-	    String generatedString = new String(array, Charset.forName("UTF-8"));
-	    System.out.println(generatedString);
 //		String fromDate = "03/27/2020";
 //		String endDate = "03/31/2020";
 //		List<List<String>> list = db.searchByStationAndTime("physical",fromDate,endDate);
@@ -31,7 +27,18 @@ public class test {
 //		for(List<String> l:list) {
 //			System.out.println(l);
 //		}
+
+		String fromDate = "03/30/2020";
+		String endDate = "04/04/2020";
+
+		System.out.println("-----------------------");
+		//list = db.searchRepair01ByDate(fromDate,endDate);;
 		
+		List<List<String>> list = db.searchByStationAndTime("physical",fromDate,endDate);
+		for(List<String> l:list) {
+			System.out.println(l);
+		}
+
 
 		
 //		System.out.println(db.searchByStation("mici"));

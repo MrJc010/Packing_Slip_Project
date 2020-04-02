@@ -1,6 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<c:import url="/WEB-INF/common/header.jsp">
-	<c:param name="title" value="Search Info"></c:param>
+
+<c:import url="/WEB-INF/common/header.jsp">	
+	<c:param name="title" value="Search Info"></c:param>	
 </c:import>
 
 <section>
@@ -19,7 +20,7 @@
 						<div class="input-group mb-2">
 							<input type="hidden" name="action01" value="searchPPIDInput">
 							<input class="form-control form-control-lg" type="text"
-								name="inputppid" placeHolder="Enter PPID">
+								name="inputppid" placeHolder="Enter PPID" value="${inputppid}">
 							<div class="input-group-append">
 
 								<input type="submit" class="btn btn-primary btn-lg"
@@ -34,37 +35,46 @@
 					<div class="form-group col-md-1 px-3">
 						<label for="refInput"><strong>Ref</strong></label> <select
 							id="refInput" class="form-control" name="refInput">
-							<option selected>Ref...</option>
-							<option>Ref_1</option>
-							<option>Ref_2</option>
-							<option>Ref_3</option>
+							<option selected>Select..</option>
+							<c:forEach var="ref" items="${listRefs}">
+
+								<option value="${ref}"
+									${(refInput == ref) ? " selected='selected'" : ""}>${ref}</option>
+							</c:forEach>
 						</select>
+
+
+
 					</div>
 					<div class="form-group col-md-1 px-3">
 						<label for="optionInput"><strong>Option</strong></label> <select
 							id="optionInput" class="form-control" name="optionInput">
-							<option selected>Option...</option>
-							<option>Option_1</option>
-							<option>Option_2</option>
-							<option>Option_3</option>
+							<option selected>Select..</option>
+
+							<c:forEach var="Aoption" items="${listOptions}">
+								<option value="${Aoption}"
+									${(optionInput == Aoption) ? " selected='selected'" : ""}>${Aoption}</option>
+							</c:forEach>
+
+
 						</select>
 					</div>
 					<div class="form-group col-md-2 px-3">
-						<label for="inputRefValue"><strong>Enter Ref
-								Value To Search</strong></label> <input type="text" class="form-control"
-							id="inputRefValue" name="inputRefValue" />
+						<label for="inputRefValue"><strong>Values</strong></label> <input type="text" class="form-control"
+							id="inputRefValue" name="inputRefValue" value="${inputRefValue}" />
 					</div>
 
 					<div class="form-group col-md-4 px-3">
 						<label for="inputEmployee"><strong>Employee</strong></label> <input
 							type="text" class="form-control" id="inputEmployee"
-							name="inputEmployee" />
+							name="inputEmployee" value="${inputEmployee}" />
 					</div>
 
 					<div class="form-group col-md-4 px-3">
 						<label for="inputStationName"><strong>Station
 								Name</strong></label> <input type="text" class="form-control"
-							id="inputStationName" name="inputStationName" />
+							id="inputStationName" name="inputStationName"
+							value="${inputStationName}" />
 					</div>
 				</div>
 
@@ -73,13 +83,17 @@
 					<div class="form-group col-md-2 px-3">
 						<label for="fromDateInput"><strong>From Date</strong></label>
 
-						<div class='input-group date my-auto' id='datetimepicker6'>
-							<input type='text' class='datepicker-here form-control'
-								data-language='en' id="fromDateInput" name="fromDateInput" /> <label
-								for="toDateInput"> <i
-								class="text-primary fa fa-calendar fa-lg my-auto p-1"
-								aria-hidden="true"></i>
+						<div class='input-group date my-auto align-items-center'
+							id='datetimepicker6'>
 
+							<input type='text' class='form-control'
+								data-language='en' id="fromDateInput" name="fromDateInput"
+								value="${fromDateInput}" /> 
+								
+						<!-- 		<label for="fromDateInput">
+								<i class="text-primary fa fa-calendar fa-lg px-2 py-2"
+								aria-hidden="true"></i>
+ -->
 
 							</label>
 
@@ -90,24 +104,24 @@
 
 					<div class="form-group col-md-2 px-3">
 						<label for="toDateInput"><strong>To Date</strong></label>
-						<div class='input-group date' id='datetimepicker6'>
-							<input type='text' class='datepicker-here form-control'
-								data-language='en' id="toDateInput" name="toDateInput" /> <i
-								class="text-primary fa fa-calendar fa-lg my-auto p-1"
-								aria-hidden="true"></i>
+						<div class='input-group date my-auto' id='datetimepicker6'>
+							<input type='text' class='form-control'
+								data-language='en' id="toDateInput" name="toDateInput"
+								value="${toDateInput}" /> 
 						</div>
 					</div>
 
 					<div class="form-group col-md-4 px-5">
 						<label for="inputFromStation"><strong>From
 								Location</strong></label> <input type="text" class="form-control"
-							id="inputFromStation" name="inputFromStation" />
+							id="inputFromStation" name="inputFromStation"
+							value="${inputFromStation}" />
 					</div>
 
 					<div class="form-group col-md-4 px-5">
 						<label for="inputToStation"><strong>To Location</strong></label> <input
 							type="text" class="form-control" id="inputToStation"
-							name="inputToStation" />
+							name="inputToStation" value="${inputToStation}" />
 					</div>
 				</div>
 
@@ -220,6 +234,19 @@
 		</div>
 	</div>
 </section>
+<script>
+	function stopDefAction(evt) {
+		evt.preventDefault();
+	}
+</script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/gijgo/1.9.13/combined/js/gijgo.min.js"></script>
+<script>
+<c:import url="/WEB-INF/js/datePickerSupport.js"></c:import>
+</script>
+<c:import url="/WEB-INF/common/footer.jsp"/>
 
-<c:import url="/WEB-INF/common/footer.jsp"></c:import>
+ 
+
 

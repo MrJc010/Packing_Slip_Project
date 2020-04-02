@@ -1,9 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
-
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="ISO-8859-1">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,8 +9,6 @@
 	crossorigin="anonymous"></script>
 
 <style>
-<%@include file="/WEB-INF/css/datepicker.min.css"%>
-
 .navbar-nav li:hover>ul.dropdown-menu {
 	display: block;
 }
@@ -36,10 +32,11 @@
 
 <!-- Bootstrap core CSS -->
 <link href="webjars/bootstrap/4.4.1/css/bootstrap.min.css"
-	rel="stylesheet">
- <!--<link href="${pageContext.request.contextPath}/WEB-INF/css/style.css" type="text/css" rel="stylesheet" />  -->
+	rel="stylesheet" />
 
-
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/gijgo/1.9.13/combined/css/gijgo.min.css"
+	rel="stylesheet" type="text/css" />
 <title>${param.title}</title>
 </head>
 <body>
