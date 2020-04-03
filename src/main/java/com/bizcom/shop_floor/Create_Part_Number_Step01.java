@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/shopfloor/create_new_partnumber_step1")
-public class Create_New_PartNumber_ShopFloor extends HttpServlet {
+public class Create_Part_Number_Step01 extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	@Override

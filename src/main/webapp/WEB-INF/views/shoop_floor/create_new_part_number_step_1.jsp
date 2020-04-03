@@ -65,7 +65,7 @@
 				</div>
 				<button type="submit" class="btnSubmit text-center">Next</button>
 				
-				<div>
+				<div ${setErrorStep01}>
 				<h1>Teeees</h1>
 				</div>
 			</div>
