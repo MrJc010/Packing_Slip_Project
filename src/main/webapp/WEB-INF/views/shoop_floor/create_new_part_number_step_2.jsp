@@ -38,10 +38,10 @@
 </style>
 	<div class="container register-form text-center p-5 mt-5 shadow">
 		<form class="form"
-			action="<%=request.getContextPath()%>/shopfloor/create_new_locations"
+			action="<%=request.getContextPath()%>/shopfloor/create_new_partnumber_step2"
 			method="POST">
 			<div class="note">
-				<p>REGISTER NEW PART NUMBER FOR A NEW PROJECT (STEP 01)</p>
+				<p>CREATE NEW LOCATIONS (STEP 02)</p>
 			</div>
 
 			<div class="form-content">
@@ -49,25 +49,21 @@
 					<div class="col-md-2  col-sm-1"></div>
 					<div class="col-md-8 col-sm-10">
 						<div class="form-group mb-4">
-							<input type="text" class="form-control" placeholder="PART NUMBER"  name="partnumber"
-								value="" required>
-						</div>				
-						<div class="form-group  mb-4">
-							<input type="text" class="form-control" name="model"
-								placeholder="MODEL NUMBER" value="" required />
+							<input type="text" class="form-control" placeholder="PART NUMBER"
+								value="" />
 						</div>
 						<div class="form-group  mb-4">
-							<input type="text" class="form-control"  name="description"
-								placeholder="PROJECT DESCRIPTION" value="" required />
+							<input type="text" class="form-control"
+								placeholder="MODEL NUMBER" value="" />
+						</div>
+						<div class="form-group  mb-4">
+							<input type="text" class="form-control"
+								placeholder="PROJECT DESCRIPTION" value="" />
 						</div>
 					</div>
 					<div class="col-md-2  col-sm-1"></div>
 				</div>
 				<button type="submit" class="btnSubmit text-center">Next</button>
-				
-				<div>
-				<h1>Teeees</h1>
-				</div>
 			</div>
 		</form>
 	</div>
