@@ -1,5 +1,4 @@
 (function(){
-
   var lastdeletedID, lastdeletedTEXT, lastdeletedINDEX, count = 0;
   
   function updateCounter(){

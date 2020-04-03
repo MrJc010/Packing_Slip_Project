@@ -2,9 +2,7 @@
 <c:import url="/WEB-INF/common/header.jsp">
 	<c:param name="title" value="Search Info"></c:param>
 </c:import>
-
-<section>
-	<style>
+<style>
 .note {
 	text-align: center;
 	height: 80px;
@@ -35,6 +33,8 @@
 	color: #fff;
 }
 </style>
+<section>
+
 	<div class="container register-form text-center p-5 mt-5 shadow">
 		<form class="form"
 			action="<%=request.getContextPath()%>/shopfloor/create_new_partnumber_step1"
@@ -69,7 +69,9 @@
 		</form>
 
 		<div ${setErrorStep01} class="p-3">
-			<div class="alert alert-warning" role="alert"><strong>${errorMessage}</strong></div>
+			<div class="alert alert-warning" role="alert">
+				<strong>${errorMessage}</strong>
+			</div>
 		</div>
 	</div>
 </section>

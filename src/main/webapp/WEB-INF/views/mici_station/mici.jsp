@@ -169,13 +169,6 @@
     btn.innerHTML = "Delete";
     divError.appendChild(btn);
 
-/*     for (var i = 0; i < list.length; i++) {
-      var divError = document.getElementById("errorDiv" + i);
-      var op = document.createElement('option');
-      op.appendChild(document.createTextNode(list[i]));
-      op.value = list[i];
-      selectX.appendChild(op);
-    } */
     var i = 0;
     for (var key in list) {
     	if (list.hasOwnProperty(key)) {
