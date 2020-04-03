@@ -50,11 +50,8 @@
 					<div class="col-md-8 col-sm-10">
 						<div class="form-group mb-4">
 							<input type="text" class="form-control" placeholder="PART NUMBER"  name="partnumber"
-								value="" / required>
-						</div>
-						<input type="hidden"name="partnumber2"
-								value="sssssss" />					
-						
+								value="" required>
+						</div>				
 						<div class="form-group  mb-4">
 							<input type="text" class="form-control" name="model"
 								placeholder="MODEL NUMBER" value="" required />

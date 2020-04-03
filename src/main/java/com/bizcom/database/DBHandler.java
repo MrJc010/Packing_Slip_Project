@@ -2117,7 +2117,18 @@ public class DBHandler {
 		String tableName = locationName+"_location_table";
 		String query = "CREATE TABLE "+tableName+" "
 		+ "(count INT NOT NULL AUTO_INCREMENT,part_number VARCHAR(45) NULL,"
-		+ "serial_number VARCHAR(45) NULL,PRIMARY KEY (count));";
+		+ "serial_number VARCHAR(45) NULL,"
+		+ "ref_1 VARCHAR(45) NULL,"
+		+ "ref_2 VARCHAR(45) NULL,"
+		+ "ref_3 VARCHAR(45) NULL,"
+		+ "ref_4 VARCHAR(45) NULL,"
+		+ "ref_5 VARCHAR(45) NULL,"
+		+ "ref_6 VARCHAR(45) NULL,"
+		+ "ref_7 VARCHAR(45) NULL,"
+		+ "ref_8 VARCHAR(45) NULL,"
+		+ "ref_9 VARCHAR(45) NULL,"
+		+ "ref_10 VARCHAR(45) NULL,"
+		+ "PRIMARY KEY (count));";
 		try {
 			sfconnection = getConnectionShopFloor();
 			pstSF = sfconnection.prepareStatement(query);
