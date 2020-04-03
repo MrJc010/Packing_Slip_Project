@@ -91,36 +91,40 @@
 					<li class="nav-item"><a class="nav-link"
 						href="<%=request.getContextPath()%>/search"><span
 							class="text-white"><strong>SEARCH</strong></span></a></li>
-						href="<%=request.getContextPath()%>/repair01">REPAIR01</a></li>
-					<li class="nav-item"><a class="nav-link" href="<%=request.getContextPath()%>/search">SEARCH</a></li>
-					<li class="nav-item dropdown">
-						<a class="nav-link dropdown-toggle" href="http://example.com"
+
+
+
+
+					<li class="nav-item dropdown"><a
+						class="nav-link dropdown-toggle" href="http://example.com"
 						id="navbarDropdownMenuLink" data-toggle="dropdown"
-						aria-haspopup="true" aria-expanded="false">SHOP FLOOR</a>
-							<ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-								<li>
-									<a class="dropdown-item" href="<%=request.getContextPath()%>/new_shopfloor_project">NEW PROJECT</a>
-								</li>
-								<li>
-									<a class="dropdown-item" href="<%=request.getContextPath()%>/exist_project">EXIST PROJECT</a>
-								</li>
-								<li>
-									<a class="dropdown-item" href="<%=request.getContextPath()%>/shopfloor_search">SEARCH</a>
-								</li>
-								<li>
-									<a class="dropdown-item" href="<%=request.getContextPath()%>/shopfloor_report">REPORT</a>
-								</li>
-							</ul>
-					</li>
+						aria-haspopup="true" aria-expanded="false">
+						<span class="text-white"><strong>SHOP FLOOR</strong></span>
+						
+						</a>
+						<ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+							<li><a class="dropdown-item"
+								href="<%=request.getContextPath()%>/new_shopfloor_project">NEW
+									PROJECT</a></li>
+							<li><a class="dropdown-item"
+								href="<%=request.getContextPath()%>/exist_project">EXIST
+									PROJECT</a></li>
+							<li><a class="dropdown-item"
+								href="<%=request.getContextPath()%>/shopfloor_search">SEARCH</a>
+							</li>
+							<li><a class="dropdown-item"
+								href="<%=request.getContextPath()%>/shopfloor_report">REPORT</a>
+							</li>
+						</ul></li>
 				</ul>
 				<%
-					if(request.getSession().getAttribute("username") == null){
+					if (request.getSession().getAttribute("username") == null) {
 						request.setAttribute("setHiddenSignOut", "hidden");
-					}else{
+					} else {
 						request.setAttribute("setHiddenSignOut", "show");
-					}				
+					}
 				%>
-				
+
 				<form class="form-inline mt-2 mt-md-0"
 					action="<%=request.getContextPath()%>/signout" method="GET">
 					<button class="btn btn-danger my-2 my-sm-0" type="submit"
