@@ -1981,8 +1981,14 @@ public class DBHandler {
 	 */
 	public boolean checkLocationForPartNumber(String partNumber, List<String> location) {
 		List<String> list = getLocationsFromPartNumber(partNumber);
+		List<String> listLocationName = getLocationName();
 		for(String l: location) {
 			if(list.contains(l)) return false;
+			else {
+				if(!listLocationName.contains(l)) {
+					createNewLocationTable(l);
+				}
+			}
 		}
 		return true;
 	}
@@ -2062,8 +2068,121 @@ public class DBHandler {
 		return result;
 	}
 
+	/**
+	 * This function is used for getting all the locations table inside of the database.
+	 * It will return a List<String> as the result
+	 * @return List<String>
+	 */
+	public List<String> getAllLocationTableName(){
+		List<String> result = new ArrayList<>();
+		String query = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA='shop_floor'";
+		try {
+			sfconnection = getConnectionShopFloor();
+			pstSF = sfconnection.prepareStatement(query);
+			rsSF = pstSF.executeQuery();
+			while (rsSF.next()) {
+				String temp = rsSF.getString("TABLE_NAME");
+				
+				if(temp.substring(temp.length()-14).equalsIgnoreCase("location_table")) result.add(temp);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			shutdownSF();
+		}
+		return result;
+	}
 
-// ***************************END*****************************
+	/**
+	 * This function is used for getting location name without _location_table part
+	 * @return List<String>
+	 */
+	public List<String> getLocationName(){
+		List<String> result = getAllLocationTableName();
+		for(int i = 0 ; i < result.size(); i++) {
+			String temp = result.get(i);
+			temp = temp.substring(0,(temp.length()-15));
+			result.set(i,temp);
+		}
+		return result;
+	}
+	
+	/**
+	 * This function is used for creating new Location Table inside of the database.
+	 * @param locationName type String
+	 * @return TRUE or FALSE
+	 */
+	public boolean createNewLocationTable(String locationName) {
+		boolean result = false;
+		String tableName = locationName+"_location_table";
+		String query = "CREATE TABLE "+tableName+" "
+		+ "(count INT NOT NULL AUTO_INCREMENT,part_number VARCHAR(45) NULL,"
+		+ "serial_number VARCHAR(45) NULL,PRIMARY KEY (count));";
+		try {
+			sfconnection = getConnectionShopFloor();
+			pstSF = sfconnection.prepareStatement(query);
+			pstSF.execute();
+			result = true;
+		} catch (SQLException | ClassNotFoundException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			shutdownSF();
+		}
+		return result;
+	}
+	
+	/**
+	 * This function is used for adding new Ref to Location Table
+	 * @param stationName
+	 * @param refName
+	 * @return TRUE or FALSE
+	 */
+	public boolean addingNewRef(String stationName,String refName) {
+		boolean result = false;
+		List<String> list = getLocationName();
+		if(list.contains(stationName)) {
+			String query = "ALTER TABLE "+stationName+"_location_table ADD COLUMN "+refName+" MEDIUMTEXT NULL;";
+			try {
+				sfconnection = getConnectionShopFloor();
+				pstSF = sfconnection.prepareStatement(query);
+				//pstSF.setString(1, refName);
+				pstSF.executeUpdate();
+				result = true;
+			} catch (SQLException | ClassNotFoundException e) {
+				System.out.println(e.getMessage());
+			} finally {
+				shutdownSF();
+			}
+		}else return false;	
+		return result;
+	}
+	
+	/**
+	 * This function is used for deleting Ref from Loation table
+	 * @param stationName
+	 * @param refName
+	 * @return TRUE or FALSE
+	 */
+	public boolean deleteRef(String stationName, String refName) {
+		boolean result = false;
+		List<String> list = getLocationName();
+		if(list.contains(stationName)) {
+			String query = "ALTER TABLE "+stationName+"_location_table DROP COLUMN "+refName;
+			try {
+				sfconnection = getConnectionShopFloor();
+				pstSF = sfconnection.prepareStatement(query);
+				pstSF.executeUpdate();
+				result = true;
+			} catch (SQLException | ClassNotFoundException e) {
+				System.out.println(e.getMessage());
+			} finally {
+				shutdownSF();
+			}
+		}else return false;	
+		return result;
+	}
+
+	// ***************************END*****************************
 // ***************************END*****************************
 // ***************************END*****************************
 // ***************************END*****************************

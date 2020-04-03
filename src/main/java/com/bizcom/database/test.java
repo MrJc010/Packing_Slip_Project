@@ -11,21 +11,12 @@ public class test {
 		//Class.forName("com.mysql.cj.jdbc.Driver");
 		DBHandler db = new DBHandler();
 		db.getConnectionAWS();
-//		db.testConnection();
-		//System.out.println(db.searchByPPID("CN00D1521296359K001C"));
-		db.testConnection();
-//		String radString  = (db.generateStringRandom(14));
-//		String hashOut = db.hash("admin", radString.getBytes());
-//		System.out.println(hashOut);
-//		
-//		// check by get salt from database   + input user
-//		// compare
-//		System.out.println(db.checkPassword( hashOut,"admin", radString.getBytes()));
-
-//		db.signUp("admin1", "admin");
-		System.out.println(db.getSaltFromUsername("admin11"));
-		System.out.println(db.signIn("admin1","admin"));
-//		System.out.println(db.searchByStation("mici"));
+		db.getConnectionShopFloor();
+		System.out.println(db.getAllLocationTableName());
+		System.out.println(db.getLocationName());
+		//System.out.println(db.addingNewRef("testing_table","ref_1"));
+		System.out.println(db.deleteRef("testing_table","ref_1"));
+		
 	}
 
 }
