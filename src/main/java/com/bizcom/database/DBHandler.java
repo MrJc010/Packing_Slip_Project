@@ -1780,12 +1780,21 @@ public class DBHandler {
 	
 	public boolean createLocationForPartNumber(String[] location,String partNumber) {
 		boolean result = false;
+		String query = "INSERT INTO location_partnumber_table (part_number,location) VALUES(?,?)";
+		for(String l: location) {
+			if(checkLocationForPartNumber(partNumber,l)) {
+				result = false;
+				System.out.println("Dispace error for cannot adding location: "+l+" for partnumer: "+partNumber);
+				return result;
+			}
+		}
+		
 		
 		return result;
 	}
 	
 	/**
-	 * This method is checking if a locaiton is already created for a part number.
+	 * This method is checking if a location is already created for a part number.
 	 * If the location is exist, the function will return TRUE, otherwise return FALSE
 	 * @param partNumber
 	 * @param location
