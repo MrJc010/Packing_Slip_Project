@@ -38,7 +38,7 @@
 </style>
 	<div class="container register-form text-center p-5 mt-5 shadow">
 		<form class="form"
-			action="<%=request.getContextPath()%>/shopfloor/create_new_partnumber"
+			action="<%=request.getContextPath()%>/shopfloor/create_new_locations"
 			method="POST">
 			<div class="note">
 				<p>REGISTER NEW PART NUMBER FOR A NEW PROJECT (STEP 01)</p>
@@ -50,11 +50,8 @@
 					<div class="col-md-8 col-sm-10">
 						<div class="form-group mb-4">
 							<input type="text" class="form-control" placeholder="PART NUMBER"  name="partnumber"
-								value="" / required>
-						</div>
-						<input type="hidden"name="partnumber2"
-								value="sssssss" />					
-						
+								value="" required>
+						</div>				
 						<div class="form-group  mb-4">
 							<input type="text" class="form-control" name="model"
 								placeholder="MODEL NUMBER" value="" required />
