@@ -31,9 +31,12 @@
 }
 </style>
 
+<!-- TODO Import Bootstrap from local -->
 <!-- Bootstrap core CSS -->
-<link href="webjars/bootstrap/4.4.1/css/bootstrap.min.css"
-	rel="stylesheet" />
+<link href="webjars/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" />
+	
+	
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
 <link
 	href="https://cdnjs.cloudflare.com/ajax/libs/gijgo/1.9.13/combined/css/gijgo.min.css"
@@ -104,7 +107,7 @@
 						</a>
 						<ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 							<li><a class="dropdown-item"
-								href="<%=request.getContextPath()%>/new_shopfloor_project">NEW
+								href="<%=request.getContextPath()%>/shopfloor/create_new_partnumber">NEW
 									PROJECT</a></li>
 							<li><a class="dropdown-item"
 								href="<%=request.getContextPath()%>/exist_project">EXIST
