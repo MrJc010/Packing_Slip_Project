@@ -14,8 +14,9 @@ public class test {
 		db.getConnectionShopFloor();
 		System.out.println(db.getAllLocationTableName());
 		System.out.println(db.getLocationName());
-		//System.out.println(db.addingNewRef("testing_table","ref_1"));
-		System.out.println(db.deleteRef("testing_table","ref_1"));
+		System.out.println(db.addingNewRef("testing_table","ref_1"));
+		//System.out.println(db.deleteRef("testing_table","ref_1"));
+		System.out.println(db.renameRef("testing_table","test","newRef"));
 		
 	}
 

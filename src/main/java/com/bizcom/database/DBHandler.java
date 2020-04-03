@@ -2158,7 +2158,7 @@ public class DBHandler {
 	}
 	
 	/**
-	 * This function is used for deleting Ref from Loation table
+	 * This function is used for deleting Ref from Location table
 	 * @param stationName
 	 * @param refName
 	 * @return TRUE or FALSE
@@ -2181,8 +2181,37 @@ public class DBHandler {
 		}else return false;	
 		return result;
 	}
+	
+	/**
+	 * This function is used for changing Ref name of Location table 
+	 * @param stationName
+	 * @param refName
+	 * @param newRefName
+	 * @return TRUE or FALSE
+	 */
+	public boolean renameRef(String stationName, String refName,String newRefName) {
+		boolean result = false;
+		List<String> list = getLocationName();
+		if(list.contains(stationName)) {
+			String query = "ALTER TABLE "+stationName+"_location_table CHANGE COLUMN "+refName+" "+ newRefName+" MEDIUMTEXT NULL DEFAULT NULL";
+			try {
+				sfconnection = getConnectionShopFloor();
+				pstSF = sfconnection.prepareStatement(query);
+				pstSF.executeUpdate();
+				result = true;
+			} catch (SQLException | ClassNotFoundException e) {
+				System.out.println(e.getMessage());
+			} finally {
+				shutdownSF();
+			}
+		}else return false;	
+		return result;
+	}
 
-	// ***************************END*****************************
+
+	
+	
+// ***************************END*****************************
 // ***************************END*****************************
 // ***************************END*****************************
 // ***************************END*****************************
