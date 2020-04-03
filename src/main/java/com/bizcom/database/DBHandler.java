@@ -1,5 +1,8 @@
 package com.bizcom.database;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -14,6 +17,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import com.bizcom.MICI_Station.ErrorCode;
@@ -21,7 +25,7 @@ import com.bizcom.ppid.PPID;
 import com.bizcom.receiving.physicalreceiving.Item;
 import com.bizcom.receiving.physicalreceiving.PreAlertItem;
 import com.bizcom.repair01.RevesionUpgrade;
-import java.time.format.DateTimeFormatter;  
+import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
 
 public class DBHandler {
@@ -38,6 +42,7 @@ public class DBHandler {
 	private static final String REPAIR01 = "REPAIR01";
 	private static final String QC1 = "QC1";
 	private static final String START = "START";
+
 	public DBHandler() {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -148,13 +153,13 @@ public class DBHandler {
 	// ***************************START***************************
 	// ***************************START***************************
 	// ***********************************************************
-	// *                    Physical Receiving                   *
+	// * Physical Receiving *
 	// ***********************************************************
 	// ***************************START***************************
 	// ***************************START***************************
 	// ***************************START***************************
 	// ***************************START***************************
-	
+
 	public List<Item> fetchRMA(String ppidN) {
 		List<Item> result = new ArrayList<>();
 		String FETCH_RMA_QUERY = "SELECT pre_ppid.rma, pre_item.ppid, pre_item.pn, pre_item.co, pre_item.lot,"
@@ -281,20 +286,19 @@ public class DBHandler {
 	// ***************************END*****************************
 	// ***************************END*****************************
 	// ***********************************************************
-	// *                   END Physical Receiving                *
+	// * END Physical Receiving *
 	// ***********************************************************
 	// ***************************END*****************************
 	// ***************************END*****************************
 	// ***************************END*****************************
 	// ***************************END*****************************
 
-
 	// ***************************START***************************
 	// ***************************START***************************
 	// ***************************START***************************
 	// ***************************START***************************
 	// ***********************************************************
-	// *                    Pre-Aler Function                  *
+	// * Pre-Aler Function *
 	// ***********************************************************
 	// ***************************START***************************
 	// ***************************START***************************
@@ -527,22 +531,19 @@ public class DBHandler {
 	// ***************************END*****************************
 	// ***************************END*****************************
 	// ***********************************************************
-	// *                   END Pre-Aler Function               *
+	// * END Pre-Aler Function *
 	// ***********************************************************
 	// ***************************END*****************************
 	// ***************************END*****************************
 	// ***************************END*****************************
 	// ***************************END*****************************
 
-	
-	
-	
 	// ***************************START***************************
 	// ***************************START***************************
 	// ***************************START***************************
 	// ***************************START***************************
 	// ***********************************************************
-	// *                        MICI STATION                     *
+	// * MICI STATION *
 	// ***********************************************************
 	// ***************************START***************************
 	// ***************************START***************************
@@ -641,8 +642,10 @@ public class DBHandler {
 //				multi m = new multi(pst);
 //				m.start();
 				int[] a = pst.executeBatch();
-				if(a.length > 0) result = true;
-				else result = false;
+				if (a.length > 0)
+					result = true;
+				else
+					result = false;
 				// dbconnection.commit();
 			}
 		}
@@ -670,28 +673,24 @@ public class DBHandler {
 		return result;
 	}
 
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***********************************************************
+	// * MICI STATION *
+	// ***********************************************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
 
-	// ***************************END*****************************
-	// ***************************END*****************************
-	// ***************************END*****************************
-	// ***************************END*****************************
-	// ***********************************************************
-	// *                     MICI STATION                        *
-	// ***********************************************************
-	// ***************************END*****************************
-	// ***************************END*****************************
-	// ***************************END*****************************
-	// ***************************END*****************************
-
-	
-	
-	
 	// ***************************START***************************
 	// ***************************START***************************
 	// ***************************START***************************
 	// ***************************START***************************
 	// ***********************************************************
-	// *                       REPAIR01 STATION                  *
+	// * REPAIR01 STATION *
 	// ***********************************************************
 	// ***************************START***************************
 	// ***************************START***************************
@@ -816,18 +815,18 @@ public class DBHandler {
 				if (recordID != -1) {
 					updateRepair01Action(dbconnection, errorCode, ppid, recordID);
 				}
-			} 
+			}
 
 		} catch (Exception e) {
 			System.out.println("Error updateRepair01RecordAction: " + e.getMessage());
 		} finally {
 			shutdown();
 		}
-		
+
 		return recordID;
 
 	}
-	
+
 	public void updateRefixMICITable(String errorCode, String ppid, String recordID) {
 		String queryInsert = "UPDATE mici_station SET refix = ? WHERE (ppid = ? AND error = ? AND refix = 'YES')";
 		try {
@@ -842,7 +841,7 @@ public class DBHandler {
 		} finally {
 			shutdown();
 		}
-		
+
 	}
 
 	public String getPartNumber(String ppid) {
@@ -854,7 +853,7 @@ public class DBHandler {
 			pst = dbconnection.prepareStatement(query);
 			pst.setString(1, ppid);
 			rs = pst.executeQuery();
-			while (rs.next()) {				
+			while (rs.next()) {
 				result = rs.getString("pn");
 			}
 		} catch (Exception e) {
@@ -866,7 +865,6 @@ public class DBHandler {
 		return result;
 	}
 
-	
 	public boolean checkIfPartNumberExist(String aPartNumber) {
 		boolean result = false;
 		String query = "SELECT * FROM repair01_part_number WHERE part_number = ?";
@@ -876,11 +874,11 @@ public class DBHandler {
 			pst = dbconnection.prepareStatement(query);
 			pst.setString(1, aPartNumber);
 			rs = pst.executeQuery();
-			
-			if(rs.next()) {
+
+			if (rs.next()) {
 				result = true;
 			}
-			
+
 		} catch (Exception e) {
 			System.out.println("Error getPartNumber: " + e.getMessage());
 		} finally {
@@ -889,12 +887,11 @@ public class DBHandler {
 
 		return result;
 	}
-	
+
 	/*****************************************************************
-	// Getting Instruction
-	// Each of the List is the instruction for upgrading revision base on part
-	// number
-	*****************************************************************/
+	 * // Getting Instruction // Each of the List is the instruction for upgrading
+	 * revision base on part // number
+	 *****************************************************************/
 	public List<List<String>> createInstruction() {
 		instruction = new ArrayList<List<String>>();
 		List<String> list1 = Arrays.asList("PU610/PU612/PU613", "to avoid no-power failures",
@@ -940,7 +937,7 @@ public class DBHandler {
 		return instruction;
 
 	}
-	
+
 	public String getMaxRevision(String part) {
 		String query = "SELECT max_ver FROM repair01_part_number WHERE part_number = ?";
 		String result = "";
@@ -957,7 +954,7 @@ public class DBHandler {
 		} finally {
 			shutdown();
 		}
-				
+
 		return result.toUpperCase();
 	}
 
@@ -970,7 +967,7 @@ public class DBHandler {
 		if ((part.equals("N6W51") || part.equals("JXP99") || part.equals("XMNM2") || part.equals("C4VVY")
 				|| part.equals("71V71") || part.equals("MH7C0") || part.equals("JFGFN") || part.equals("W4DYC")
 				|| part.equals("41M0M") || part.equals("1DMJH") || part.equals("2WCVJ") || part.equals("PHP7P"))
-				&& oldR.equals("A00") && newR.equals("A01")) {			
+				&& oldR.equals("A00") && newR.equals("A01")) {
 			List<String> list = instruction.get(0);
 			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4),
 					list.get(5), 0);
@@ -1101,27 +1098,25 @@ public class DBHandler {
 		}
 
 	}
-	
+
 	// ***************************END*****************************
 	// ***************************END*****************************
 	// ***************************END*****************************
 	// ***************************END*****************************
 	// ***********************************************************
-	// *                     REPAIR01 STATION                    *
+	// * REPAIR01 STATION *
 	// ***********************************************************
 	// ***************************END*****************************
 	// ***************************END*****************************
 	// ***************************END*****************************
 	// ***************************END*****************************
-	
-	
-	
+
 	// ***************************START***************************
 	// ***************************START***************************
 	// ***************************START***************************
 	// ***************************START***************************
 	// ***********************************************************
-	// *                       GENERAL STATION                   *
+	// * GENERAL STATION *
 	// ***********************************************************
 	// ***************************START***************************
 	// ***************************START***************************
@@ -1171,7 +1166,7 @@ public class DBHandler {
 		}
 		return result;
 	}
-	
+
 	public void addToRecord(Connection conn, String sn, String ppid) throws SQLException {
 
 		String INSERT_INTO_RECORD = "INSERT INTO pre_sn_record VALUES(?,?,?)";
@@ -1222,46 +1217,45 @@ public class DBHandler {
 	// ***************************END*****************************
 	// ***************************END*****************************
 	// ***********************************************************
-	// *                     GENERAL STATION                     *
+	// * GENERAL STATION *
 	// ***********************************************************
 	// ***************************END*****************************
 	// ***************************END*****************************
 	// ***************************END*****************************
 	// ***************************END*****************************
 
-	
 	// ***************************START***************************
 	// ***************************START***************************
 	// ***************************START***************************
 	// ***************************START***************************
 	// ***********************************************************
-	// *                    Searching Function                   *
+	// * Searching Function *
 	// ***********************************************************
 	// ***************************START***************************
 	// ***************************START***************************
 	// ***************************START***************************
 	// ***************************START***************************
-	
-	//Test Done
-	public List<List<String>> searchByStation(String station){
+
+	// Test Done
+	public List<List<String>> searchByStation(String station) {
 		List<List<String>> result = new ArrayList<List<String>>();
-		if(station.equalsIgnoreCase("physical")) {
+		if (station.equalsIgnoreCase("physical")) {
 			result = searchPhysicalReceivingStation();
-		}else if(station.equalsIgnoreCase("mici")) {
+		} else if (station.equalsIgnoreCase("mici")) {
 			result = searchMICIStation();
-		}else if(station.equalsIgnoreCase("repair01")) {
+		} else if (station.equalsIgnoreCase("repair01")) {
 			result = searchRepair01Station();
 		}
 		return result;
 	}
-	
-	//Test Done
-	public List<List<String>> searchPhysicalReceivingStation(){
-		
+
+	// Test Done
+	public List<List<String>> searchPhysicalReceivingStation() {
+
 		List<List<String>> result = new ArrayList<List<String>>();
 		String query = "SELECT * FROM physical_station WHERE physical_station.ppid "
-		+ "IN (SELECT status_table.ppid FROM status_table "
-		+ "WHERE status_table.from_location ='START' AND status_table.to_location ='PHYSICAL_RECEIVING');";
+				+ "IN (SELECT status_table.ppid FROM status_table "
+				+ "WHERE status_table.from_location ='START' AND status_table.to_location ='PHYSICAL_RECEIVING');";
 		try {
 			dbconnection = getConnectionAWS();
 			pst = dbconnection.prepareStatement(query);
@@ -1285,17 +1279,17 @@ public class DBHandler {
 		}
 		return result;
 	}
-	
-	//Test Done
-	public List<List<String>> searchMICIStation(){
+
+	// Test Done
+	public List<List<String>> searchMICIStation() {
 		List<List<String>> result = new ArrayList<List<String>>();
 		String query1 = "SELECT * FROM mici_station WHERE mici_station.ppid "
-		+ "IN (SELECT status_table.ppid FROM status_table WHERE (status_table.from_location ='MICI' "
-		+ "AND status_table.to_location ='REPAIR01_FAIL') "
-		+ "OR (status_table.from_location ='REPAIR01_PASS' AND status_table.to_location ='MICI'))";
-		
+				+ "IN (SELECT status_table.ppid FROM status_table WHERE (status_table.from_location ='MICI' "
+				+ "AND status_table.to_location ='REPAIR01_FAIL') "
+				+ "OR (status_table.from_location ='REPAIR01_PASS' AND status_table.to_location ='MICI'))";
+
 		String query2 = "SELECT status_table.ppid FROM status_table WHERE status_table.from_location ='PHYSICAL_RECEIVING' "
-		+ "AND status_table.to_location ='MICI';";
+				+ "AND status_table.to_location ='MICI';";
 		try {
 			dbconnection = getConnectionAWS();
 			pst = dbconnection.prepareStatement(query1);
@@ -1326,30 +1320,24 @@ public class DBHandler {
 		return result;
 	}
 
-	//Test Done : NAME STATION SHOULD BE repair01
-	public List<List<String>> searchRepair01Station(){
+	// Test Done : NAME STATION SHOULD BE repair01
+	public List<List<String>> searchRepair01Station() {
 		List<List<String>> result = new ArrayList<List<String>>();
 		String query1 = "SELECT repair01_action.ppid,  repair01_action.errorCode, repair01_action_record.duty, "
-		+ "repair01_action_record.old_part_number, repair01_action_record.new_part_number, repair01_action_record.area_repair, "
-		+ "repair01_action_record.action, repair01_action_record.userId, repair01_action_record.time "
-		+ "FROM repair01_action, repair01_action_record "
-		+ "WHERE (repair01_action.repair_action_id = repair01_action_record.count) "
-		+ "AND repair01_action.ppid "
-		+ "IN (SELECT status_table.ppid FROM status_table "
-		+ "WHERE (status_table.from_location ='REPAIR01' "
-		+ "AND status_table.to_location ='REPAIR01_PASS') "
-		+ "OR (status_table.from_location ='REPAIR01_FAIL' AND status_table.to_location ='REPAIR01'));";
-		
-		String query2 = "SELECT repair01_action.ppid, repair01_action.errorCode "
-		+ "FROM repair01_action "
-		+ "WHERE (repair01_action.repair_action_id IS NULL) "
-		+ "AND repair01_action.ppid "
-		+ "IN (SELECT status_table.ppid FROM status_table "
-		+ "WHERE (status_table.from_location ='REPAIR01' "
-		+ "AND status_table.to_location ='REPAIR01_PASS') "
-		+ "OR (status_table.from_location ='REPAIR01_FAIL' "
-		+ "AND status_table.to_location ='REPAIR01'));";
-		
+				+ "repair01_action_record.old_part_number, repair01_action_record.new_part_number, repair01_action_record.area_repair, "
+				+ "repair01_action_record.action, repair01_action_record.userId, repair01_action_record.time "
+				+ "FROM repair01_action, repair01_action_record "
+				+ "WHERE (repair01_action.repair_action_id = repair01_action_record.count) "
+				+ "AND repair01_action.ppid " + "IN (SELECT status_table.ppid FROM status_table "
+				+ "WHERE (status_table.from_location ='REPAIR01' " + "AND status_table.to_location ='REPAIR01_PASS') "
+				+ "OR (status_table.from_location ='REPAIR01_FAIL' AND status_table.to_location ='REPAIR01'));";
+
+		String query2 = "SELECT repair01_action.ppid, repair01_action.errorCode " + "FROM repair01_action "
+				+ "WHERE (repair01_action.repair_action_id IS NULL) " + "AND repair01_action.ppid "
+				+ "IN (SELECT status_table.ppid FROM status_table " + "WHERE (status_table.from_location ='REPAIR01' "
+				+ "AND status_table.to_location ='REPAIR01_PASS') " + "OR (status_table.from_location ='REPAIR01_FAIL' "
+				+ "AND status_table.to_location ='REPAIR01'));";
+
 		try {
 			dbconnection = getConnectionAWS();
 			pst = dbconnection.prepareStatement(query1);
@@ -1389,11 +1377,9 @@ public class DBHandler {
 		}
 		return result;
 	}
-	
-	
-	
-	//Test Done
-	public List<String> searchByPPID(String ppid){
+
+	// Test Done
+	public List<String> searchByPPID(String ppid) {
 		String[] curentStation = getCurrentStation(ppid);
 		List<String> result = new ArrayList<String>();
 		String query = "SELECT * FROM physical_station WHERE ppid = ?";
@@ -1421,67 +1407,69 @@ public class DBHandler {
 		}
 		return result;
 	}
-	
+
 	// Search by PPId and Stations
-	public List<List<String>> searchByPPIDAndStation(String ppid,String station){
+	public List<List<String>> searchByPPIDAndStation(String ppid, String station) {
 		List<List<String>> result = new ArrayList<List<String>>();
-		if(station.equalsIgnoreCase("physical")) {
+		if (station.equalsIgnoreCase("physical")) {
 			result = searchPhysicalReceivingStationByPPID(ppid);
-		}else if(station.equalsIgnoreCase("mici")) {
+		} else if (station.equalsIgnoreCase("mici")) {
 			result = searchMICIStationByPPID(ppid);
-		}else if(station.equalsIgnoreCase("repair01")) {
+		} else if (station.equalsIgnoreCase("repair01")) {
 			result = searchRepair01ByPPID(ppid);
 		}
 		return result;
 	}
-	//Test Done
-	public List<List<String>> searchRepair01ByPPID(String ppid){
+
+	// Test Done
+	public List<List<String>> searchRepair01ByPPID(String ppid) {
 		List<List<String>> temp = searchRepair01Station();
 		List<List<String>> result = new ArrayList<List<String>>();
-		for(List<String> list: temp) {
-			if(list.get(0).equalsIgnoreCase(ppid)) result.add(list);
+		for (List<String> list : temp) {
+			if (list.get(0).equalsIgnoreCase(ppid))
+				result.add(list);
 		}
 		return result;
 	}
-	
-	
-	//Test Done
-	public List<List<String>> searchMICIStationByPPID(String ppid){
+
+	// Test Done
+	public List<List<String>> searchMICIStationByPPID(String ppid) {
 		List<List<String>> temp = searchMICIStation();
 		List<List<String>> result = new ArrayList<List<String>>();
-		for(List<String> list: temp) {
-			if(list.get(0).equalsIgnoreCase(ppid)) result.add(list);
+		for (List<String> list : temp) {
+			if (list.get(0).equalsIgnoreCase(ppid))
+				result.add(list);
 		}
 		return result;
 	}
 
-	//Test Done
-	public List<List<String>> searchPhysicalReceivingStationByPPID(String ppid){
+	// Test Done
+	public List<List<String>> searchPhysicalReceivingStationByPPID(String ppid) {
 		List<List<String>> temp = searchPhysicalReceivingStation();
 		List<List<String>> result = new ArrayList<List<String>>();
-		for(List<String> list: temp) {
-			if(list.get(0).equalsIgnoreCase(ppid)) result.add(list);
+		for (List<String> list : temp) {
+			if (list.get(0).equalsIgnoreCase(ppid))
+				result.add(list);
 		}
 		return result;
 	}
 
-	
-	
-	//Test Done	
-	
-	public List<List<String>> searchPhysicalReceivingStationByDate(String from, String to) throws ParseException{
+	// Test Done
+
+	public List<List<String>> searchPhysicalReceivingStationByDate(String from, String to) throws ParseException {
 		List<List<String>> result = new ArrayList<List<String>>();
 		String query = "SELECT * FROM physical_station WHERE physical_station.ppid "
-		+ "IN (SELECT status_table.ppid FROM status_table WHERE status_table.from_location ='START' "
-		+ "AND status_table.to_location ='PHYSICAL_RECEIVING') AND  physical_station.time >= ? AND physical_station.time <= ?";
-		if(dateForSearch.parse(to).before(dateForSearch.parse(from))) return result;
+				+ "IN (SELECT status_table.ppid FROM status_table WHERE status_table.from_location ='START' "
+				+ "AND status_table.to_location ='PHYSICAL_RECEIVING') AND  physical_station.time >= ? AND physical_station.time <= ?";
+		if (dateForSearch.parse(to).before(dateForSearch.parse(from)))
+			return result;
 		String fromDate = dateForSearch.format(new Date(from));
 		String endDate = dateForSearch.format(new Date(to));
 		try {
 			dbconnection = getConnectionAWS();
 			pst = dbconnection.prepareStatement(query);
-			pst.setString(1, fromDate+" 00:00:00.000");
-			pst.setString(2, endDate+" 23:59:59.999");
+			pst.setString(1, fromDate + " 00:00:00.000");
+			pst.setString(2, endDate + " 23:59:59.999");
 			rs = pst.executeQuery();
 			while (rs.next()) {
 				List<String> temp = new ArrayList<String>();
@@ -1503,9 +1491,9 @@ public class DBHandler {
 		System.out.println("size: " + result.size());
 		return result;
 	}
-	
-	//Test Done
-	public List<List<String>> searchMICIStationByDate(String from, String to) throws ParseException{
+
+	// Test Done
+	public List<List<String>> searchMICIStationByDate(String from, String to) throws ParseException {
 		List<List<String>> result = new ArrayList<List<String>>();
 		String query = "SELECT * FROM mici_station WHERE mici_station.ppid "
 				+ "IN (SELECT status_table.ppid FROM status_table WHERE (status_table.from_location ='MICI' "
@@ -1513,14 +1501,15 @@ public class DBHandler {
 				+ "OR (status_table.from_location ='MICI' AND status_table.to_location ='REPAIR01_PASS') "
 				+ "OR (status_table.from_location ='REPAIR01_PASS' AND status_table.to_location ='MICI')) "
 				+ "AND mici_station.time >= ? AND mici_station.time <= ?";
-		if(dateForSearch.parse(to).before(dateForSearch.parse(from))) return result;
+		if (dateForSearch.parse(to).before(dateForSearch.parse(from)))
+			return result;
 		String fromDate = dateForSearch.format(new Date(from));
 		String endDate = dateForSearch.format(new Date(to));
 		try {
 			dbconnection = getConnectionAWS();
 			pst = dbconnection.prepareStatement(query);
-			pst.setString(1, fromDate+" 00:00:00.000");
-			pst.setString(2, endDate+" 23:59:59.999");
+			pst.setString(1, fromDate + " 00:00:00.000");
+			pst.setString(2, endDate + " 23:59:59.999");
 			rs = pst.executeQuery();
 			while (rs.next()) {
 				List<String> temp = new ArrayList<String>();
@@ -1539,28 +1528,27 @@ public class DBHandler {
 		return result;
 	}
 
-	//Test Done
-	public List<List<String>> searchRepair01ByDate(String from, String to) throws ParseException{
+	// Test Done
+	public List<List<String>> searchRepair01ByDate(String from, String to) throws ParseException {
 		List<List<String>> result = new ArrayList<List<String>>();
 		String query = "SELECT repair01_action.ppid,  repair01_action.errorCode, repair01_action_record.duty, "
-		+ "repair01_action_record.old_part_number, repair01_action_record.new_part_number, repair01_action_record.area_repair, "
-		+ "repair01_action_record.action, repair01_action_record.userId, repair01_action_record.time "
-		+ "FROM repair01_action, repair01_action_record "
-		+ "WHERE (repair01_action.repair_action_id = repair01_action_record.count) "
-		+ "AND repair01_action.ppid "
-		+ "IN (SELECT status_table.ppid FROM status_table "
-		+ "WHERE (status_table.from_location ='REPAIR01' "
-		+ "AND status_table.to_location ='REPAIR01_PASS') "
-		+ "OR (status_table.from_location ='REPAIR01_FAIL' AND status_table.to_location ='REPAIR01')) "
-		+ "AND repair01_action_record.time >= ? AND repair01_action_record.time <= ?";
-		if(dateForSearch.parse(to).before(dateForSearch.parse(from))) return result;
+				+ "repair01_action_record.old_part_number, repair01_action_record.new_part_number, repair01_action_record.area_repair, "
+				+ "repair01_action_record.action, repair01_action_record.userId, repair01_action_record.time "
+				+ "FROM repair01_action, repair01_action_record "
+				+ "WHERE (repair01_action.repair_action_id = repair01_action_record.count) "
+				+ "AND repair01_action.ppid " + "IN (SELECT status_table.ppid FROM status_table "
+				+ "WHERE (status_table.from_location ='REPAIR01' " + "AND status_table.to_location ='REPAIR01_PASS') "
+				+ "OR (status_table.from_location ='REPAIR01_FAIL' AND status_table.to_location ='REPAIR01')) "
+				+ "AND repair01_action_record.time >= ? AND repair01_action_record.time <= ?";
+		if (dateForSearch.parse(to).before(dateForSearch.parse(from)))
+			return result;
 		String fromDate = dateForSearch.format(new Date(from));
 		String endDate = dateForSearch.format(new Date(to));
 		try {
 			dbconnection = getConnectionAWS();
 			pst = dbconnection.prepareStatement(query);
-			pst.setString(1, fromDate+" 00:00:00.000");
-			pst.setString(2, endDate+" 23:59:59.999");
+			pst.setString(1, fromDate + " 00:00:00.000");
+			pst.setString(2, endDate + " 23:59:59.999");
 			rs = pst.executeQuery();
 			while (rs.next()) {
 				List<String> temp = new ArrayList<String>();
@@ -1580,41 +1568,42 @@ public class DBHandler {
 		} finally {
 			shutdown();
 		}
-		return result;	
+		return result;
 	}
-	
-	
-	//Search by station with time
-	public List<List<String>> searchByStationAndTime(String station,String from, String to) throws ParseException{
+
+	// Search by station with time
+	public List<List<String>> searchByStationAndTime(String station, String from, String to) throws ParseException {
 		List<List<String>> result = new ArrayList<List<String>>();
-		if(station.equalsIgnoreCase("physical")) {
+		if (station.equalsIgnoreCase("physical")) {
 			System.out.println("hrere");
-			result = searchPhysicalReceivingStationByDate(from,to);
-		}else if(station.equalsIgnoreCase("mici")) {
-			result = searchMICIStationByDate(from,to);
-		}else if(station.equalsIgnoreCase("repair01")) {
-			result = searchRepair01ByDate(from,to);
+			result = searchPhysicalReceivingStationByDate(from, to);
+		} else if (station.equalsIgnoreCase("mici")) {
+			result = searchMICIStationByDate(from, to);
+		} else if (station.equalsIgnoreCase("repair01")) {
+			result = searchRepair01ByDate(from, to);
 		}
 		return result;
 	}
-	
+
 	// ***************************END*****************************
 	// ***************************END*****************************
 	// ***************************END*****************************
 	// ***************************END*****************************
 	// ***********************************************************
-	// *                     Searching Function                  *
+	// * Searching Function *
 	// ***********************************************************
 	// ***************************END*****************************
 	// ***************************END*****************************
 	// ***************************END*****************************
 	// ***************************END*****************************
-	
+
 	public class multi extends Thread {
 		PreparedStatement pst;
+
 		public multi(PreparedStatement pst) {
 			this.pst = pst;
 		}
+
 		public void run() {
 			try {
 				pst.executeBatch();
@@ -1623,5 +1612,147 @@ public class DBHandler {
 			}
 		}
 	}
+
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***********************************************************
+	// * SIGN IN / SIGN UP*
+	// ***********************************************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	public boolean signUp(String username, String password) {
+		String tempRan = generateStringRandom(14);
+		String hashPassword = hash(password,tempRan.getBytes());
+		boolean result = false;
+		
+		String query = "INSERT INTO users VALUES(?,?,?)";
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(query);
+			pst.setString(1, username);
+			pst.setString(2, hashPassword);
+			pst.setString(3, tempRan);
+			pst.execute();			
+			result = true;
+		}catch(Exception e) {			
+			e.printStackTrace();
+		}finally {
+			shutdown();
+		}
+		return result;
+	}
+	public String getSaltFromUsername(String username) {
+		String result = "";
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement("SELECT salt FROM users WHERE userid=?");
+			pst.setString(1, username);
+			rs = pst.executeQuery();
+			if(rs.next()) {
+				result = rs.getString("salt");
+			}
+			
+		}catch(Exception e) {			
+			e.printStackTrace();
+		}finally {
+			shutdown();
+		}
+		return result;
+	}
+	public String getPasswordFromUsername(String username) {
+		String result = "";
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement("SELECT hashpass FROM users WHERE userid=?");
+			pst.setString(1, username);
+			rs = pst.executeQuery();
+			if(rs.next()) {
+				result = rs.getString("hashpass");
+			}
+			
+		}catch(Exception e) {			
+			e.printStackTrace();
+		}finally {
+			shutdown();
+		}
+		return result;
+	}
+	public boolean signIn(String username, String password) {
+		String userSalt = getSaltFromUsername(username);
+		boolean result = false;
+		if(!userSalt.isEmpty()) {
+//			String hashPassword = hash(password, userSalt.getBytes());
+			String userHashPass = getPasswordFromUsername(username);
+			if(checkPassword(userHashPass,password,userSalt.getBytes())) {
+				result = true;
+			}
+		}
+		return result;
+
+	}
+	
+	public String hash(String passwordToHash, byte[] salt) {
+		String generatedPassword = null;
+		try {
+			MessageDigest md = MessageDigest.getInstance("SHA-512");
+			md.update(salt);
+			byte[] bytes = md.digest(passwordToHash.getBytes(StandardCharsets.UTF_8));
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < bytes.length; i++) {
+				sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+			}
+			generatedPassword = sb.toString();
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		return generatedPassword;
+	}
+
+	public boolean checkPassword(String hash, String attempt, byte[] salt) {
+		String generatedHash = hash(attempt, salt);
+		return hash.equals(generatedHash);
+	}
+	
+	public String generateStringRandom(int n) {
+		 // lower limit for LowerCase Letters 
+        int lowerLimit = 97; 
+  
+        // lower limit for LowerCase Letters 
+        int upperLimit = 122; 
+  
+        Random random = new Random(); 
+  
+        // Create a StringBuffer to store the result 
+        StringBuffer r = new StringBuffer(n); 
+  
+        for (int i = 0; i < n; i++) { 
+  
+            // take a random value between 97 and 122 
+            int nextRandomChar = lowerLimit 
+                                 + (int)(random.nextFloat() 
+                                         * (upperLimit - lowerLimit + 1)); 
+  
+            // append a character at the end of bs 
+            r.append((char)nextRandomChar); 
+        } 
+  
+        // return the resultant string 
+        return r.toString(); 
+	}
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***********************************************************
+	// * SIGN IN / SIGN UP*
+	// ***********************************************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
 
 }
