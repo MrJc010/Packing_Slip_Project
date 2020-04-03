@@ -14,26 +14,30 @@ import javax.servlet.http.HttpServletResponse;
 public class Create_Part_Number_Step02 extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-	 private String pn = "";
-	 private String sn = "";
-	 private String desc = "";
 
+	private String partNumber="";
+	private String model="";
+	private String desc="";
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		System.out.println("create_new_locations called");
+		System.out.println("create_new_locations called");		
+		partNumber = request.getParameter("pn");
+		model = request.getParameter("model");
+		desc = request.getParameter("desc");		
+		request.setAttribute("partNumber", partNumber);
+		request.setAttribute("model", model);
+		request.setAttribute("desc", desc);
 		
-		System.out.println(request.getParameter("pn"));
-		System.out.println(request.getParameter("model"));
-		System.out.println(request.getParameter("desc"));
 		request.getRequestDispatcher("/WEB-INF/views/shoop_floor/create_new_part_number_step_2.jsp").forward(request, response);
 		
 	}
 
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+		// drop down
+		System.out.println("Call post step 2");
+	
+		
 	}
 
 }

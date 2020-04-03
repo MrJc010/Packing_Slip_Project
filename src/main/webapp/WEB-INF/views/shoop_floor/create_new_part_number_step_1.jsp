@@ -21,9 +21,8 @@
 }
 
 .form-control {
-	background-color : #ecf0f1;
+	background-color: #ecf0f1;
 	border-radius: 1.5rem;
-	 
 }
 
 .btnSubmit {
@@ -49,27 +48,29 @@
 					<div class="col-md-2  col-sm-1"></div>
 					<div class="col-md-8 col-sm-10">
 						<div class="form-group mb-4">
-							<input type="text" class="form-control" placeholder="PART NUMBER"  name="partnumber"
-								value="" required>
-						</div>				
+							<input type="text" class="form-control" placeholder="PART NUMBER"
+								name="partnumber" value="" required>
+						</div>
 						<div class="form-group  mb-4">
 							<input type="text" class="form-control" name="model"
 								placeholder="MODEL NUMBER" value="" required />
 						</div>
 						<div class="form-group  mb-4">
-							<input type="text" class="form-control"  name="description"
+							<input type="text" class="form-control" name="description"
 								placeholder="PROJECT DESCRIPTION" value="" required />
 						</div>
 					</div>
 					<div class="col-md-2  col-sm-1"></div>
 				</div>
 				<button type="submit" class="btnSubmit text-center">Next</button>
-				
-				<div ${setErrorStep01}>
-				<h1>Teeees</h1>
-				</div>
+
+
 			</div>
 		</form>
+
+		<div ${setErrorStep01} class="p-3">
+			<div class="alert alert-warning" role="alert"><strong>${errorMessage}</strong></div>
+		</div>
 	</div>
 </section>
 
