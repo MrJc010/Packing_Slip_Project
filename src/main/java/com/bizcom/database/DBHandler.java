@@ -1643,6 +1643,8 @@ public class DBHandler {
 	}
 
 
+	
+	
 
 	//Search by station with time
 	public List<List<String>> searchByStationAndTime(String station,String from, String to) throws ParseException{
@@ -1701,7 +1703,6 @@ public class DBHandler {
 		String tempRan = generateStringRandom(14);
 		String hashPassword = hash(password,tempRan.getBytes());
 		boolean result = false;
-
 		String query = "INSERT INTO users VALUES(?,?,?)";
 		try {
 			dbconnection = getConnectionAWS();
@@ -1727,8 +1728,7 @@ public class DBHandler {
 			rs = pst.executeQuery();
 			if(rs.next()) {
 				result = rs.getString("salt");
-			}
-
+			}	
 		}catch(Exception e) {			
 			e.printStackTrace();
 		}finally {
@@ -1746,7 +1746,7 @@ public class DBHandler {
 			if(rs.next()) {
 				result = rs.getString("hashpass");
 			}
-
+			
 		}catch(Exception e) {			
 			e.printStackTrace();
 		}finally {
@@ -1758,7 +1758,7 @@ public class DBHandler {
 		String userSalt = getSaltFromUsername(username);
 		boolean result = false;
 		if(!userSalt.isEmpty()) {
-			//			String hashPassword = hash(password, userSalt.getBytes());
+//			String hashPassword = hash(password, userSalt.getBytes());
 			String userHashPass = getPasswordFromUsername(username);
 			if(checkPassword(userHashPass,password,userSalt.getBytes())) {
 				result = true;
@@ -1767,7 +1767,7 @@ public class DBHandler {
 		return result;
 
 	}
-
+	
 	public String hash(String passwordToHash, byte[] salt) {
 		String generatedPassword = null;
 		try {
@@ -1789,34 +1789,34 @@ public class DBHandler {
 		String generatedHash = hash(attempt, salt);
 		return hash.equals(generatedHash);
 	}
-
+	
 	public String generateStringRandom(int n) {
-		// lower limit for LowerCase Letters 
-		int lowerLimit = 97; 
-
-		// lower limit for LowerCase Letters 
-		int upperLimit = 122; 
-
-		Random random = new Random(); 
-
-		// Create a StringBuffer to store the result 
-		StringBuffer r = new StringBuffer(n); 
-
-		for (int i = 0; i < n; i++) { 
-
-			// take a random value between 97 and 122 
-			int nextRandomChar = lowerLimit 
-					+ (int)(random.nextFloat() 
-							* (upperLimit - lowerLimit + 1)); 
-
-			// append a character at the end of bs 
-			r.append((char)nextRandomChar); 
-		} 
-
-		// return the resultant string 
-		return r.toString(); 
+		 // lower limit for LowerCase Letters 
+        int lowerLimit = 97; 
+  
+        // lower limit for LowerCase Letters 
+        int upperLimit = 122; 
+  
+        Random random = new Random(); 
+  
+        // Create a StringBuffer to store the result 
+        StringBuffer r = new StringBuffer(n); 
+  
+        for (int i = 0; i < n; i++) { 
+  
+            // take a random value between 97 and 122 
+            int nextRandomChar = lowerLimit 
+                                 + (int)(random.nextFloat() 
+                                         * (upperLimit - lowerLimit + 1)); 
+  
+            // append a character at the end of bs 
+            r.append((char)nextRandomChar); 
+        } 
+  
+        // return the resultant string 
+        return r.toString(); 
 	}
-
+	
 	// *************************SHOP FLOOR************************
 	// *************************SHOP FLOOR************************
 	// *************************SHOP FLOOR************************
@@ -2029,7 +2029,6 @@ public class DBHandler {
 		return result;
 	}
 	
-	
 	/**
 	 * This function is used for editing the name of Location of a partnumber.
 	 * If it successfully rename the Location, it will return TRUE, otherwise return FALSE
@@ -2075,6 +2074,5 @@ public class DBHandler {
 // ***************************END*****************************
 // ***************************END*****************************
 // ***************************END*****************************
-
 
 }
