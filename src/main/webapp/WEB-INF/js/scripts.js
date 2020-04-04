@@ -23,8 +23,8 @@
   var editReminder = function(id){
      var $this = $('#' + id);
      $this.focus()
-          .append($('<button />', {
-                        "class": "icon-save save-button", 
+          .append($('<i />', {
+                        "class": "fa fa-floppy-o fa-lg save-button", 
                          click: function(){
                                   
                                    $this.attr('contenteditable', 'false');
@@ -44,7 +44,7 @@
                                            saved.hide();
                                         },2000);
                                         $(this).remove();
-                                        $('.icon-pencil').show();
+                                        $('.fa-pencil').show();
                                    }
                 
                                 }
@@ -118,8 +118,8 @@
 
         var createdItem = $('#'+ id);
 
-        createdItem.append($('<button />', {
-                               "class" :"icon-trash delete-button",
+        createdItem.append($('<i />', {
+                               "class" :"fa fa-trash fa-lg delete-button",
                                "contenteditable" : "false",
                                click: function(){
                                         var confirmation = confirm('Delete this item?');
@@ -129,8 +129,8 @@
                                       }
                   })); 
 
-        createdItem.append($('<button />', {
-                              "class" :"icon-pencil edit-button",
+        createdItem.append($('<i />', {
+                              "class" :"fa fa-pencil fa-lg edit-button",
                               "contenteditable" : "false",
                               click: function(){
                                       createdItem.attr('contenteditable', 'true');

@@ -4,7 +4,7 @@
 </c:import>
 
 <style>
-
+@import url(http://fonts.googleapis.com/css?family=Lato:300,100,400);
 .note {
 	text-align: center;
 	height: 80px;
@@ -37,7 +37,7 @@
 
 <%-- =========================== --%>
 
-@import url(http://fonts.googleapis.com/css?family=Lato:300,100,400);
+
 
 *{
   margin:0;
@@ -174,17 +174,17 @@ button::-moz-focus-inner {
 input[type='text']:focus {
   outline: none;
 }
-.icon-trash,
-.icon-pencil,
-.icon-save {
+.fa-trash,
+.fa-pencil,
+.fa-floppy-o {
   position: absolute;
-  top: 3px;
-  color: #aaa;
+  top: 12px;
+  color: red;
   cursor: pointer;
   right: 40px
 }
 
-.icon-trash {
+.fa-trash {
   right: 10px
 }
 
@@ -229,12 +229,12 @@ button.disabled,
   color: grey;
 }
 
-button.disabled .icon-trash,
-.clear-all.disabled .icon-trash {
+button.disabled .fa-trash,
+.clear-all.disabled .fa-trash {
   color: #888
 }
 
-button .icon-trash {
+button .fa-trash {
   float: none;
   margin-right: 10px;
   opacity: 1 !important;
@@ -283,7 +283,7 @@ li[contenteditable='true']{
 }
 
 
-@import "http://netdna.bootstrapcdn.com/font-awesome/2.0/css/font-awesome.css";
+@import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css";
 
 @import url(http://fonts.googleapis.com/css?family=Lato:300, 100, 400);
 
@@ -524,10 +524,9 @@ li.removed-item {
 	</div>
 
 </section>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<script>
-	<c:import url="/WEB-INF/js/jquery-1.8.2.min.js"></c:import>
-	<c:import url="/WEB-INF/js/modernizr-1.5.min.js"></c:import>
-	<c:import url="/WEB-INF/js/scripts.js"></c:import>
-</script>
+
 <c:import url="/WEB-INF/common/footer.jsp"></c:import>
+<script>
+	<c:import url="/WEB-INF/js/modernizr-1.5.min.js" />
+	<c:import url="/WEB-INF/js/scripts.js" />
+</script>
