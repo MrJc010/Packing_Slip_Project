@@ -1,11 +1,20 @@
 package com.bizcom.shop_floor;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.json.JSONObject;
+
+import com.bizcom.MICI_Station.ErrorCode;
+import com.bizcom.database.DBHandler;
 
 /**
  * Servlet implementation class Create_New_Locations
@@ -18,15 +27,36 @@ public class Create_Part_Number_Step02 extends HttpServlet {
 	private String partNumber="";
 	private String model="";
 	private String desc="";
+	private DBHandler db = new DBHandler();
+	private List<String> locationList;
+	private JSONObject jsonMap;
+	private Map<String, Object> mapLocationList = new HashMap<>();
+	
+	public Create_Part_Number_Step02() {
+		try {
+			db.getConnectionAWS();
+			db.getConnectionShopFloor();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		locationList = db.getLocationName();
+		for(int i = 0 ; i < locationList.size(); i++) {
+			mapLocationList.put(i+1+"", (Object)locationList.get(i));
+		}
+		jsonMap= new JSONObject(mapLocationList);
+	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("create_new_locations called");		
+		System.out.println("create_new_locations called");
 		partNumber = request.getParameter("pn");
 		model = request.getParameter("model");
 		desc = request.getParameter("desc");		
 		request.setAttribute("partNumber", partNumber);
 		request.setAttribute("model", model);
 		request.setAttribute("desc", desc);
+		request.setAttribute("locationList", jsonMap);
+		
 		
 		request.getRequestDispatcher("/WEB-INF/views/shoop_floor/create_new_part_number_step_2.jsp").forward(request, response);
 		
