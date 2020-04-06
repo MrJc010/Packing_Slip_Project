@@ -546,6 +546,7 @@ input[type=submit] {
 		<div class="demo-wrapper">
 			<header>
 				<h1>Creative Add/Remove Effects for List Items</h1>
+				<h3 class="text-danger"><strong>DON'T NEED TO ADD FAIL LOCATION</strong></h3>
 			</header>
 			<div class="notification undo-button">Item Deleted. Undo?</div>
 			<div class="notification save-notification">Item Saved</div>
@@ -560,8 +561,8 @@ input[type=submit] {
 				<input type="submit" value="Submit" onClick='clearCache()'/>
 				</form>
 				<div class="alert alert-success" role="alert">
-Create New Locations Successfully!
-</div>
+				Create New Locations Successfully!
+				</div>
 				<footer>
 					<span class="count"></span>
 					<button class="clear-all">Delete All</button>
