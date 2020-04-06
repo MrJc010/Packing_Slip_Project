@@ -11,12 +11,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
@@ -25,8 +27,6 @@ import com.bizcom.ppid.PPID;
 import com.bizcom.receiving.physicalreceiving.Item;
 import com.bizcom.receiving.physicalreceiving.PreAlertItem;
 import com.bizcom.repair01.RevesionUpgrade;
-import java.time.format.DateTimeFormatter;
-import java.time.LocalDateTime;
 
 public class DBHandler {
 	private Connection dbconnection;
@@ -2219,19 +2219,177 @@ public class DBHandler {
 		return result;
 	}
 
-
+	
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***********************************************************
+	// *                    CREATE NEW PART NUMBER               *
+	// ***********************************************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
 	
 	
-// ***************************END*****************************
-// ***************************END*****************************
-// ***************************END*****************************
-// ***************************END*****************************
-// ***********************************************************
-// *                    CREATE NEW PART NUMBER               *
-// ***********************************************************
-// ***************************END*****************************
-// ***************************END*****************************
-// ***************************END*****************************
-// ***************************END*****************************
+	
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***********************************************************
+	// *                    STATION CONFIGURATION                *
+	// ***********************************************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
+	
+	/**
+	 * This function is used for inserting data into UI table
+	 * This function then Update Station Table
+	 * An array of String will be pass into this function as a data configuration
+	 * @param l String[]
+	 * @return TRUE or FALSE
+	 */
+	public int insertIntoUITable(String part_number, String from_location, String to_location, String serial_number,String[] l) {
+		int result = -1;
+		String query = "INSERT INTO default_ui_table (ref_1, ref_pattern_1, ref_count_1, ref_max_1,"
+		+ " ref_2, ref_pattern_2, ref_count_2, ref_max_2, ref_3, ref_pattern_3, ref_count_3, ref_max_3,"
+		+ " ref_4, ref_pattern_4, ref_count_4, ref_max_4, ref_5, ref_pattern_5, ref_count_5, ref_max_5,"
+		+ " ref_6, ref_pattern_6, ref_count_6, ref_max_6, ref_7, ref_pattern_7, ref_count_7, ref_max_7,"
+		+ " ref_8, ref_pattern_8, ref_count_8, ref_max_8, ref_9, ref_pattern_9, ref_count_9, ref_max_9,"
+		+ " ref_10, ref_pattern_10, ref_count_10, ref_max_10)"
+		+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		try {
+			sfconnection = getConnectionShopFloor();
+			pstSF = sfconnection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+			pstSF.setString(1, l[0]);pstSF.setString(2, l[1]);pstSF.setString(3, l[2]);pstSF.setString(4, l[3]);pstSF.setString(5, l[4]);
+			pstSF.setString(6, l[5]);pstSF.setString(7, l[6]);pstSF.setString(8, l[7]);pstSF.setString(9, l[8]);pstSF.setString(10, l[9]);
+			pstSF.setString(11, l[10]);pstSF.setString(12, l[11]);pstSF.setString(13, l[12]);pstSF.setString(14, l[13]);pstSF.setString(15, l[14]);
+			pstSF.setString(16, l[15]);pstSF.setString(17, l[16]);pstSF.setString(18, l[17]);pstSF.setString(19, l[18]);pstSF.setString(20, l[19]);
+			pstSF.setString(21, l[20]);pstSF.setString(22, l[21]);pstSF.setString(23, l[22]);pstSF.setString(24, l[23]);pstSF.setString(25, l[24]);
+			pstSF.setString(26, l[25]);pstSF.setString(27, l[26]);pstSF.setString(28, l[27]);pstSF.setString(29, l[28]);pstSF.setString(30, l[29]);
+			pstSF.setString(31, l[30]);pstSF.setString(32, l[31]);pstSF.setString(33, l[32]);pstSF.setString(34, l[33]);pstSF.setString(35, l[34]);
+			pstSF.setString(36, l[35]);pstSF.setString(37, l[36]);pstSF.setString(38, l[37]);pstSF.setString(39, l[38]);pstSF.setString(40, l[39]);
+			result = pstSF.executeUpdate();
+			rsSF = pstSF.getGeneratedKeys();
+			if (rsSF != null && rsSF.next()) {
+				result = rsSF.getInt(1);
+				if (result != -1) {
+					if(!updateStationTable(part_number, from_location, to_location, serial_number, result)) result = -1;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			shutdownSF();
+		}
+		return result;
+	}
+	
+	/**
+	 * This function is used for setting up initial condition for Location Configuration
+	 * @param l List of String
+	 * @return Map<String,Boolean>
+	 */
+	public Map<String,Boolean> setUpConfigure(List<String> l) {
+		Map<String,Boolean> map = new HashMap<String,Boolean>();
+		for(String s : l) {
+			map.put(s,false);
+		}
+		return map;
+	}
+	
+	/**
+	 * This function is used for update the relationship between location
+	 * @param map which is Map<String,Boolean>
+	 * @param from which is original location type String
+	 * @param to which is the destination location type String
+	 * @return Map<String,Boolean>
+	 */
+	public Map<String,Boolean> updateConfigure(Map<String,Boolean> map, String from, String to){
+		if(map.get(from) == false && map.get(to) == false) {
+			map.put(from,true);
+		}
+		return map;
+	}
+	
+	/**
+	 * This function is checking if a Location has it own relationship with another Location
+	 * @param map
+	 * @return TRUE or FALSE
+	 */
+	public boolean checkFinishConfigure(Map<String,Boolean> map) {
+		int count = 0;
+		for(int i = 0 ; i < map.size(); i++) {
+			if(map.get(i) == false) count++;
+		}
+		return count == 1;
+	}
+	
+	/**
+	 * This function is used for searching Locations which has not done the configure
+	 * @param map
+	 * @return List<String>
+	 */
+	public List<String> getUnFinishLocationConfigure(Map<String,Boolean> map){
+		List<String> result = new ArrayList<>();
+		if(!checkFinishConfigure(map)) {
+			for (Map.Entry<String, Boolean> entry : map.entrySet()){
+			  String key = entry.getKey();
+			  Boolean value = entry.getValue();
+			  if(value == false) result.add(key);
+			}
+			return result;
+		}else return result;
+		
+		
+	}
+	
+	/**
+	 * This function is used for updating default_station_table right after new UI record has created.
+	 * @param part_number
+	 * @param from_location
+	 * @param to_location
+	 * @param serial_number
+	 * @param ui_id
+	 * @return TRUE or FALSE
+	 */
+	public boolean updateStationTable(String part_number, String from_location, String to_location, String serial_number, int ui_id) {
+		boolean result = false;
+		String station_name = part_number+"_From_"+from_location+"_To_"+to_location;
+		String query = "INSERT INTO default_station_table (station_name, part_number, from_location, to_location, serial_number, ui_id) VALUES (?, ?, ?, ?, ?, ?)";
+		try {
+			sfconnection = getConnectionShopFloor();
+			pstSF = sfconnection.prepareStatement(query);
+			pstSF.setString(1, station_name);
+			pstSF.setString(2, part_number);
+			pstSF.setString(3, from_location);
+			pstSF.setString(4, to_location);
+			pstSF.setString(5, serial_number);
+			pstSF.setLong(6, ui_id);
+			pstSF.executeUpdate();
+			result = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			shutdownSF();
+		}
+		return result;
+	}
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***********************************************************
+	// *                    STATION CONFIGURATION                *
+	// ***********************************************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
 
+	//
 }
