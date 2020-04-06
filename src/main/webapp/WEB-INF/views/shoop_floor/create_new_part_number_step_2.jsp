@@ -74,18 +74,13 @@ li [class*=" icon-"] {
 }
 
 
-html, body{
-  height:100%;
-}
-body{
-  background-color: red;
-}
 .page-header{
   width:100%;
   color:white;
   padding:5px 30px;
   font: normal 18px/1.5 "Lato", "Arial", sans-serif;
   overflow:hidden;
+  
 }
 .demo-nav{
   float:right;
@@ -121,15 +116,6 @@ h1 {
   margin: 0
 }
 
-header {
-  padding-top: 30px;
-  margin-bottom: 30px;
-  text-align:center;
-}
-header p{
-  color:rgba(255,255,255,.6);
-}
-
 .reminder-container {
   margin: 0 auto;
   width: 500px;
@@ -137,13 +123,14 @@ header p{
 }
 
 input[type='text'] {
-  width: 430px;
+  width: 400px;
   height: 50px;
   border: none;
+/*   border-radius : 25px; */
   background-color: transparent;
   font-size: 20px;
   font-weight:300;
-  color: white;
+  color: black;
   float:left;
   padding:5px 10px;
   -webkit-transition: all .3s ease;
@@ -152,6 +139,7 @@ input[type='text'] {
   background-color: rgba(0,0,0,.15);
 }
 input[type='submit']{
+margin: 15px 0px;
   height:50px;
   width:70px;
   padding:10px;
@@ -163,7 +151,7 @@ input[type='submit']{
   cursor:pointer;
   padding:0;
   vertical-align:bottom;
-  font:300 18px "Lato", "Arial", sans-serif;
+  font:500 18px "Lato", "Arial", sans-serif;
 }
 
 button::-moz-focus-inner {
@@ -172,6 +160,7 @@ button::-moz-focus-inner {
 }
 
 input[type='text']:focus {
+/*  border-radius : 25px; */
   outline: none;
 }
 .fa-trash,
@@ -257,6 +246,7 @@ button .fa-trash {
 .reminders li {
   z-index:1;
   font-weight: 400;
+/*    border-radius : 15px; */
   /*box-shadow: 0 7px 0 -4px rgba(0, 0, 0, 0.2);*/
   color: #444;
   text-align: left;
@@ -283,20 +273,9 @@ li[contenteditable='true']{
 }
 
 
-@import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css";
-
-@import url(http://fonts.googleapis.com/css?family=Lato:300, 100, 400);
-
-html {
-  height: 100%;
-  position: relative;
-}
-
 body {
-  background-color: #3498db;
-  font-family: "Lato", sans-serif;
-  height: 2000px;
-  color: white;
+  background-color: #bdc3c7;
+ 
 }
 
 li.new-item {
@@ -496,23 +475,22 @@ body {
   display: inline-block;
 }
 
-input {
-  border: 1px solid transparent;
-  background-color: #f1f1f1;
-  padding: 10px;
-  font-size: 16px;
-}
 
 input[type=text] {
   background-color: #f1f1f1;
-  width: 100%;
+
 }
 
 input[type=submit] {
   background-color: DodgerBlue;
   color: #fff;
   cursor: pointer;
+ padding: 0 ;
+ margin: 0;
+ margin-left: 10px;
+ 	
 }
+
 
 .autocomplete-items {
   position: absolute;
@@ -573,10 +551,17 @@ input[type=submit] {
 			<div class="notification save-notification">Item Saved</div>
 			<div class="reminder-container">
 				<form id="input-form">
-					<input type="text" id="text" placeholder="Remind me to.." /> 
+					<input type="text" id="text" placeholder="Add your stations.." /> 
 					<input type="submit" value="Add" />
 				</form>
+				
+				<form action="<%=request.getContextPath() %>/shopfloor/create_new_partnumber_step2" method="POST">			
 				<ul class="reminders"></ul>
+				<input type="submit" value="Submit" onClick='clearCache()'/>
+				</form>
+				<div class="alert alert-success" role="alert">
+Create New Locations Successfully!
+</div>
 				<footer>
 					<span class="count"></span>
 					<button class="clear-all">Delete All</button>
@@ -589,6 +574,9 @@ input[type=submit] {
 	
 	
 <script>
+function clearCache(){
+	localStorage.clear();
+}
 function autocomplete(inp, arr) {
   /*the autocomplete function takes two arguments,
   the text field element and an array of possible autocompleted values:*/
@@ -690,6 +678,8 @@ var list =[];
 for (var key in locationList) {
 	list.push(locationList[key]);
 }
+
+
 console.log(list);
 /*initiate the autocomplete function on the "myInput" element, and pass along the countries array as possible autocomplete values:*/
 autocomplete(document.getElementById("text"), list);

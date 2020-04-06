@@ -92,7 +92,7 @@
     };
    
     var createReminder = function(id, content, index){
-      var reminder = '<li id="' + id + '">' + content + '</li>',
+      var reminder = '<li id="' + id + '">' + content +'<input name="itemStations" type="hidden" value='+content+'>' + '</li>',
           list = $('.reminders li');
           
       
