@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 
+import com.amazonaws.Request;
 import com.bizcom.MICI_Station.ErrorCode;
 import com.bizcom.database.DBHandler;
 
@@ -34,7 +35,7 @@ public class Create_Part_Number_Step02 extends HttpServlet {
 	private JSONObject jsonMap;
 	private Map<String, Object> mapLocationList = new HashMap<>();
 
-	public Create_Part_Number_Step02() {
+	public Create_Part_Number_Step02() {		
 		try {
 			db.getConnectionAWS();
 			db.getConnectionShopFloor();
@@ -59,7 +60,9 @@ public class Create_Part_Number_Step02 extends HttpServlet {
 		request.setAttribute("model", model);
 		request.setAttribute("desc", desc);
 		request.setAttribute("locationList", jsonMap);
+		request.setAttribute("setHiddenSuccess", "hidden");
 
+		
 		request.getRequestDispatcher("/WEB-INF/views/shoop_floor/create_new_part_number_step_2.jsp").forward(request,
 				response);
 

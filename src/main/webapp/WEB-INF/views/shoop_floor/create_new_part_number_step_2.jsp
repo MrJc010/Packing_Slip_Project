@@ -560,7 +560,7 @@ input[type=submit] {
 				<ul class="reminders"></ul>
 				<input type="submit" value="Submit" onClick='clearCache()'/>
 				</form>
-				<div class="alert alert-success" role="alert">
+				<div class="alert alert-success" role="alert" ${setHiddenSuccess}>
 				Create New Locations Successfully!
 				</div>
 				<footer>
