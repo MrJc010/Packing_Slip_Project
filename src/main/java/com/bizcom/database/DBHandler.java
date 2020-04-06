@@ -2255,13 +2255,14 @@ public class DBHandler {
 	 */
 	public int insertIntoUITable(String part_number, String from_location, String to_location, String serial_number,String[] l) {
 		int result = -1;
-		String query = "INSERT INTO default_ui_table (ref_1, ref_pattern_1, ref_count_1, ref_max_1,"
+		String query = "INSERT INTO default_ui_table (part_number,part_number_pattern,serial_number,serial_number_pattern,"
+		+ "ref_1, ref_pattern_1, ref_count_1, ref_max_1,"
 		+ " ref_2, ref_pattern_2, ref_count_2, ref_max_2, ref_3, ref_pattern_3, ref_count_3, ref_max_3,"
 		+ " ref_4, ref_pattern_4, ref_count_4, ref_max_4, ref_5, ref_pattern_5, ref_count_5, ref_max_5,"
 		+ " ref_6, ref_pattern_6, ref_count_6, ref_max_6, ref_7, ref_pattern_7, ref_count_7, ref_max_7,"
 		+ " ref_8, ref_pattern_8, ref_count_8, ref_max_8, ref_9, ref_pattern_9, ref_count_9, ref_max_9,"
 		+ " ref_10, ref_pattern_10, ref_count_10, ref_max_10)"
-		+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		+ " VALUES (? , ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		try {
 			sfconnection = getConnectionShopFloor();
 			pstSF = sfconnection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -2273,12 +2274,13 @@ public class DBHandler {
 			pstSF.setString(26, l[25]);pstSF.setString(27, l[26]);pstSF.setString(28, l[27]);pstSF.setString(29, l[28]);pstSF.setString(30, l[29]);
 			pstSF.setString(31, l[30]);pstSF.setString(32, l[31]);pstSF.setString(33, l[32]);pstSF.setString(34, l[33]);pstSF.setString(35, l[34]);
 			pstSF.setString(36, l[35]);pstSF.setString(37, l[36]);pstSF.setString(38, l[37]);pstSF.setString(39, l[38]);pstSF.setString(40, l[39]);
+			pstSF.setString(41, l[40]);pstSF.setString(42, l[41]);pstSF.setString(43, l[42]);pstSF.setString(44, l[43]);
 			result = pstSF.executeUpdate();
 			rsSF = pstSF.getGeneratedKeys();
 			if (rsSF != null && rsSF.next()) {
 				result = rsSF.getInt(1);
 				if (result != -1) {
-					if(!updateStationTable(part_number, from_location, to_location, serial_number, result)) result = -1;
+					if(!updateStationTable(part_number, from_location, to_location, result)) result = -1;
 				}
 			}
 		} catch (Exception e) {
@@ -2357,10 +2359,10 @@ public class DBHandler {
 	 * @param ui_id
 	 * @return TRUE or FALSE
 	 */
-	public boolean updateStationTable(String part_number, String from_location, String to_location, String serial_number, int ui_id) {
+	public boolean updateStationTable(String part_number, String from_location, String to_location, int ui_id) {
 		boolean result = false;
 		String station_name = part_number+"_From_"+from_location+"_To_"+to_location;
-		String query = "INSERT INTO default_station_table (station_name, part_number, from_location, to_location, serial_number, ui_id) VALUES (?, ?, ?, ?, ?, ?)";
+		String query = "INSERT INTO default_station_table (station_name, part_number, from_location, to_location, ui_id) VALUES (?, ?, ?, ?, ?)";
 		try {
 			sfconnection = getConnectionShopFloor();
 			pstSF = sfconnection.prepareStatement(query);
@@ -2368,8 +2370,7 @@ public class DBHandler {
 			pstSF.setString(2, part_number);
 			pstSF.setString(3, from_location);
 			pstSF.setString(4, to_location);
-			pstSF.setString(5, serial_number);
-			pstSF.setLong(6, ui_id);
+			pstSF.setLong(5, ui_id);
 			pstSF.executeUpdate();
 			result = true;
 		} catch (Exception e) {
