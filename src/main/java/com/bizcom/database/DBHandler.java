@@ -2252,7 +2252,7 @@ public class DBHandler {
 	 * @param l String[]
 	 * @return TRUE or FALSE
 	 */
-	public int insertIntoUITable(String part_number, String from_location, String to_location, String serial_number,String[] l) {
+	public int insertIntoUITable(String part_number, String from_location, String to_location,String[] l) {
 		int result = -1;
 		String query = "INSERT INTO default_ui_table (part_number,part_number_pattern,serial_number,serial_number_pattern,"
 		+ "ref_1, ref_pattern_1, ref_count_1, ref_max_1,"
@@ -2435,6 +2435,30 @@ public class DBHandler {
 	// ***************************START***************************
 	// ***************************START***************************
 	// ***************************START***************************
+	
+	/**
+	 * This function is used for getting station name for given part number
+	 * @param part_number
+	 * @return List<String>
+	 */
+	public List<String> getStationName(String part_number){
+		List<String> result = new ArrayList<String>();
+		String query = "SELECT station_name FROM default_station_table WHERE part_number = ?";
+		try {
+			sfconnection = getConnectionShopFloor();
+			pstSF = sfconnection.prepareStatement(query);
+			pstSF.setString(1, part_number);
+			rsSF = pstSF.executeQuery();
+			while (rsSF.next()) {
+				result.add(rsSF.getString("station_name"));
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			shutdownSF();
+		}
+		return result;
+	}
 	
 	/**
 	 * This function is used for loading configuration of a function based on part number, from location and to location
