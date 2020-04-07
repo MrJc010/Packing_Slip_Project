@@ -29,10 +29,10 @@
 				<!-- Operate Type -->
 
 				<div class="form-group row my-4">
-					<label for="operateType" class="col-md-2 col-form-label">Station
+					<label for="stationAvaiable" class="col-md-2 col-form-label">Station
 						Config </label>
 					<div class="col-md-4">
-						<select id="operateType" class="custom-select">
+						<select id="stationAvaiable" name="stationAvaiable" class="custom-select">
 							<option selected>Select</option>
 							<option value="1">One</option>
 							<option value="2">Two</option>
@@ -93,12 +93,12 @@
 				<div class="form-inline my-4">
 					<div class="form-group">
 						<label for="serialnumber" class="mr-4">Serial Number</label> <input
-							if="serialnumber" type="text" value="${serialnumber}"
+							if="serialnumber" type="text" name="serialnumber" value="${serialnumber}"
 							class="form-control ml-5">
 					</div>
 					<div class="form-group ml-5">
 						<label for="snPattern" class="mr-4">Serial Number Pattern</label>
-						<input id="snPattern" type="text" class="form-control ml-5">
+						<input id="snPattern" name="snPattern" type="text" class="form-control ml-5">
 					</div>
 				</div>
 
@@ -106,26 +106,26 @@
 				<div class="form-inline my-4">
 					<div class="form-group">
 						<label for="partNumber" class="mr-4">Part Number</label> <input
-							if="partNumber" type="text" class="form-control ml-5">
+							if="partNumber" name="partNumber" type="text" class="form-control ml-5">
 					</div>
 					<div class="form-group ml-5">
 						<label for="patternPN" class="mr-4">Part Number Pattern</label> <input
-							id="patternPN" type="text" class="form-control ml-5">
+							id="patternPN" name="patternPN" type="text" class="form-control ml-5">
 					</div>
 				</div>
 				<!-- Ref_1 -->
 				<div class="form-inline  my-4">
 					<div class="form-group">
-						<label for="ref1Name" class="mr-4">Ref_1 Name</label> <input
-							if="ref1Name" type="text" class="form-control">
+						<label for="Ref_1Name" class="mr-4">Ref_1 Name</label> <input
+							if="Ref_1Name" name="Ref_1Name" type="text" class="form-control">
 					</div>
 					<div class="form-group ml-5">
 						<label for="ref1Pattern" class="mr-4">Ref_1 Pattern</label> <input
-							id="ref1Pattern" type="text" class="form-control">
+							id="ref1Pattern" name="ref1Pattern" type="text" class="form-control">
 					</div>
 					<div class="form-group ml-5">
 						<label for="count_Ref1Pattern" class="mr-4">Count</label> <select
-							id="count_Ref1Pattern" class="custom-select">
+							id="count_Ref1Pattern" name="count_Ref1Pattern" class="custom-select">
 							<option selected>Select</option>
 							<option value="1">Yes</option>
 							<option value="2">No</option>
@@ -133,7 +133,7 @@
 					</div>
 					<div class="form-group ml-5">
 						<label for="maxref1Pattern" class="mr-4">Max_Count</label> <input
-							id="maxref1Pattern" type="number" class="form-control">
+							id="maxref1Pattern" name="maxref1Pattern" type="number" class="form-control">
 					</div>
 				</div>
 
@@ -141,15 +141,15 @@
 				<div class="form-inline  my-4">
 					<div class="form-group">
 						<label for="Ref_2Name" class="mr-4">Ref_2 Name</label> <input
-							if="Ref_2Name" type="text" class="form-control">
+							if="Ref_2Name" name="Ref_2Name" type="text" class="form-control">
 					</div>
 					<div class="form-group ml-5">
 						<label for="Ref_2Pattern" class="mr-4">Ref_2 Pattern</label> <input
-							id="Ref_2Pattern" type="text" class="form-control">
+							id="Ref_2Pattern" name="Ref_2Pattern" type="text" class="form-control">
 					</div>
 					<div class="form-group ml-5">
 						<label for="count_Ref_2Pattern" class="mr-4">Count</label> <select
-							id="count_Ref_2Pattern" class="custom-select">
+							id="count_Ref_2Pattern" name="count_Ref_2Pattern" class="custom-select">
 							<option selected>Select</option>
 							<option value="1">Yes</option>
 							<option value="2">No</option>
@@ -157,7 +157,7 @@
 					</div>
 					<div class="form-group ml-5">
 						<label for="maxRef_2Pattern" class="mr-4">Max_Count</label> <input
-							id="maxRef_2Pattern" type="number" class="form-control">
+							id="maxRef_2Pattern" name="maxRef_2Pattern" type="number" class="form-control">
 					</div>
 				</div>
 
@@ -166,15 +166,15 @@
 				<div class="form-inline  my-4">
 					<div class="form-group">
 						<label for="Ref_3Name" class="mr-4">Ref_3 Name</label> <input
-							if="Ref_3Name" type="text" class="form-control">
+							if="Ref_3Name" name="Ref_3Name" type="text" class="form-control">
 					</div>
 					<div class="form-group ml-5">
 						<label for="Ref_3Pattern" class="mr-4">Ref_3 Pattern</label> <input
-							id="Ref_3Pattern" type="text" class="form-control">
+							id="Ref_3Pattern" name="Ref_3Pattern" type="text" class="form-control">
 					</div>
 					<div class="form-group ml-5">
 						<label for="count_Ref_3Pattern" class="mr-4">Count</label> <select
-							id="count_Ref_3Pattern" class="custom-select">
+							id="count_Ref_3Pattern" name="count_Ref_3Pattern" class="custom-select">
 							<option selected>Select</option>
 							<option value="1">Yes</option>
 							<option value="2">No</option>
@@ -182,7 +182,7 @@
 					</div>
 					<div class="form-group ml-5">
 						<label for="maxRef_3Pattern" class="mr-4">Max_Count</label> <input
-							id="maxRef_3Pattern" type="number" class="form-control">
+							id="maxRef_3Pattern" name="maxRef_3Pattern" type="number" class="form-control">
 					</div>
 				</div>
 
@@ -191,14 +191,14 @@
 				<div class="form-inline  my-4">
 					<div class="form-group">
 						<label for="Ref_4Name" class="mr-4">Ref_4 Name</label> <input
-							if="Ref_4Name" type="text" class="form-control">
+							if="Ref_4Name" name="Ref_4Name" type="text" class="form-control">
 					</div>
 					<div class="form-group ml-5">
 						<label for="Ref_4Pattern" class="mr-4">Ref_4 Pattern</label> <input
-							id="Ref_4Pattern" type="text" class="form-control">
+							id="Ref_4Pattern" name="Ref_4Pattern" type="text" class="form-control">
 					</div>
 					<div class="form-group ml-5">
-						<label for="count_Ref_4Pattern" class="mr-4">Count</label> <select
+						<label for="count_Ref_4Pattern" class="mr-4">Count</label> <select name="count_Ref_4Pattern"
 							id="count_Ref_4Pattern" class="custom-select">
 							<option selected>Select</option>
 							<option value="1">Yes</option>
@@ -207,7 +207,7 @@
 					</div>
 					<div class="form-group ml-5">
 						<label for="maxRef_4Pattern" class="mr-4">Max_Count</label> <input
-							id="maxRef_4Pattern" type="number" class="form-control">
+							id="maxRef_4Pattern" name="maxRef_4Pattern" type="number" class="form-control">
 					</div>
 				</div>
 
@@ -217,15 +217,15 @@
 				<div class="form-inline  my-4">
 					<div class="form-group">
 						<label for="Ref_5Name" class="mr-4">Ref_5 Name</label> <input
-							if="Ref_5Name" type="text" class="form-control">
+							if="Ref_5Name" name="Ref_5Name" type="text" class="form-control">
 					</div>
 					<div class="form-group ml-5">
 						<label for="Ref_5Pattern" class="mr-4">Ref_5 Pattern</label> <input
-							id="Ref_5Pattern" type="text" class="form-control">
+							id="Ref_5Pattern" name="Ref_5Pattern" type="text" class="form-control">
 					</div>
 					<div class="form-group ml-5">
 						<label for="count_Ref_5Pattern" class="mr-4">Count</label> <select
-							id="count_Ref_5Pattern" class="custom-select">
+							id="count_Ref_5Pattern" name="count_Ref_5Pattern" class="custom-select">
 							<option selected>Select</option>
 							<option value="1">Yes</option>
 							<option value="2">No</option>
@@ -233,7 +233,7 @@
 					</div>
 					<div class="form-group ml-5">
 						<label for="maxRef_5Pattern" class="mr-4">Max_Count</label> <input
-							id="maxRef_5Pattern" type="number" class="form-control">
+							id="maxRef_5Pattern" name="maxRef_5Pattern" type="number" class="form-control">
 					</div>
 				</div>
 
@@ -242,15 +242,15 @@
 				<div class="form-inline  my-4">
 					<div class="form-group">
 						<label for="Ref_6Name" class="mr-4">Ref_6 Name</label> <input
-							if="Ref_6Name" type="text" class="form-control">
+							if="Ref_6Name" name="Ref_6Name" type="text" class="form-control">
 					</div>
 					<div class="form-group ml-5">
 						<label for="Ref_6Pattern" class="mr-4">Ref_6 Pattern</label> <input
-							id="Ref_6Pattern" type="text" class="form-control">
+							id="Ref_6Pattern" name="Ref_6Pattern" type="text" class="form-control">
 					</div>
 					<div class="form-group ml-5">
 						<label for="count_Ref_6Pattern" class="mr-4">Count</label> <select
-							id="count_Ref_6Pattern" class="custom-select">
+							id="count_Ref_6Pattern" name="count_Ref_6Pattern" class="custom-select">
 							<option selected>Select</option>
 							<option value="1">Yes</option>
 							<option value="2">No</option>
@@ -258,7 +258,7 @@
 					</div>
 					<div class="form-group ml-5">
 						<label for="maxRef_6Pattern" class="mr-4">Max_Count</label> <input
-							id="maxRef_6Pattern" type="number" class="form-control">
+							id="maxRef_6Pattern" name="maxRef_6Pattern" type="number" class="form-control">
 					</div>
 				</div>
 
@@ -266,15 +266,15 @@
 				<div class="form-inline  my-4">
 					<div class="form-group">
 						<label for="Ref_7Name" class="mr-4">Ref_7 Name</label> <input
-							if="Ref_7Name" type="text" class="form-control">
+							if="Ref_7Name" name="Ref_7Name" type="text" class="form-control">
 					</div>
 					<div class="form-group ml-5">
 						<label for="Ref_7Pattern" class="mr-4">Ref_7 Pattern</label> <input
-							id="Ref_7Pattern" type="text" class="form-control">
+							id="Ref_7Pattern" name="Ref_7Pattern" type="text" class="form-control">
 					</div>
 					<div class="form-group ml-5">
 						<label for="count_Ref_7Pattern" class="mr-4">Count</label> <select
-							id="count_Ref_7Pattern" class="custom-select">
+							id="count_Ref_7Pattern" name="count_Ref_7Pattern" class="custom-select">
 							<option selected>Select</option>
 							<option value="1">Yes</option>
 							<option value="2">No</option>
@@ -282,7 +282,7 @@
 					</div>
 					<div class="form-group ml-5">
 						<label for="maxRef_7Pattern" class="mr-4">Max_Count</label> <input
-							id="maxRef_7Pattern" type="number" class="form-control">
+							id="maxRef_7Pattern" name="maxRef_7Pattern" type="number" class="form-control">
 					</div>
 				</div>
 
@@ -290,15 +290,15 @@
 				<div class="form-inline  my-4">
 					<div class="form-group">
 						<label for="Ref_8Name" class="mr-4">Ref_8 Name</label> <input
-							if="Ref_8Name" type="text" class="form-control">
+							if="Ref_8Name" name="Ref_8Name" type="text" class="form-control">
 					</div>
 					<div class="form-group ml-5">
 						<label for="Ref_8Pattern" class="mr-4">Ref_8 Pattern</label> <input
-							id="Ref_8Pattern" type="text" class="form-control">
+							id="Ref_8Pattern" name="Ref_8Pattern" type="text" class="form-control">
 					</div>
 					<div class="form-group ml-5">
 						<label for="count_Ref_8Pattern" class="mr-4">Count</label> <select
-							id="count_Ref_8Pattern" class="custom-select">
+							id="count_Ref_8Pattern" name="count_Ref_8Pattern" class="custom-select">
 							<option selected>Select</option>
 							<option value="1">Yes</option>
 							<option value="2">No</option>
@@ -306,7 +306,7 @@
 					</div>
 					<div class="form-group ml-5">
 						<label for="maxRef_8Pattern" class="mr-4">Max_Count</label> <input
-							id="maxRef_8Pattern" type="number" class="form-control">
+							id="maxRef_8Pattern" name="maxRef_8Pattern" type="number" class="form-control">
 					</div>
 				</div>
 
@@ -315,15 +315,15 @@
 				<div class="form-inline  my-4">
 					<div class="form-group">
 						<label for="Ref_9Name" class="mr-4">Ref_9 Name</label> <input
-							if="Ref_9Name" type="text" class="form-control">
+							if="Ref_9Name" name="Ref_9Name" type="text" class="form-control">
 					</div>
 					<div class="form-group ml-5">
 						<label for="Ref_9Pattern" class="mr-4">Ref_9 Pattern</label> <input
-							id="Ref_9Pattern" type="text" class="form-control">
+							id="Ref_9Pattern" name="Ref_9Pattern" type="text" class="form-control">
 					</div>
 					<div class="form-group ml-5">
 						<label for="count_Ref_9Pattern" class="mr-4">Count</label> <select
-							id="count_Ref_9Pattern" class="custom-select">
+							id="count_Ref_9Pattern" name="count_Ref_9Pattern" class="custom-select">
 							<option selected>Select</option>
 							<option value="1">Yes</option>
 							<option value="2">No</option>
@@ -331,7 +331,7 @@
 					</div>
 					<div class="form-group ml-5">
 						<label for="maxRef_9Pattern" class="mr-4">Max_Count</label> <input
-							id="maxRef_9Pattern" type="number" class="form-control">
+							id="maxRef_9Pattern" name="maxRef_9Pattern" type="number" class="form-control">
 					</div>
 				</div>
 
@@ -339,15 +339,15 @@
 				<div class="form-inline  my-4">
 					<div class="form-group">
 						<label for="Ref_10Name" class="mr-4">Ref_10 Name</label> <input
-							if="Ref_10Name" type="text" class="form-control">
+							if="Ref_10Name" name="Ref_10Name" type="text" class="form-control">
 					</div>
 					<div class="form-group ml-5">
 						<label for="Ref_10Pattern" class="mr-4">Ref_10 Pattern</label> <input
-							id="Ref_10Pattern" type="text" class="form-control">
+							id="Ref_10Pattern" name="Ref_10Pattern" type="text" class="form-control">
 					</div>
 					<div class="form-group ml-5">
 						<label for="count_Ref_10Pattern" class="mr-4">Count</label> <select
-							id="count_Ref_10Pattern" class="custom-select">
+							id="count_Ref_10Pattern" name="count_Ref_10Pattern" class="custom-select">
 							<option selected>Select</option>
 							<option value="1">Yes</option>
 							<option value="2">No</option>
@@ -355,7 +355,7 @@
 					</div>
 					<div class="form-group ml-5">
 						<label for="maxRef_10Pattern" class="mr-4">Max_Count</label> <input
-							id="maxRef_10Pattern" type="number" class="form-control">
+							id="maxRef_10Pattern" name="maxRef_10Pattern" type="number" class="form-control">
 					</div>
 				</div>
 				<!-- Comparison  -->
@@ -371,7 +371,7 @@
 					<label for="userList" class="col-md-1 col-form-label">User:
 					</label>
 					<div class="col-md-4">
-						<input type="text" class="form-control" id="userList"
+						<input type="text" class="form-control" id="userList" name="userList"
 							value="${userList}" />
 					</div>
 				</div>
