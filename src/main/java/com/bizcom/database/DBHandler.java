@@ -2266,8 +2266,13 @@ public class DBHandler {
 		try {
 			sfconnection = getConnectionShopFloor();
 			pstSF = sfconnection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-			pstSF.setString(1, l[0]);pstSF.setString(2, l[1]);pstSF.setString(3, l[2]);pstSF.setString(4, l[3]);pstSF.setString(5, l[4]);
-			pstSF.setString(6, l[5]);pstSF.setString(7, l[6]);pstSF.setString(8, l[7]);pstSF.setString(9, l[8]);pstSF.setString(10, l[9]);
+			pstSF.setString(1, l[0]);
+			pstSF.setString(2, l[1]);
+			pstSF.setString(3, l[2]);
+			pstSF.setString(4, l[3]);
+			pstSF.setString(5, l[4]);
+			pstSF.setString(6, l[5]);
+			pstSF.setString(7, l[6]);pstSF.setString(8, l[7]);pstSF.setString(9, l[8]);pstSF.setString(10, l[9]);
 			pstSF.setString(11, l[10]);pstSF.setString(12, l[11]);pstSF.setString(13, l[12]);pstSF.setString(14, l[13]);pstSF.setString(15, l[14]);
 			pstSF.setString(16, l[15]);pstSF.setString(17, l[16]);pstSF.setString(18, l[17]);pstSF.setString(19, l[18]);pstSF.setString(20, l[19]);
 			pstSF.setString(21, l[20]);pstSF.setString(22, l[21]);pstSF.setString(23, l[22]);pstSF.setString(24, l[23]);pstSF.setString(25, l[24]);
@@ -2280,7 +2285,7 @@ public class DBHandler {
 			if (rsSF != null && rsSF.next()) {
 				result = rsSF.getInt(1);
 				if (result != -1) {
-					int rule_id = insertIntoRulesTable(result,l[44]);
+					int rule_id = insertIntoRulesTable(result,l[43]);
 					if(rule_id != -1 && !updateStationTable(part_number, from_location, to_location, result, rule_id,"userId")) result = -1;
 				}
 			}
