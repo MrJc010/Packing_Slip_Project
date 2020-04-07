@@ -19,6 +19,10 @@ import com.bizcom.database.DBHandler;
 public class StationConfig extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private String partNumberURL ="";
+	
+	private List<List<String>> listAvaiStations = new ArrayList<List<String>>();
+	private List<String> avaiStationsDropDown = new ArrayList<>();
+	private String avaiStationsDropDownSelected = "";
     private ArrayList<String> listStations = new ArrayList<>();
     private DBHandler db = new DBHandler();
     private String fromLocation = "";
@@ -108,6 +112,17 @@ public class StationConfig extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		partNumberURL = request.getParameter("partNumber");
+		if(partNumberURL!= null && !partNumberURL.isEmpty()) {
+			listAvaiStations.clear();
+			avaiStationsDropDown.clear();
+			listAvaiStations.addAll(db.getStationInfor(partNumberURL));
+			for(List<String> l : listAvaiStations) {
+				avaiStationsDropDown.add(l.get(0));
+			}
+			if(!avaiStationsDropDown.isEmpty()) {
+				request.setAttribute("avaiStationsDropDown", avaiStationsDropDown);
+			}
+		}
 		request.setAttribute("listStations", listStations);
 		
 		if(fromLocation!= null && !fromLocation.isEmpty()) {
@@ -116,6 +131,9 @@ public class StationConfig extends HttpServlet {
 		if(toLocation!= null && !toLocation.isEmpty()) {
 			request.setAttribute("toLocationValue", toLocation);
 		}
+		if(avaiStationsDropDownSelected!= null && !avaiStationsDropDownSelected.isEmpty()) {
+			request.setAttribute("avaiStationsDropDownSelected", avaiStationsDropDownSelected);
+		}
 		request.getRequestDispatcher("/WEB-INF/views/shoop_floor/StationConfig.jsp").forward(request, response);
 	}
 
@@ -123,7 +141,8 @@ public class StationConfig extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("doPost");
 		getAllInput(request, response);
-		System.out.println(toString());
+//		System.out.println(toString());
+		
 		doGet(request, response);
 	}
 	
@@ -203,7 +222,7 @@ public class StationConfig extends HttpServlet {
 					Ref_10Name,Ref_10Pattern,count_Ref_10Pattern,maxRef_10Pattern,
 					comparison.trim()
 			};
-			System.out.println("int insertIntoUITable's result " + db.insertIntoUITable(partNumberURL, fromLocation, toLocation, lTemp));
+//			System.out.println("int insertIntoUITable's result " + db.insertIntoUITable(partNumberURL, fromLocation, toLocation, lTemp));
 		}catch(Exception e) {
 			
 		}

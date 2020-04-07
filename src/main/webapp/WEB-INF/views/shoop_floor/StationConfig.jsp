@@ -33,10 +33,15 @@
 						Config </label>
 					<div class="col-md-4">
 						<select id="stationAvaiable" name="stationAvaiable" class="custom-select">
-							<option selected>Select</option>
-							<option value="1">One</option>
-							<option value="2">Two</option>
-							<option value="3">Three</option>
+						<option value="">Select</option>
+						<c:forEach var="item" items="${avaiStationsDropDown}">
+						<c:if test="${item == avaiStationsDropDownSelected}">
+									<option selected value="${item}">${item}</option>
+								</c:if>
+								<c:if test="${avaiStationsDropDownSelected != item}">
+									<option value="${item}">${item}</option>
+								</c:if>
+						</c:forEach>														
 						</select>
 					</div>
 				</div>
@@ -59,7 +64,7 @@
 					<div class="form-group mr-5">
 						<label for="fromLocation" class="">From location</label> <select
 							id="fromLocation" name="fromLocation" class="custom-select ml-5">
-							<option>Select Location</option>
+							<option value="">Select Location</option>
 							<option value="BIZ_START">BIZ_START</option>
 							<c:forEach var="aStation" items="${listStations}">
 								<c:if test="${aStation == fromLocationValue}">
@@ -76,7 +81,7 @@
 					<div class="form-group ml-5">
 						<label for="toLocation" class="mr-5">From location</label> <select
 							name="toLocation" id="toLocation" class="custom-select">
-							<option>Select Location</option>
+							<option value="">Select Location</option>
 							<c:forEach var="aStation" items="${listStations}">
 								<c:if test="${aStation == toLocationValue}">
 									<option selected value="${aStation}">${aStation}</option>

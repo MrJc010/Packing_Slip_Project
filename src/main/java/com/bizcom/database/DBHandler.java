@@ -2446,16 +2446,21 @@ public class DBHandler {
 	 * @param part_number
 	 * @return List<String>
 	 */
-	public List<String> getStationName(String part_number){
-		List<String> result = new ArrayList<String>();
-		String query = "SELECT station_name FROM default_station_table WHERE part_number = ?";
+	public List<List<String>> getStationInfor(String part_number){
+		List<List<String>> result = new ArrayList<List<String>>();
+		String query = "SELECT station_name,part_number,from_location,to_location FROM default_station_table WHERE part_number = ?";
 		try {
 			sfconnection = getConnectionShopFloor();
 			pstSF = sfconnection.prepareStatement(query);
 			pstSF.setString(1, part_number);
 			rsSF = pstSF.executeQuery();
 			while (rsSF.next()) {
-				result.add(rsSF.getString("station_name"));
+				List<String> temp = new ArrayList<>();
+				temp.add(rsSF.getString("station_name"));
+				temp.add(rsSF.getString("part_number"));
+				temp.add(rsSF.getString("from_location"));
+				temp.add(rsSF.getString("to_location"));
+				result.add(temp);
 			}
 		}catch (Exception e) {
 			e.printStackTrace();
