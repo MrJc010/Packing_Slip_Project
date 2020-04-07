@@ -84,9 +84,11 @@ public class Create_Part_Number_Step02 extends HttpServlet {
 			}
 		}
 
+		
 		// listItems
 
-		doGet(request, response);
+//		doGet(request, response);
+		response.sendRedirect(request.getContextPath()+"/shopfloor/station_config_step_3?partNumber=" + partNumber);
 	}
 
 }

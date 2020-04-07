@@ -18,6 +18,7 @@ import com.bizcom.database.DBHandler;
 @WebServlet("/shopfloor/station_config_step_3")
 public class StationConfig extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private String partNumberURL ="";
     private ArrayList<String> listStations = new ArrayList<>();
     private DBHandler db = new DBHandler();
     private String fromLocation = "";
@@ -91,6 +92,7 @@ public class StationConfig extends HttpServlet {
     private String maxRef_10Pattern = "";
     
 	public StationConfig() {
+		
 		if(listStations.size() != db.getAllLocationTableName().size()) {
 			listStations.clear();
 			List<String> tempArrays = db.getAllLocationTableName();
@@ -105,6 +107,7 @@ public class StationConfig extends HttpServlet {
 
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		partNumberURL = request.getParameter("partNumber");
 		request.setAttribute("listStations", listStations);
 		
 		if(fromLocation!= null && !fromLocation.isEmpty()) {
@@ -200,7 +203,7 @@ public class StationConfig extends HttpServlet {
 					Ref_10Name,Ref_10Pattern,count_Ref_10Pattern,maxRef_10Pattern,
 					comparison.trim()
 			};
-			System.out.println("int insertIntoUITable's result " + db.insertIntoUITable(partNumber, fromLocation, toLocation, lTemp));
+			System.out.println("int insertIntoUITable's result " + db.insertIntoUITable(partNumberURL, fromLocation, toLocation, lTemp));
 		}catch(Exception e) {
 			
 		}

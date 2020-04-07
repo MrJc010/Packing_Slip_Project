@@ -2252,7 +2252,7 @@ public class DBHandler {
 	 * @param l String[]
 	 * @return TRUE or FALSE
 	 */
-	public int insertIntoUITable(String part_number, String from_location, String to_location, String serial_number,String[] l) {
+	public int insertIntoUITable(String part_number, String from_location, String to_location,String[] l) {
 		int result = -1;
 		String query = "INSERT INTO default_ui_table (part_number,part_number_pattern,serial_number,serial_number_pattern,"
 		+ "ref_1, ref_pattern_1, ref_count_1, ref_max_1,"
@@ -2284,7 +2284,7 @@ public class DBHandler {
 			if (rsSF != null && rsSF.next()) {
 				result = rsSF.getInt(1);
 				if (result != -1) {
-					int rule_id = insertIntoRulesTable(result,l[43]);
+					int rule_id = insertIntoRulesTable(result,l[44]);					
 					if(rule_id != -1 && !updateStationTable(part_number, from_location, to_location, result, rule_id,"userId")) result = -1;
 				}
 			}

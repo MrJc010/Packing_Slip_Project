@@ -20,8 +20,8 @@ public class test {
 //		System.out.println(db.addingNewRef("testing_table","ref_1"));
 //		//System.out.println(db.deleteRef("testing_table","ref_1"));
 //		System.out.println(db.renameRef("testing_table","test","newRef"));
-		String[] l = new String[]{"","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""};
-		System.out.println(db.insertIntoUITable("test name","partnumber","from","to",l));
+		String[] l = new String[]{"","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","abc"};
+		System.out.println(db.insertIntoUITable("part","A","B",l));
 		
 		
     }
