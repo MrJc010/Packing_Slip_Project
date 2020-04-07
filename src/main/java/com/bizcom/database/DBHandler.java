@@ -481,7 +481,6 @@ public class DBHandler {
 		} finally {
 			shutdown();
 		}
-
 		return result;
 	}
 
@@ -2410,6 +2409,7 @@ public class DBHandler {
 		}
 		return result;
 	}
+	
 	// ***************************END*****************************
 	// ***************************END*****************************
 	// ***************************END*****************************
@@ -2421,8 +2421,204 @@ public class DBHandler {
 	// ***************************END*****************************
 	// ***************************END*****************************
 	// ***************************END*****************************
-
-	//
+	
+	
+	
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***********************************************************
+	// *                    LOAD STATION CONFIGURATION           *
+	// ***********************************************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
+	
+	/**
+	 * This function is used for loading configuration of a function based on part number, from location and to location
+	 * @param partNumber
+	 * @param fromLocation
+	 * @param toLocation
+	 * @return String[]
+	 */
+	public String[] loadConfigure(String partNumber, String fromLocation, String toLocation) {
+		String[] result = new String[44];
+		String query = "SELECT * FROM default_station_table,default_ui_table,default_rules_table "
+		+ "WHERE default_station_table.part_number = ? AND default_station_table.from_location = ? "
+		+ "AND default_station_table.to_location = ? AND default_rules_table.count "
+		+ "IN ( SELECT default_station_table.rules_id FROM default_station_table "
+		+ "WHERE default_station_table.part_number = ? AND default_station_table.from_location = ? "
+		+ "AND default_station_table.to_location = ?) AND  default_ui_table.count "
+		+ "IN ( SELECT default_station_table.ui_id FROM default_station_table WHERE default_station_table.part_number = ? "
+		+ "AND default_station_table.from_location = ? AND default_station_table.to_location = ?)";
+		try {
+			sfconnection = getConnectionShopFloor();
+			pstSF = sfconnection.prepareStatement(query);
+			pstSF.setString(1, partNumber);
+			pstSF.setString(2, fromLocation);
+			pstSF.setString(3, toLocation);
+			pstSF.setString(4, partNumber);
+			pstSF.setString(5, fromLocation);
+			pstSF.setString(6, toLocation);
+			pstSF.setString(7, partNumber);
+			pstSF.setString(8, fromLocation);
+			pstSF.setString(9, toLocation);
+			rsSF = pstSF.executeQuery();
+			while (rsSF.next()) {
+				result[0] = rsSF.getString("part_number");result[1] = rsSF.getString("part_number_pattern");
+				result[2] = rsSF.getString("serial_number");result[3] = rsSF.getString("serial_number_pattern");
+				result[4] = rsSF.getString("ref_1");result[5] = rsSF.getString("ref_pattern_1");
+				result[6] = rsSF.getString("ref_count_1");result[7] = rsSF.getString("ref_max_1");
+				result[8] = rsSF.getString("ref_2");result[9] = rsSF.getString("ref_pattern_2");
+				result[10] = rsSF.getString("ref_count_2");result[11] = rsSF.getString("ref_max_2");
+				result[12] = rsSF.getString("ref_3");result[13] = rsSF.getString("ref_pattern_3");
+				result[14] = rsSF.getString("ref_count_3");result[15] = rsSF.getString("ref_max_3");
+				result[16] = rsSF.getString("ref_4");result[17] = rsSF.getString("ref_pattern_4");
+				result[18] = rsSF.getString("ref_count_4");result[19] = rsSF.getString("ref_max_4");
+				result[20] = rsSF.getString("ref_5");result[21] = rsSF.getString("ref_pattern_5");
+				result[22] = rsSF.getString("ref_count_5");result[23] = rsSF.getString("ref_max_5");
+				result[24] = rsSF.getString("ref_6");result[25] = rsSF.getString("ref_pattern_6");
+				result[26] = rsSF.getString("ref_count_6");result[27] = rsSF.getString("ref_max_6");
+				result[28] = rsSF.getString("ref_7");result[29] = rsSF.getString("ref_pattern_7");
+				result[30] = rsSF.getString("ref_count_7");result[31] = rsSF.getString("ref_max_7");
+				result[32] = rsSF.getString("ref_8");result[33] = rsSF.getString("ref_pattern_8");
+				result[34] = rsSF.getString("ref_count_8");result[35] = rsSF.getString("ref_max_8");
+				result[36] = rsSF.getString("ref_9");result[37] = rsSF.getString("ref_pattern_9");
+				result[38] = rsSF.getString("ref_count_9");result[39] = rsSF.getString("ref_max_9");
+				result[40] = rsSF.getString("ref_10");result[41] = rsSF.getString("ref_pattern_10");
+				result[42] = rsSF.getString("ref_count_10");result[43] = rsSF.getString("ref_max_10");
+				result[44] = rsSF.getString("rule");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			shutdownSF();
+		}
+		return result;
+	}
+	
+	/**
+	 * This function is used for updating the UI configure
+	 * @param count
+	 * @param list
+	 * @return TRUE or FALSE
+	 */
+	public boolean updateUIConfigure(int count, String[] list) {
+		boolean result = false;
+		String query = "UPDATE default_ui_table SET part_number = ?, part_number_pattern = ?, serial_number = ?, serial_number_pattern = ?, "
+		+ "ref_1 = ?, ref_pattern_1 = ?, ref_count_1 = ?, ref_max_1 = ?, ref_2 = ?, ref_pattern_2 = ?, ref_count_2 = ?, ref_max_2 = ?, ref_3 = ?, "
+		+ "ref_pattern_3 = ?, ref_count_3 = ?, ref_max_3 = ?, ref_4 = ?, ref_pattern_4 = ?, ref_count_4 = ?, ref_max_4 = ?, ref_5 = ?, ref_pattern_5 = ?, "
+		+ "ref_count_5 = ?, ref_max_5 = ?, ref_6 = ?, ref_pattern_6 = ?, ref_count_6 = ?, ref_max_6 = ?, ref_7 = ?, ref_pattern_7 = ?, ref_count_7 = ?, "
+		+ "ref_max_7 = ?, ref_8 = ?, ref_pattern_8 = ?, ref_count_8 = ?, ref_max_8 = ?, ref_9 = ?, ref_pattern_9 = ?, ref_count_9 = ?, ref_max_9 = ?, "
+		+ "ref_10 = ?, ref_pattern_10 = ?, ref_count_10 = ?, ref_max_10 = ? WHERE (count = ?);";
+		try {
+			sfconnection = getConnectionShopFloor();
+			pstSF = sfconnection.prepareStatement(query);
+			pstSF.setString(1, list[0]);pstSF.setString(2, list[1]);
+			pstSF.setString(3, list[2]);pstSF.setString(4, list[3]);
+			pstSF.setString(5, list[4]);pstSF.setString(6, list[5]);
+			pstSF.setString(7, list[6]);pstSF.setString(8, list[7]);
+			pstSF.setString(9, list[8]);pstSF.setString(10, list[9]);
+			pstSF.setString(11, list[10]);pstSF.setString(12, list[11]);
+			pstSF.setString(13, list[12]);pstSF.setString(14, list[13]);
+			pstSF.setString(15, list[14]);pstSF.setString(16, list[15]);
+			pstSF.setString(17, list[16]);pstSF.setString(18, list[17]);
+			pstSF.setString(19, list[18]);pstSF.setString(20, list[19]);
+			pstSF.setString(21, list[20]);pstSF.setString(22, list[21]);
+			pstSF.setString(23, list[22]);pstSF.setString(24, list[23]);
+			pstSF.setString(25, list[24]);pstSF.setString(26, list[25]);
+			pstSF.setString(27, list[26]);pstSF.setString(28, list[27]);
+			pstSF.setString(29, list[28]);pstSF.setString(30, list[29]);
+			pstSF.setString(31, list[30]);pstSF.setString(32, list[31]);
+			pstSF.setString(33, list[32]);pstSF.setString(34, list[33]);
+			pstSF.setString(35, list[34]);pstSF.setString(36, list[35]);
+			pstSF.setString(37, list[36]);pstSF.setString(38, list[37]);
+			pstSF.setString(39, list[38]);pstSF.setString(40, list[39]);
+			pstSF.setString(41, list[40]);pstSF.setString(42, list[41]);
+			pstSF.setString(43, list[42]);pstSF.setString(44, list[43]);
+			pstSF.executeUpdate();
+			result = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			shutdownSF();
+		}
+		return result;
+	}
+	
+	/**
+	 * This function is used for updating rules
+	 * @param count
+	 * @param rules
+	 * @return TRUE or FALSE
+	 */
+	public boolean updateRulesConfigure(int count, String[] list) {
+		boolean result = false;
+		String query = "UPDATE default_rules_table SET rule = ? WHERE count = ?";
+		try {
+			sfconnection = getConnectionShopFloor();
+			pstSF = sfconnection.prepareStatement(query);
+			pstSF.setString(1, list[44]);
+			pstSF.setLong(2, count);
+			pstSF.executeUpdate();
+			result = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			shutdownSF();
+		}
+		return result;
+	}
+	
+	/**
+	 * This function is used for updating existing station
+	 * @param partNumber
+	 * @param from_location
+	 * @param to_location
+	 * @param list
+	 * @return TRUE or FALSE
+	 */
+	public boolean updateStationFunction(String partNumber, int from_location, int to_location, String[] list) {
+		boolean result = false;
+		String query = "SELECT ui_id , rules_id FROM default_station_table WHERE part_number = ? AND from_location = ? AND to_location = ?";
+		try {
+			sfconnection = getConnectionShopFloor();
+			pstSF = sfconnection.prepareStatement(query);
+			pstSF.setString(1, partNumber);
+			pstSF.setLong(2, from_location);
+			pstSF.setLong(3, to_location);
+			rsSF = pstSF.executeQuery();
+			
+			while (rsSF.next()) {
+				int ui_id = rsSF.getInt("ui_id");
+				int rules_id = rsSF.getInt("rules_id");
+				if(!updateUIConfigure(ui_id, list)) return false;
+				else {
+					if(!updateRulesConfigure(rules_id, list)) return false;
+					else return true;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			shutdownSF();
+		}
+		return result;
+	}
+	
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***********************************************************
+	// *                    LOAD STATION CONFIGURATION           *
+	// ***********************************************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
 
 	
 	
