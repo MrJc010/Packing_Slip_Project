@@ -2280,8 +2280,36 @@ public class DBHandler {
 			if (rsSF != null && rsSF.next()) {
 				result = rsSF.getInt(1);
 				if (result != -1) {
-					if(!updateStationTable(part_number, from_location, to_location, result)) result = -1;
+					int rule_id = insertIntoRulesTable(result,l[44]);
+					if(rule_id != -1 && !updateStationTable(part_number, from_location, to_location, result, rule_id,"userId")) result = -1;
 				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			shutdownSF();
+		}
+		return result;
+	}
+	
+	/**
+	 * This function is used for creating new record for the rules
+	 * @param ui_id
+	 * @param rule
+	 * @return INTEGER
+	 */
+	public int insertIntoRulesTable(int ui_id, String rule) {
+		int result = -1;
+		String query = "INSERT INTO default_rules_table (ui_id, rule) VALUES (?,?)";
+		try {
+			sfconnection = getConnectionShopFloor();
+			pstSF = sfconnection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+			pstSF.setLong(1, ui_id);
+			pstSF.setString(2, rule);
+			result = pstSF.executeUpdate();
+			rsSF = pstSF.getGeneratedKeys();
+			if (rsSF != null && rsSF.next()) {
+				result = rsSF.getInt(1);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2359,10 +2387,10 @@ public class DBHandler {
 	 * @param ui_id
 	 * @return TRUE or FALSE
 	 */
-	public boolean updateStationTable(String part_number, String from_location, String to_location, int ui_id) {
+	public boolean updateStationTable(String part_number, String from_location, String to_location, int ui_id,int rules_id, String userId) {
 		boolean result = false;
 		String station_name = part_number+"_From_"+from_location+"_To_"+to_location;
-		String query = "INSERT INTO default_station_table (station_name, part_number, from_location, to_location, ui_id) VALUES (?, ?, ?, ?, ?)";
+		String query = "INSERT INTO default_station_table (station_name, part_number, from_location, to_location, ui_id, rules_id, userId) VALUES (?, ?, ?, ?, ?, ?, ?)";
 		try {
 			sfconnection = getConnectionShopFloor();
 			pstSF = sfconnection.prepareStatement(query);
@@ -2371,6 +2399,8 @@ public class DBHandler {
 			pstSF.setString(3, from_location);
 			pstSF.setString(4, to_location);
 			pstSF.setLong(5, ui_id);
+			pstSF.setLong(6, rules_id);
+			pstSF.setString(7, userId);
 			pstSF.executeUpdate();
 			result = true;
 		} catch (Exception e) {
@@ -2393,4 +2423,7 @@ public class DBHandler {
 	// ***************************END*****************************
 
 	//
+
+	
+	
 }

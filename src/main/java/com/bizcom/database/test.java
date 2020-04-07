@@ -1,9 +1,12 @@
 package com.bizcom.database;
 
-import java.nio.charset.Charset;
 import java.text.ParseException;
-import java.util.List;
-import java.util.Random;    
+import java.util.Arrays;
+
+import javax.tools.DiagnosticCollector;
+import javax.tools.JavaCompiler;
+import javax.tools.JavaFileObject;
+import javax.tools.ToolProvider;    
 
 public class test {
 
@@ -17,9 +20,10 @@ public class test {
 //		System.out.println(db.addingNewRef("testing_table","ref_1"));
 //		//System.out.println(db.deleteRef("testing_table","ref_1"));
 //		System.out.println(db.renameRef("testing_table","test","newRef"));
-		String[] l = new String[]{"","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""};
+		String[] l = new String[]{"","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""};
 		System.out.println(db.insertIntoUITable("test name","partnumber","from","to",l));
 		
-	}
+		
+    }
 
 }
