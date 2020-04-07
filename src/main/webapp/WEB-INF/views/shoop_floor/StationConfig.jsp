@@ -14,7 +14,9 @@
 			<h2 class="mb-4 text-primary display-3">Station Configs</h2>
 		</div>
 		<div class="row justify-content-left">
-			<form class="container-fluid">
+			<form class="container-fluid"
+				action="<%=request.getContextPath()%>//shopfloor/station_config_step_3"
+				method="POST">
 				<%--     <!-- Name  -->
                     <div class="form-group row">
                         <label for="nameStation" class="col-md-1 col-form-label">Name:
@@ -28,7 +30,7 @@
 
 				<div class="form-group row my-4">
 					<label for="operateType" class="col-md-2 col-form-label">Station
-						Avaiable: Type: </label>
+						Config </label>
 					<div class="col-md-4">
 						<select id="operateType" class="custom-select">
 							<option selected>Select</option>
@@ -56,35 +58,47 @@
 				<div class="form-inline my-4">
 					<div class="form-group mr-5">
 						<label for="fromLocation" class="">From location</label> <select
-							id="fromLocation" class="custom-select ml-5">
-							<option selected>Select Location</option>
-							<option value="Open_Box">Open_Box</option>
-							<option value="Scan_Box">Scan_Box</option>
-							<option value="Closing_Box">Closing_Box</option>
+							id="fromLocation" name="fromLocation" class="custom-select ml-5">
+							<option>Select Location</option>
+							<option value="BIZ_START">BIZ_START</option>
+							<c:forEach var="aStation" items="${listStations}">
+								<c:if test="${aStation == fromLocationValue}">
+									<option selected value="${aStation}">${aStation}</option>
+								</c:if>
+								<c:if test="${fromLocationValue != aStation}">
+									<option value="${aStation}">${aStation}</option>
+								</c:if>
+							</c:forEach>
+
 						</select>
 
 					</div>
 					<div class="form-group ml-5">
 						<label for="toLocation" class="mr-5">From location</label> <select
-							id="toLocation" class="custom-select">
-							<option selected>Select Location</option>
-							<option value="Open_Box">Open_Box</option>
-							<option value="Scan_Box">Scan_Box</option>
-							<option value="Closing_Box">Closing_Box</option>
+							name="toLocation" id="toLocation" class="custom-select">
+							<option>Select Location</option>
+							<c:forEach var="aStation" items="${listStations}">
+								<c:if test="${aStation == toLocationValue}">
+									<option selected value="${aStation}">${aStation}</option>
+								</c:if>
+								<c:if test="${toLocationValue != aStation}">
+									<option value="${aStation}">${aStation}</option>
+								</c:if>
+							</c:forEach>
 						</select>
 					</div>
 				</div>
-		
-					<!-- Serial Number  -->
+
+				<!-- Serial Number  -->
 				<div class="form-inline my-4">
 					<div class="form-group">
-						<label for="serialnumber" class="mr-4">Serial
-						Number</label> <input
-							if="serialnumber" type="text" value="${serialnumber}" class="form-control ml-5">
+						<label for="serialnumber" class="mr-4">Serial Number</label> <input
+							if="serialnumber" type="text" value="${serialnumber}"
+							class="form-control ml-5">
 					</div>
 					<div class="form-group ml-5">
-						<label for="snPattern" class="mr-4">Serial Number Pattern</label> <input
-							id="snPattern" type="text" class="form-control ml-5">
+						<label for="snPattern" class="mr-4">Serial Number Pattern</label>
+						<input id="snPattern" type="text" class="form-control ml-5">
 					</div>
 				</div>
 
@@ -340,8 +354,8 @@
 						</select>
 					</div>
 					<div class="form-group ml-5">
-						<label for="maxRef_10Pattern" class="mr-4">Max_Count</label>
-						<input id="maxRef_10Pattern" type="number" class="form-control">
+						<label for="maxRef_10Pattern" class="mr-4">Max_Count</label> <input
+							id="maxRef_10Pattern" type="number" class="form-control">
 					</div>
 				</div>
 				<!-- Comparison  -->
@@ -349,8 +363,7 @@
 					<label for="comparison" class="col-md-1 col-form-label">Comparison:
 					</label>
 					<div class="col-md-11">
-						<textarea id="comparison" name="comparison" rows="10" cols="100"
-							value="${comparison}"></textarea>
+						<textarea id="comparison" name="comparison" rows="10" cols="100"></textarea>
 					</div>
 				</div>
 				<!-- User  -->
@@ -365,8 +378,10 @@
 
 				<div class="row my-5 justify-content-center">
 					<input type="submit" class="btn btn-lg btn-primary mx-5"
-						value="Save" name="action" /> <input type="submit"
-						class="btn btn-lg btn-secondary mx-5" value="Close" name="action" />
+						value="Save" name="action" />
+
+					<!-- 	<input type="submit"
+						class="btn btn-lg btn-secondary mx-5" value="Close" name="action" /> -->
 				</div>
 
 			</form>
