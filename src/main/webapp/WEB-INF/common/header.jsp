@@ -112,8 +112,7 @@
 								href="<%=request.getContextPath()%>/shopfloor/create_new_partnumber_step1">NEW
 									PROJECT</a></li>
 							<li><a class="dropdown-item"
-								href="<%=request.getContextPath()%>/exist_project">EXIST
-									PROJECT</a></li>
+								href="<%=request.getContextPath()%>/shopfloor/station_management">STATION MANAGEMENT</a></li>
 							<li><a class="dropdown-item"
 								href="<%=request.getContextPath()%>/shopfloor_search">SEARCH</a>
 							</li>

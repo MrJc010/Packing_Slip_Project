@@ -87,7 +87,7 @@ public class Create_Part_Number_Step02 extends HttpServlet {
 		List<String> aList = new ArrayList<String>(); 
 		aList.addAll(locations);
 		try {
-			System.out.println(partNumber);
+			
 			db.createLocationForPartNumber(aList, partNumber);
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -100,7 +100,6 @@ public class Create_Part_Number_Step02 extends HttpServlet {
 
 		
 		// listItems
-
 //		doGet(request, response);
 		response.sendRedirect(request.getContextPath()+"/shopfloor/station_config_step_3?partNumber=" + partNumber);
 	}

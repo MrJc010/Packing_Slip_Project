@@ -2,7 +2,11 @@ package com.bizcom.shop_floor;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -20,8 +24,14 @@ public class StationConfig extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private String partNumberURL ="";
 	
+	// Map Handle Location Finished or Unfinished
+	private Map<String, Boolean> mapLocationCheck = new HashMap<>();
+	
+	// keep user's work _ create new staion info
+	private Map<String,String[]> userConfigs = new HashMap<>();
+	
 	private List<List<String>> listAvaiStations = new ArrayList<List<String>>();
-	private List<String> avaiStationsDropDown = new ArrayList<>();
+	private Set<String> avaiStationsDropDown = new HashSet<>();
 	private String avaiStationsDropDownSelected = "";
     private ArrayList<String> listStations = new ArrayList<>();
     private DBHandler db = new DBHandler();
@@ -95,6 +105,7 @@ public class StationConfig extends HttpServlet {
     private String count_Ref_10Pattern = "";
     private String maxRef_10Pattern = "";
     
+    private String action="";
 	public StationConfig() {
 		
 		if(listStations.size() != db.getAllLocationTableName().size()) {
@@ -105,26 +116,21 @@ public class StationConfig extends HttpServlet {
 				String a = s.split("_")[0];
 				String b = s.split("_")[1];
 				listStations.add(a+"_"+b);
-			}			
-		}		
+			}
+			
+			mapLocationCheck = db.setUpConfigure(listStations);
+		
+		}
+		
 	}
 
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		partNumberURL = request.getParameter("partNumber");
-		if(partNumberURL!= null && !partNumberURL.isEmpty()) {
-			listAvaiStations.clear();
-			avaiStationsDropDown.clear();
-			listAvaiStations.addAll(db.getStationInfor(partNumberURL));
-			for(List<String> l : listAvaiStations) {
-				avaiStationsDropDown.add(l.get(0));
-			}
-			if(!avaiStationsDropDown.isEmpty()) {
-				request.setAttribute("avaiStationsDropDown", avaiStationsDropDown);
-			}
+		if(partNumberURL.isEmpty())	{
+			partNumberURL = request.getParameter("partNumber");
 		}
+		System.out.println("partNumber from get: " + partNumberURL);
 		request.setAttribute("listStations", listStations);
-		
 		if(fromLocation!= null && !fromLocation.isEmpty()) {
 			request.setAttribute("fromLocationValue", fromLocation);
 		}
@@ -134,17 +140,71 @@ public class StationConfig extends HttpServlet {
 		if(avaiStationsDropDownSelected!= null && !avaiStationsDropDownSelected.isEmpty()) {
 			request.setAttribute("avaiStationsDropDownSelected", avaiStationsDropDownSelected);
 		}
-		request.getRequestDispatcher("/WEB-INF/views/shoop_floor/StationConfig.jsp").forward(request, response);
+		String action = request.getParameter("action");
+		if(action!= null) {
+			switch (action) {
+			case "Save":
+				saveAction(request, response);
+				System.out.println("Save action called");
+				break;
+
+			}
+		}else {
+			request.getRequestDispatcher("/WEB-INF/views/shoop_floor/StationConfig.jsp").forward(request, response);
+		}	
+		
 	}
 
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("doPost");
-		String[] lTemp = getAllInput(request, response);
+		System.out.println("doPost called");
+		String action = request.getParameter("action");
+		System.out.println("do post action: " + action);
+		if(action!= null) {
+			switch (action) {
+			case "Save":
+				System.out.println("Save action called Posted");
+				doGet(request, response);
+				break;
+			}
+		}else {
+			doGet(request, response);
+		}	
+		
+//		partNumberURL = request.getParameter("partNumber");
 //		System.out.println(toString());
-		System.out.println("int insertIntoUITable's result " + db.insertIntoUITable(partNumberURL, fromLocation, toLocation, lTemp));
+		// detect save action
+//		System.out.println("int insertIntoUITable's result " + db.insertIntoUITable(partNumberURL, fromLocation, toLocation, lTemp));
+//		1233_From_Select Location_To_SCAN_BOX
+		
+		
 		doGet(request, response);
+//		request.getRequestDispatcher("/WEB-INF/views/shoop_floor/StationConfig.jsp").forward(request, response);
+//		response.sendRedirect(request.getContextPath()+"/shopfloor/station_config_step_3?partNumber=" + partNumberURL);
 	}
+	
+	/**
+	 * Active when save button clicked
+	 * Add data to avaiStationsDropDown
+	 * @param request
+	 * @param response
+	 * @param pn
+	 * @throws IOException 
+	 * @throws ServletException 
+	 */
+	public void saveAction(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("saveAction called");
+		System.out.println("partNumberURL" + partNumberURL);
+		String[] lTemp = getAllInput(request, response);
+		userConfigs.put(partNumberURL+"_From_"+fromLocation+"_To_"+toLocation, lTemp);
+		avaiStationsDropDown.add(partNumberURL+"_From_"+fromLocation+"_To_"+toLocation);
+		request.setAttribute("avaiStationsDropDown", avaiStationsDropDown);
+		System.out.println("SaveAction======User Configs Map Size: " + userConfigs.size());
+		request.getRequestDispatcher("/WEB-INF/views/shoop_floor/StationConfig.jsp").forward(request, response);
+//		response.sendRedirect(request.getContextPath()+"/shopfloor/station_config_step_3?partNumber=" + partNumberURL);
+	}
+	
+	
 	
 	public String[] getAllInput(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String[] lTemp = null;

@@ -684,6 +684,11 @@ for (var key in locationList) {
 console.log(list);
 /*initiate the autocomplete function on the "myInput" element, and pass along the countries array as possible autocomplete values:*/
 autocomplete(document.getElementById("text"), list);
+
+window.addEventListener('beforeunload', function (e) { 
+    e.preventDefault(); 
+    e.returnValue = ''; 
+}); 
 </script>
 
 </section>
