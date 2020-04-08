@@ -129,6 +129,23 @@ public class StationConfig extends HttpServlet {
 		if(partNumberURL.isEmpty())	{
 			partNumberURL = request.getParameter("partNumber");
 		}
+		if (!partNumberURL.isEmpty()) {
+			if (listStations.size() != db.getLocationsFromPartNumber(partNumberURL).size()) {
+				listStations.clear();
+				List<String> tempArrays = db.getLocationsFromPartNumber(partNumberURL);
+				for (String s : tempArrays) {
+					s = s.toUpperCase().trim();
+					String a = s.split("_")[0];
+					String b = s.split("_")[1];
+					listStations.add(a + "_" + b);
+				}
+
+				mapLocationCheck = db.setUpConfigure(listStations);
+
+			}
+		} else {
+			System.out.println("ERORR CANNOT GET PARTNUMBER>>>");
+		}
 		System.out.println("partNumber from get: " + partNumberURL);
 		request.setAttribute("listStations", listStations);
 		if(fromLocation!= null && !fromLocation.isEmpty()) {
@@ -163,24 +180,13 @@ public class StationConfig extends HttpServlet {
 		if(action!= null) {
 			switch (action) {
 			case "Save":
-				System.out.println("Save action called Posted");
 				doGet(request, response);
 				break;
 			}
-		}else {
-			doGet(request, response);
-		}	
-		
-//		partNumberURL = request.getParameter("partNumber");
-//		System.out.println(toString());
-		// detect save action
-//		System.out.println("int insertIntoUITable's result " + db.insertIntoUITable(partNumberURL, fromLocation, toLocation, lTemp));
-//		1233_From_Select Location_To_SCAN_BOX
-		
-		
-		doGet(request, response);
-//		request.getRequestDispatcher("/WEB-INF/views/shoop_floor/StationConfig.jsp").forward(request, response);
-//		response.sendRedirect(request.getContextPath()+"/shopfloor/station_config_step_3?partNumber=" + partNumberURL);
+		}
+//		}else {
+//			doGet(request, response);
+//		}
 	}
 	
 	/**
@@ -193,15 +199,12 @@ public class StationConfig extends HttpServlet {
 	 * @throws ServletException 
 	 */
 	public void saveAction(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("saveAction called");
-		System.out.println("partNumberURL" + partNumberURL);
 		String[] lTemp = getAllInput(request, response);
 		userConfigs.put(partNumberURL+"_From_"+fromLocation+"_To_"+toLocation, lTemp);
 		avaiStationsDropDown.add(partNumberURL+"_From_"+fromLocation+"_To_"+toLocation);
 		request.setAttribute("avaiStationsDropDown", avaiStationsDropDown);
-		System.out.println("SaveAction======User Configs Map Size: " + userConfigs.size());
-		request.getRequestDispatcher("/WEB-INF/views/shoop_floor/StationConfig.jsp").forward(request, response);
-//		response.sendRedirect(request.getContextPath()+"/shopfloor/station_config_step_3?partNumber=" + partNumberURL);
+		//request.getRequestDispatcher("/WEB-INF/views/shoop_floor/StationConfig.jsp").forward(request, response);
+		response.sendRedirect(request.getContextPath()+"/shopfloor/station_config_step_3?partNumber=" + partNumberURL);
 	}
 	
 	
