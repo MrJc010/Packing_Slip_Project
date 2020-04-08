@@ -32,8 +32,8 @@ public class DBHandler {
 	private Connection dbconnection;
 	private Connection sfconnection;
 	private PreparedStatement pst;
-	private ResultSet rs;
 	private PreparedStatement pstSF;
+	private ResultSet rs;
 	private ResultSet rsSF;
 	private static final DateTimeFormatter sdf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss.SSS");
 	private static final SimpleDateFormat dateForSearch = new SimpleDateFormat("MM/dd/yyyy");
@@ -1849,7 +1849,7 @@ public class DBHandler {
 	 */
 	public List<String> getLocationsFromPartNumber(String partNumber){
 		List<String> result = new ArrayList<String>();
-		String query = "SELECT * FROM part_number_table WHERE part_number = ?";
+		String query = "SELECT * FROM location_partnumber_table WHERE part_number = ?";
 		try {
 			sfconnection = getConnectionShopFloor();
 			pstSF = sfconnection.prepareStatement(query);
@@ -1902,7 +1902,7 @@ public class DBHandler {
 	 */
 	public boolean createNewPartNumber(String partNumber, String descp, String model, String userId) {
 		boolean result = false;
-		if(!checkPartNumber(partNumber)) {
+		if(checkPartNumber(partNumber)) {
 			System.out.println("Displace error for partnumber is already exist inside the database");
 			result = false;
 		}else {
@@ -1916,7 +1916,7 @@ public class DBHandler {
 				pstSF.setString(3, model);
 				pstSF.setString(4, userId);
 				pstSF.setString(5, sdf.format(now));
-				rsSF = pstSF.executeQuery();
+				pstSF.executeUpdate();
 				result = true;
 			} catch (SQLException | ClassNotFoundException e) {
 				System.out.println(e.getMessage());
@@ -1937,22 +1937,26 @@ public class DBHandler {
 	 * @throws SQLException
 	 * @throws ClassNotFoundException 
 	 */
-	public boolean createLocationForPartNumber(List<String> location,String partNumber) throws SQLException, ClassNotFoundException {
+	public boolean createLocationForPartNumber(List<String> location,String part_number) throws SQLException, ClassNotFoundException {
 		boolean result = false;
-		String query = "INSERT INTO location_partnumber_table (part_number,location) VALUES(?,?)";
+		String query = "INSERT INTO location_partnumber_table (part_number,location) VALUES (?,?)";
 		sfconnection = getConnectionShopFloor();
 		pstSF = sfconnection.prepareStatement(query);
-		if(!checkLocationForPartNumber(partNumber,location)) {
+		if(!checkLocationForPartNumber(part_number,location)) {
 			result = false;
-			System.out.println("Dispace error for cannot adding location: "+location.toString()+" for partnumer: "+partNumber);
+			System.out.println("Dispace error for cannot adding location: "+location.toString()+" for partnumer: "+part_number);
 			return result;
+		}else {
+			sfconnection = getConnectionShopFloor();
+			pstSF = sfconnection.prepareStatement(query);
 		}
 		int i = 0;
 		for(String l : location) {
-			pstSF.setString(1, partNumber);
+			pstSF.setString(1, part_number);
 			pstSF.setString(2, l);
 			pstSF.addBatch();
 			i++;
+			System.out.println(i);
 			if (i == location.size()) {
 				int[] a = pstSF.executeBatch();
 				if (a.length > 0) {

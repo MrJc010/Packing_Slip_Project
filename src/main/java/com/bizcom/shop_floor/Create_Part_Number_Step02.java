@@ -1,6 +1,7 @@
 package com.bizcom.shop_floor;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -83,6 +84,19 @@ public class Create_Part_Number_Step02 extends HttpServlet {
 				}
 			}
 		}
+		List<String> aList = new ArrayList<String>(); 
+		aList.addAll(locations);
+		try {
+			System.out.println(partNumber);
+			db.createLocationForPartNumber(aList, partNumber);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 
 		
 		// listItems

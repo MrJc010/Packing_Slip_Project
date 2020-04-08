@@ -7,9 +7,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.bizcom.database.DBHandler;
+
 @WebServlet("/shopfloor/create_new_partnumber_step1")
 public class Create_Part_Number_Step01 extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private DBHandler db = new DBHandler();
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -38,7 +41,12 @@ public class Create_Part_Number_Step01 extends HttpServlet {
 		}else
 		{
 		url = "/shopfloor/create_new_partnumber_step2?pn=" + pn + "&model=" + model + "&desc=" + desc;
-		response.sendRedirect(request.getContextPath() + url);
+		if(db.createNewPartNumber(pn, desc, model, "USER STEP 1")) {
+			response.sendRedirect(request.getContextPath() + url);
+		}else {
+			doGet(request, response);
+		}
+		
 		
 		}
 

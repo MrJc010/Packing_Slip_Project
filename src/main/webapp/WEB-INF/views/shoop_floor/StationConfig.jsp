@@ -15,7 +15,7 @@
 		</div>
 		<div class="row justify-content-left">
 			<form class="container-fluid"
-				action="<%=request.getContextPath()%>//shopfloor/station_config_step_3"
+				action="<%=request.getContextPath()%>/shopfloor/station_config_step_3"
 				method="POST">
 				<%--     <!-- Name  -->
                     <div class="form-group row">

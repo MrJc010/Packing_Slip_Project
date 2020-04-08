@@ -140,13 +140,14 @@ public class StationConfig extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("doPost");
-		getAllInput(request, response);
+		String[] lTemp = getAllInput(request, response);
 //		System.out.println(toString());
-		
+		System.out.println("int insertIntoUITable's result " + db.insertIntoUITable(partNumberURL, fromLocation, toLocation, lTemp));
 		doGet(request, response);
 	}
 	
-	public void getAllInput(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public String[] getAllInput(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String[] lTemp = null;
 		try {
 			fromLocation = getAnInput(request,response,"fromLocation");
 			toLocation= getAnInput(request,response,"toLocation");
@@ -208,7 +209,7 @@ public class StationConfig extends HttpServlet {
 			
 			comparison= getAnInput(request, response, "comparison");
 			userList= getAnInput(request, response, "userList");
-			String[] lTemp = new String[] {
+			lTemp = new String[] {
 					partNumber,patternPN,serialnumber,snPattern,
 					Ref_1Name,ref1Pattern,count_Ref1Pattern,maxref1Pattern,
 					Ref_2Name,Ref_2Pattern,count_Ref_2Pattern,maxRef_2Pattern,
@@ -222,10 +223,10 @@ public class StationConfig extends HttpServlet {
 					Ref_10Name,Ref_10Pattern,count_Ref_10Pattern,maxRef_10Pattern,
 					comparison.trim()
 			};
-//			System.out.println("int insertIntoUITable's result " + db.insertIntoUITable(partNumberURL, fromLocation, toLocation, lTemp));
-		}catch(Exception e) {
 			
+		}catch(Exception e) {
 		}
+		return lTemp;
 	}
 	
 	public String getAnInput(HttpServletRequest request, HttpServletResponse response, String name) throws ServletException, IOException {
