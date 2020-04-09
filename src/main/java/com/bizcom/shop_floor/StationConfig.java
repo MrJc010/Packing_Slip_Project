@@ -148,7 +148,6 @@ public class StationConfig extends HttpServlet {
 			System.out.println("ERORR CANNOT GET PARTNUMBER>>>");
 
 		}
-
 		System.out.println("partNumber from get: " + partNumberURL);
 		// Set avaiable station
 		if (!avaiStationsDropDown.isEmpty()) {
@@ -188,7 +187,6 @@ public class StationConfig extends HttpServlet {
 		if (action != null) {
 			switch (action) {
 			case "Save":
-				System.out.println("Save action called Posted");
 				doGet(request, response);
 				break;
 
@@ -199,17 +197,10 @@ public class StationConfig extends HttpServlet {
 				doGet(request, response);
 				break;
 			}
-
 		}
-
-//		partNumberURL = request.getParameter("partNumber");
-//		System.out.println(toString());
-		// detect save action
-//		System.out.println("int insertIntoUITable's result " + db.insertIntoUITable(partNumberURL, fromLocation, toLocation, lTemp));
-//		1233_From_Select Location_To_SCAN_BOX
-
-//		request.getRequestDispatcher("/WEB-INF/views/shoop_floor/StationConfig.jsp").forward(request, response);
-//		response.sendRedirect(request.getContextPath()+"/shopfloor/station_config_step_3?partNumber=" + partNumberURL);
+//		}else {
+//			doGet(request, response);
+//		}
 	}
 
 	/**
