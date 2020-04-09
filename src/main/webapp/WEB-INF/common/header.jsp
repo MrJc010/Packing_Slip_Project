@@ -29,16 +29,17 @@
 	text-decoration: underline;
 	transform: rotate(-90deg);
 }
-
-
 </style>
 
 <!-- TODO Import Bootstrap from local -->
 <!-- Bootstrap core CSS -->
 
-	
-	
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+	integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+	crossorigin="anonymous">
 
 <link
 	href="https://cdnjs.cloudflare.com/ajax/libs/gijgo/1.9.13/combined/css/gijgo.min.css"
@@ -94,6 +95,61 @@
 						href="<%=request.getContextPath()%>/repair01"><span
 							class="text-white"><strong>REPAIR01</strong></span></a></li>
 					<li class="nav-item"><a class="nav-link"
+						href="<%=request.getContextPath()%>/qc1"><span
+							class="text-white"><strong>QC1</strong></span></a></li>
+					<li class="nav-item"><a class="nav-link"
+						href="<%=request.getContextPath()%>/eco"><span
+							class="text-white"><strong>ECO</strong></span></a></li>
+					<li class="nav-item"><a class="nav-link"
+						href="<%=request.getContextPath()%>/repair02"><span
+							class="text-white"><strong>REPAIR02</strong></span></a></li>
+					<li class="nav-item"><a class="nav-link"
+						href="<%=request.getContextPath()%>/v1"><span
+							class="text-white"><strong>V1</strong></span></a></li>
+
+
+
+					<li class="nav-item"><a class="nav-link"
+						href="<%=request.getContextPath()%>/qc2"><span
+							class="text-white"><strong>QC2</strong></span></a></li>
+
+					<li class="nav-item"><a class="nav-link"
+						href="<%=request.getContextPath()%>/runin2"><span
+							class="text-white"><strong>RUNIN-2</strong></span></a></li>
+
+					<li class="nav-item"><a class="nav-link"
+						href="<%=request.getContextPath()%>/cmb2"><span
+							class="text-white"><strong>CMB2</strong></span></a></li>
+
+					<li class="nav-item"><a class="nav-link"
+						href="<%=request.getContextPath()%>/qc3"><span
+							class="text-white"><strong>QC3</strong></span></a></li>
+
+					<li class="nav-item"><a class="nav-link"
+						href="<%=request.getContextPath()%>/cosmetic_check"><span
+							class="text-white"><strong>Cosmetic Check</strong></span></a></li>
+
+					<li class="nav-item"><a class="nav-link"
+						href="<%=request.getContextPath()%>/packing"><span
+							class="text-white"><strong>Packing</strong></span></a></li>
+
+					<li class="nav-item"><a class="nav-link"
+						href="<%=request.getContextPath()%>/shipping"><span
+							class="text-white"><strong>Shipping</strong></span></a></li>
+					<li class="nav-item"><a class="nav-link"
+						href="<%=request.getContextPath()%>/obe"><span
+							class="text-white"><strong>OBE</strong></span></a></li>
+
+
+					<li class="nav-item"><a class="nav-link"
+						href="<%=request.getContextPath()%>/pe_analyze"><span
+							class="text-white"><strong>PE Analyze</strong></span></a></li>
+					<li class="nav-item"><a class="nav-link"
+						href="<%=request.getContextPath()%>/pe_clca_identify"><span
+							class="text-white"><strong>PE CLCA and Identify</strong></span></a></li>
+
+
+					<li class="nav-item"><a class="nav-link"
 						href="<%=request.getContextPath()%>/search"><span
 							class="text-white"><strong>SEARCH</strong></span></a></li>
 
@@ -103,16 +159,17 @@
 					<li class="nav-item dropdown"><a
 						class="nav-link dropdown-toggle" href="http://example.com"
 						id="navbarDropdownMenuLink" data-toggle="dropdown"
-						aria-haspopup="true" aria-expanded="false">
-						<span class="text-white"><strong>SHOP FLOOR</strong></span>
-						
-						</a>
+						aria-haspopup="true" aria-expanded="false"> <span
+							class="text-white"><strong>SHOP FLOOR</strong></span>
+
+					</a>
 						<ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 							<li><a class="dropdown-item"
 								href="<%=request.getContextPath()%>/shopfloor/create_new_partnumber_step1">NEW
 									PROJECT</a></li>
 							<li><a class="dropdown-item"
-								href="<%=request.getContextPath()%>/shopfloor/station_management">STATION MANAGEMENT</a></li>
+								href="<%=request.getContextPath()%>/shopfloor/station_management">STATION
+									MANAGEMENT</a></li>
 							<li><a class="dropdown-item"
 								href="<%=request.getContextPath()%>/shopfloor_search">SEARCH</a>
 							</li>

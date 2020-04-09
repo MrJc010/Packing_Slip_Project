@@ -1,6 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <c:import url="/WEB-INF/common/header.jsp">
-	<c:param name="title" value="Repair02 Station"></c:param>
+	<c:param name="title" value="Repair02-Station"></c:param>
 </c:import>
 <section>
 
@@ -31,9 +31,10 @@
 
 		</div>
 		<div>
-		<div class="alert alert-success" role="alert" ${setTransferMessageSuccess}>
-  			<strong>This PPID is PASSED!</strong>
-		</div>
+			<div class="alert alert-success" role="alert"
+				${setTransferMessageSuccess}>
+				<strong>This PPID is PASSED!</strong>
+			</div>
 		</div>
 		<div class="row justify-content-center p-5" ${setHiddenTransfer}>
 			<form action="<%=request.getContextPath()%>/repair01" method="POST">
@@ -220,7 +221,8 @@
 									class="rounded mx-auto d-block img-responsive img-thumbnail"
 									alt="Introduction_Shortcut"
 									style="min-height: 300px; height: 300px;"
-									onclick=imgClickHandler("https://i.ibb.co/gvbJGDL/Yk3-S935-ORSey-REs-OG6o-LIw.png")>
+									onclick=imgClickHandler(
+									"https://i.ibb.co/gvbJGDL/Yk3-S935-ORSey-REs-OG6o-LIw.png")>
 
 							</div>
 
@@ -326,13 +328,9 @@
 			</div>
 		</div>
 	</div>
-</section>
-<script>
-		function imgClickHandler(sr)
-        {		
-            $('#mimg').attr('src',sr);
-            $('#myModal').modal('show');
-        };
 
-</script>
-<c:import url="/WEB-INF/common/footer.jsp"/>
+
+</section>
+
+
+<c:import url="/WEB-INF/common/footer.jsp" />
