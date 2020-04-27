@@ -6,13 +6,28 @@
 	<c:param name="title" value="Station Config"></c:param>
 </c:import>
 
+<style>
+#canvas {
+  border: 1px solid red;
+}
 
+.myCanvas {
+position: fixed;
+top : 8%;
+right: 10%;
+
+}
+
+
+</style>
 
 <section>
 	<div class="container-fluid p-5">
 		<div class="row justify-content-center">
-			<h2 class="mb-4 text-primary display-3">Station Configs</h2>
+			<h2 class="mb-4 text-primary display-3">Station Configs</h2>		
 		</div>
+		<div class="myCanvas"><canvas id="canvas" width="300" height="300"></canvas> </div>
+		
 		<div class="row justify-content-left">
 			<div class="container-fluid p-5">
 
@@ -463,7 +478,7 @@
 
 				<div class="row my-5 justify-content-center">
 					<input type="submit" class="btn btn-lg btn-primary mx-5"
-						value="Save" name="action" />
+						value="${buttonName}" name="action" />
 
 					<!-- 	<input type="submit"
 						class="btn btn-lg btn-secondary mx-5" value="Close" name="action" /> -->
@@ -472,4 +487,122 @@
 			</form>
 		</div>
 </section>
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>
+var arrayItems = ['Item 1', 'Item 2', 'Item 3', 'Item 4'];
+
+var canvas = document.getElementById('canvas');
+var ctx = canvas.getContext('2d');
+
+var canvasOffset = $('#canvas').offset();
+var offsetX = canvasOffset.left;
+var offsetY = canvasOffset.top;
+
+var startX;
+var startY;
+var isDown = false;
+var dragTarget;
+
+var boxes = [];
+boxes.push({ x: 50, y: 25, w: 75, h: 50 }); // x,y,width,height
+boxes.push({ x: 50, y: 25, w: 75, h: 50 });
+boxes.push({ x: 50, y: 25, w: 75, h: 50 });
+boxes.push({ x: 50, y: 25, w: 75, h: 50 });
+
+var items = [...arrayItems];
+
+var connectors = [];
+connectors.push({ box1: 0, box2: 1 });
+// connectors.push({ box1: 1, box2: 2 });
+connectors.push({ box1: 2, box2: 3 });
+
+draw();
+
+$('#canvas').mousedown(function (e) {
+  handleMouseDown(e);
+});
+$('#canvas').mousemove(function (e) {
+  handleMouseMove(e);
+});
+$('#canvas').mouseup(function (e) {
+  handleMouseUp(e);
+});
+$('#canvas').mouseout(function (e) {
+  handleMouseOut(e);
+});
+
+function draw() {
+  // clear the canvas
+  for (var i = 0; i < boxes.length; i++) {
+    ctx.fillStyle = 'green';
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+
+  for (var i = 0; i < boxes.length; i++) {
+    var box = boxes[i];
+    ctx.fillRect(box.x, box.y, box.w, box.h);
+    ctx.fillStyle = 'green';
+    ctx.font = '10pt sans-serif';
+    ctx.fillText(items[i], boxes[i].x, boxes[i].y);
+  }
+  for (var i = 0; i < connectors.length; i++) {
+    var connector = connectors[i];
+    var box1 = boxes[connector.box1];
+    var box2 = boxes[connector.box2];
+    ctx.beginPath();
+    ctx.moveTo(box1.x + box1.w / 2, box1.y + box1.h / 2);
+    ctx.lineTo(box2.x + box2.w / 2, box2.y + box2.h / 2);
+    ctx.stroke();
+  }
+}
+
+function hit(x, y) {
+  for (var i = 0; i < boxes.length; i++) {
+    var box = boxes[i];
+    if (x >= box.x && x <= box.x + box.w && y >= box.y && y <= box.y + box.h) {
+      dragTarget = box;
+      return true;
+    }
+  }
+  return false;
+}
+
+function handleMouseDown(e) {
+  startX = parseInt(e.clientX - offsetX);
+  startY = parseInt(e.clientY - offsetY);
+
+  // Put your mousedown stuff here
+  isDown = hit(startX, startY);
+}
+
+function handleMouseUp(e) {
+  // Put your mouseup stuff here
+  dragTarget = null;
+  isDown = false;
+}
+
+function handleMouseOut(e) {
+  handleMouseUp(e);
+}
+
+function handleMouseMove(e) {
+  if (!isDown) {
+    return;
+  }
+
+  mouseX = parseInt(e.clientX - offsetX);
+  mouseY = parseInt(e.clientY - offsetY);
+
+  // Put your mousemove stuff here
+  var dx = mouseX - startX;
+  var dy = mouseY - startY;
+  startX = mouseX;
+  startY = mouseY;
+  dragTarget.x += dx;
+  dragTarget.y += dy;
+  draw();
+}
+
+
+</script>
 <c:import url="/WEB-INF/common/footer.jsp"></c:import>

@@ -218,6 +218,7 @@ public class FileUploadServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+//		 request.getSession().getAttribute("username");
 		setHiddenExport = "hidden";
 		// checks if the request actually contains upload file
 		if (!ServletFileUpload.isMultipartContent(request)) {
@@ -286,6 +287,7 @@ public class FileUploadServlet extends HttpServlet {
 
 							request.setAttribute("setSuccesHidden", "hidden");
 							hideBody(request, response, true);
+							
 							request.getRequestDispatcher("/WEB-INF/views/receiving_station/pre_alert/pre_alert.jsp")
 									.forward(request, response);
 							return;

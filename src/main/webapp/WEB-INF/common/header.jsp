@@ -125,7 +125,7 @@
 						href="<%=request.getContextPath()%>/qc3"><span
 							class="text-white"><strong>QC3</strong></span></a></li>
 
-					<li class="nav-item"><a class="nav-link"
+				<%-- 	<li class="nav-item"><a class="nav-link"
 						href="<%=request.getContextPath()%>/cosmetic_check"><span
 							class="text-white"><strong>Cosmetic Check</strong></span></a></li>
 
@@ -139,7 +139,7 @@
 					<li class="nav-item"><a class="nav-link"
 						href="<%=request.getContextPath()%>/obe"><span
 							class="text-white"><strong>OBE</strong></span></a></li>
-
+ --%>
 
 					<li class="nav-item"><a class="nav-link"
 						href="<%=request.getContextPath()%>/pe_analyze"><span

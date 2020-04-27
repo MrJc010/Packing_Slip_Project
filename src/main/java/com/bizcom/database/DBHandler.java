@@ -2345,13 +2345,17 @@ public class DBHandler {
 	 * @param map which is Map<String,Boolean>
 	 * @param from which is original location type String
 	 * @param to which is the destination location type String
-	 * @return Map<String,Boolean>
+	 * @return Boolean
 	 */
-	public Map<String,Boolean> updateConfigure(Map<String,Boolean> map, String from, String to){
+	public boolean updateConfigure(Map<String,Boolean> map, String from, String to){
+		if(from.equalsIgnoreCase(to)) {
+			return false;
+		}
 		if(map.get(from) == false && map.get(to) == false) {
 			map.put(from,true);
+			return true;
 		}
-		return map;
+		return false;
 	}
 	
 	/**
@@ -2361,8 +2365,10 @@ public class DBHandler {
 	 */
 	public boolean checkFinishConfigure(Map<String,Boolean> map) {
 		int count = 0;
-		for(int i = 0 ; i < map.size(); i++) {
-			if(map.get(i) == false) count++;
+		
+		for (Object key : map.keySet()) {
+			System.out.println("get : "+map.get(key));
+			if(map.get(key) == false) count++;
 		}
 		return count == 1;
 	}

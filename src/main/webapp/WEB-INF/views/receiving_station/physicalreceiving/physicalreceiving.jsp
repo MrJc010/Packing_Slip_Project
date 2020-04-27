@@ -12,15 +12,11 @@
 
 		<div class="row px-5">
 			<div class="col-md-2"></div>
-			<div class="col-md-8 col-sm-12 shadow-lg p-3 mb-5 bg-white rounded sh bg-light py-2 px-5">
+			<div
+				class="col-md-8 col-sm-12 shadow-lg p-3 mb-5 bg-white rounded sh bg-light py-2 px-5">
 				<form method="POST"
 					action="<%=request.getContextPath()%>/physicalreceiving">
-					<div class="row justify-content-center my-3">
-						<button type="submit" class="btn btn-primary"
-							onclick="return confirmation();">
-							<strong>Receive Item</strong>
-						</button>
-					</div>
+
 					<div class="form-group row">
 						<label for="SN#" class="col-sm-3 col-form-label text-primary"><strong>SN#</strong></label>
 						<div class="col-sm-8">
@@ -135,7 +131,12 @@
 						</div>
 					</div>
 
-
+					<div class="row justify-content-center my-3">
+						<button type="submit" class="btn btn-primary"
+							onclick="return confirmation();">
+							<strong>Receive Item</strong>
+						</button>
+					</div>
 				</form>
 
 			</div>

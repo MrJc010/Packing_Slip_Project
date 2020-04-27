@@ -71,37 +71,39 @@ public class Create_Part_Number_Step02 extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// drop down
 		System.out.println("Call post step 2");
 		String[] listItems = request.getParameterValues("itemStations");
 		Set<String> locations = new HashSet<>();
-		List<String> currentLocations = db.getLocationName();
 		for (String s : listItems) {
-			if (!locations.contains(s)) {
-				locations.add(s);
-				if (!currentLocations.contains(s)) {
-					db.createNewLocationTable(s);
-				}
-			}
+			locations.add(s);			
 		}
-		List<String> aList = new ArrayList<String>(); 
-		aList.addAll(locations);
-		try {
-			
-			db.createLocationForPartNumber(aList, partNumber);
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+		String stringLocation = String.join(";", locations); 
+//		System.out.print("stringLocation in step 2: " + stringLocation);
+//		List<String> currentLocations = db.getLocationName();
+//		for (String s : listItems) {
+//			if (!locations.contains(s)) {
+//				locations.add(s);
+//				if (!currentLocations.contains(s)) {
+//					db.createNewLocationTable(s);
+//				}
+//			}
+//		}
+//		List<String> aList = new ArrayList<String>(); 
+//		aList.addAll(locations);
+//		try {
+//			
+//			db.createLocationForPartNumber(aList, partNumber);
+//		} catch (ClassNotFoundException e) {
+//			e.printStackTrace();
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//		
 
 		
 		// listItems
 //		doGet(request, response);
-		response.sendRedirect(request.getContextPath()+"/shopfloor/station_config_step_3?partNumber=" + partNumber);
+		response.sendRedirect(request.getContextPath()+"/shopfloor/station_config_step_3?partNumber=" + partNumber+"&listLocation="+stringLocation);
 	}
 
 }

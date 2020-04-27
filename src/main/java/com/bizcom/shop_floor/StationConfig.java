@@ -1,7 +1,9 @@
 package com.bizcom.shop_floor;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -23,7 +25,8 @@ import com.bizcom.database.DBHandler;
 public class StationConfig extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private String partNumberURL = "";
-
+	private String tempListLocation = "";
+	private List<String> listLocationInput = new ArrayList<>();
 	// Map Handle Location Finished or Unfinished
 	private Map<String, Boolean> mapLocationCheck = new HashMap<>();
 
@@ -112,6 +115,7 @@ public class StationConfig extends HttpServlet {
 	public StationConfig() {
 		listCountOptions.add("No");
 		listCountOptions.add("Yes");
+		
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -119,29 +123,64 @@ public class StationConfig extends HttpServlet {
 		if (partNumberURL.isEmpty()) {
 			try {
 				partNumberURL = request.getParameter("partNumber");
+				tempListLocation = request.getParameter("listLocation");
+				
+				if(!tempListLocation.isEmpty()) {
+					if(tempListLocation.contains(";")) {
+						listLocationInput.addAll(Arrays.asList(tempListLocation.split(";")));
+					}
+					else {
+						listLocationInput.add(tempListLocation);
+					}
+				}
 			} catch (Exception e) {
-
+				
 			}
 			System.out.println("GET pN: " + partNumberURL);
+			
 		}
+		
+		
+//		System.out.println("=========Print out all List location =========");
+//		for(String s : listLocationInput) {
+//			System.out.println("location: "+s);
+//		}
+		
+		
 		if (!listCountOptions.isEmpty()) {
 			request.setAttribute("listCountOptions", listCountOptions);
 		}
-		if (!partNumberURL.isEmpty()) {
+		
+	
+		if (!partNumberURL.isEmpty() && !listLocationInput.isEmpty()) {
 			request.setAttribute("partNumberURL", partNumberURL);
 //			if (listStations.size() != db.getLocationsFromPartNumber(partNumberURL).size()) {
 			listStations.clear();
-			List<String> tempArrays = db.getLocationsFromPartNumber(partNumberURL);
-			for (String s : tempArrays) {
-				s = s.toUpperCase().trim();
-				String a = s.split("_")[0];
-				String b = s.split("_")[1];
-				listStations.add(a + "_" + b);
+			
+//			List<String> tempArrays = db.getLocationsFromPartNumber(partNumberURL);
+			for (String s : listLocationInput) {
+				s = s.toUpperCase().trim();				
+				listStations.add(s);
 			}
 			listStations.add("BIZ_START");
 			listStations.add("DEFAULT_FAIL");
 
-			mapLocationCheck = db.setUpConfigure(listStations);
+			System.out.println("listStations" + listStations);
+			
+			if(mapLocationCheck.isEmpty()) {
+				mapLocationCheck = db.setUpConfigure(listStations);
+				System.out.println("=========Print out all List mapLocationCheck _ 1 =========" + mapLocationCheck.toString());	
+			}else {
+//				System.out.println("mapLocationCheck: " + mapLocationCheck.toString());
+//				if(db.checkFinishConfigure(mapLocationCheck)) {
+//					System.out.println("completed --==Change to Submit");
+//					request.setAttribute("buttonName", "Submit");
+//				}else {
+//					request.setAttribute("buttonName", "Save");
+//					System.out.println("some thing else");
+//				}
+			}
+			
 
 //			}
 		} else {
@@ -171,9 +210,21 @@ public class StationConfig extends HttpServlet {
 				String keyStation = request.getParameter("stationAvaiable");
 				System.out.println("Key: " + keyStation);
 				addAllInput(request, response, keyStation);
+				request.setAttribute("buttonName", "Save");
+				break;
+			case "Submit" :
+				System.out.println("Submit clicked");
+				
 				break;
 			}
 		} else {
+			if(db.checkFinishConfigure(mapLocationCheck)) {
+				System.out.println("completed --==Change to Submit");
+				request.setAttribute("buttonName", "Submit");
+			}else {
+				request.setAttribute("buttonName", "Save");
+				System.out.println("some thing else");
+			}
 			request.getRequestDispatcher("/WEB-INF/views/shoop_floor/StationConfig.jsp").forward(request, response);
 		}
 
@@ -194,7 +245,8 @@ public class StationConfig extends HttpServlet {
 				System.out.println("get_avaiable_stations called Posted");
 				avaiStationsDropDownSelected = getAnInput(request, response, "stationAvaiable");
 				System.out.println("detected : avaiStationsDropDownSelected = " + avaiStationsDropDownSelected);
-				doGet(request, response);
+				request.setAttribute("buttonName", "Save");
+				doGet(request, response);				
 				break;
 			}
 		}
@@ -218,13 +270,23 @@ public class StationConfig extends HttpServlet {
 		System.out.println("partNumberURL" + partNumberURL);
 		String[] lTemp = getAllInput(request, response);
 		userConfigs.put(partNumberURL + "_From_" + fromLocation + "_To_" + toLocation, lTemp);
-		avaiStationsDropDown.add(partNumberURL + "_From_" + fromLocation + "_To_" + toLocation);
+		
 		request.setAttribute("avaiStationsDropDown", avaiStationsDropDown);
-		System.out.println("SaveAction======User Configs Map Size: " + userConfigs.size());
+		
+		boolean flag = db.updateConfigure(mapLocationCheck, fromLocation, toLocation);
+		if(flag) {
+			System.out.println("Pass");
+			avaiStationsDropDown.add(partNumberURL + "_From_" + fromLocation + "_To_" + toLocation);
+		}else {
+			System.out.println("Fail to save");
+		}
+		System.out.println("=========Print out  Updated mapLocationCheck =========" + mapLocationCheck.toString());
+		
+		
 //		request.getRequestDispatcher("/WEB-INF/views/shoop_floor/StationConfig.jsp").forward(request, response);
 
 		response.sendRedirect(
-				request.getContextPath() + "/shopfloor/station_config_step_3?partNumber=" + partNumberURL);
+				request.getContextPath() + "/shopfloor/station_config_step_3?partNumber=" + partNumberURL+"&listLocation="+tempListLocation);
 	}
 
 	public void reloadBasedOnStationName(HttpServletRequest request, HttpServletResponse response, String stationName) {
@@ -421,7 +483,34 @@ public class StationConfig extends HttpServlet {
 		request.setAttribute("OptionStationAvaiableSelected", keyStation);
 		request.getRequestDispatcher("/WEB-INF/views/shoop_floor/StationConfig.jsp").forward(request, response);
 	}
-
+	public boolean createStation(String[] a) {
+		boolean result = false;
+		List<String> currentLocations = db.getLocationName();
+		Set<String> locations = new HashSet<>();
+		for (String s : a) {
+			if (!locations.contains(s)) {
+				locations.add(s);
+				if (!currentLocations.contains(s)) {
+					db.createNewLocationTable(s);
+				}
+			}
+		}
+		List<String> aList = new ArrayList<String>(); 
+		aList.addAll(locations);
+		try {
+			
+			result = db.createLocationForPartNumber(aList, partNumber);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			result = false;
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			result = false;
+			e.printStackTrace();
+		}
+		return result;
+	}
 	@Override
 	public String toString() {
 		final int maxLen = 10;
