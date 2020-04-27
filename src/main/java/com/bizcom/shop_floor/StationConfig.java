@@ -16,6 +16,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONObject;
+import org.json.simple.JSONArray;
+
 import com.bizcom.database.DBHandler;
 
 /**
@@ -26,6 +29,7 @@ public class StationConfig extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private String partNumberURL = "";
 	private String tempListLocation = "";
+	private JSONObject jsonMap;
 	private List<String> listLocationInput = new ArrayList<>();
 	// Map Handle Location Finished or Unfinished
 	private Map<String, Boolean> mapLocationCheck = new HashMap<>();
@@ -120,6 +124,8 @@ public class StationConfig extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		
+		
 		if (partNumberURL.isEmpty()) {
 			try {
 				partNumberURL = request.getParameter("partNumber");
@@ -165,7 +171,11 @@ public class StationConfig extends HttpServlet {
 			listStations.add("BIZ_START");
 			listStations.add("DEFAULT_FAIL");
 
+			
+			
 			System.out.println("listStations" + listStations);
+			
+			
 			
 			if(mapLocationCheck.isEmpty()) {
 				mapLocationCheck = db.setUpConfigure(listStations);
@@ -194,8 +204,25 @@ public class StationConfig extends HttpServlet {
 		}
 
 		// Set location
+		String jsonStr = JSONArray.toJSONString(listStations);
+		request.setAttribute("listStationsJson", jsonStr);
 		request.setAttribute("listStations", listStations);
 
+		// Connector
+		Map<String,String> connection = new HashMap<String,String>();
+		if(!avaiStationsDropDown.isEmpty()) {
+			for(String s: avaiStationsDropDown) {
+				String[] temp = s.split("_From_");
+				String[] temp1 = temp[1].split("_To_");
+				String fromL = temp1[0];
+				String toL = temp1[1];
+				connection.put(fromL,toL);
+			}
+		}
+		jsonMap= new JSONObject(connection);
+		request.setAttribute("connection", jsonMap);
+		
+		
 		String action = request.getParameter("action");
 		System.out.println("Action from get " + action);
 		if (action != null) {

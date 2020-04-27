@@ -21,6 +21,7 @@ right: 10%;
 
 </style>
 
+
 <section>
 	<div class="container-fluid p-5">
 		<div class="row justify-content-center">
@@ -483,14 +484,33 @@ right: 10%;
 					<!-- 	<input type="submit"
 						class="btn btn-lg btn-secondary mx-5" value="Close" name="action" /> -->
 				</div>
-
+					
 			</form>
 		</div>
 </section>
  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script>
-var arrayItems = ['Item 1', 'Item 2', 'Item 3', 'Item 4'];
+var arrayItems = <%=request.getAttribute("listStationsJson")%>;
+console.log(arrayItems);
+var connection = ${connection};
+var connectors = [];
+for(var key in connection){	
+	var index1 = arrayItems.indexOf(key);
+	console.log(typeof index1);
+	console.log(index1);
+	var index2 = arrayItems.indexOf(connection[key]);
+	console.log("============");
+	console.log(typeof index2);
+	console.log(index2);
+	console.log(key);
+	console.log("ss : " + connection[key]);
+	connectors.push({ box1: index1, box2: index2});
+}
 
+for(let x of arrayItems){
+	console.log(x);
+}
+var items = [...arrayItems];
 var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d');
 
@@ -504,17 +524,18 @@ var isDown = false;
 var dragTarget;
 
 var boxes = [];
-boxes.push({ x: 50, y: 25, w: 75, h: 50 }); // x,y,width,height
-boxes.push({ x: 50, y: 25, w: 75, h: 50 });
-boxes.push({ x: 50, y: 25, w: 75, h: 50 });
-boxes.push({ x: 50, y: 25, w: 75, h: 50 });
 
-var items = [...arrayItems];
+var x = 50;
+var y = 25;
+var w = 75;
+var h = 30;
+items.forEach(() => {
+  boxes.push({ x, y, w, h });
+  y += 55;
+});
 
-var connectors = [];
-connectors.push({ box1: 0, box2: 1 });
-// connectors.push({ box1: 1, box2: 2 });
-connectors.push({ box1: 2, box2: 3 });
+
+
 
 draw();
 
@@ -543,7 +564,7 @@ function draw() {
     ctx.fillRect(box.x, box.y, box.w, box.h);
     ctx.fillStyle = 'green';
     ctx.font = '10pt sans-serif';
-    ctx.fillText(items[i], boxes[i].x, boxes[i].y);
+    ctx.fillText(items[i], boxes[i].x, boxes[i].y - 2);
   }
   for (var i = 0; i < connectors.length; i++) {
     var connector = connectors[i];
