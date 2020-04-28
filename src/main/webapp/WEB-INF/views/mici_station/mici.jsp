@@ -42,13 +42,13 @@
 							placeholder="Enter PPID" name="ppidNumber" required
 							value="${ppid}">
 					</div>
-
+<%-- 
 					<div class="form-group">
 						<label for="serialNumbber">Enter Serial Number</label> <input
 							type="text" class="form-control" id="serialNumbber"
 							name="serialnumber" placeholder="Enter Serial Number" required
 							value="${sn}">
-					</div>
+					</div> --%>
 					<div class="form-groud text-center my-3">
 						<button type="submit" class="btn btn-primary btn-lg">Check</button>
 					</div>

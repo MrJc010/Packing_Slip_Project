@@ -72,8 +72,7 @@ public class FileUploadServlet extends HttpServlet {
 			throws IOException, ServletException {
 
 		if(request.getSession().getAttribute("username") == null) {
-			response.sendRedirect(request.getContextPath()+"/signin");
-			return;
+			response.sendRedirect(request.getContextPath()+"/signin");		
 		}
 		pathFile = "";
 		request.setAttribute("setErrorHidden", "hidden");

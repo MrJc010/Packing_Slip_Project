@@ -23,12 +23,10 @@ public class singin extends HttpServlet {
 	 */
 	public singin() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		System.out.println("signin called doget");
 		request.getRequestDispatcher("/WEB-INF/signin/signin.jsp").forward(request, response);
 	}
 
@@ -38,12 +36,13 @@ public class singin extends HttpServlet {
 		String password = request.getParameter("password");
 		if (!username.isEmpty() && !password.isEmpty()) {
 			if (db.signIn(username, password)) {
+				String role = db.getUserRole(username);
 				request.getSession().setMaxInactiveInterval(15);
 				request.getSession().setAttribute("username", username);
-				response.sendRedirect(request.getContextPath() + "/pre_alert");
+				request.getSession().setAttribute("user_role", role);
+				response.sendRedirect(request.getContextPath() + "/");
 			}
 		} else {
-
 			response.sendRedirect(request.getContextPath() + "/signin");
 		}
 	}

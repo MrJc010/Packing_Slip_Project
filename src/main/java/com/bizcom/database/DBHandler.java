@@ -22,6 +22,8 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
+import org.apache.commons.collections4.bidimap.DualHashBidiMap;
+
 import com.bizcom.MICI_Station.ErrorCode;
 import com.bizcom.ppid.PPID;
 import com.bizcom.receiving.physicalreceiving.Item;
@@ -1698,17 +1700,18 @@ public class DBHandler {
 	// ***************************END*****************************
 	// ***************************END*****************************
 	// ***************************END*****************************
-	public boolean signUp(String username, String password) {
+	public boolean signUp(String username, String password, String role) {
 		String tempRan = generateStringRandom(14);
 		String hashPassword = hash(password,tempRan.getBytes());
 		boolean result = false;
-		String query = "INSERT INTO users VALUES(?,?,?)";
+		String query = "INSERT INTO users VALUES(?,?,?,?)";
 		try {
 			dbconnection = getConnectionAWS();
 			pst = dbconnection.prepareStatement(query);
 			pst.setString(1, username);
 			pst.setString(2, hashPassword);
 			pst.setString(3, tempRan);
+			pst.setString(4, role);
 			pst.execute();			
 			result = true;
 		}catch(Exception e) {			
@@ -1757,7 +1760,6 @@ public class DBHandler {
 		String userSalt = getSaltFromUsername(username);
 		boolean result = false;
 		if(!userSalt.isEmpty()) {
-//			String hashPassword = hash(password, userSalt.getBytes());
 			String userHashPass = getPasswordFromUsername(username);
 			if(checkPassword(userHashPass,password,userSalt.getBytes())) {
 				result = true;
@@ -1767,6 +1769,28 @@ public class DBHandler {
 
 	}
 	
+	public String getUserRole(String userName) {
+		String query = "SELECT roles FROM users WHERE userid=?";
+		String result ="";
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(query);
+			pst.setString(1, userName);
+			rs = pst.executeQuery();
+			
+			while(rs.next()) {
+				result = rs.getString("roles");
+			}
+			
+		}catch (Exception e) {
+			result = "error";
+			System.out.println("getUserRole error " + e.getMessage());
+		}finally {
+			shutdown();
+		}
+		
+		return result;
+	}
 	public String hash(String passwordToHash, byte[] salt) {
 		String generatedPassword = null;
 		try {
@@ -1784,7 +1808,9 @@ public class DBHandler {
 		return generatedPassword;
 	}
 
+	
 	public boolean checkPassword(String hash, String attempt, byte[] salt) {
+		
 		String generatedHash = hash(attempt, salt);
 		return hash.equals(generatedHash);
 	}

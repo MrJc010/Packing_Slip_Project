@@ -291,7 +291,7 @@
 													<br>
 
 													<div class="form-group">
-														<label for="oldPN">AREA</label> <input type="text"
+														<label for="oldPN">Location</label> <input type="text"
 															class="form-control" name="area${aError}"
 															placeholder="Enter area" required>
 													</div>

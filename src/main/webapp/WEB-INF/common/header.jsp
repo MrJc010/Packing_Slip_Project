@@ -61,7 +61,7 @@
 			<div class="collapse navbar-collapse" id="navbarCollapse">
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item dropdown"><a
-						class="nav-link dropdown-toggle" href="http://example.com"
+						class="nav-link dropdown-toggle" href="<%=request.getContextPath()%>/"
 						id="navbarDropdownMenuLink" data-toggle="dropdown"
 						aria-haspopup="true" aria-expanded="false"> <span
 							class="text-white"><strong>RECEIVING</strong></span>
@@ -156,7 +156,7 @@
 
 
 
-					<li class="nav-item dropdown"><a
+					<%-- <li class="nav-item dropdown"><a
 						class="nav-link dropdown-toggle" href="http://example.com"
 						id="navbarDropdownMenuLink" data-toggle="dropdown"
 						aria-haspopup="true" aria-expanded="false"> <span
@@ -176,7 +176,7 @@
 							<li><a class="dropdown-item"
 								href="<%=request.getContextPath()%>/shopfloor_report">REPORT</a>
 							</li>
-						</ul></li>
+						</ul></li> --%>
 				</ul>
 				<%
 					if (request.getSession().getAttribute("username") == null) {

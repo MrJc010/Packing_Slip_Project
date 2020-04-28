@@ -17,9 +17,10 @@ public class SignOut extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		System.out.println("sign out called");
+		System.out.println("User Logged Out -== Delete all session");
+		System.out.println("Test getSession ( NULL ? )" + request.getSession().getId());
 		request.getSession().invalidate();
-		response.sendRedirect(request.getContextPath()+"/signin");
+		response.sendRedirect(request.getContextPath()+"/");
 	}
 
 

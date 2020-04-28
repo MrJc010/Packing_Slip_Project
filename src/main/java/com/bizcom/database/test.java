@@ -11,7 +11,8 @@ public class test {
 		//Class.forName("com.mysql.cj.jdbc.Driver");
 		DBHandler db = new DBHandler();
 		db.getConnectionAWS();
-		db.getConnectionShopFloor();
+		db.signUp("aaaa", "1234567Aa@", "test");
+//		db.getConnectionShopFloor();
 //		System.out.println(db.getAllLocationTableName());
 //		System.out.println(db.getLocationName());
 //		System.out.println(db.addingNewRef("testing_table","ref_1"));
@@ -19,10 +20,10 @@ public class test {
 //		System.out.println(db.renameRef("testing_table","test","newRef"));
 //		String[] l = new String[]{"","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","abc"};
 //		System.out.println(db.insertIntoUITable("part","A","B",l));
-		List<String> list = new ArrayList<>();
-		list.add("scan_box");
-		list.add("open_box");
-		db.createLocationForPartNumber(list, "12345");
+//		List<String> list = new ArrayList<>();
+//		list.add("scan_box");
+//		list.add("open_box");
+//		db.createLocationForPartNumber(list, "12345");
 		
 		
     }
