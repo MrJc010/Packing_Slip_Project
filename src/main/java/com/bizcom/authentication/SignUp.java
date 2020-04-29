@@ -1,4 +1,4 @@
-package authentication;
+package com.bizcom.authentication;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -12,8 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONObject;
 
 import com.bizcom.database.DBHandler;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 /**
  * Servlet implementation class SignUp
@@ -29,6 +28,7 @@ public class SignUp extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setAttribute("db", db);
 		request.getRequestDispatcher("/WEB-INF/signup/signup.jsp").forward(request, response);
 	}
 
@@ -37,8 +37,12 @@ public class SignUp extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String roles = request.getParameter("roles");
-		if(roles != null && roles.equalsIgnoreCase("employee")) {
-			System.out.println("This is employee");
+		if(roles != null && roles.equalsIgnoreCase("employee")) {		
+			String firstName = request.getParameter("firstName2");
+			String lastName = request.getParameter("lastName2");
+			String employeeID = request.getParameter("employeeID2");
+			String password1 = request.getParameter("password2");	
+			db.signUp(employeeID, password1, "Employee", firstName, lastName);
 		}
 		
 		else if(roles != null && roles.equalsIgnoreCase("manager")) {
@@ -46,27 +50,21 @@ public class SignUp extends HttpServlet {
 			String firstName = request.getParameter("firstName1");
 			String lastName = request.getParameter("lastName1");
 			String employeeID = request.getParameter("employeeID1");
-			String password1 = request.getParameter("password1");
-			
-			
+			String password1 = request.getParameter("password1");						
 			if(getHashFromString(manageCode)) {
-				System.out.println("call db");
-			}else {
-//				 ObjectMapper objectMapper = new ObjectMapper();
-//				 try {
-//			            String json = objectMapper.writeValueAsString(data);
-//			            System.out.println(json);
-//			        } catch (JsonProcessingException e) {
-//			            e.printStackTrace();
-//			        }
-//				System.out.println(json);
+				if(db.signUp(employeeID, password1, "Manager", firstName, lastName)) {
+					//If Create user-account Successfull
+					
+				}else {
+					//Else Fail to create account
+				}
+			}else {				
 				HashMap<String,String> data = new HashMap<>();
 				data.put("firstName1", firstName);
 				data.put("lastName1", lastName);
 				data.put("employeeID1", employeeID);
 				data.put("password1", password1);
 				 JSONObject jsonMap= new JSONObject(data);
-				
 				request.setAttribute("jsonMap", jsonMap);
 				doGet(request,response);
 			}			

@@ -1700,18 +1700,20 @@ public class DBHandler {
 	// ***************************END*****************************
 	// ***************************END*****************************
 	// ***************************END*****************************
-	public boolean signUp(String username, String password, String role) {
-		String tempRan = generateStringRandom(14);
-		String hashPassword = hash(password,tempRan.getBytes());
+	public boolean signUp(String username, String password, String role, String firstName, String lastName) {
+		String saltRd = generateStringRandom(14);
+		String hashPassword = hash(password,saltRd.getBytes());
 		boolean result = false;
-		String query = "INSERT INTO users VALUES(?,?,?,?)";
+		String query = "INSERT INTO users VALUES(?,?,?,?,?,?)";
 		try {
 			dbconnection = getConnectionAWS();
 			pst = dbconnection.prepareStatement(query);
 			pst.setString(1, username);
 			pst.setString(2, hashPassword);
-			pst.setString(3, tempRan);
+			pst.setString(3, saltRd);
 			pst.setString(4, role);
+			pst.setString(5, firstName);
+			pst.setString(6, lastName);
 			pst.execute();			
 			result = true;
 		}catch(Exception e) {			

@@ -5,7 +5,7 @@
 <html lang="en" >
 <head>
   <meta charset="UTF-8">
-  <title>CodePen - Sign-Up/Login Form</title>
+  <title>Sign Up Form</title>
   <link rel="stylesheet"
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
 	integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
@@ -258,27 +258,7 @@ textarea {
 											Item</a></li>
 								</ul></li>
 						</ul></li>
-
-				
-
-
-
 				</ul>
-				<%
-					if (request.getSession().getAttribute("username") == null) {
-						request.setAttribute("setHiddenSignOut", "hidden");
-					} else {
-						request.setAttribute("setHiddenSignOut", "show");
-					}
-				%>
-
-				<form class="form-inline mt-2 mt-md-0"
-					action="<%=request.getContextPath()%>/signout" method="GET">
-					<button class="btn btn-danger my-2 my-sm-0" type="submit"
-						${setHiddenSignOut}>
-						<strong>SIGN OUT</strong>
-					</button>
-				</form>
 			</div>
 		</nav>
 	</header>
@@ -317,7 +297,7 @@ textarea {
 		<div class="field-wrap">	
             <label>
               Enter Manager Code<span class="req">*</span>
-            </label>
+            </label>            
             <input type="password" name="manageCode1"  id="manageCode1" required autocomplete="off"/>
           </div>
           <div class="field-wrap">
@@ -342,7 +322,6 @@ textarea {
           </div>
           <input type="submit" class="button button-block" id="submit1" value="Sign Up"/>        
           </form>
-
         </div>
         
         <div id="Employee">   
@@ -355,7 +334,7 @@ textarea {
               </label>
               <input type="text" name="firstName2" id="firstName2" required autocomplete="off" />
             </div>
-        
+        	
             <div class="field-wrap">
               <label>
                 Last Name<span class="req">*</span>
@@ -390,12 +369,13 @@ textarea {
         </div>
         
       </div><!-- tab-content -->
-      
+     
 </div> <!-- /form -->
 <!-- partial -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 <script>
+
 var password1 = document.getElementById("password1");
 var confirm_password1 = document.getElementById("confirm_password1");
 var password2 = document.getElementById("password2");
@@ -416,20 +396,26 @@ var lastName2 = document.getElementById("lastName2");
 var employeeID2 = document.getElementById("employeeID2");
 var password2 = document.getElementById("password2");
 var confirm_password2 = document.getElementById("confirm_password2");
-console.log("My map" );
 
 
+
+var allLabels = document.querySelectorAll('label');
 var setAtribute = (data = {}) =>{
 	
-	if (data.hasAttribute("firstName1")) {
+	if (Object.keys(data).length !==0) {
 		firstName1.value = data.firstName1;
 		lastName1.value = data.lastName1;
 		employeeID1.value = data.employeeID1;
 		password1.value = data.password1;
-		confirm_password1.value = data.password1;
-	}
-	
+		confirm_password1.value = data.password1;		
+		for(var i = 0; i< 6; i++){
+			if(i !== 2){			
+			allLabels[i].outerText = '';
+			}
+		}		
+	}	
 }
+
 setAtribute(${jsonMap});
 
 submit1.onclick = () => {
@@ -442,8 +428,6 @@ submit1.onclick = () => {
 }
 
 submit2.onclick = () => {
-	console.log("sibmit");
-	console.log(confirm_password2.value);
 	if(confirm_password2.value === "" || firstName2.value==="" || lastName2.value==="" || employeeID2.value==="" || password2.value===""){
 	alert("All information must be filled out");
 	return false;
@@ -460,8 +444,6 @@ if(password.value != confirm_password.value) {
   return true;
 }
 }
-
-
 
 $('.form').find('input, textarea').on('keyup blur focus', function (e) {
 	  

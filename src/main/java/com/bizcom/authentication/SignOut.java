@@ -1,4 +1,4 @@
-package authentication;
+package com.bizcom.authentication;
 
 import java.io.IOException;
 import javax.servlet.ServletException;

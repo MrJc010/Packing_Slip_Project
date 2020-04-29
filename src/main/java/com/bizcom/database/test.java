@@ -11,7 +11,7 @@ public class test {
 		//Class.forName("com.mysql.cj.jdbc.Driver");
 		DBHandler db = new DBHandler();
 		db.getConnectionAWS();
-		db.signUp("aaaa", "1234567Aa@", "test");
+	
 //		db.getConnectionShopFloor();
 //		System.out.println(db.getAllLocationTableName());
 //		System.out.println(db.getLocationName());
