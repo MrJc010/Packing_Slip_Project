@@ -54,16 +54,19 @@ public class SignUp extends HttpServlet {
 			if(getHashFromString(manageCode)) {
 				if(db.signUp(employeeID, password1, "Manager", firstName, lastName)) {
 					//If Create user-account Successfull
-					
+					request.setAttribute("create-account-notification", "True");
+					doGet(request,response);
 				}else {
 					//Else Fail to create account
+					request.setAttribute("create-account-notification", "False");
+					doGet(request,response);
 				}
 			}else {				
+				request.setAttribute("create-account-notification", "False");
 				HashMap<String,String> data = new HashMap<>();
 				data.put("firstName1", firstName);
 				data.put("lastName1", lastName);
 				data.put("employeeID1", employeeID);
-				data.put("password1", password1);
 				 JSONObject jsonMap= new JSONObject(data);
 				request.setAttribute("jsonMap", jsonMap);
 				doGet(request,response);

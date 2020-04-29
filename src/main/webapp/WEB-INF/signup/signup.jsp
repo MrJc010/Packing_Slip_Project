@@ -10,6 +10,7 @@
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
 	integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
 	crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
   <link href='https://fonts.googleapis.com/css?family=Titillium+Web:400,300,600' rel='stylesheet' type='text/css'><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
 
 </head>
@@ -215,7 +216,10 @@ textarea {
 .dropdown-menu>li>a:hover:after {
 	text-decoration: underline;
 	transform: rotate(-90deg);
-}
+}  
+
+
+
 </style>
 <body>
 <!-- partial:index.partial.html -->
@@ -262,7 +266,30 @@ textarea {
 			</div>
 		</nav>
 	</header>
-		<div class="form">		      
+				
+			 <!-- The Modal -->
+  <div class="modal fade" id="myModal">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title"><strong>Bizcom Notification</strong></h4>
+          <button id="closeBTN-modal" type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body">
+          <h3 id="modal-message" class="text-primary">xxx</h3>
+          <a id="btn-gologin" type="button" class="btn btn-outline-success" href="<%=request.getContextPath()%>/signin">Go Login</a>          
+        </div>        
+   
+        
+      </div>
+    </div>
+  </div>
+  
+		<div class="form" id="signup-form">		      
       <ul class="tab-group">
         <li class="tab active"><a href="#Manger">Manager</a></li>
         <li class="tab"><a href="#Employee">Employee</a></li>
@@ -275,7 +302,7 @@ textarea {
   -- *  :::::: S I G N   U P   F O R M   M A N A G E : :  :   :    :     :        :          :
   -- ────────────────────────────────────────────────────────────────────────────────────────
   -->
-          <h1>USE FOR MANAGER ONLY!</h1>
+          <h1>Need Manager Code to Use!!!</h1>
           
           <form name="manger" action="<%=request.getContextPath()%>/signup" method="post">
           <input type="hidden" value="manager" name="roles" />
@@ -376,6 +403,48 @@ textarea {
 
 <script>
 
+var isSuccessed = `<%=request.getAttribute("create-account-notification")%>`;
+var signUpForm = document.getElementById("signup-form");
+var closeButton = document.getElementById("closeBTN-modal");
+var modalMessage = document.getElementById("modal-message");
+var goToLoginBTN = document.getElementById("btn-gologin");
+var x = document.getElementById("myModal");
+
+if(isSuccessed === "False"){
+	console.log("false to sign up");
+	$(document).ready(function(){
+	    // Show modal on page load
+	    
+	    $("#myModal").modal({
+	        backdrop: 'static',
+	        keyboard: false
+	      });
+	    goToLoginBTN.style.display = "none";
+	    closeButton.style.display = "block";
+	    modalMessage.innerText = "Fail to create your account!";
+	    modalMessage.classList = "";
+	    modalMessage.classList.add("text-warning");
+	});
+}
+if(isSuccessed === "True"){
+	
+	$(document).ready(function(){
+	    // Show modal on page load
+	       $("#myModal").modal({
+	        backdrop: 'static',
+	        keyboard: false
+	      });
+	    
+	    goToLoginBTN.style.display = "block";
+	    closeButton.style.display = "none";
+	    modalMessage.innerText = "Successfully create your account";
+	    modalMessage.classList = "";
+	    modalMessage.classList.add("text-success");
+	});
+}
+
+
+
 var password1 = document.getElementById("password1");
 var confirm_password1 = document.getElementById("confirm_password1");
 var password2 = document.getElementById("password2");
@@ -405,10 +474,8 @@ var setAtribute = (data = {}) =>{
 	if (Object.keys(data).length !==0) {
 		firstName1.value = data.firstName1;
 		lastName1.value = data.lastName1;
-		employeeID1.value = data.employeeID1;
-		password1.value = data.password1;
-		confirm_password1.value = data.password1;		
-		for(var i = 0; i< 6; i++){
+		employeeID1.value = data.employeeID1;	
+		for(var i = 0; i< 4; i++){
 			if(i !== 2){			
 			allLabels[i].outerText = '';
 			}
@@ -489,5 +556,7 @@ $('.form').find('input, textarea').on('keyup blur focus', function (e) {
 	  
 	});
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </body>
 </html>
