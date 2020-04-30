@@ -1,5 +1,6 @@
 package com.bizcom.database;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -22,9 +23,13 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.collections4.bidimap.DualHashBidiMap;
 
 import com.bizcom.MICI_Station.ErrorCode;
+import com.bizcom.authentication.UrlPatternUtils;
 import com.bizcom.ppid.PPID;
 import com.bizcom.receiving.physicalreceiving.Item;
 import com.bizcom.receiving.physicalreceiving.PreAlertItem;
@@ -1283,7 +1288,31 @@ public class DBHandler {
 
 		return result;
 	}
+	public boolean checkAuthentication(HttpServletRequest request, HttpServletResponse response,String patternURL) throws IOException {
+		StringBuilder stB = new StringBuilder(UrlPatternUtils.getUrlPattern(request));
+		stB.deleteCharAt(0);
+		String urlPattern = stB.toString();		
+		try {
+			String userName = request.getSession().getAttribute("username").toString();
+			String roles = request.getSession().getAttribute("user_role").toString();
 
+			if(userName != null ) {		
+				String[] roleArray = roles.split(";");
+				for(int i=0; i< roleArray.length; i++) {
+					System.out.println("Role: >> "  +roleArray[i]);
+					if(roleArray[i].equalsIgnoreCase(urlPattern)) {
+						request.getRequestDispatcher("/WEB-INF/views/"+patternURL+".jsp").forward(request, response);
+						return true;
+					}
+				}
+				response.sendRedirect(request.getContextPath() + "/signin");
+			}	
+		}catch(Exception e) {
+			System.out.println(e.getMessage());	
+			response.sendRedirect(request.getContextPath() + "/signin");
+		}
+		return false;
+	}
 	// ***************************END*****************************
 	// ***************************END*****************************
 	// ***************************END*****************************
