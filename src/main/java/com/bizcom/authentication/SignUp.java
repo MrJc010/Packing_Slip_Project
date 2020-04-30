@@ -34,22 +34,22 @@ public class SignUp extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO add shoploor
 		// "shopfloor/station_config_step_3","shopfloor/station_management","shopfloor/create_new_partnumber_step2","shopfloor/create_new_partnumber_step1"
-	
+		String[] rolesArr = db.getAllRoles();
+		List<String> listRolesWeb=  new ArrayList<String>() ;
+		for(int i=0; i < rolesArr.length  ; i++) {
+			listRolesWeb.add(rolesArr[i].toUpperCase());
+		}
+		request.setAttribute("ListRoles", listRolesWeb);
 		if(db.checkAuthentication(request, response, "signup/signup" )) {
 			if (request.getSession().getAttribute("username") == null) {			
 				request.setAttribute("setHiddenSignOut", "hidden");				
 			} else {			
 				request.setAttribute("setHiddenSignOut", "show");				
-			}
-		
-			
-			String[] rolesArr = db.getAllRoles();
-			List<String> listRolesWeb=  new ArrayList<String>() ;
-			for(int i=0; i < rolesArr.length  ; i++) {
-				listRolesWeb.add(rolesArr[i].toUpperCase());
-			}
-			request.setAttribute("ListRoles", listRolesWeb);	
+			}					
+				
 //			request.getRequestDispatcher("/WEB-INF/signup/signup.jsp").forward(request, response);
+		}else {
+			
 		}
 		
 	
