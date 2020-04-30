@@ -461,7 +461,7 @@ if(isSuccessed === "True"){
 	        keyboard: false
 	      });	    
 	    goToLoginBTN.style.display = "block";
-/* 	    closeButton.style.display = "none"; */
+ 	    closeButton.style.display = "none"; 
 	    modalMessage.innerText = "Successfully create your account";
 	    modalMessage.classList = "";
 	    modalMessage.classList.add("text-success");
