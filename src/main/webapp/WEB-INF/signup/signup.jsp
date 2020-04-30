@@ -6,6 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Sign Up Form</title>
+
 <link rel="stylesheet"
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
 	integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
@@ -288,7 +289,7 @@ textarea {
 						<strong>Bizcom Notification</strong>
 					</h4>
 					<button id="closeBTN-modal" type="button" class="close"
-						data-dismiss="modal">&times;</button>
+						data-dismiss="modal"><strong class="text-danger">&times;</strong></button>
 				</div>
 
 				<!-- Modal body -->
@@ -404,10 +405,10 @@ textarea {
 								<select name="picker-id" id="picker-id"
 									class="selectpicker form-control show-tick" data-width="100%"
 									multiple data-live-search="true" data-size="10"
-									title="Choose one or more roles">									
-								<%-- 	<c:forEach var="item" items="${arrayRoles}">
-									<option value="${item }">${item }</option>
-									</c:forEach>	 --%>												
+									title="Choose one or more roles">
+									<c:forEach items="${ListRoles}" var="item">
+										<option value="${item }">${item}</option>
+									</c:forEach>
 								</select>
 
 							</div>
@@ -437,7 +438,6 @@ var goToLoginBTN = document.getElementById("btn-gologin");
 var x = document.getElementById("myModal");
 
 if(isSuccessed === "False"){
-	console.log("false to sign up");
 	$(document).ready(function(){
 	    // Show modal on page load
 	    
@@ -459,10 +459,9 @@ if(isSuccessed === "True"){
 	       $("#myModal").modal({
 	        backdrop: 'static',
 	        keyboard: false
-	      });
-	    
+	      });	    
 	    goToLoginBTN.style.display = "block";
-	    closeButton.style.display = "none";
+/* 	    closeButton.style.display = "none"; */
 	    modalMessage.innerText = "Successfully create your account";
 	    modalMessage.classList = "";
 	    modalMessage.classList.add("text-success");
@@ -518,26 +517,13 @@ submit1.onclick = () => {
 	}
 	validatePassword(password1,confirm_password1);
 }
-
-var stringRoles = `${arrayRoles}`;
-console.log(stringRoles);
-var listRoles = stringRoles.split(",");
-console.log(listRoles);
 var picker_id = document.getElementById("picker-id");
 
-for(var key in listRoles){
-	 var op = document.createElement('option');
-    op.appendChild(document.createTextNode(listRoles[key]));
-    op.value = key;
-    picker_id.appendChild(op);
-}
-
 submit2.onclick = () => {
-	if(picker_id.value="" || confirm_password2.value === "" || firstName2.value==="" || lastName2.value==="" || employeeID2.value==="" || password2.value===""){
+	if(picker_id.value ==="" || confirm_password2.value === "" || firstName2.value==="" || lastName2.value==="" || employeeID2.value==="" || password2.value===""){
 	alert("All information must be filled out");
 	return false;
 	}	
-
 	
 	validatePassword(password2,confirm_password2);
 }

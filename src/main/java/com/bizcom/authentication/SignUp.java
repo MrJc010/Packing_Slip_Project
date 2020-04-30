@@ -26,7 +26,7 @@ public class SignUp extends HttpServlet {
 	private final static String manageCode= "08950c6b1295b314a272e70c2efdf3174a065ae65f4e0eefcb0e572fe0f881b3dd99014e04d377587ac07195c1a5d93cd85458e6d406ecd200d10a7f43591a2a";
 	private final static String salt = "bqlpbbjiuazmka";
 	private DBHandler db = new DBHandler();
-
+	
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -35,14 +35,12 @@ public class SignUp extends HttpServlet {
 		// TODO add shoploor
 		// "shopfloor/station_config_step_3","shopfloor/station_management","shopfloor/create_new_partnumber_step2","shopfloor/create_new_partnumber_step1"
 		String[] rolesArr = {"v1","shopfloor_management","shipping","search","runin2","extraitem","repair02","repair01","file_downLoad","pre_alert","searchitem","rma-receiver","physicalreceiving","receiving","qc3","qc2","qc1","pe_clca_identify","pe_analyze","packing_slip","packing","obe","mici","a","eco","cosmetic_check","cmb2","signin","signup","signout"};
-		System.out.println(rolesArr);	
-		StringBuffer sb = new StringBuffer();
-		int i;
-		for(i=0; i < rolesArr.length - 1 ; i++) {
-			sb.append(rolesArr[i] + ",");
+
+		List<String> listRolesWeb=  new ArrayList<String>() ;
+		for(int i=0; i < rolesArr.length  ; i++) {
+			listRolesWeb.add(rolesArr[i].toUpperCase());
 		}
-		sb.append(rolesArr[i]);
-		request.setAttribute("arrayRoles", sb.toString());	
+		request.setAttribute("ListRoles", listRolesWeb);	
 		request.getRequestDispatcher("/WEB-INF/signup/signup.jsp").forward(request, response);
 	}
 
@@ -51,19 +49,17 @@ public class SignUp extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String roles = request.getParameter("roles");
-		if(roles != null && roles.equalsIgnoreCase("employee")) {		
+		if(roles != null && roles.equalsIgnoreCase("employee")) {
 			String firstName = request.getParameter("firstName2");
 			String lastName = request.getParameter("lastName2");
 			String employeeID = request.getParameter("employeeID2");
-			String password1 = request.getParameter("password2");	
-
+			String password1 = request.getParameter("password2");			
 			// Get and Set roles
+
 			String[] a = request.getParameterValues("picker-id");
 			StringBuilder rolesBuilder = new StringBuilder();
-			System.out.println(Arrays.toString(a));
-			System.out.println(arrayRoles.toString());	
-			for(int i = 0; i < a.length - 1; i++) {
-				rolesBuilder.append(a[i].toLowerCase()+";");
+			for(int j = 0; j < a.length; j++) {
+				rolesBuilder.append(a[j].toLowerCase()+";");
 
 			}
 			rolesBuilder.append(a[a.length - 1].toLowerCase());
@@ -93,6 +89,7 @@ public class SignUp extends HttpServlet {
 				if(db.signUp(employeeID, password1, "Manager", firstName, lastName)) {
 					//If Create user-account Successfull
 					request.setAttribute("create-account-notification", "True");
+					request.getSession().invalidate();					
 					doGet(request,response);
 				}else {
 					//Else Fail to create account
