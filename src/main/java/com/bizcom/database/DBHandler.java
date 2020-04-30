@@ -1793,6 +1793,7 @@ public class DBHandler {
 		
 		return result;
 	}
+	
 	public String hash(String passwordToHash, byte[] salt) {
 		String generatedPassword = null;
 		try {

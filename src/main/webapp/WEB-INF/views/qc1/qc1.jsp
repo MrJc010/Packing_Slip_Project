@@ -6,7 +6,7 @@
 
 	<div class="container p-5">
 		<div class="row justify-content-center">
-			<h1>Repair02 Station</h1>
+			<h1>QC1 Station</h1>
 		</div>
 
 		<form class="container-fluid"
