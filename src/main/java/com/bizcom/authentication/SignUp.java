@@ -34,8 +34,7 @@ public class SignUp extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO add shoploor
 		// "shopfloor/station_config_step_3","shopfloor/station_management","shopfloor/create_new_partnumber_step2","shopfloor/create_new_partnumber_step1"
-		String[] rolesArr = {"v1","shopfloor_management","shipping","search","runin2","extraitem","repair02","repair01","file_downLoad","pre_alert","searchitem","rma-receiver","physicalreceiving","receiving","qc3","qc2","qc1","pe_clca_identify","pe_analyze","packing_slip","packing","obe","mici","a","eco","cosmetic_check","cmb2","signin","signup","signout"};
-
+		String[] rolesArr = db.getAllRoles();
 		List<String> listRolesWeb=  new ArrayList<String>() ;
 		for(int i=0; i < rolesArr.length  ; i++) {
 			listRolesWeb.add(rolesArr[i].toUpperCase());

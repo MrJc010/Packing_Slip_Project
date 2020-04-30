@@ -52,7 +52,7 @@ public class DBHandler {
 	private static final String REPAIR01 = "REPAIR01";
 	private static final String QC1 = "QC1";
 	private static final String START = "START";
-
+	private static final String[] allRoles = {"v1","shopfloor_management","shipping","search","runin2","extraitem","repair02","repair01","file_downLoad","pre_alert","searchitem","rma-receiver","physicalreceiving","receiving","qc3","qc2","qc1","pe_clca_identify","pe_analyze","packing_slip","packing","obe","mici","eco","cosmetic_check","cmb2","signin","signup"};
 	public DBHandler() {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -1313,6 +1313,10 @@ public class DBHandler {
 			response.sendRedirect(request.getContextPath() + "/signin");
 		}
 		return false;
+	}
+	
+	public String[] getAllRoles () {
+		return this.allRoles;
 	}
 	// ***************************END*****************************
 	// ***************************END*****************************
