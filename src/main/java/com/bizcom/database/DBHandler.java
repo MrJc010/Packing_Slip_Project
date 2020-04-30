@@ -1735,6 +1735,7 @@ public class DBHandler {
 	// ***************************END*****************************
 	// ***************************END*****************************
 	public boolean signUp(String username, String password, String role, String firstName, String lastName) {
+		if(username.toLowerCase().contains("admin")) return false;
 		String saltRd = generateStringRandom(14);
 		String hashPassword = hash(password,saltRd.getBytes());
 		boolean result = false;

@@ -244,36 +244,16 @@ textarea {
 				<span class="navbar-toggler-icon"></span>
 			</button>
 
-			<div class="collapse navbar-collapse" id="navbarCollapse">
+			<div class="collapse navbar-collapse text-right" id="navbarCollapse">
 				<ul class="navbar-nav mr-auto">
-					<li class="nav-item dropdown"><a
-						class="nav-link dropdown-toggle"
-						href="<%=request.getContextPath()%>/" id="navbarDropdownMenuLink"
-						data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							<span class="text-white"><strong>RECEIVING</strong></span>
-					</a>
-						<ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-							<li><a class="dropdown-item"
-								href="<%=request.getContextPath()%>/pre_alert"> <span
-									class="text-black"><strong>PRE-ALERT</strong></span>
-							</a></li>
-							<li><a class="dropdown-item"
-								href="<%=request.getContextPath()%>/searchitem"><span
-									class="text-black"><strong>Physical Receiving</strong></span></a></li>
-							<li class="dropdown-submenu"><a
-								class="dropdown-item dropdown-toggle" href="#"><span
-									class="text-black"><strong>Report</strong></span></a>
-								<ul class="dropdown-menu">
-									<li><a class="dropdown-item"
-										href="<%=request.getContextPath()%>/shortitem">Short Item</a></li>
-									<li><a class="dropdown-item"
-										href="<%=request.getContextPath()%>/extraitem">Extra Item</a></li>
-									<li><a class="dropdown-item"
-										href="<%=request.getContextPath()%>/incorrectitem">Incorrect
-											Item</a></li>
-								</ul></li>
-						</ul></li>
+
 				</ul>
+				<a type="button" href="<%=request.getContextPath()%>/signout"
+					class="btn btn-danger" ${setHiddenSignOut} >Sign out</a> 
+					
+				<a type="button"
+					href="<%=request.getContextPath()%>/signin" class="btn btn-success" ${setHiddenSignIn}>Sign
+					in</a>
 			</div>
 		</nav>
 	</header>
@@ -289,7 +269,9 @@ textarea {
 						<strong>Bizcom Notification</strong>
 					</h4>
 					<button id="closeBTN-modal" type="button" class="close"
-						data-dismiss="modal"><strong class="text-danger">&times;</strong></button>
+						data-dismiss="modal">
+						<strong class="text-danger">&times;</strong>
+					</button>
 				</div>
 
 				<!-- Modal body -->

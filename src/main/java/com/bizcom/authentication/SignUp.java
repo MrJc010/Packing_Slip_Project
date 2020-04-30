@@ -34,6 +34,16 @@ public class SignUp extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO add shoploor
 		// "shopfloor/station_config_step_3","shopfloor/station_management","shopfloor/create_new_partnumber_step2","shopfloor/create_new_partnumber_step1"
+	
+		if (request.getSession().getAttribute("username") == null) {			
+			request.setAttribute("setHiddenSignOut", "hidden");
+			request.setAttribute("setHiddenSignIn", "show");
+		} else {			
+			request.setAttribute("setHiddenSignOut", "show");
+			request.setAttribute("setHiddenSignIn", "hidden");
+		}
+	
+		
 		String[] rolesArr = db.getAllRoles();
 		List<String> listRolesWeb=  new ArrayList<String>() ;
 		for(int i=0; i < rolesArr.length  ; i++) {

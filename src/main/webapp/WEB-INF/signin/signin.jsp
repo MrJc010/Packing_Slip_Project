@@ -3,15 +3,21 @@
 <c:import url="/WEB-INF/common/header.jsp">
 	<c:param name="title" value="Search Info"></c:param>
 </c:import>
+<style>
+*, *:before, *:after {
+	box-sizing: border-box;
+}
 
+
+</style>
 
 
 <section>
 
-	<div class="container-fluid">
+	<div class="main container-fluid">
 		<div class="row mt-3">
 			<div class="col-md-4 col-sm-0"></div>
-			<div class="col-md-4 col-sm-12">
+			<div class="col-md-4 col-sm-12 shadow-lg p-3 mb-5 bg-white rounded">
 				<div class="text-center">
 					<form action="<%=request.getContextPath()%>/signin" method="POST">
 						<h1 class="display-5 text-primary mb-5">
