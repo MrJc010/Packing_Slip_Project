@@ -24,8 +24,7 @@
 					<input type="submit" class="btn btn-md btn-primary" value="Search"
 						name="action" />
 				</div>
-			</div>
-
+			</div>			
 			<div class="form-group row my-4 justify-content-center"
 				${setHiddenNotification}>
 				<button type="button" class="btn btn-outline-info">

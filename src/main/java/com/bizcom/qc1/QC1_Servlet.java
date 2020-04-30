@@ -42,8 +42,6 @@ public class QC1_Servlet extends HttpServlet {
 			System.out.println("ELE soemthing");
 		}
 		
-		
-		
 
 	}
 
