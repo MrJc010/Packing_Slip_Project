@@ -70,89 +70,89 @@ public class FileUploadServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
-
+		
 	
-		pathFile = "";
-		request.setAttribute("setErrorHidden", "hidden");
-		request.setAttribute("setSuccesHidden", "hidden");
-
-		String resetAc = request.getParameter("resetButton");
-		if (resetAc != null && resetAc.equalsIgnoreCase("resetPage")) {
-			hideBody(request, response, true);
+		if(dbHandler.checkAuthentication(request, response, "receiving_station/pre_alert/pre_alert")) {
+			pathFile = "";
 			request.setAttribute("setErrorHidden", "hidden");
 			request.setAttribute("setSuccesHidden", "hidden");
-			request.getRequestDispatcher("/WEB-INF/views/receiving_station/pre_alert/pre_alert.jsp").forward(request,
-					response);
-			return;
-		}
 
-		if (request.getSession().getAttribute("PathFile") != null) {
+			String resetAc = request.getParameter("resetButton");
+			if (resetAc != null && resetAc.equalsIgnoreCase("resetPage")) {
+				hideBody(request, response, true);
+				request.setAttribute("setErrorHidden", "hidden");
+				request.setAttribute("setSuccesHidden", "hidden");
+				request.getRequestDispatcher("/WEB-INF/views/receiving_station/pre_alert/pre_alert.jsp").forward(request,
+						response);
+				return;
+			}
 
-			hideBody(request, response, false);
-			pathFile = request.getSession().getAttribute("PathFile").toString();
-			request.setAttribute("setSuccesHidden", "show");
-			request.setAttribute("urll", pathFile);
-			String rmaPara = request.getParameter("rmaButton");
-			// excelService.read(pathFile);
+			if (request.getSession().getAttribute("PathFile") != null) {
 
-			excelService.read(pathFile);
+				hideBody(request, response, false);
+				pathFile = request.getSession().getAttribute("PathFile").toString();
+				request.setAttribute("setSuccesHidden", "show");
+				request.setAttribute("urll", pathFile);
+				String rmaPara = request.getParameter("rmaButton");
+				// excelService.read(pathFile);
 
-			List<PPID> list = new ArrayList<>();
+				excelService.read(pathFile);
 
-			list.addAll(excelService.getListOfRowPPID());
-			String isExported = "";
+				List<PPID> list = new ArrayList<>();
 
-			PPID tempPPID = list.get(0);
-			String ppidTest = tempPPID.getPpidNumber();
-			String pnTest = tempPPID.getPnNumber();
-			String lotTest = tempPPID.getLotNumber();
-			isExported = dbHandler.isRecordPreAlertExist(ppidTest, pnTest, lotTest);
+				list.addAll(excelService.getListOfRowPPID());
+				String isExported = "";
 
-			if (rmaPara != null && isExported.isEmpty()) {
-				RMAServices rma = new RMAServices();
-				String newRMA = rma.generatorRMA();
-//				
-				
-				
+				PPID tempPPID = list.get(0);
+				String ppidTest = tempPPID.getPpidNumber();
+				String pnTest = tempPPID.getPnNumber();
+				String lotTest = tempPPID.getLotNumber();
+				isExported = dbHandler.isRecordPreAlertExist(ppidTest, pnTest, lotTest);
 
-				try {
-					dbHandler.ppidToDB(excelService.appendRMAForPPID(list, newRMA));
-					setHiddenExport = "show";
-				} catch (ClassNotFoundException | SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				if (rmaPara != null && isExported.isEmpty()) {
+					RMAServices rma = new RMAServices();
+					String newRMA = rma.generatorRMA();
+//					
+					
+					
+
+					try {
+						dbHandler.ppidToDB(excelService.appendRMAForPPID(list, newRMA));
+						setHiddenExport = "show";
+					} catch (ClassNotFoundException | SQLException e) {
+						e.printStackTrace();
+					}
+
+					saveRMA(pathFile, newRMA);
+					dbHandler.createNewRMA(newRMA, "userID");
+					try {
+						dbHandler.addToPre_PPID(newRMA, list);
+					} catch (ClassNotFoundException e) {
+						
+						e.printStackTrace();
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+
+				} else {
+					request.setAttribute("setErrorHidden", "hidden");
+//					System.out.println("uploaded show uppp");
 				}
-
-				saveRMA(pathFile, newRMA);
-				dbHandler.createNewRMA(newRMA, "userID");
 				try {
-					dbHandler.addToPre_PPID(newRMA, list);
-				} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
+					refeshPackingSlip(request, response, pathFile);
+					refeshPPIDs(request, response, pathFile);
+				} catch (Exception e) {
 					e.printStackTrace();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					System.out.println(e.getMessage());
 				}
 
 			} else {
-				request.setAttribute("setErrorHidden", "hidden");
-//				System.out.println("uploaded show uppp");
+				hideBody(request, response, true);
 			}
-			try {
-				refeshPackingSlip(request, response, pathFile);
-				refeshPPIDs(request, response, pathFile);
-			} catch (Exception e) {
-				e.printStackTrace();
-				System.out.println(e.getMessage());
-			}
-
-		} else {
-			hideBody(request, response, true);
+			request.setAttribute("setHiddenExport", setHiddenExport);
+			request.getRequestDispatcher("/WEB-INF/views/receiving_station/pre_alert/pre_alert.jsp").forward(request,
+					response);
 		}
-		request.setAttribute("setHiddenExport", setHiddenExport);
-		request.getRequestDispatcher("/WEB-INF/views/receiving_station/pre_alert/pre_alert.jsp").forward(request,
-				response);
 
 	}
 

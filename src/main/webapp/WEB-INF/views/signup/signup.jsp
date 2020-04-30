@@ -249,11 +249,8 @@ textarea {
 
 				</ul>
 				<a type="button" href="<%=request.getContextPath()%>/signout"
-					class="btn btn-danger" ${setHiddenSignOut} >Sign out</a> 
-					
-				<a type="button"
-					href="<%=request.getContextPath()%>/signin" class="btn btn-success" ${setHiddenSignIn}>Sign
-					in</a>
+					class="btn btn-danger" ${setHiddenSignOut} >Sign out</a> 					
+			
 			</div>
 		</nav>
 	</header>

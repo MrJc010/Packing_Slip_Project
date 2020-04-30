@@ -61,10 +61,10 @@
 			<div class="collapse navbar-collapse" id="navbarCollapse">
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item dropdown"><a
-						class="nav-link dropdown-toggle" href="<%=request.getContextPath()%>/"
-						id="navbarDropdownMenuLink" data-toggle="dropdown"
-						aria-haspopup="true" aria-expanded="false"> <span
-							class="text-white"><strong>RECEIVING</strong></span>
+						class="nav-link dropdown-toggle"
+						href="<%=request.getContextPath()%>/" id="navbarDropdownMenuLink"
+						data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<span class="text-white"><strong>RECEIVING</strong></span>
 					</a>
 						<ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 							<li><a class="dropdown-item"
@@ -125,7 +125,7 @@
 						href="<%=request.getContextPath()%>/qc3"><span
 							class="text-white"><strong>QC3</strong></span></a></li>
 
-				<%-- 	<li class="nav-item"><a class="nav-link"
+					<%-- 	<li class="nav-item"><a class="nav-link"
 						href="<%=request.getContextPath()%>/cosmetic_check"><span
 							class="text-white"><strong>Cosmetic Check</strong></span></a></li>
 
@@ -181,24 +181,37 @@
 				<%
 					if (request.getSession().getAttribute("username") == null) {
 						request.setAttribute("setHiddenSignOut", "hidden");
-						request.setAttribute("setHiddenSignUp", "show");
-						
+
 					} else {
 						request.setAttribute("setHiddenSignOut", "show");
 					}
 				%>
 
-				<form class="form-inline mt-2 mt-md-0"
-					action="<%=request.getContextPath()%>/signout" method="GET">
-					<button class="btn btn-danger my-2 my-sm-0" type="submit"
-						${setHiddenSignOut}>
-						<strong>SIGN OUT</strong>
-					</button>					
-				</form>
-				<a class="btn btn-danger my-2 my-sm-0" type="submit" href="<%=request.getContextPath()%>/signup"
-						${setHiddenSignUp}>
-						<strong>SIGN UP</strong>
+				<ul class="navbar-nav ml-auto mr-5">
+				<li class="nav-item dropdown"><a
+						class="nav-link dropdown-toggle"
+						id="navbarDropdownMenuLink"
+						data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<span class="text-white"><strong>Account</strong></span>
 					</a>
+						<ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+							<li><a class="dropdown-item"
+								href="<%=request.getContextPath()%>/signout"> <span
+									class="text-black"><strong>Sign Out</strong></span>
+							</a></li>
+							<li><a class="dropdown-item"
+								href="<%=request.getContextPath()%>/signup"> <span
+									class="text-black"><strong>Create Account</strong></span>
+							</a></li>
+							<li><a class="dropdown-item"
+								href="<%=request.getContextPath()%>/manage_account"> <span
+									class="text-black"><strong>Manage Account</strong></span>
+							</a></li>
+						</ul>
+
+				</ul>
+
+				
 			</div>
 		</nav>
 	</header>
