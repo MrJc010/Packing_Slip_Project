@@ -34,46 +34,47 @@ public class SearchItemController extends HttpServlet {
 		String isSuccess = "";
 		request.setAttribute("setHiddenSuccess", "hidden");
 		request.setAttribute("setHiddenError", "hidden");
-		if(dbHandler.checkAuthentication(request, response, "receiving_station/physicalreceiving/searchitem")) {		
+		if(dbHandler.checkAuthenticationPreAlert(request)) {		
 			System.out.println("Run doget");
-		try {
-			isSuccess = (String) request.getSession().getAttribute("Successfull");
-			if (isSuccess.equalsIgnoreCase("Successfull")) {
-				System.out.println("found Successfull");
-				request.setAttribute("setHiddenSuccess", "show");
-				request.setAttribute("successMessage", request.getParameter("ppid") + " updated successfully!");
+			try {
+				isSuccess = (String) request.getSession().getAttribute("Successfull");
+				if (isSuccess.equalsIgnoreCase("Successfull")) {
+					System.out.println("found Successfull");
+					request.setAttribute("setHiddenSuccess", "show");
+					request.setAttribute("successMessage", request.getParameter("ppid") + " updated successfully!");
+					request.getSession().setAttribute("Successfull", "");
+				} else if (isSuccess.equalsIgnoreCase("Unsuccessfull")) {
+
+					System.out.println("found Unsuccessfull");
+					request.setAttribute("setHiddenSuccess", "hidden");
+					request.setAttribute("successMessage", "");
+					errorDisplay(request, response, request.getParameter("ppid") + " cannot update to database.");
+					request.getSession().setAttribute("Successfull", "");
+				} else {
+					System.out.println("not found ");
+					request.setAttribute("setHiddenSuccess", "hidden");
+					request.setAttribute("setHiddenError", "hidden");
+					request.setAttribute("ppidValue", "");
+				}
+			} catch (Exception e) {
+				System.out.println("catch");
+				// first time access
 				request.getSession().setAttribute("Successfull", "");
-			} else if (isSuccess.equalsIgnoreCase("Unsuccessfull")) {
-		
-				System.out.println("found Unsuccessfull");
-				request.setAttribute("setHiddenSuccess", "hidden");
-				request.setAttribute("successMessage", "");
-				errorDisplay(request, response, request.getParameter("ppid") + " cannot update to database.");
-				request.getSession().setAttribute("Successfull", "");
-			} else {
-				System.out.println("not found ");
 				request.setAttribute("setHiddenSuccess", "hidden");
 				request.setAttribute("setHiddenError", "hidden");
 				request.setAttribute("ppidValue", "");
 			}
-		} catch (Exception e) {
-			System.out.println("catch");
-			// first time access
-			request.getSession().setAttribute("Successfull", "");
-			request.setAttribute("setHiddenSuccess", "hidden");
-			request.setAttribute("setHiddenError", "hidden");
-			request.setAttribute("ppidValue", "");
-		}
+			request.getRequestDispatcher("/WEB-INF/views/receiving_station/physicalreceiving/searchitem.jsp").forward(request, response);
 
-
-		
+		}else {
+			response.sendRedirect(request.getContextPath() + "/signin");
 		}
 	}
 
 	private void searchItem(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		request.getRequestDispatcher("/WEB-INF/views/receiving_station/physicalreceiving/searchitem.jsp")
-				.forward(request, response);
+		.forward(request, response);
 	}
 
 	/**

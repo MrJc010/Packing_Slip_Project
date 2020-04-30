@@ -1290,42 +1290,16 @@ public class DBHandler {
 
 		return result;
 	}
-	
-	public boolean checkAuthenticationPreAlert(HttpServletRequest request,String patternURL) throws IOException {
-		StringBuilder stB = new StringBuilder(UrlPatternUtils.getUrlPattern(request));
-		stB.deleteCharAt(0);
-		String urlPattern = stB.toString();		
-		try {
-			String userName = request.getSession().getAttribute("username").toString();
-			String roles = request.getSession().getAttribute("user_role").toString();
-
-			if(userName != null ) {		
-				String[] roleArray = roles.split(";");
-				for(int i=0; i< roleArray.length; i++) {
-					if(roleArray[i].equalsIgnoreCase(urlPattern)) {
-						return true;
-					}
-				}
-			}	
-		}catch(Exception e) {
-			return false;
-		}
-		return false;
-	}
-	
 	public boolean checkAuthentication(HttpServletRequest request, HttpServletResponse response,String patternURL) throws IOException {
 		StringBuilder stB = new StringBuilder(UrlPatternUtils.getUrlPattern(request));
 		stB.deleteCharAt(0);
 		String urlPattern = stB.toString();		
-		System.out.println("urlPattern : " + urlPattern);
 		try {
 			String userName = request.getSession().getAttribute("username").toString();
 			String roles = request.getSession().getAttribute("user_role").toString();
-
 			if(userName != null ) {		
 				String[] roleArray = roles.split(";");
-				for(int i=0; i< roleArray.length; i++) {				
-					
+				for(int i=0; i< roleArray.length; i++) {
 					if(urlPattern.length() == 0) {
 						request.getRequestDispatcher("/WEB-INF/index.jsp").forward(request, response);
 						return true;
@@ -1342,6 +1316,29 @@ public class DBHandler {
 		}catch(Exception e) {
 			System.out.println("error " +e.getMessage());	
 			response.sendRedirect(request.getContextPath() + "/signin");
+		}
+		return false;
+	}
+	
+	public boolean checkAuthenticationPreAlert(HttpServletRequest request) throws IOException {
+		StringBuilder stB = new StringBuilder(UrlPatternUtils.getUrlPattern(request));
+		stB.deleteCharAt(0);
+		String urlPattern = stB.toString();
+		System.out.println(urlPattern);
+		try {
+			String userName = request.getSession().getAttribute("username").toString();
+			String roles = request.getSession().getAttribute("user_role").toString();
+
+			if(userName != null ) {		
+				String[] roleArray = roles.split(";");
+				for(int i=0; i< roleArray.length; i++) {
+					if(roleArray[i].equalsIgnoreCase(urlPattern)) {
+						return true;
+					}
+				}
+			}	
+		}catch(Exception e) {
+			return false;
 		}
 		return false;
 	}

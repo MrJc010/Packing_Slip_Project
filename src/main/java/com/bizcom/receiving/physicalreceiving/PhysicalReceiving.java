@@ -29,7 +29,7 @@ public class PhysicalReceiving extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		if(dbhandler.checkAuthentication(request, response, "receiving_station/physicalreceiving/physicalreceiving")) {
+		if(dbhandler.checkAuthenticationPreAlert(request)) {
 			request.getSession().setAttribute("Successfull", "");
 			myList = new ArrayList<>();
 			String ppid = request.getParameter("ppid");
@@ -67,6 +67,8 @@ public class PhysicalReceiving extends HttpServlet {
 			} else {
 				response.sendRedirect(request.getContextPath() + "/searchitem");
 			}
+		}else {
+			response.sendRedirect(request.getContextPath() + "/signin");
 		}
 
 	}
