@@ -28,51 +28,45 @@ public class PhysicalReceiving extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-//		HttpSession session = request.getSession();
-		request.getSession().setAttribute("Successfull", "");
-		myList = new ArrayList<>();
-		String ppid = request.getParameter("ppid");
-		int count = dbhandler.getRecordCount(ppid);
-		if (count >= 5) {
-			response.sendRedirect(request.getContextPath() + "/morethanfive?ppid=" + ppid);
-			return;
-		}
-		if (ppid != null) {
-			myList.addAll(dbhandler.fetchRMA(ppid));
 
-//			if (myList.size() == 0) {
-//				notFound = "Cannot Find Item With Your Info!";
-//				session.setAttribute("re", notFound);
-//				response.sendRedirect(request.getContextPath() + "/searchitem");
-//			} else {
-//				notFound = "";
-//				session.setAttribute("re", notFound);
-			Item temp = myList.get(0);
-			String rma = temp.getRma();
-			String ppid2 = temp.getPpid();
-			String pn = temp.getPn();
-			String co = temp.getCo();
-			String problemDescription = temp.getDescription();
-			String lotNum = temp.getLot();
-			String problemCode = temp.getProblemCode();
-			String dpsNumer = temp.getDps();
+		if(dbhandler.checkAuthentication(request, response, "receiving_station/physicalreceiving/physicalreceiving")) {
+			request.getSession().setAttribute("Successfull", "");
+			myList = new ArrayList<>();
+			String ppid = request.getParameter("ppid");
+			int count = dbhandler.getRecordCount(ppid);
+			if (count >= 5) {
+				response.sendRedirect(request.getContextPath() + "/morethanfive?ppid=" + ppid);
+				return;
+			}
+			if (ppid != null) {
+				myList.addAll(dbhandler.fetchRMA(ppid));
+				Item temp = myList.get(0);
+				String rma = temp.getRma();
+				String ppid2 = temp.getPpid();
+				String pn = temp.getPn();
+				String co = temp.getCo();
+				String problemDescription = temp.getDescription();
+				String lotNum = temp.getLot();
+				String problemCode = temp.getProblemCode();
+				String dpsNumer = temp.getDps();
 
-			request.setAttribute("rma_Number", rma);
-			request.setAttribute("ppid_Number", ppid2);
-			request.setAttribute("pn_Number", pn);
-			request.setAttribute("co_Number", co);
-			request.setAttribute("problem_desc", problemDescription);
-			request.setAttribute("lot", lotNum);
-			request.setAttribute("problem_code", problemCode);
-			request.setAttribute("dps", dpsNumer);
-			request.setAttribute("title", "Search Item");
+				request.setAttribute("rma_Number", rma);
+				request.setAttribute("ppid_Number", ppid2);
+				request.setAttribute("pn_Number", pn);
+				request.setAttribute("co_Number", co);
+				request.setAttribute("problem_desc", problemDescription);
+				request.setAttribute("lot", lotNum);
+				request.setAttribute("problem_code", problemCode);
+				request.setAttribute("dps", dpsNumer);
+				request.setAttribute("title", "Search Item");
 
-			request.getRequestDispatcher("/WEB-INF/views/receiving_station/physicalreceiving/physicalreceiving.jsp")
-					.forward(request, response);
-//			}
+				request.getRequestDispatcher("/WEB-INF/views/receiving_station/physicalreceiving/physicalreceiving.jsp")
+						.forward(request, response);
+//				}
 
-		} else {
-			response.sendRedirect(request.getContextPath() + "/searchitem");
+			} else {
+				response.sendRedirect(request.getContextPath() + "/searchitem");
+			}
 		}
 
 	}
@@ -108,8 +102,6 @@ public class PhysicalReceiving extends HttpServlet {
 
 					request.getSession().setAttribute("Successfull", "Successfull");
 					request.setAttribute("setHiddenError", "hidden");
-//					request.getRequestDispatcher("/WEB-INF/views/receiving_station/physicalreceiving/searchItems.jsp")
-//					.forward(request, response);
 
 				}
 			} else {
@@ -118,7 +110,7 @@ public class PhysicalReceiving extends HttpServlet {
 			}
 
 			response.sendRedirect(request.getContextPath() + "/searchitem?ppid=" + ppid);
-			// request.getSession().setAttribute("Successfull", "");
+
 
 		} else {
 			System.out.println("Duplicate Information");

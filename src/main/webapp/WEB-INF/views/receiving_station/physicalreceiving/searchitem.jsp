@@ -5,7 +5,7 @@
 
 <section>
 
-	<div class="container-fluid px-5 ">
+	<div class="container-fluid px-5">
 
 		<div class="jumbotron row">
 			<div class="col-lg-2"></div>
@@ -69,6 +69,7 @@
 				</h1>
 			</div>
 		</div>
+	</div>
 </section>
 
 

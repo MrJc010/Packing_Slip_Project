@@ -71,13 +71,11 @@ public class FileUploadServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		
-	
-		if(dbHandler.checkAuthentication(request, response, "receiving_station/pre_alert/pre_alert")) {
-			pathFile = "";
-			request.setAttribute("setErrorHidden", "hidden");
-			request.setAttribute("setSuccesHidden", "hidden");
-
-			String resetAc = request.getParameter("resetButton");
+		request.setAttribute("setErrorHidden", "hidden");
+		request.setAttribute("setSuccesHidden", "hidden");
+		pathFile = "";
+		String resetAc = request.getParameter("resetButton");
+		if(dbHandler.checkAuthenticationPreAlert(request, "receiving_station/pre_alert/pre_alert")) {
 			if (resetAc != null && resetAc.equalsIgnoreCase("resetPage")) {
 				hideBody(request, response, true);
 				request.setAttribute("setErrorHidden", "hidden");
@@ -88,7 +86,6 @@ public class FileUploadServlet extends HttpServlet {
 			}
 
 			if (request.getSession().getAttribute("PathFile") != null) {
-
 				hideBody(request, response, false);
 				pathFile = request.getSession().getAttribute("PathFile").toString();
 				request.setAttribute("setSuccesHidden", "show");
@@ -112,10 +109,6 @@ public class FileUploadServlet extends HttpServlet {
 				if (rmaPara != null && isExported.isEmpty()) {
 					RMAServices rma = new RMAServices();
 					String newRMA = rma.generatorRMA();
-//					
-					
-					
-
 					try {
 						dbHandler.ppidToDB(excelService.appendRMAForPPID(list, newRMA));
 						setHiddenExport = "show";
@@ -136,9 +129,10 @@ public class FileUploadServlet extends HttpServlet {
 
 				} else {
 					request.setAttribute("setErrorHidden", "hidden");
-//					System.out.println("uploaded show uppp");
+					
 				}
 				try {
+					
 					refeshPackingSlip(request, response, pathFile);
 					refeshPPIDs(request, response, pathFile);
 				} catch (Exception e) {
@@ -152,6 +146,8 @@ public class FileUploadServlet extends HttpServlet {
 			request.setAttribute("setHiddenExport", setHiddenExport);
 			request.getRequestDispatcher("/WEB-INF/views/receiving_station/pre_alert/pre_alert.jsp").forward(request,
 					response);
+		}else {
+			response.sendRedirect(request.getContextPath() + "/signin");
 		}
 
 	}
