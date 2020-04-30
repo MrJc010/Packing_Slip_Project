@@ -181,6 +181,8 @@
 				<%
 					if (request.getSession().getAttribute("username") == null) {
 						request.setAttribute("setHiddenSignOut", "hidden");
+						request.setAttribute("setHiddenSignUp", "show");
+						
 					} else {
 						request.setAttribute("setHiddenSignOut", "show");
 					}
@@ -191,8 +193,12 @@
 					<button class="btn btn-danger my-2 my-sm-0" type="submit"
 						${setHiddenSignOut}>
 						<strong>SIGN OUT</strong>
-					</button>
+					</button>					
 				</form>
+				<a class="btn btn-danger my-2 my-sm-0" type="submit" href="<%=request.getContextPath()%>/signup"
+						${setHiddenSignUp}>
+						<strong>SIGN UP</strong>
+					</a>
 			</div>
 		</nav>
 	</header>

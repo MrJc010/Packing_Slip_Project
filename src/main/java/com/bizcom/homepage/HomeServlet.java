@@ -27,12 +27,10 @@ public class HomeServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if(db.checkAuthentication(request, response, "")) {
+		System.out.println("RUn hereeee");
+		if(db.checkAuthentication(request, response, "/")) {
 			System.out.println("IF soemthing");
 			request.getRequestDispatcher("/WEB-INF/index.jsp").forward(request, response);
-		}else {
-			System.out.println("ELE soemthing");
-			response.sendRedirect(request.getContextPath()+"/signin");
 		}
 		
 //		

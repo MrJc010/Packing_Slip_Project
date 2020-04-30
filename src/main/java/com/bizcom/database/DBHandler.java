@@ -1301,15 +1301,22 @@ public class DBHandler {
 				String[] roleArray = roles.split(";");
 				for(int i=0; i< roleArray.length; i++) {
 					System.out.println("Role: >> "  +roleArray[i]);
+					System.out.println("urlPattern : " + urlPattern);
+					if(urlPattern.length() == 0) {
+						request.getRequestDispatcher("/WEB-INF/index.jsp").forward(request, response);
+						return true;
+					}
 					if(roleArray[i].equalsIgnoreCase(urlPattern)) {
+						System.out.println("patternURL =>> " + "/WEB-INF/views/"+patternURL+".jsp");
 						request.getRequestDispatcher("/WEB-INF/views/"+patternURL+".jsp").forward(request, response);
 						return true;
 					}
 				}
+				
 				response.sendRedirect(request.getContextPath() + "/signin");
 			}	
 		}catch(Exception e) {
-			System.out.println(e.getMessage());	
+			System.out.println("error " +e.getMessage());	
 			response.sendRedirect(request.getContextPath() + "/signin");
 		}
 		return false;
