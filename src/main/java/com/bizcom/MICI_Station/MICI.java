@@ -75,7 +75,7 @@ public class MICI extends HttpServlet {
 					
 					miciDisplay(request, response);
 					break;
-				case "check":
+				case "check": 
 					checkMICI(request, response);
 					break;
 				default:

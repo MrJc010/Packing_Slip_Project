@@ -48,6 +48,7 @@ public class RepairStaion01 extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
+		if(db.checkAuthentication(request)) {		
 		System.out.println("doget called");
 		String action = request.getParameter("action01");
 		if (action != null) {
@@ -103,6 +104,10 @@ public class RepairStaion01 extends HttpServlet {
 		} else {
 			displayInitialView(request, response, true);
 			request.getRequestDispatcher("/WEB-INF/views/repair_01/repair01.jsp").forward(request, response);
+		}
+		}else {
+			System.out.println("RUN WHEEE");
+			response.sendRedirect(request.getContextPath() + "/signin?pagerequest=repair01");
 		}
 	}
 
