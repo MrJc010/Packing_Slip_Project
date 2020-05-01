@@ -132,13 +132,15 @@
 					</div>
 
 					<div class="row justify-content-center my-3">
-						<button type="submit" class="btn btn-primary"
-							onclick="return confirmation();">
+						<button  type="submit" class="btn btn-primary"
+							>
 							<strong>Receive Item</strong>
 						</button>
+						
 					</div>
 				</form>
-
+				<br/>
+				<button id="print-btn" >Print Out</button>
 			</div>
 			<div class="col-md-2"></div>
 
@@ -150,6 +152,12 @@
 
 </section>
 
-
+<script>
+var btn = document.getElementById("print-btn");
+btn.onclick = () => {
+	console.log("testing" + window);
+	window.print()
+	};
+</script>
 
 <c:import url="/WEB-INF/common/footer.jsp" />
