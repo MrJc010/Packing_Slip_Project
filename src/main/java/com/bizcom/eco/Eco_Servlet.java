@@ -357,6 +357,7 @@ public class Eco_Servlet extends HttpServlet {
 			request.setAttribute("newMaterialPN", "NA");
 			request.setAttribute("shortcut", "NA");
 			request.setAttribute("setPPID", ppid);
+			request.setAttribute("isNoInformationUpdate", "True");
 
 		} else {
 			request.setAttribute("curRevNumber", generatorRev(temp.getCurrentRev()));
@@ -371,6 +372,7 @@ public class Eco_Servlet extends HttpServlet {
 			request.setAttribute("newMaterialPN", temp.getNewMaterial());
 			request.setAttribute("shortcut", temp.getShortcut());
 			request.setAttribute("setPPID", ppid);
+			request.setAttribute("isNoInformationUpdate", "False");
 		}
 		displayInitialView(request, response, false);
 		request.setAttribute("setRepair01HiddenError", "hidden");

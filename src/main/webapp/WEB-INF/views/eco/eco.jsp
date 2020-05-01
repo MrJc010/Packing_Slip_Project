@@ -3,6 +3,32 @@
 	<c:param name="title" value="ECO Station"></c:param>
 </c:import>
 <section>
+	<!-- The Modal -->
+	<div class="modal fade" id="myModal">
+		<div class="modal-dialog modal-lg modal-dialog-centered">
+			<div class="modal-content">
+
+				<!-- Modal Header -->
+				<div class="modal-header">
+					<h4 class="modal-title">
+						<strong>Bizcom Notification</strong>
+					</h4>
+					<button id="closeBTN-modal" type="button" class="close"
+						data-dismiss="modal">
+						<strong class="text-danger">&times;</strong>
+					</button>
+				</div>
+
+				<!-- Modal body -->
+				<div class="modal-body">
+					<h3 id="modal-message" class="text-primary">xxx</h3>
+					
+				</div>
+
+
+			</div>
+		</div>
+	</div>
 
 	<div class="container-fluid p-5">
 
@@ -31,9 +57,10 @@
 
 		</div>
 		<div>
-		<div class="alert alert-success" role="alert" ${setTransferMessageSuccess}>
-  			<strong>This PPID is PASSED!</strong>
-		</div>
+			<div class="alert alert-success" role="alert"
+				${setTransferMessageSuccess}>
+				<strong>This PPID is PASSED!</strong>
+			</div>
 		</div>
 		<div class="row justify-content-center p-5" ${setHiddenTransfer}>
 			<form action="<%=request.getContextPath()%>/eco" method="POST">
@@ -139,7 +166,7 @@
 					<li class="nav-item"><a class="nav-link active" id="home-tab"
 						data-toggle="tab" href="#home" role="tab" aria-controls="home"
 						aria-selected="true">UPGRADE REVISION</a></li>
-					
+
 				</ul>
 
 			</div>
@@ -155,8 +182,7 @@
 
 							<div class=" p-2">
 
-								<form method="POST"
-									action="<%=request.getContextPath()%>/eco">
+								<form method="POST" action="<%=request.getContextPath()%>/eco">
 									<input type="hidden" name="action01" value="updateRevision">
 									<div class="card">
 										<h2 class="card-header text-center">
@@ -217,7 +243,8 @@
 									class="rounded mx-auto d-block img-responsive img-thumbnail"
 									alt="Introduction_Shortcut"
 									style="min-height: 300px; height: 300px;"
-									onclick=imgClickHandler("https://i.ibb.co/gvbJGDL/Yk3-S935-ORSey-REs-OG6o-LIw.png")>
+									onclick=imgClickHandler(
+									"https://i.ibb.co/gvbJGDL/Yk3-S935-ORSey-REs-OG6o-LIw.png")>
 
 							</div>
 
@@ -225,20 +252,38 @@
 					</div>
 				</div>
 
-			
 
-			
+
+
 
 			</div>
 		</div>
 	</div>
 </section>
+<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
 <script>
+var modalMessage = document.getElementById("modal-message");
 		function imgClickHandler(sr)
         {		
             $('#mimg').attr('src',sr);
             $('#myModal').modal('show');
         };
-
+        
+        var isNoInformationUpdate = `<%=request.getAttribute("isNoInformationUpdate")%>`;
+if(isNoInformationUpdate ==="True"){
+	$(document).ready(function(){
+	    // Show modal on page load
+	    
+	    $("#myModal").modal({
+	        backdrop: 'static',
+	        keyboard: false
+	      });    	   
+	    modalMessage.innerText = "No action needed. Click \"Upgrade\" button to go next.";
+	    modalMessage.classList = "";
+	    modalMessage.classList.add("text-warning");
+	});
+}
 </script>
-<c:import url="/WEB-INF/common/footer.jsp"/>
+<c:import url="/WEB-INF/common/footer.jsp" />
