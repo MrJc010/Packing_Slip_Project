@@ -34,7 +34,7 @@ public class SearchItemController extends HttpServlet {
 		String isSuccess = "";
 		request.setAttribute("setHiddenSuccess", "hidden");
 		request.setAttribute("setHiddenError", "hidden");
-		if(dbHandler.checkAuthenticationPreAlert(request)) {		
+		if(dbHandler.checkAuthentication(request)) {		
 			System.out.println("Run doget");
 			try {
 				isSuccess = (String) request.getSession().getAttribute("Successfull");
@@ -67,7 +67,7 @@ public class SearchItemController extends HttpServlet {
 			request.getRequestDispatcher("/WEB-INF/views/receiving_station/physicalreceiving/searchitem.jsp").forward(request, response);
 
 		}else {
-			response.sendRedirect(request.getContextPath() + "/signin");
+			response.sendRedirect(request.getContextPath() + "/signin?pagerequest=searchitem");
 		}
 	}
 

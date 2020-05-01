@@ -40,16 +40,17 @@ public class SignUp extends HttpServlet {
 			listRolesWeb.add(rolesArr[i].toUpperCase());
 		}
 		request.setAttribute("ListRoles", listRolesWeb);
-		if(db.checkAuthentication(request, response, "signup/signup" )) {
+		if(db.checkAuthentication(request)) {
 			if (request.getSession().getAttribute("username") == null) {			
-				request.setAttribute("setHiddenSignOut", "hidden");				
+				request.setAttribute("setHiddenSignOut", "hidden");		
+				
 			} else {			
 				request.setAttribute("setHiddenSignOut", "show");				
 			}					
 				
-//			request.getRequestDispatcher("/WEB-INF/signup/signup.jsp").forward(request, response);
+			request.getRequestDispatcher("/WEB-INF/views/signup/signup.jsp").forward(request, response);
 		}else {
-			
+			response.sendRedirect(request.getContextPath() + "/signin?pagerequest=signup");
 		}
 		
 	

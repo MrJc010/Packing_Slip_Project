@@ -17,7 +17,7 @@ public class singin extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	private DBHandler db = new DBHandler();
-
+	private String page="";
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -27,11 +27,14 @@ public class singin extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		page = request.getParameter("pagerequest");
 		request.getRequestDispatcher("/WEB-INF/signin/signin.jsp").forward(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		
+		System.out.println("GET APGE ?? " + page);
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 		if (!username.isEmpty() && !password.isEmpty()) {
@@ -40,7 +43,7 @@ public class singin extends HttpServlet {
 				request.getSession().setMaxInactiveInterval(15);
 				request.getSession().setAttribute("username", username);
 				request.getSession().setAttribute("user_role", role);
-				response.sendRedirect(request.getContextPath() + "/");
+				response.sendRedirect(request.getContextPath() + "/"+page);
 			}
 		} else {
 			response.sendRedirect(request.getContextPath() + "/signin");

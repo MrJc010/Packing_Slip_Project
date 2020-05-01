@@ -58,36 +58,36 @@ public class MICI extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
-		// listErrorCodes have List Object ErrorCode
-		// ErrorCode ( errocode , description)
+		
+		if(dbHandler.checkAuthentication(request)) {			
+			request.setAttribute("listErrorCodes", jsonMap);
+			errorCodeSet = new HashSet<String>();
+			request.setAttribute("seterrorhiddenMICI", "hidden");
+			request.setAttribute("setHiddenResultSucess", "hidden");
+			request.setAttribute("currentCountMICI", 2);
+			String page = request.getParameter("page");
 
-//		System.out.println(stringError);
-		request.setAttribute("listErrorCodes", jsonMap);
-
-		/// END ==============
-
-		errorCodeSet = new HashSet<String>();
-		request.setAttribute("seterrorhiddenMICI", "hidden");
-		request.setAttribute("setHiddenResultSucess", "hidden");
-//		request.setAttribute("setHidenResult", "hidden");
-		request.setAttribute("currentCountMICI", 2);
-		String page = request.getParameter("page");
-
-		if (page == null) {
-			miciDisplay(request, response);
-		} else {
-			switch (page) {
-			case "display":
-				
+			if (page == null) {
 				miciDisplay(request, response);
-				break;
-			case "check":
-				checkMICI(request, response);
-				break;
-			default:
-				errorPage(request, response);
+			} else {
+				switch (page) {
+				case "display":
+					
+					miciDisplay(request, response);
+					break;
+				case "check":
+					checkMICI(request, response);
+					break;
+				default:
+					errorPage(request, response);
+				}
 			}
+		}else {
+			System.out.println("RUN WHEEE");
+			response.sendRedirect(request.getContextPath() + "/signin?pagerequest=mici");
 		}
+	
+		
 	}
 
 	/**

@@ -1290,37 +1290,37 @@ public class DBHandler {
 
 		return result;
 	}
-	public boolean checkAuthentication(HttpServletRequest request, HttpServletResponse response,String patternURL) throws IOException {
-		StringBuilder stB = new StringBuilder(UrlPatternUtils.getUrlPattern(request));
-		stB.deleteCharAt(0);
-		String urlPattern = stB.toString();		
-		try {
-			String userName = request.getSession().getAttribute("username").toString();
-			String roles = request.getSession().getAttribute("user_role").toString();
-			if(userName != null ) {		
-				String[] roleArray = roles.split(";");
-				for(int i=0; i< roleArray.length; i++) {
-					if(urlPattern.length() == 0) {
-						request.getRequestDispatcher("/WEB-INF/index.jsp").forward(request, response);
-						return true;
-					}
-					if(roleArray[i].equalsIgnoreCase(urlPattern)) {
-						System.out.println("patternURL =>> " + "/WEB-INF/views/"+patternURL+".jsp");
-						request.getRequestDispatcher("/WEB-INF/views/"+patternURL+".jsp").forward(request, response);
-						return true;
-					}
-				}
-				
-				response.sendRedirect(request.getContextPath() + "/signin");
-			}	
-		}catch(Exception e) {
-			System.out.println("error " +e.getMessage());	
-			response.sendRedirect(request.getContextPath() + "/signin");
-		}
-		return false;
-	}
+//	public boolean checkAuthentication(HttpServletRequest request, HttpServletResponse response,String patternURL) throws IOException {
+//		StringBuilder stB = new StringBuilder(UrlPatternUtils.getUrlPattern(request));
+//		stB.deleteCharAt(0);
+//		String urlPattern = stB.toString();		
+//		try {
+//			String userName = request.getSession().getAttribute("username").toString();
+//			String roles = request.getSession().getAttribute("user_role").toString();
+//			if(userName != null ) {		
+//				String[] roleArray = roles.split(";");
+//				for(int i=0; i< roleArray.length; i++) {
+//					if(urlPattern.length() == 0) {
+//						request.getRequestDispatcher("/WEB-INF/index.jsp").forward(request, response);
+//						return true;
+//					}
+//					if(roleArray[i].equalsIgnoreCase(urlPattern)) {
+//						System.out.println("patternURL =>> " + "/WEB-INF/views/"+patternURL+".jsp");
+//						request.getRequestDispatcher("/WEB-INF/views/"+patternURL+".jsp").forward(request, response);
+//						return true;
+//					}
+//				}
+//				
+//				response.sendRedirect(request.getContextPath() + "/signin");
+//			}	
+//		}catch(Exception e) {
+//			System.out.println("error " +e.getMessage());	
+//			response.sendRedirect(request.getContextPath() + "/signin");
+//		}
+//		return false;
+//	}
 	
-	public boolean checkAuthenticationPreAlert(HttpServletRequest request) throws IOException {
+	public boolean checkAuthentication(HttpServletRequest request) throws IOException {
 		StringBuilder stB = new StringBuilder(UrlPatternUtils.getUrlPattern(request));
 		stB.deleteCharAt(0);
 		String urlPattern = stB.toString();
@@ -1328,11 +1328,11 @@ public class DBHandler {
 		try {
 			String userName = request.getSession().getAttribute("username").toString();
 			String roles = request.getSession().getAttribute("user_role").toString();
-
+			
 			if(userName != null ) {		
 				String[] roleArray = roles.split(";");
 				for(int i=0; i< roleArray.length; i++) {
-					if(roleArray[i].equalsIgnoreCase(urlPattern)) {
+					if(roleArray[i].equalsIgnoreCase(urlPattern)) {						
 						return true;
 					}
 				}

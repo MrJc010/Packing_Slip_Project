@@ -36,10 +36,11 @@ public class QC1_Servlet extends HttpServlet {
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
 
-		if(db.checkAuthentication(request, response, "qc1/qc1")) {
-			System.out.println("IF soemthing");
+		if(db.checkAuthentication(request)) {
+			request.getRequestDispatcher("/WEB-INF/views/qc1/qc1.jsp").forward(request, response);
 		}else {
-			System.out.println("ELE soemthing");
+		
+			response.sendRedirect(request.getContextPath() + "/signin?pagerequest=qc1");
 		}
 		
 

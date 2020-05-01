@@ -75,7 +75,7 @@ public class FileUploadServlet extends HttpServlet {
 		request.setAttribute("setSuccesHidden", "hidden");
 		pathFile = "";
 		String resetAc = request.getParameter("resetButton");
-		if(dbHandler.checkAuthenticationPreAlert(request)) {
+		if(dbHandler.checkAuthentication(request)) {
 			if (resetAc != null && resetAc.equalsIgnoreCase("resetPage")) {
 				hideBody(request, response, true);
 				request.setAttribute("setErrorHidden", "hidden");
