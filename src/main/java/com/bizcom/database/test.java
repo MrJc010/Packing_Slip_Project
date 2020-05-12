@@ -3,7 +3,8 @@ package com.bizcom.database;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.List;    
+import java.util.List;
+import java.util.Map;    
 
 public class test {
 
@@ -11,19 +12,31 @@ public class test {
 		//Class.forName("com.mysql.cj.jdbc.Driver");
 		DBHandler db = new DBHandler();
 		db.getConnectionAWS();
-	
-//		db.getConnectionShopFloor();
-//		System.out.println(db.getAllLocationTableName());
-//		System.out.println(db.getLocationName());
-//		System.out.println(db.addingNewRef("testing_table","ref_1"));
-//		//System.out.println(db.deleteRef("testing_table","ref_1"));
-//		System.out.println(db.renameRef("testing_table","test","newRef"));
-//		String[] l = new String[]{"","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","abc"};
-//		System.out.println(db.insertIntoUITable("part","A","B",l));
-//		List<String> list = new ArrayList<>();
-//		list.add("scan_box");
-//		list.add("open_box");
-//		db.createLocationForPartNumber(list, "12345");
+
+		List<List<String>> list = db.getInstruction("N6W51");
+		for(List<String> l : list) {
+			System.out.println(l.toString());
+		}
+		System.out.println("**********************************");
+		System.out.println();
+		
+		//Get all details for all upgrades
+		Map<String, List<String>> instructionDetail = db.getInstructionDetailMap();
+		
+		//get first upgrade revision for partnumber N6W51:
+		System.out.println("First updrage " +list.get(0).toString());
+		System.out.println("************************************");
+		
+		
+		//getting details of the first upgrade
+		String location = instructionDetail.get(list.get(0).get(0)).get(0);
+		String detail = instructionDetail.get(list.get(0).get(0)).get(1);
+		String picture = instructionDetail.get(list.get(0).get(0)).get(2);
+		System.out.println("location: "+ location);
+		System.out.println("detail: "+ detail);
+		System.out.println("picture: "+ picture);
+		
+		
 		
 		
     }
