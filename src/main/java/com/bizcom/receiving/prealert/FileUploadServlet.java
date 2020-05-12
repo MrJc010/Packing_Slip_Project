@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -31,6 +32,7 @@ import com.bizcom.excel.ExcelService;
 import com.bizcom.packingslip.PackingSlip;
 import com.bizcom.ppid.PPID;
 import com.bizcom.services.ExcelValidation;
+import com.bizcom.services.RMAServices;
 
 /**
  * A Java servlet that handles file upload from client.
@@ -47,6 +49,7 @@ public class FileUploadServlet extends HttpServlet {
 	private static int QTY_COL_NUM;
 	private static int RMA_COL;
 	private ExcelService excelService = new ExcelService();
+	private String setHiddenExport = "hidden";
 	// location to store file uploaded
 	private static final String UPLOAD_DIRECTORY = "upload";
 
@@ -67,73 +70,88 @@ public class FileUploadServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
+		
+		request.setAttribute("setErrorHidden", "hidden");
+		request.setAttribute("setSuccesHidden", "hidden");
 		pathFile = "";
-		if (request.getSession().getAttribute("PathFile") != null) {
-			pathFile = request.getSession().getAttribute("PathFile").toString();
-			request.setAttribute("urll", pathFile);
-			String rmaPara = request.getParameter("RMA Number");
-			// excelService.read(pathFile);
+		String resetAc = request.getParameter("resetButton");
+		if(dbHandler.checkAuthentication(request)) {
+			if (resetAc != null && resetAc.equalsIgnoreCase("resetPage")) {
+				hideBody(request, response, true);
+				request.setAttribute("setErrorHidden", "hidden");
+				request.setAttribute("setSuccesHidden", "hidden");
+				request.getRequestDispatcher("/WEB-INF/views/receiving_station/pre_alert/pre_alert.jsp").forward(request,
+						response);
+				return;
+			}
 
-			excelService.read(pathFile);
+			if (request.getSession().getAttribute("PathFile") != null) {
+				hideBody(request, response, false);
+				pathFile = request.getSession().getAttribute("PathFile").toString();
+				request.setAttribute("setSuccesHidden", "show");
+				request.setAttribute("urll", pathFile);
+				String rmaPara = request.getParameter("rmaButton");
+				// excelService.read(pathFile);
 
-			List<PPID> list = new ArrayList<>();
+				excelService.read(pathFile);
 
-			list.addAll(excelService.getListOfRowPPID());
+				List<PPID> list = new ArrayList<>();
 
-			String isExported = "";
-			PPID tempPPID = list.get(0);
-			String ppidTest = tempPPID.getPpidNumber();
-			String pnTest = tempPPID.getPnNumber();
-			String lotTest = tempPPID.getLotNumber();
-			isExported = dbHandler.isRecordPreAlertExist(ppidTest, pnTest, lotTest);
+				list.addAll(excelService.getListOfRowPPID());
+				String isExported = "";
 
-			if (rmaPara != null && isExported.isEmpty()) {
+				PPID tempPPID = list.get(0);
+				String ppidTest = tempPPID.getPpidNumber();
+				String pnTest = tempPPID.getPnNumber();
+				String lotTest = tempPPID.getLotNumber();
+				isExported = dbHandler.isRecordPreAlertExist(ppidTest, pnTest, lotTest);
 
-				System.out.println("RUN NEW RMA");
+				if (rmaPara != null && isExported.isEmpty()) {
+					RMAServices rma = new RMAServices();
+					String newRMA = rma.generatorRMA();
+					try {
+						dbHandler.ppidToDB(excelService.appendRMAForPPID(list, newRMA));
+						setHiddenExport = "show";
+					} catch (ClassNotFoundException | SQLException e) {
+						e.printStackTrace();
+					}
 
-//				Multi thread = new Multi(list, rmaPara, excelService, dbHandler);
-//				thread.start();
+					saveRMA(pathFile, newRMA);
+					dbHandler.createNewRMA(newRMA, "userID");
+					try {
+						dbHandler.addToPre_PPID(newRMA, list);
+					} catch (ClassNotFoundException e) {
+						
+						e.printStackTrace();
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
 
+				} else {
+					request.setAttribute("setErrorHidden", "hidden");
+					
+				}
 				try {
-					dbHandler.ppidToDB(excelService.appendRMAForPPID(list, rmaPara));
-				} catch (ClassNotFoundException | SQLException e) {
-					// TODO Auto-generated catch block
+					
+					refeshPackingSlip(request, response, pathFile);
+					refeshPPIDs(request, response, pathFile);
+				} catch (Exception e) {
 					e.printStackTrace();
+					System.out.println(e.getMessage());
 				}
 
-				saveRMA(pathFile, rmaPara);
-
 			} else {
-//				System.out.println("uploaded show uppp");
+				hideBody(request, response, true);
 			}
-			try {
-				refeshPackingSlip(request, response, pathFile);
-				refeshPPIDs(request, response, pathFile);
-			} catch (Exception e) {
-				e.printStackTrace();
-				System.out.println(e.getMessage());
-			}
-
-		}
-
-		String page = "";
-		try {
-			page = request.getParameter("page").toLowerCase();
-		} catch (NullPointerException e) {
-
-		}
-
-		switch (page) {
-		case "save":
-			break;
-		default:
+			request.setAttribute("setHiddenExport", setHiddenExport);
 			request.getRequestDispatcher("/WEB-INF/views/receiving_station/pre_alert/pre_alert.jsp").forward(request,
 					response);
+		}else {
+			response.sendRedirect(request.getContextPath() + "/signin");
 		}
 
 	}
 
-	// TODO: Validate if file have RMA
 	public void saveRMA(String path, String rma) throws IOException {
 		FileInputStream inputStream = new FileInputStream(new File(path));
 		Workbook workbook = null;
@@ -193,7 +211,8 @@ public class FileUploadServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
+//		 request.getSession().getAttribute("username");
+		setHiddenExport = "hidden";
 		// checks if the request actually contains upload file
 		if (!ServletFileUpload.isMultipartContent(request)) {
 			// if not, we stop here
@@ -246,11 +265,38 @@ public class FileUploadServlet extends HttpServlet {
 						request.getSession().setAttribute("Name", fileName);
 						ExcelValidation validation = new ExcelValidation();
 						item.write(storeFile);
-						
-						if (validation.prealertValidation(filePath)) {
-							System.out.println("=====excel file is good=========");
+						request.setAttribute("setHiddenExport", "hidden");
+
+						int valflag = validation.prealertValidation(filePath);
+						if (valflag == 1) {
+							request.setAttribute("setErrorHidden", "hidden");
+							request.setAttribute("setSuccesHidden", "show");
+
+						} else if (valflag == 0) {
+							request.getSession().removeAttribute("PathFile");
+							request.setAttribute("setErrorHidden", "show");
+							request.setAttribute("message",
+									"Excel file is not valid. Please check with manager.");
+
+							request.setAttribute("setSuccesHidden", "hidden");
+							hideBody(request, response, true);
+							
+							request.getRequestDispatcher("/WEB-INF/views/receiving_station/pre_alert/pre_alert.jsp")
+									.forward(request, response);
+							return;
+						} else if (valflag == 2) {
+							request.getSession().removeAttribute("PathFile");
+							request.setAttribute("setErrorHidden", "show");
+							request.setAttribute("message",
+									"File Excel contains value EXIST in the database");
+
+							request.setAttribute("setSuccesHidden", "hidden");
+							hideBody(request, response, true);
+							request.getRequestDispatcher("/WEB-INF/views/receiving_station/pre_alert/pre_alert.jsp")
+									.forward(request, response);
+							return;
 						} else {
-							System.out.println(" ==== excel file does not match ====");
+
 						}
 
 					}
@@ -261,6 +307,8 @@ public class FileUploadServlet extends HttpServlet {
 		}
 		response.sendRedirect(request.getContextPath() + "/pre_alert");
 
+//		request.getRequestDispatcher("/WEB-INF/views/receiving_station/pre_alert/pre_alert.jsp").forward(request,
+//				response);
 		// get the s3Client
 //		AmazonS3 s3Client = new AmazonS3Client(new ProfileCredentialsProvider());
 //		String uploadFilePath = uploadPath;
@@ -380,6 +428,18 @@ public class FileUploadServlet extends HttpServlet {
 			System.out.println("File Does Not Exist");
 			return false;
 		}
+	}
+
+	public void hideBody(HttpServletRequest request, HttpServletResponse response, boolean value) {
+		// true will hide
+		if (value) {
+			request.setAttribute("setHideInfo", "hidden");
+		}
+//		false will show
+		else {
+			request.setAttribute("setHideInfo", "show");
+		}
+
 	}
 
 }

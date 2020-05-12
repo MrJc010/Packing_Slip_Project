@@ -10,9 +10,10 @@ import javax.servlet.http.HttpServletResponse;
 import com.bizcom.database.DBHandler;
 
 
-@WebServlet(description = "Show Up Home page", urlPatterns = { "/a" })
+@WebServlet(description = "Show Up Home page", urlPatterns = { "/" })
 public class HomeServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private DBHandler db = new DBHandler();
     /**
      * @throws ClassNotFoundException 
      * @see HttpServlet#HttpServlet()
@@ -26,7 +27,8 @@ public class HomeServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.getRequestDispatcher("/WEB-INF/index.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/index.jsp").forward(request, response);		
+//		
 	}
 
 	/**
