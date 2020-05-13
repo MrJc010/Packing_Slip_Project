@@ -341,9 +341,10 @@ public class Eco_Servlet extends HttpServlet {
 		request.setAttribute("setRepair01Hidden", "show");
 		updateRevisionFlag = false;
 		// Fetch data base on currentNum
-		db.createInstruction();
+		//db.createInstruction();
 		// TODO if PART NUMBER DOES NOT EXIST
-		RevesionUpgrade temp = db.getInstruction(partNumber, generatorRev(currentRev), generatorRev(currentRev + 1));
+		RevesionUpgrade temp = //db.getInstruction(partNumber, generatorRev(currentRev), generatorRev(currentRev + 1));
+		null;
 		if (temp.getOldMaterial() == null) {
 			request.setAttribute("curRevNumber", generatorRev(currentRev));
 			request.setAttribute("iconColor", "warning");

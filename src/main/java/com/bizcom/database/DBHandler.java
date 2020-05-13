@@ -44,7 +44,6 @@ public class DBHandler {
 	private ResultSet rsSF;
 	private static final DateTimeFormatter sdf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss.SSS");
 	private static final SimpleDateFormat dateForSearch = new SimpleDateFormat("MM/dd/yyyy");
-	private List<List<String>> instruction;
 	private static final String PHYSICAL_RECEIVING = "PHYSICAL_RECEIVING";
 	private static final String MICI = "MICI";
 	private static final String REPAIR01_FAIL = "REPAIR01_FAIL";
@@ -53,11 +52,13 @@ public class DBHandler {
 	private static final String QC1 = "QC1";
 	private static final String START = "START";
 	
+	private static Map<String, List<List<String>>> instruction;
+	private static Map<String,List<String>> instructionDetail;
+
 	private static final String[] allRoles = {"manage_account","v1","shopfloor_management","shipping","search","runin2","extraitem","repair02","repair01","file_downLoad","pre_alert","searchitem","rma-receiver","physicalreceiving","receiving","qc3","qc2","qc1","pe_clca_identify","pe_analyze","packing_slip","packing","obe","mici","eco","cosmetic_check","cmb2","signin","signup"};
 	public DBHandler() {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -87,6 +88,8 @@ public class DBHandler {
 			dbconnection = DriverManager.getConnection(
 					"jdbc:mysql://" + Configs.dbHost + ":" + Configs.dbPort + "/" + Configs.dbName, Configs.dbUsername,
 					Configs.dbPassword);
+			instruction = createECOInstruction();
+			instructionDetail = createDetailInstruction();
 		} catch (SQLException e) {
 
 			System.out.println(e);
@@ -117,8 +120,8 @@ public class DBHandler {
 		return sfconnection;
 
 	}
-	
-	
+
+
 	/**
 	 * shutdown method will close connection
 	 */
@@ -763,6 +766,74 @@ public class DBHandler {
 	// ***************************END*****************************
 	// ***************************END*****************************
 	// ***************************END*****************************
+	
+	
+
+
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***********************************************************
+	// *                    Report Functions                     *
+	// ***********************************************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
+	
+	/**
+	 * This function is used for getting download excel file of items left in data base after
+	 * Physical receive in.
+	 * @param rma
+	 */
+	public static void getShortItemReport(String rma) {
+		
+	}
+	
+	/**
+	 * This function is used for getting download excel file of all extra physical items after
+	 * Physical Receive in
+	 * @param items
+	 * @param rma
+	 */
+	public static void getExtraItemReport(List<String> items, String rma) {
+		
+	}
+	
+	/**
+	 * This funtion is used for getting download excel file of all extra physical items, and items as left
+	 * on database after doing Physical receiving.
+	 * @param rma
+	 * @param items
+	 */
+	public static void getIncorrectItem(String rma, List<String> items) {
+		
+	}
+	
+	/**
+	 * This function is used for getting all un-receive items
+	 * @param rma
+	 * @return
+	 */
+	public static List<String> getUnReceiveItem(String rma){
+		return new ArrayList<String>();
+	}
+	
+	
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***********************************************************
+	// *                    Report Functions                     *
+	// ***********************************************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+
+
 
 	// ***************************START***************************
 	// ***************************START***************************
@@ -775,7 +846,7 @@ public class DBHandler {
 	// ***************************START***************************
 	// ***************************START***************************
 	// ***************************START***************************
-	public boolean generateErrorRecord(String ppid) {
+ 	public boolean generateErrorRecord(String ppid) {
 		boolean result = false;
 		String query = "INSERT INTO repair01_action (ppid,errorCode) SELECT ppid,error FROM mici_station  WHERE ppid=? AND refix='YES'";
 		try {
@@ -971,52 +1042,293 @@ public class DBHandler {
 	 * // Getting Instruction // Each of the List is the instruction for upgrading
 	 * revision base on part // number
 	 *****************************************************************/
-	public List<List<String>> createInstruction() {
-		instruction = new ArrayList<List<String>>();
-		List<String> list1 = Arrays.asList("PU610/PU612/PU613", "to avoid no-power failures",
-				"Change PU610/PU612/PU613 from SA0000AHX00 to SA0000AHX10 or SA0000C4800", "SA0000AHX00",
-				"SA0000AHX10 SA0000C4800", "https://image.prntscr.com/image/9uUfNxHtSLGQZm4BGmum-Q.png");
+	public Map<String,List<String>> createDetailInstruction() {
+		instructionDetail = new HashMap<>();
+		List<String> list1 = Arrays.asList("DDA30 PU610/PU612/PU613",
+		"Change PU610/PU612/PU613 from SA0000AHX00 to SA0000AHX10 or SA0000C4800,"
+		+ " to avoid no-power failures",
+		"https://image.prntscr.com/image/9uUfNxHtSLGQZm4BGmum-Q.png");
 
-		List<String> list2 = Arrays.asList("UT2",
-				"Improved the stability of power states/ Improved device compatibility", "TBT FW Upgrade", "NA", "NA",
-				"https://image.prntscr.com/image/9uUfNxHtSLGQZm4BGmum-Q.png");
+		List<String> list2 = Arrays.asList("DDA30 UT2",
+		"TBT FW Upgrade, Improved the stability of power states/ Improved device compatibility",
+		"https://image.prntscr.com/image/9uUfNxHtSLGQZm4BGmum-Q.png");
 
-		List<String> list3 = Arrays.asList("PC308/PC309/PC310/PC311", "fix WHEA BSOD issue",
-				"Change PC308, PC309,PC310,PC311 from SE0000M00(22uF) to SE000015500 /add CC221(SE000001120)",
-				"SE0000M00", "SE000015500 SE000001120", "https://image.prntscr.com/image/9uUfNxHtSLGQZm4BGmum-Q.png");
+		List<String> list3 = Arrays.asList("DDA30 PC308/PC309/PC310/PC311",
+		"Change PC308, PC309,PC310,PC311 from SE0000M00(22uF) to SE000015500 /add CC221(SE000001120) ,"
+		+ "fix WHEA BSOD issue",
+		"https://image.prntscr.com/image/9uUfNxHtSLGQZm4BGmum-Q.png");
 
-		List<String> list4 = Arrays.asList("PU610/PU612/PU613",
-				"Fairchild DrMOS FDMF3035 UIS testing criteria improvement",
-				"Change PU610/PU612/PU613 fromSA0000AHX00 / SA0000AHX10 to  SA0000AHX20 or SA0000C4800",
-				"SA0000AHX00/SA0000AHX10", "SA0000AHX20 or SA0000C4800",
-				"https://image.prntscr.com/image/9uUfNxHtSLGQZm4BGmum-Q.png");
+		List<String> list4 = Arrays.asList("DDA30 PU610/PU612/PU613",
+		"Change PU610/PU612/PU613 fromSA0000AHX00 / SA0000AHX10 " + 
+		"to  SA0000AHX20 or SA0000C4800, Fairchild DrMOS FDMF3035 UIS testing criteria improvement ",
+		"https://image.prntscr.com/image/9uUfNxHtSLGQZm4BGmum-Q.png");
 
-		List<String> list5 = Arrays.asList("PU610/PU612/PU613",
-				"Fairchild DrMOS FDMF3035 UIS testing criteria improvement",
-				"Change PU610/PU612/PU613 fromSA0000AHX00 / SA0000AHX10", "SA0000AHX00/SA0000AHX10",
-				"SA0000AHX20 or SA0000C4800", "https://image.prntscr.com/image/9uUfNxHtSLGQZm4BGmum-Q.png");
+		List<String> list5 = Arrays.asList("DDA30 Thunderbolt",
+		"Thunderbolt FW upgrade to NVM41, To fix issue cut in new Thunderbolt FW NVM41",
+		"https://image.prntscr.com/image/9uUfNxHtSLGQZm4BGmum-Q.png");
 
-		List<String> list6 = Arrays.asList("NA", "To fix issue cut in new Thunderbolt FW NVM41",
-				"Thunderbolt FW upgrade to NVM41 (cover by testing operation)", "NA", "NA",
-				"https://image.prntscr.com/image/9uUfNxHtSLGQZm4BGmum-Q.png");
+		List<String> list6 = Arrays.asList("DDA30 RC417 , RC418 , RC419 , RC420", 
+		"Non-AR U42 Replace RC417/ RC418 Change SD028000080 to SD028330A80,Non-AR U22 "
+		+ "Replace RC419; RC420 Change SD028000080 to SD028330A80, Cut in HW workaround "
+		+ "can get further immunity of Kirkwood MLK flicker issue (BITS410252& BITS423117)"
+		+ " if any unproper manual assembly process to cause the thermal module deformation. ",
+		"https://image.prntscr.com/image/9uUfNxHtSLGQZm4BGmum-Q.png");
 
-		List<String> list7 = Arrays.asList("RC417 , RC418 , RC419 , RC420",
-				"Cut in HW workaround can get further immunity of Kirkwood MLK flicker issue (BITS410252& BITS423117) if any unproper manual assembly process to cause the thermal module deformation. ",
-				"Non-AR U42 Replace RC417/ RC418 Change SD028000080 to SD028330A80,Non-AR U22 Replace RC419; RC420 Change SD028000080 to SD028330A80",
-				"SD028000080", "SD028330A80", "https://image.prntscr.com/image/9uUfNxHtSLGQZm4BGmum-Q.png");
-
-		instruction.add(list1);
-		instruction.add(list2);
-		instruction.add(list3);
-		instruction.add(list4);
-		instruction.add(list5);
-		instruction.add(list6);
-		instruction.add(list7);
-
-		return instruction;
+		instructionDetail.put("SECO_N1870266",list1);
+		instructionDetail.put("SECO_N1850685",list2);
+		instructionDetail.put("SECO_N1880712",list3);
+		instructionDetail.put("SECO_N1931193",list4);
+		instructionDetail.put("SECO_N1980101",list5);
+		instructionDetail.put("SECO_N1980546",list6);
+		return instructionDetail;
 
 	}
 
+	public static Map<String, List<List<String>>> createECOInstruction() {
+		instruction = new HashMap<>();
+		ArrayList<List<String>> mapList = new ArrayList<List<String>>();
+		List<String> innerList = new ArrayList<>();
+		//PartNumber 1
+		innerList.add("SECO_N1931193");innerList.add("N/A");innerList.add("N/A");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1931193");innerList.add("A02");innerList.add("A03");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		instruction.put("07RYD",mapList);mapList = new ArrayList<List<String>>();
+
+		//PartNumber 2
+		innerList.add("SECO_N1870266");innerList.add("00");innerList.add("01");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1850685");innerList.add("A01");innerList.add("A02");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1880712");innerList.add("A03");innerList.add("A04");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1931193");innerList.add("N/A");innerList.add("N/A");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1931193");innerList.add("06");innerList.add("07");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		instruction.put("1DMJH",mapList);mapList = new ArrayList<List<String>>();
+		//PartNumber 3
+		innerList.add("SECO_N1931193");innerList.add("N/A");innerList.add("N/A");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1931193");innerList.add("A02");innerList.add("A03");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1980101");innerList.add("A01");innerList.add("A02");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		instruction.put("2PK0W",mapList);mapList = new ArrayList<List<String>>();
+		//PartNumber 4 
+		innerList.add("SECO_N1870266");innerList.add("00");innerList.add("01");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1850685");innerList.add("A01");innerList.add("A02");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1880712");innerList.add("A03");innerList.add("A04");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1931193");innerList.add("N/A");innerList.add("N/A");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1931193");innerList.add("06");innerList.add("07");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		instruction.put("2WCVJ",mapList);mapList = new ArrayList<List<String>>();
+		//PartNumber 5 
+		innerList.add("SECO_N1870266");innerList.add("00");innerList.add("01");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1850685");innerList.add("A01");innerList.add("A02");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1880712");innerList.add("A03");innerList.add("A04");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1931193");innerList.add("N/A");innerList.add("N/A");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1931193");innerList.add("06");innerList.add("07");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		instruction.put("41M0M",mapList);mapList = new ArrayList<List<String>>();
+		//PartNumber 6 441WF
+		innerList.add("SECO_N1931193");innerList.add("N/A");innerList.add("N/A");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1931193");innerList.add("02");innerList.add("03");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		instruction.put("441WF",mapList);mapList = new ArrayList<List<String>>();
+		//PartNumber 7 5FXXY
+		innerList.add("SECO_N1931193");innerList.add("N/A");innerList.add("N/A");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1931193");innerList.add("02");innerList.add("03");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		instruction.put("5FXXY",mapList);mapList = new ArrayList<List<String>>();
+		//PartNumber 8 
+		innerList.add("SECO_N1870266");innerList.add("00");innerList.add("01");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1880712");innerList.add("A02");innerList.add("A03");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1931193");innerList.add("N/A");innerList.add("N/A");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1931193");innerList.add("05");innerList.add("06");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		instruction.put("71V71",mapList);mapList = new ArrayList<List<String>>();
+		//PartNumber 9
+		innerList.add("SECO_N1980101");innerList.add("01");innerList.add("02");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1931193");innerList.add("A02");innerList.add("A03");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1931193");innerList.add("N/A");innerList.add("N/A");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		instruction.put("C35PP",mapList);mapList = new ArrayList<List<String>>();
+		//PartNumber 10
+		innerList.add("SECO_N1870266");innerList.add("00");innerList.add("01");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1880712");innerList.add("A02");innerList.add("A03");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1931193");innerList.add("N/A");innerList.add("N/A");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1931193");innerList.add("A05");innerList.add("A06");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		instruction.put("C4VVY",mapList);mapList = new ArrayList<List<String>>();
+		//PartNumber 11
+		innerList.add("SECO_N1980101");innerList.add("01");innerList.add("02");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1931193");innerList.add("A02");innerList.add("A03");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1931193");innerList.add("N/A");innerList.add("N/A");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		instruction.put("CM3RM",mapList);mapList = new ArrayList<List<String>>();
+		//PartNumber 12
+		innerList.add("SECO_N1931193");innerList.add("A02");innerList.add("A03");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1931193");innerList.add("N/A");innerList.add("N/A");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		instruction.put("HVW90",mapList);mapList = new ArrayList<List<String>>();
+		//PartNumber 13
+		innerList.add("SECO_N1870266");innerList.add("00");innerList.add("01");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1850685");innerList.add("A01");innerList.add("A02");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1880712");innerList.add("A03");innerList.add("A04");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1931193");innerList.add("N/A");innerList.add("N/A");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1931193");innerList.add("06");innerList.add("07");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		instruction.put("JFGFN",mapList);mapList = new ArrayList<List<String>>();
+		//PartNumber 14
+		innerList.add("SECO_N1980101");innerList.add("01");innerList.add("02");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1931193");innerList.add("A02");innerList.add("A03");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1931193");innerList.add("N/A");innerList.add("N/A");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		instruction.put("CM3RM",mapList);mapList = new ArrayList<List<String>>();
+		//PartNumber 15
+		innerList.add("SECO_N1931193");innerList.add("N/A");innerList.add("N/A");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1931193");innerList.add("02");innerList.add("03");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		instruction.put("JT36N",mapList);mapList = new ArrayList<List<String>>();
+		//PartNumber 16
+		innerList.add("SECO_N1870266");innerList.add("00");innerList.add("01");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1880712");innerList.add("A02");innerList.add("A03");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1931193");innerList.add("N/A");innerList.add("N/A");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1931193");innerList.add("A05");innerList.add("A06");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		instruction.put("JXP99",mapList);mapList = new ArrayList<List<String>>();
+		//PartNumber 17
+		innerList.add("SECO_N1870266");innerList.add("00");innerList.add("01");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1880712");innerList.add("A02");innerList.add("A03");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1931193");innerList.add("N/A");innerList.add("N/A");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1931193");innerList.add("A05");innerList.add("A06");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		instruction.put("MH7C0",mapList);mapList = new ArrayList<List<String>>();
+		//PartNumber 18
+		innerList.add("SECO_N1870266");innerList.add("00");innerList.add("01");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1880712");innerList.add("A02");innerList.add("A03");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1931193");innerList.add("N/A");innerList.add("N/A");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1931193");innerList.add("A05");innerList.add("A06");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		instruction.put("N6W51",mapList);mapList = new ArrayList<List<String>>();
+		//PartNumber 19
+		innerList.add("SECO_N1931193");innerList.add("N/A");innerList.add("N/A");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1931193");innerList.add("02");innerList.add("03");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		instruction.put("NGHF1",mapList);mapList = new ArrayList<List<String>>();
+		//PartNumber 20
+		innerList.add("SECO_N1931193");innerList.add("N/A");innerList.add("N/A");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1931193");innerList.add("02");innerList.add("03");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		instruction.put("P79TK",mapList);mapList = new ArrayList<List<String>>();
+		//PartNumber 21
+		innerList.add("SECO_N1931193");innerList.add("N/A");innerList.add("N/A");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1931193");innerList.add("02");innerList.add("03");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		instruction.put("P86NJ",mapList);mapList = new ArrayList<List<String>>();
+		//PartNumber 22
+		innerList.add("SECO_N1870266");innerList.add("00");innerList.add("01");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1850685");innerList.add("A01");innerList.add("A02");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1880712");innerList.add("A03");innerList.add("A04");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1931193");innerList.add("N/A");innerList.add("N/A");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1931193");innerList.add("06");innerList.add("07");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		instruction.put("PHP7P",mapList);mapList = new ArrayList<List<String>>();
+		//PartNumber 23
+		innerList.add("SECO_N1931193");innerList.add("N/A");innerList.add("N/A");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1931193");innerList.add("02");innerList.add("03");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		instruction.put("TGTM2",mapList);mapList = new ArrayList<List<String>>();
+		//PartNumber 24
+		innerList.add("SECO_N1931193");innerList.add("N/A");innerList.add("N/A");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1931193");innerList.add("02");innerList.add("03");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		instruction.put("TR16P",mapList);mapList = new ArrayList<List<String>>();
+		//PartNumber 25
+		innerList.add("SECO_N1931193");innerList.add("N/A");innerList.add("N/A");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1931193");innerList.add("02");innerList.add("03");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		instruction.put("V0P2N",mapList);mapList = new ArrayList<List<String>>();
+		//PartNumber 26
+		innerList.add("SECO_N1870266");innerList.add("00");innerList.add("01");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1850685");innerList.add("A01");innerList.add("A02");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1880712");innerList.add("A03");innerList.add("A04");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1931193");innerList.add("N/A");innerList.add("N/A");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1931193");innerList.add("06");innerList.add("07");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		instruction.put("W4DYC",mapList);mapList = new ArrayList<List<String>>();
+		//PartNumber 27
+		innerList.add("SECO_N1870266");innerList.add("00");innerList.add("01");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1880712");innerList.add("A02");innerList.add("A03");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1931193");innerList.add("N/A");innerList.add("N/A");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1931193");innerList.add("A05");innerList.add("A06");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		instruction.put("XMNM2",mapList);mapList = new ArrayList<List<String>>();
+		//PartNumber 28
+		innerList.add("SECO_N1931193");innerList.add("N/A");innerList.add("N/A");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		innerList.add("SECO_N1931193");innerList.add("02");innerList.add("03");
+		mapList.add(innerList);innerList= new ArrayList<>();
+		instruction.put("YNMMF",mapList);mapList = new ArrayList<List<String>>();
+		return instruction;
+	}
+
+	
 	public String getMaxRevision(String part) {
 		String query = "SELECT max_ver FROM repair01_part_number WHERE part_number = ?";
 		String result = "";
@@ -1036,108 +1348,128 @@ public class DBHandler {
 
 		return result.toUpperCase();
 	}
-
-	public RevesionUpgrade getInstruction(String part, String oldR, String newR) {
-		part = part.toUpperCase();
-		oldR = oldR.toUpperCase();
-		newR = newR.toUpperCase();
-
-		// Line 1
-		if ((part.equals("N6W51") || part.equals("JXP99") || part.equals("XMNM2") || part.equals("C4VVY")
-				|| part.equals("71V71") || part.equals("MH7C0") || part.equals("JFGFN") || part.equals("W4DYC")
-				|| part.equals("41M0M") || part.equals("1DMJH") || part.equals("2WCVJ") || part.equals("PHP7P"))
-				&& oldR.equals("A00") && newR.equals("A01")) {
-			List<String> list = instruction.get(0);
-			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4),
-					list.get(5), 0);
-		}
-
-		// Line2
-		else if ((part.equals("JFGFN") || part.equals("W4DYC") || part.equals("41M0M") || part.equals("1DMJH")
-				|| part.equals("2WCVJ") || part.equals("PHP7P")) && oldR.equals("A01") && newR.equals("A02")) {
-			List<String> list = instruction.get(1);
-			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4),
-					list.get(5), 1);
-		}
-
-		// line3.1
-		else if ((part.equals("71V71") || part.equals("C4VVY") || part.equals("JXP99") || part.equals("MH7C0")
-				|| part.equals("N6W51") || part.equals("XMNM2")) && oldR.equals("A02") && newR.equals("A03")) {
-			List<String> list = instruction.get(2);
-			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4),
-					list.get(5), 2);
-		}
-
-		// line3.2
-		else if ((part.equals("1DMJH") || part.equals("2WCVJ") || part.equals("41M0M") || part.equals("JFGFN")
-				|| part.equals("PHP7P") || part.equals("W4DYC")) && oldR.equals("A03") && newR.equals("A04")) {
-			List<String> list = instruction.get(2);
-			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4),
-					list.get(5), 3);
-		}
-
-		// line5
-		else if ((part.equals("07RYD") || part.equals("2PK0W") || part.equals("441WF") || part.equals("5FXXY")
-				|| part.equals("C35PP") || part.equals("CM3RM") || part.equals("TGTM2") || part.equals("TR16P")
-				|| part.equals("HVW90") || part.equals("JK58T") || part.equals("JT36N") || part.equals("NGHF1")
-				|| part.equals("P79TK") || part.equals("P86NJ") || part.equals("V0P2N") || part.equals("YNMMF"))
-				&& oldR.equals("A02") && newR.equals("A03")) {
-			List<String> list = instruction.get(4);
-			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4),
-					list.get(5), 2);
-		}
-
-		// line6
-		else if ((part.equals("71V71") || part.equals("C4VVY") || part.equals("JXP99") || part.equals("MH7C0")
-				|| part.equals("N6W51") || part.equals("XMNM2")) && oldR.equals("A05") && newR.equals("A06")) {
-			List<String> list = instruction.get(4);
-			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4),
-					list.get(5), 5);
-		}
-
-		// line7
-		else if ((part.equals("1DMJH") || part.equals("2WCVJ") || part.equals("41M0M") || part.equals("JFGFN")
-				|| part.equals("PHP7P") || part.equals("W4DYC")) && oldR.equals("A06") && newR.equals("A07")) {
-			List<String> list = instruction.get(4);
-			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4),
-					list.get(5), 6);
-		}
-
-		// line 8
-		else if ((part.equals("2PK0W") || part.equals("C35PP") || part.equals("CM3RM") || part.equals("JK58T")
-				|| part.equals("JT36N") || part.equals("NGHF1") || part.equals("P86NJ") || part.equals("TGTM2")
-				|| part.equals("V0P2N") || part.equals("YNMMF")) && oldR.equals("A01") && newR.equals("A02")) {
-			List<String> list = instruction.get(5);
-			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4),
-					list.get(5), 1);
-		}
-
-		// line 9
-		else if ((part.equals("1DMJH") || part.equals("2WCVJ") || part.equals("41M0M") || part.equals("JFGFN")
-				|| part.equals("PHP7P") || part.equals("W4DYC")) && oldR.equals("A05") && newR.equals("A06")) {
-			List<String> list = instruction.get(5);
-			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4),
-					list.get(5), 5);
-		}
-
-		// line 10
-		else if ((part.equals("441WF") || part.equals("HVW90") || part.equals("5FXXY") || part.equals("TR16P")
-				|| part.equals("P79TK") || part.equals("07RYD")) && oldR.equals("A01") && newR.equals("A02")) {
-			List<String> list = instruction.get(6);
-			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4),
-					list.get(5), 1);
-		}
-
-		// line 11
-		else if ((part.equals("N6W51") || part.equals("JXP99") || part.equals("XMNM2") || part.equals("C4VVY")
-				|| part.equals("71V71") || part.equals("MH7C0")) && oldR.equals("A04") && newR.equals("A05")) {
-			List<String> list = instruction.get(6);
-			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4),
-					list.get(5), 4);
-		} else {
-			return new RevesionUpgrade();
-		}
+	
+	
+	public List<List<String>> getInstruction(String part){
+		if(instruction.containsKey(part)) return instruction.get(part);
+		else return new ArrayList<List<String>>();
 	}
+	
+	public List<String> getDetailsInstruction(String code){
+		if(instructionDetail.containsKey(code)) return instructionDetail.get(code);
+		return new ArrayList<String>();
+	}
+	
+	public Map<String,List<List<String>>> getInstructionMap(){
+		return instruction;
+	}
+	
+	public Map<String, List<String>> getInstructionDetailMap(){
+		return instructionDetail;
+	}
+
+	
+//	public RevesionUpgrade getInstruction(String part, String oldR, String newR) {
+//		part = part.toUpperCase();
+//		oldR = oldR.toUpperCase();
+//		newR = newR.toUpperCase();
+//
+//		// Line 1
+//		if ((part.equals("N6W51") || part.equals("JXP99") || part.equals("XMNM2") || part.equals("C4VVY")
+//				|| part.equals("71V71") || part.equals("MH7C0") || part.equals("JFGFN") || part.equals("W4DYC")
+//				|| part.equals("41M0M") || part.equals("1DMJH") || part.equals("2WCVJ") || part.equals("PHP7P"))
+//				&& oldR.equals("A00") && newR.equals("A01")) {
+//			List<String> list = instruction.get(0);
+//			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4),
+//					list.get(5), 0);
+//		}
+//
+//		// Line2
+//		else if ((part.equals("JFGFN") || part.equals("W4DYC") || part.equals("41M0M") || part.equals("1DMJH")
+//				|| part.equals("2WCVJ") || part.equals("PHP7P")) && oldR.equals("A01") && newR.equals("A02")) {
+//			List<String> list = instruction.get(1);
+//			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4),
+//					list.get(5), 1);
+//		}
+//
+//		// line3.1
+//		else if ((part.equals("71V71") || part.equals("C4VVY") || part.equals("JXP99") || part.equals("MH7C0")
+//				|| part.equals("N6W51") || part.equals("XMNM2")) && oldR.equals("A02") && newR.equals("A03")) {
+//			List<String> list = instruction.get(2);
+//			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4),
+//					list.get(5), 2);
+//		}
+//
+//		// line3.2
+//		else if ((part.equals("1DMJH") || part.equals("2WCVJ") || part.equals("41M0M") || part.equals("JFGFN")
+//				|| part.equals("PHP7P") || part.equals("W4DYC")) && oldR.equals("A03") && newR.equals("A04")) {
+//			List<String> list = instruction.get(2);
+//			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4),
+//					list.get(5), 3);
+//		}
+//
+//		// line5
+//		else if ((part.equals("07RYD") || part.equals("2PK0W") || part.equals("441WF") || part.equals("5FXXY")
+//				|| part.equals("C35PP") || part.equals("CM3RM") || part.equals("TGTM2") || part.equals("TR16P")
+//				|| part.equals("HVW90") || part.equals("JK58T") || part.equals("JT36N") || part.equals("NGHF1")
+//				|| part.equals("P79TK") || part.equals("P86NJ") || part.equals("V0P2N") || part.equals("YNMMF"))
+//				&& oldR.equals("A02") && newR.equals("A03")) {
+//			List<String> list = instruction.get(4);
+//			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4),
+//					list.get(5), 2);
+//		}
+//
+//		// line6
+//		else if ((part.equals("71V71") || part.equals("C4VVY") || part.equals("JXP99") || part.equals("MH7C0")
+//				|| part.equals("N6W51") || part.equals("XMNM2")) && oldR.equals("A05") && newR.equals("A06")) {
+//			List<String> list = instruction.get(4);
+//			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4),
+//					list.get(5), 5);
+//		}
+//
+//		// line7
+//		else if ((part.equals("1DMJH") || part.equals("2WCVJ") || part.equals("41M0M") || part.equals("JFGFN")
+//				|| part.equals("PHP7P") || part.equals("W4DYC")) && oldR.equals("A06") && newR.equals("A07")) {
+//			List<String> list = instruction.get(4);
+//			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4),
+//					list.get(5), 6);
+//		}
+//
+//		// line 8
+//		else if ((part.equals("2PK0W") || part.equals("C35PP") || part.equals("CM3RM") || part.equals("JK58T")
+//				|| part.equals("JT36N") || part.equals("NGHF1") || part.equals("P86NJ") || part.equals("TGTM2")
+//				|| part.equals("V0P2N") || part.equals("YNMMF")) && oldR.equals("A01") && newR.equals("A02")) {
+//			List<String> list = instruction.get(5);
+//			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4),
+//					list.get(5), 1);
+//		}
+//
+//		// line 9
+//		else if ((part.equals("1DMJH") || part.equals("2WCVJ") || part.equals("41M0M") || part.equals("JFGFN")
+//				|| part.equals("PHP7P") || part.equals("W4DYC")) && oldR.equals("A05") && newR.equals("A06")) {
+//			List<String> list = instruction.get(5);
+//			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4),
+//					list.get(5), 5);
+//		}
+//
+//		// line 10
+//		else if ((part.equals("441WF") || part.equals("HVW90") || part.equals("5FXXY") || part.equals("TR16P")
+//				|| part.equals("P79TK") || part.equals("07RYD")) && oldR.equals("A01") && newR.equals("A02")) {
+//			List<String> list = instruction.get(6);
+//			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4),
+//					list.get(5), 1);
+//		}
+//
+//		// line 11
+//		else if ((part.equals("N6W51") || part.equals("JXP99") || part.equals("XMNM2") || part.equals("C4VVY")
+//				|| part.equals("71V71") || part.equals("MH7C0")) && oldR.equals("A04") && newR.equals("A05")) {
+//			List<String> list = instruction.get(6);
+//			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4),
+//					list.get(5), 4);
+//		} else {
+//			return new RevesionUpgrade();
+//		}
+//	}
 
 	public String getCurrentRev(String ppid) {
 		String result = "";
@@ -1290,36 +1622,7 @@ public class DBHandler {
 
 		return result;
 	}
-//	public boolean checkAuthentication(HttpServletRequest request, HttpServletResponse response,String patternURL) throws IOException {
-//		StringBuilder stB = new StringBuilder(UrlPatternUtils.getUrlPattern(request));
-//		stB.deleteCharAt(0);
-//		String urlPattern = stB.toString();		
-//		try {
-//			String userName = request.getSession().getAttribute("username").toString();
-//			String roles = request.getSession().getAttribute("user_role").toString();
-//			if(userName != null ) {		
-//				String[] roleArray = roles.split(";");
-//				for(int i=0; i< roleArray.length; i++) {
-//					if(urlPattern.length() == 0) {
-//						request.getRequestDispatcher("/WEB-INF/index.jsp").forward(request, response);
-//						return true;
-//					}
-//					if(roleArray[i].equalsIgnoreCase(urlPattern)) {
-//						System.out.println("patternURL =>> " + "/WEB-INF/views/"+patternURL+".jsp");
-//						request.getRequestDispatcher("/WEB-INF/views/"+patternURL+".jsp").forward(request, response);
-//						return true;
-//					}
-//				}
-//				
-//				response.sendRedirect(request.getContextPath() + "/signin");
-//			}	
-//		}catch(Exception e) {
-//			System.out.println("error " +e.getMessage());	
-//			response.sendRedirect(request.getContextPath() + "/signin");
-//		}
-//		return false;
-//	}
-	
+
 	public boolean checkAuthentication(HttpServletRequest request) throws IOException {
 		StringBuilder stB = new StringBuilder(UrlPatternUtils.getUrlPattern(request));
 		stB.deleteCharAt(0);
@@ -1328,7 +1631,7 @@ public class DBHandler {
 		try {
 			String userName = request.getSession().getAttribute("username").toString();
 			String roles = request.getSession().getAttribute("user_role").toString();
-			
+
 			if(userName != null ) {		
 				String[] roleArray = roles.split(";");
 				for(int i=0; i< roleArray.length; i++) {
@@ -1342,7 +1645,7 @@ public class DBHandler {
 		}
 		return false;
 	}
-	
+
 	public String[] getAllRoles () {
 		return this.allRoles;
 	}
@@ -1706,9 +2009,6 @@ public class DBHandler {
 	}
 
 
-	
-	
-
 	//Search by station with time
 	public List<List<String>> searchByStationAndTime(String station,String from, String to) throws ParseException{
 		List<List<String>> result = new ArrayList<List<String>>();
@@ -1813,7 +2113,7 @@ public class DBHandler {
 			if(rs.next()) {
 				result = rs.getString("hashpass");
 			}
-			
+
 		}catch(Exception e) {			
 			e.printStackTrace();
 		}finally {
@@ -1833,7 +2133,7 @@ public class DBHandler {
 		return result;
 
 	}
-	
+
 	public String getUserRole(String userName) {
 		String query = "SELECT roles FROM users WHERE userid=?";
 		String result ="";
@@ -1842,21 +2142,21 @@ public class DBHandler {
 			pst = dbconnection.prepareStatement(query);
 			pst.setString(1, userName);
 			rs = pst.executeQuery();
-			
+
 			while(rs.next()) {
 				result = rs.getString("roles");
 			}
-			
+
 		}catch (Exception e) {
 			result = "error";
 			System.out.println("getUserRole error " + e.getMessage());
 		}finally {
 			shutdown();
 		}
-		
+
 		return result;
 	}
-	
+
 	public String hash(String passwordToHash, byte[] salt) {
 		String generatedPassword = null;
 		try {
@@ -1874,40 +2174,40 @@ public class DBHandler {
 		return generatedPassword;
 	}
 
-	
+
 	public boolean checkPassword(String hash, String attempt, byte[] salt) {
-		
+
 		String generatedHash = hash(attempt, salt);
 		return hash.equals(generatedHash);
 	}
-	
+
 	public String generateStringRandom(int n) {
-		 // lower limit for LowerCase Letters 
-        int lowerLimit = 97; 
-  
-        // lower limit for LowerCase Letters 
-        int upperLimit = 122; 
-  
-        Random random = new Random(); 
-  
-        // Create a StringBuffer to store the result 
-        StringBuffer r = new StringBuffer(n); 
-  
-        for (int i = 0; i < n; i++) { 
-  
-            // take a random value between 97 and 122 
-            int nextRandomChar = lowerLimit 
-                                 + (int)(random.nextFloat() 
-                                         * (upperLimit - lowerLimit + 1)); 
-  
-            // append a character at the end of bs 
-            r.append((char)nextRandomChar); 
-        } 
-  
-        // return the resultant string 
-        return r.toString(); 
+		// lower limit for LowerCase Letters 
+		int lowerLimit = 97; 
+
+		// lower limit for LowerCase Letters 
+		int upperLimit = 122; 
+
+		Random random = new Random(); 
+
+		// Create a StringBuffer to store the result 
+		StringBuffer r = new StringBuffer(n); 
+
+		for (int i = 0; i < n; i++) { 
+
+			// take a random value between 97 and 122 
+			int nextRandomChar = lowerLimit 
+					+ (int)(random.nextFloat() 
+							* (upperLimit - lowerLimit + 1)); 
+
+			// append a character at the end of bs 
+			r.append((char)nextRandomChar); 
+		} 
+
+		// return the resultant string 
+		return r.toString(); 
 	}
-	
+
 	// *************************SHOP FLOOR************************
 	// *************************SHOP FLOOR************************
 	// *************************SHOP FLOOR************************
@@ -1957,7 +2257,7 @@ public class DBHandler {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * This function is used for checking if part number is exist in side part_number_table or not.
 	 * If it does not exist, this function will return false, otherwise return true.
@@ -2108,28 +2408,28 @@ public class DBHandler {
 		int i = 0;
 		for(String l: location) {
 			if(list.contains(l)) {
-					pstSF.setString(1, partNumber);
-					pstSF.setString(2, l);
-					pstSF.addBatch();
-					i++;
-					if (i == location.size()) {
-						int[] a = pstSF.executeBatch();
-						if (a.length > 0) {
-							shutdownSF();
-							result = true;
-						}
-						else{
-							shutdownSF();
-							result = false;
-						}
+				pstSF.setString(1, partNumber);
+				pstSF.setString(2, l);
+				pstSF.addBatch();
+				i++;
+				if (i == location.size()) {
+					int[] a = pstSF.executeBatch();
+					if (a.length > 0) {
+						shutdownSF();
+						result = true;
 					}
+					else{
+						shutdownSF();
+						result = false;
+					}
+				}
 			}
 		}
 		result = checkLocationForPartNumber(partNumber,location);
 		shutdownSF();
 		return result;
 	}
-	
+
 	/**
 	 * This function is used for editing the name of Location of a partnumber.
 	 * If it successfully rename the Location, it will return TRUE, otherwise return FALSE
@@ -2177,7 +2477,7 @@ public class DBHandler {
 			rsSF = pstSF.executeQuery();
 			while (rsSF.next()) {
 				String temp = rsSF.getString("TABLE_NAME");
-				
+
 				if(temp.substring(temp.length()-14).equalsIgnoreCase("location_table")) result.add(temp);
 			}
 		} catch (Exception e) {
@@ -2201,7 +2501,7 @@ public class DBHandler {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * This function is used for creating new Location Table inside of the database.
 	 * @param locationName type String
@@ -2211,19 +2511,19 @@ public class DBHandler {
 		boolean result = false;
 		String tableName = locationName+"_location_table";
 		String query = "CREATE TABLE "+tableName+" "
-		+ "(count INT NOT NULL AUTO_INCREMENT,part_number VARCHAR(45) NULL,"
-		+ "serial_number VARCHAR(45) NULL,"
-		+ "ref_1 VARCHAR(45) NULL,"
-		+ "ref_2 VARCHAR(45) NULL,"
-		+ "ref_3 VARCHAR(45) NULL,"
-		+ "ref_4 VARCHAR(45) NULL,"
-		+ "ref_5 VARCHAR(45) NULL,"
-		+ "ref_6 VARCHAR(45) NULL,"
-		+ "ref_7 VARCHAR(45) NULL,"
-		+ "ref_8 VARCHAR(45) NULL,"
-		+ "ref_9 VARCHAR(45) NULL,"
-		+ "ref_10 VARCHAR(45) NULL,"
-		+ "PRIMARY KEY (count));";
+				+ "(count INT NOT NULL AUTO_INCREMENT,part_number VARCHAR(45) NULL,"
+				+ "serial_number VARCHAR(45) NULL,"
+				+ "ref_1 VARCHAR(45) NULL,"
+				+ "ref_2 VARCHAR(45) NULL,"
+				+ "ref_3 VARCHAR(45) NULL,"
+				+ "ref_4 VARCHAR(45) NULL,"
+				+ "ref_5 VARCHAR(45) NULL,"
+				+ "ref_6 VARCHAR(45) NULL,"
+				+ "ref_7 VARCHAR(45) NULL,"
+				+ "ref_8 VARCHAR(45) NULL,"
+				+ "ref_9 VARCHAR(45) NULL,"
+				+ "ref_10 VARCHAR(45) NULL,"
+				+ "PRIMARY KEY (count));";
 		try {
 			sfconnection = getConnectionShopFloor();
 			pstSF = sfconnection.prepareStatement(query);
@@ -2236,7 +2536,7 @@ public class DBHandler {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * This function is used for adding new Ref to Location Table
 	 * @param stationName
@@ -2262,7 +2562,7 @@ public class DBHandler {
 		}else return false;	
 		return result;
 	}
-	
+
 	/**
 	 * This function is used for deleting Ref from Location table
 	 * @param stationName
@@ -2287,7 +2587,7 @@ public class DBHandler {
 		}else return false;	
 		return result;
 	}
-	
+
 	/**
 	 * This function is used for changing Ref name of Location table 
 	 * @param stationName
@@ -2314,7 +2614,7 @@ public class DBHandler {
 		return result;
 	}
 
-	
+
 	// ***************************END*****************************
 	// ***************************END*****************************
 	// ***************************END*****************************
@@ -2326,9 +2626,9 @@ public class DBHandler {
 	// ***************************END*****************************
 	// ***************************END*****************************
 	// ***************************END*****************************
-	
-	
-	
+
+
+
 	// ***************************START***************************
 	// ***************************START***************************
 	// ***************************START***************************
@@ -2340,7 +2640,7 @@ public class DBHandler {
 	// ***************************START***************************
 	// ***************************START***************************
 	// ***************************START***************************
-	
+
 	/**
 	 * This function is used for inserting data into UI table
 	 * This function then Update Station Table
@@ -2351,13 +2651,13 @@ public class DBHandler {
 	public int insertIntoUITable(String part_number, String from_location, String to_location,String[] l) {
 		int result = -1;
 		String query = "INSERT INTO default_ui_table (part_number,part_number_pattern,serial_number,serial_number_pattern,"
-		+ "ref_1, ref_pattern_1, ref_count_1, ref_max_1,"
-		+ " ref_2, ref_pattern_2, ref_count_2, ref_max_2, ref_3, ref_pattern_3, ref_count_3, ref_max_3,"
-		+ " ref_4, ref_pattern_4, ref_count_4, ref_max_4, ref_5, ref_pattern_5, ref_count_5, ref_max_5,"
-		+ " ref_6, ref_pattern_6, ref_count_6, ref_max_6, ref_7, ref_pattern_7, ref_count_7, ref_max_7,"
-		+ " ref_8, ref_pattern_8, ref_count_8, ref_max_8, ref_9, ref_pattern_9, ref_count_9, ref_max_9,"
-		+ " ref_10, ref_pattern_10, ref_count_10, ref_max_10)"
-		+ " VALUES (? , ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+				+ "ref_1, ref_pattern_1, ref_count_1, ref_max_1,"
+				+ " ref_2, ref_pattern_2, ref_count_2, ref_max_2, ref_3, ref_pattern_3, ref_count_3, ref_max_3,"
+				+ " ref_4, ref_pattern_4, ref_count_4, ref_max_4, ref_5, ref_pattern_5, ref_count_5, ref_max_5,"
+				+ " ref_6, ref_pattern_6, ref_count_6, ref_max_6, ref_7, ref_pattern_7, ref_count_7, ref_max_7,"
+				+ " ref_8, ref_pattern_8, ref_count_8, ref_max_8, ref_9, ref_pattern_9, ref_count_9, ref_max_9,"
+				+ " ref_10, ref_pattern_10, ref_count_10, ref_max_10)"
+				+ " VALUES (? , ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		try {
 			sfconnection = getConnectionShopFloor();
 			pstSF = sfconnection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -2391,7 +2691,7 @@ public class DBHandler {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * This function is used for creating new record for the rules
 	 * @param ui_id
@@ -2418,7 +2718,7 @@ public class DBHandler {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * This function is used for setting up initial condition for Location Configuration
 	 * @param l List of String
@@ -2431,7 +2731,7 @@ public class DBHandler {
 		}
 		return map;
 	}
-	
+
 	/**
 	 * This function is used for update the relationship between location
 	 * @param map which is Map<String,Boolean>
@@ -2449,7 +2749,7 @@ public class DBHandler {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * This function is checking if a Location has it own relationship with another Location
 	 * @param map
@@ -2457,14 +2757,14 @@ public class DBHandler {
 	 */
 	public boolean checkFinishConfigure(Map<String,Boolean> map) {
 		int count = 0;
-		
+
 		for (Object key : map.keySet()) {
 			System.out.println("get : "+map.get(key));
 			if(map.get(key) == false) count++;
 		}
 		return count == 1;
 	}
-	
+
 	/**
 	 * This function is used for searching Locations which has not done the configure
 	 * @param map
@@ -2474,16 +2774,16 @@ public class DBHandler {
 		List<String> result = new ArrayList<>();
 		if(!checkFinishConfigure(map)) {
 			for (Map.Entry<String, Boolean> entry : map.entrySet()){
-			  String key = entry.getKey();
-			  Boolean value = entry.getValue();
-			  if(value == false) result.add(key);
+				String key = entry.getKey();
+				Boolean value = entry.getValue();
+				if(value == false) result.add(key);
 			}
 			return result;
 		}else return result;
-		
-		
+
+
 	}
-	
+
 	/**
 	 * This function is used for updating default_station_table right after new UI record has created.
 	 * @param part_number
@@ -2516,7 +2816,7 @@ public class DBHandler {
 		}
 		return result;
 	}
-	
+
 	// ***************************END*****************************
 	// ***************************END*****************************
 	// ***************************END*****************************
@@ -2528,9 +2828,9 @@ public class DBHandler {
 	// ***************************END*****************************
 	// ***************************END*****************************
 	// ***************************END*****************************
-	
-	
-	
+
+
+
 	// ***************************START***************************
 	// ***************************START***************************
 	// ***************************START***************************
@@ -2542,7 +2842,7 @@ public class DBHandler {
 	// ***************************START***************************
 	// ***************************START***************************
 	// ***************************START***************************
-	
+
 	/**
 	 * This function is used for getting station name for given part number
 	 * @param part_number
@@ -2571,7 +2871,7 @@ public class DBHandler {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * This function is used for loading configuration of a function based on part number, from location and to location
 	 * @param partNumber
@@ -2582,13 +2882,13 @@ public class DBHandler {
 	public String[] loadConfigure(String partNumber, String fromLocation, String toLocation) {
 		String[] result = new String[44];
 		String query = "SELECT * FROM default_station_table,default_ui_table,default_rules_table "
-		+ "WHERE default_station_table.part_number = ? AND default_station_table.from_location = ? "
-		+ "AND default_station_table.to_location = ? AND default_rules_table.count "
-		+ "IN ( SELECT default_station_table.rules_id FROM default_station_table "
-		+ "WHERE default_station_table.part_number = ? AND default_station_table.from_location = ? "
-		+ "AND default_station_table.to_location = ?) AND  default_ui_table.count "
-		+ "IN ( SELECT default_station_table.ui_id FROM default_station_table WHERE default_station_table.part_number = ? "
-		+ "AND default_station_table.from_location = ? AND default_station_table.to_location = ?)";
+				+ "WHERE default_station_table.part_number = ? AND default_station_table.from_location = ? "
+				+ "AND default_station_table.to_location = ? AND default_rules_table.count "
+				+ "IN ( SELECT default_station_table.rules_id FROM default_station_table "
+				+ "WHERE default_station_table.part_number = ? AND default_station_table.from_location = ? "
+				+ "AND default_station_table.to_location = ?) AND  default_ui_table.count "
+				+ "IN ( SELECT default_station_table.ui_id FROM default_station_table WHERE default_station_table.part_number = ? "
+				+ "AND default_station_table.from_location = ? AND default_station_table.to_location = ?)";
 		try {
 			sfconnection = getConnectionShopFloor();
 			pstSF = sfconnection.prepareStatement(query);
@@ -2634,7 +2934,7 @@ public class DBHandler {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * This function is used for updating the UI configure
 	 * @param count
@@ -2644,11 +2944,11 @@ public class DBHandler {
 	public boolean updateUIConfigure(int count, String[] list) {
 		boolean result = false;
 		String query = "UPDATE default_ui_table SET part_number = ?, part_number_pattern = ?, serial_number = ?, serial_number_pattern = ?, "
-		+ "ref_1 = ?, ref_pattern_1 = ?, ref_count_1 = ?, ref_max_1 = ?, ref_2 = ?, ref_pattern_2 = ?, ref_count_2 = ?, ref_max_2 = ?, ref_3 = ?, "
-		+ "ref_pattern_3 = ?, ref_count_3 = ?, ref_max_3 = ?, ref_4 = ?, ref_pattern_4 = ?, ref_count_4 = ?, ref_max_4 = ?, ref_5 = ?, ref_pattern_5 = ?, "
-		+ "ref_count_5 = ?, ref_max_5 = ?, ref_6 = ?, ref_pattern_6 = ?, ref_count_6 = ?, ref_max_6 = ?, ref_7 = ?, ref_pattern_7 = ?, ref_count_7 = ?, "
-		+ "ref_max_7 = ?, ref_8 = ?, ref_pattern_8 = ?, ref_count_8 = ?, ref_max_8 = ?, ref_9 = ?, ref_pattern_9 = ?, ref_count_9 = ?, ref_max_9 = ?, "
-		+ "ref_10 = ?, ref_pattern_10 = ?, ref_count_10 = ?, ref_max_10 = ? WHERE (count = ?);";
+				+ "ref_1 = ?, ref_pattern_1 = ?, ref_count_1 = ?, ref_max_1 = ?, ref_2 = ?, ref_pattern_2 = ?, ref_count_2 = ?, ref_max_2 = ?, ref_3 = ?, "
+				+ "ref_pattern_3 = ?, ref_count_3 = ?, ref_max_3 = ?, ref_4 = ?, ref_pattern_4 = ?, ref_count_4 = ?, ref_max_4 = ?, ref_5 = ?, ref_pattern_5 = ?, "
+				+ "ref_count_5 = ?, ref_max_5 = ?, ref_6 = ?, ref_pattern_6 = ?, ref_count_6 = ?, ref_max_6 = ?, ref_7 = ?, ref_pattern_7 = ?, ref_count_7 = ?, "
+				+ "ref_max_7 = ?, ref_8 = ?, ref_pattern_8 = ?, ref_count_8 = ?, ref_max_8 = ?, ref_9 = ?, ref_pattern_9 = ?, ref_count_9 = ?, ref_max_9 = ?, "
+				+ "ref_10 = ?, ref_pattern_10 = ?, ref_count_10 = ?, ref_max_10 = ? WHERE (count = ?);";
 		try {
 			sfconnection = getConnectionShopFloor();
 			pstSF = sfconnection.prepareStatement(query);
@@ -2683,7 +2983,7 @@ public class DBHandler {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * This function is used for updating rules
 	 * @param count
@@ -2707,7 +3007,7 @@ public class DBHandler {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * This function is used for updating existing station
 	 * @param partNumber
@@ -2726,7 +3026,7 @@ public class DBHandler {
 			pstSF.setLong(2, from_location);
 			pstSF.setLong(3, to_location);
 			rsSF = pstSF.executeQuery();
-			
+
 			while (rsSF.next()) {
 				int ui_id = rsSF.getInt("ui_id");
 				int rules_id = rsSF.getInt("rules_id");
@@ -2743,7 +3043,7 @@ public class DBHandler {
 		}
 		return result;
 	}
-	
+
 	// ***************************END*****************************
 	// ***************************END*****************************
 	// ***************************END*****************************
@@ -2756,6 +3056,6 @@ public class DBHandler {
 	// ***************************END*****************************
 	// ***************************END*****************************
 
-	
-	
+
+
 }
