@@ -132,15 +132,15 @@
 					</div>
 
 					<div class="row justify-content-center my-3">
-						<button  type="submit" class="btn btn-primary"
+						<button id="print-btn" type="submit" class="btn btn-primary"
 							>
 							<strong>Receive Item</strong>
 						</button>
-						
+						<!-- <button id="print-btn" >Print Out</button> -->
 					</div>
 				</form>
 				<br/>
-				<button id="print-btn" >Print Out</button>
+				
 			</div>
 			<div class="col-md-2"></div>
 
@@ -155,7 +155,6 @@
 <script>
 var btn = document.getElementById("print-btn");
 btn.onclick = () => {
-	console.log("testing" + window);
 	window.print()
 	};
 </script>
