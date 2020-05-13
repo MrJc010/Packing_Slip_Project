@@ -81,10 +81,9 @@
 									<li><a class="dropdown-item"
 										href="<%=request.getContextPath()%>/shortitem">Short Item</a></li>
 									<li><a class="dropdown-item"
-										href="<%=request.getContextPath()%>/extraitem">Extra Item</a></li>
+										href="<%=request.getContextPath()%>/extraitems">Extra Item</a></li>
 									<li><a class="dropdown-item"
-										href="<%=request.getContextPath()%>/incorrectitem">Incorrect
-											Item</a></li>
+										href="<%=request.getContextPath()%>/incorrectitem">Incorrect Item</a></li>
 								</ul></li>
 						</ul></li>
 

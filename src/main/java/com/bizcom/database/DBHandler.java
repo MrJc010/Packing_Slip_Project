@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections4.bidimap.DualHashBidiMap;
+import org.json.JSONObject;
 
 import com.bizcom.MICI_Station.ErrorCode;
 import com.bizcom.authentication.UrlPatternUtils;
@@ -784,22 +785,13 @@ public class DBHandler {
 	// ***************************START***************************
 	
 	/**
-	 * This function is used for getting download excel file of items left in data base after
-	 * Physical receive in.
-	 * @param rma
-	 */
-	public static void getShortItemReport(String rma) {
-		
-	}
-	
-	/**
 	 * This function is used for getting download excel file of all extra physical items after
 	 * Physical Receive in
 	 * @param items
 	 * @param rma
 	 */
-	public static void getExtraItemReport(List<String> items, String rma) {
-		
+	public String getExtraItemReport(List<List<String>> items) {
+		return new Gson().toJson(items);
 	}
 	
 	/**
@@ -808,8 +800,12 @@ public class DBHandler {
 	 * @param rma
 	 * @param items
 	 */
-	public static void getIncorrectItem(String rma, List<String> items) {
-		
+	public JSONObject getIncorrectItem(String rma, List<List<String>> items) {
+		String unreceivedItems = getUnReceiveItem(rma);
+		Map<String,String> dataMap = new HashMap<String,String>();
+		dataMap.put("unreceived", unreceivedItems);
+		dataMap.put("incorect", new Gson().toJson(items));
+		return new JSONObject(dataMap);
 	}
 	
 	/**
