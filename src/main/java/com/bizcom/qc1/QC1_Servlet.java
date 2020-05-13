@@ -1,6 +1,12 @@
 package com.bizcom.qc1;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Scanner;
 
 import javax.enterprise.inject.ResolutionException;
 import javax.servlet.ServletException;
@@ -54,4 +60,25 @@ public class QC1_Servlet extends HttpServlet {
 		doGet(request, response);
 	}
 
+	
+	public static boolean service() throws IOException  {
+	    File file = new File("C:\\Users\\viet\\Desktop\\name.txt");
+	    try {
+	        Scanner scanner = new Scanner(file);
+	        //now read the file line by line...
+	        int lineNum = 0;
+	        while (scanner.hasNextLine()) {
+	            String str = scanner.nextLine();
+	            System.out.println(str);
+	            lineNum++;
+	            if(str.toUpperCase().contains("PASS") || str.toUpperCase().contains("PASSED")) { 
+	                return true;
+	            }
+	        }
+	    } catch(FileNotFoundException e) { 
+	        System.out.println(e);
+	        return false;
+	    }
+	    return false;
+	  }
 }
