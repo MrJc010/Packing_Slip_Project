@@ -34,6 +34,7 @@ import com.bizcom.ppid.PPID;
 import com.bizcom.receiving.physicalreceiving.Item;
 import com.bizcom.receiving.physicalreceiving.PreAlertItem;
 import com.bizcom.repair01.RevesionUpgrade;
+import com.google.gson.Gson;
 
 public class DBHandler {
 	private Connection dbconnection;
@@ -816,8 +817,39 @@ public class DBHandler {
 	 * @param rma
 	 * @return
 	 */
-	public static List<String> getUnReceiveItem(String rma){
-		return new ArrayList<String>();
+	public String getUnReceiveItem(String rma){
+		List<List<String>> result = new ArrayList<List<String>>();
+		String jsonResult = "";
+		String query = "SELECT * FROM pre_item where pre_item.ppid IN " + 
+				"(SELECT ppid  FROM pre_ppid WHERE rma = ? AND status = 'UnRecevied');";
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(query);
+			pst.setString(1, rma);
+			rs = pst.executeQuery();
+			
+			while (rs.next()) {
+				List<String> temp = new ArrayList<String>();
+				temp.add(rs.getString("ppid"));
+				temp.add(rs.getString("pn"));
+				temp.add(rs.getString("co"));
+				temp.add(rs.getString("lot"));
+				temp.add(rs.getString("dps"));
+				temp.add(rs.getString("pro_code"));
+				temp.add(rs.getString("code_descp"));
+				temp.add(rma);
+				temp.add("UnReceived");
+				result.add(temp);
+			}
+			jsonResult = new Gson().toJson(result);
+			
+		} catch (Exception e) {
+			System.out.println("Error getUnReceiveItem function in DBHandler: " + e.getMessage());
+		} finally {
+			shutdown();
+		}
+
+		return jsonResult;
 	}
 	
 	
@@ -1350,14 +1382,14 @@ public class DBHandler {
 	}
 	
 	
-	public List<List<String>> getInstruction(String part){
-		if(instruction.containsKey(part)) return instruction.get(part);
-		else return new ArrayList<List<String>>();
+	public String getInstruction(String part){
+		if(instruction.containsKey(part)) return new Gson().toJson(instruction.get(part));
+		else return new Gson().toJson(new ArrayList<List<String>>());
 	}
 	
-	public List<String> getDetailsInstruction(String code){
-		if(instructionDetail.containsKey(code)) return instructionDetail.get(code);
-		return new ArrayList<String>();
+	public String getDetailsInstruction(String code){
+		if(instructionDetail.containsKey(code)) return new Gson().toJson(instructionDetail.get(code));
+		return new Gson().toJson(new ArrayList<String>());
 	}
 	
 	public Map<String,List<List<String>>> getInstructionMap(){

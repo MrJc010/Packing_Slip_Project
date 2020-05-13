@@ -1,28 +1,22 @@
 package com.bizcom.database;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.Scanner;    
+import java.util.List;
+import java.util.Map;    
 
 public class test {
 
 	public static void main(String[] args) throws ClassNotFoundException, ParseException, SQLException {
 		//Class.forName("com.mysql.cj.jdbc.Driver");
-//		DBHandler db = new DBHandler();
-//		db.getConnectionAWS();
-//
-//		List<List<String>> list = db.getInstruction("N6W51");
-//		for(List<String> l : list) {
-//			System.out.println(l.toString());
-//		}
-//		System.out.println("**********************************");
-//		System.out.println();
-//		
+		DBHandler db = new DBHandler();
+		db.getConnectionAWS();
+
+		String list = db.getInstruction("N6W51");
+		System.out.println(list);
+		System.out.println("**********************************");
+		System.out.println();
+		
 //		//Get all details for all upgrades
 //		Map<String, List<String>> instructionDetail = db.getInstructionDetailMap();
 //		
