@@ -766,6 +766,74 @@ public class DBHandler {
 	// ***************************END*****************************
 	// ***************************END*****************************
 	// ***************************END*****************************
+	
+	
+
+
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***********************************************************
+	// *                    Report Functions                     *
+	// ***********************************************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
+	
+	/**
+	 * This function is used for getting download excel file of items left in data base after
+	 * Physical receive in.
+	 * @param rma
+	 */
+	public static void getShortItemReport(String rma) {
+		
+	}
+	
+	/**
+	 * This function is used for getting download excel file of all extra physical items after
+	 * Physical Receive in
+	 * @param items
+	 * @param rma
+	 */
+	public static void getExtraItemReport(List<String> items, String rma) {
+		
+	}
+	
+	/**
+	 * This funtion is used for getting download excel file of all extra physical items, and items as left
+	 * on database after doing Physical receiving.
+	 * @param rma
+	 * @param items
+	 */
+	public static void getIncorrectItem(String rma, List<String> items) {
+		
+	}
+	
+	/**
+	 * This function is used for getting all un-receive items
+	 * @param rma
+	 * @return
+	 */
+	public static List<String> getUnReceiveItem(String rma){
+		return new ArrayList<String>();
+	}
+	
+	
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***********************************************************
+	// *                    Report Functions                     *
+	// ***********************************************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+
+
 
 	// ***************************START***************************
 	// ***************************START***************************
@@ -778,7 +846,7 @@ public class DBHandler {
 	// ***************************START***************************
 	// ***************************START***************************
 	// ***************************START***************************
-	public boolean generateErrorRecord(String ppid) {
+ 	public boolean generateErrorRecord(String ppid) {
 		boolean result = false;
 		String query = "INSERT INTO repair01_action (ppid,errorCode) SELECT ppid,error FROM mici_station  WHERE ppid=? AND refix='YES'";
 		try {
