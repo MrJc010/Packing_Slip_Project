@@ -9,57 +9,62 @@
 			<h1>Physical Receiving Station</h1>
 		</div>
 		<div>
-			<p>
-				Calling data from function getUnReceiveItem. This function is providing JSON format.
-			</p>
+			<p>Calling data from function getUnReceiveItem. This function is
+				providing JSON format.</p>
 		</div>
-		<button onclick="exportTableToExcel('tblData', 'members-data')">Export Table Data To Excel File</button>
+		<button onclick="exportTableToExcel('tblData', 'members-data')">Export
+			Table Data To Excel File</button>
 
-		<table id="tblData">
-			<tr>
-				<th>ppid</th>
-				<th>pn</th>
-				<th>co</th>
-				<th>lot</th>
-				<th>dps</th>
-				<th>pro_code</th>
-				<th>code_descp</th>
-				<th>rma</th>
-				<th>status</th>
-			</tr>
-			<tr>
-				<td>John Doe</td>
-				<td>john@gmail.com</td>
-				<td>USA</td>
-				<td>John Doe</td>
-				<td>john@gmail.com</td>
-				<td>USA</td>
-				<td>John Doe</td>
-				<td>john@gmail.com</td>
-				<td>USA</td>
-			</tr>
-			<tr>
-				<td>John Doe</td>
-				<td>john@gmail.com</td>
-				<td>USA</td>
-				<td>John Doe</td>
-				<td>john@gmail.com</td>
-				<td>USA</td>
-				<td>John Doe</td>
-				<td>john@gmail.com</td>
-				<td>USA</td>
-			</tr>
-			<tr>
-				<td>John Doe</td>
-				<td>john@gmail.com</td>
-				<td>USA</td>
-				<td>John Doe</td>
-				<td>john@gmail.com</td>
-				<td>USA</td>
-				<td>John Doe</td>
-				<td>john@gmail.com</td>
-				<td>USA</td>
-			</tr>
+		<table id="tblData" class="table table-bordered">
+			<thead class="thead-dark">
+				<tr>
+					<th scope="col">ppid</th>
+					<th scope="col">pn</th>
+					<th scope="col">co</th>
+					<th scope="col">lot</th>
+					<th scope="col">dps</th>
+					<th scope="col">pro_code</th>
+					<th scope="col">code_descp</th>
+					<th scope="col">rma</th>
+					<th scope="col">status</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>John Doe</td>
+					<td>john@gmail.com</td>
+					<td>USA</td>
+					<td>John Doe</td>
+					<td>john@gmail.com</td>
+					<td>USA</td>
+					<td>John Doe</td>
+					<td>john@gmail.com</td>
+					<td>USA</td>
+				</tr>
+				<tr>
+					<td>John Doe</td>
+					<td>john@gmail.com</td>
+					<td>USA</td>
+					<td>John Doe</td>
+					<td>john@gmail.com</td>
+					<td>USA</td>
+					<td>John Doe</td>
+					<td>john@gmail.com</td>
+					<td>USA</td>
+				</tr>
+				<tr>
+					<td>John Doe</td>
+					<td>john@gmail.com</td>
+					<td>USA</td>
+					<td>John Doe</td>
+					<td>john@gmail.com</td>
+					<td>USA</td>
+					<td>John Doe</td>
+					<td>john@gmail.com</td>
+					<td>USA</td>
+				</tr>
+
+			</tbody>
 		</table>
 	</div>
 
