@@ -17,9 +17,10 @@ public class test {
 		System.out.println("**********************************");
 		System.out.println();
 		
+//		CN00C209CMK007670158
 //		//Get all details for all upgrades
 //		Map<String, List<String>> instructionDetail = db.getInstructionDetailMap();
-//		
+//		System.out.println("aalll ==>> " + instructionDetail);
 //		//get first upgrade revision for partnumber N6W51:
 //		System.out.println("First updrage " +list.get(0).toString());
 //		System.out.println("************************************");
