@@ -21,7 +21,7 @@
 						<div class="input-group-append">
 
 							<input type="submit" class="btn btn-primary btn-lg" value="FIND"
-								name="actionSubmitRepair01" id="btnSubmit" onClick="asyncCall()">
+								name="actionSubmitRepair01" id="btnSubmit" onClick="showResult(event)">
 						</div>
 					</div>
 				</form>
@@ -33,7 +33,33 @@
 	
 
 	<div id="result1" ${resultHidden}>
-	<h1>aaaaa</h1>
+	<div id="accordion">
+				<div class="card">
+					<div class="card-header" id="headingOne">
+						<h5 class="mb-0">
+							<button class="btn btn-link" data-toggle="collapse"
+								data-target="#collapseOne" aria-expanded="true"
+								aria-controls="collapseOne">Collapsible Group Item #1</button>
+						</h5>
+					</div>
+
+					<div id="collapseOne" class="collapse show"
+						aria-labelledby="headingOne" data-parent="#accordion">
+						<div class="card-body">Anim pariatur cliche reprehenderit,
+							enim eiusmod high life accusamus terry richardson ad squid. 3
+							wolf moon officia aute, non cupidatat skateboard dolor brunch.
+							Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon
+							tempor, sunt aliqua put a bird on it squid single-origin coffee
+							nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica,
+							craft beer labore wes anderson cred nesciunt sapiente ea
+							proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat
+							craft beer farm-to-table, raw denim aesthetic synth nesciunt you
+							probably haven't heard of them accusamus labore sustainable VHS.
+						</div>
+					</div>
+				</div>
+
+			</div>
 	
 		
 	</div>
@@ -46,36 +72,36 @@
 
 <script>
 
-
-
-var testValue = null;
-function test() {
-	return new Promise(resolve => {
-		setTimeout(()=> {
-			testValue = `<%=request.getAttribute("myObject")%>`;
-			console.log("testValue" + testValue);
-		},2000);
-	});
-}
-
-async function asyncCall(){
-	console.log('Start');
-	var result = await test();
-	console.log(result);
-	console.log('End');
-}
-var  showResult =  () => {
+var accordionResult = document.getElementById("accordion");
+var showResult =  (event) => {
+	event.preventDefault();
+	console.log('run here');
 	var listItems =  ['11','222','333'];
-	/* divResult.innerHTML = ""; */
-/* 	var htmlString = '<ul>';
+	var tempDiv = document.createElement('div');
+	tempDiv.classList = 'card';
+	tempDiv.innerHTML = "";
+	
 	if(listItems){
+		console.log('in if');
 		for (var key in listItems) {
-			console.log(listItems[key][0]);
-			htmlString += `<li>${listItems[key][0]}</li>`;
+			tempDiv.innerHTML += `
+			<div class=\"card-header\" id=\"heading${key}\">
+						<h5 class=\"mb-0\">
+							<button class=\"btn btn-link\" data-toggle=\"collapse\"
+								data-target=\"#collapse'+key+'\" aria-expanded=\"true\"
+								aria-controls=\"collapse'+key+'\">1111</button>
+						</h5>
+					</div>
+
+					<div id=\"collapse'+key+'\" class=\"collapse show\"
+						aria-labelledby=\"heading' +key+ '\" data-parent=\"#accordion\">
+						<div class=\"card-body\">222222
+						</div>
+					</div>
+	`;
 		}
 	}
-	htmlString += '</ul>';
-	divResult.innerHTML = htmlString; */
+	accordionResult.appendChild(tempDiv);
 }
 var modalMessage = document.getElementById("modal-message");
 		function imgClickHandler(sr)
