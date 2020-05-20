@@ -4,12 +4,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.json.JSONObject;
 
 import com.bizcom.database.DBHandler;
 import com.bizcom.repair01.RevesionUpgrade;
@@ -32,8 +35,10 @@ public class Eco_Servlet extends HttpServlet {
 	private boolean errorCodeFlag = false;
 	private boolean updateRevisionFlag = false;
 	private boolean isTransferButtonClicked = false;
+	private JSONObject jsonMap;
+	private String partNumber = "";
 	
-	private String revisionList = "";
+	private List<List<String>> revisionList;
 	
     /**
      * @see HttpServlet#HttpServlet()
@@ -47,16 +52,22 @@ public class Eco_Servlet extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+    	
+    	jsonMap= new JSONObject(db.createECOInstruction());
+    	
     }
     
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
     	
-		
+    	if(!partNumber.isEmpty()) {
+    		request.setAttribute("myObject", partNumber);
+    	}
 //		if(db.checkAuthentication(request)) {		
 		System.out.println("doget called");
 		String action = request.getParameter("action01");
 		request.setAttribute("resultHidden", "hidden");
+		request.setAttribute("ins", jsonMap);
 		if (action != null) {
 			switch (action) {
 			case "findPPID":
@@ -69,18 +80,19 @@ public class Eco_Servlet extends HttpServlet {
 						boolean updateFlag = db.generateErrorRecord(ppid);
 						if (updateFlag) {
 							displayInitialView(request, response, false);
-							// Update status also
-//							db.updateCurrentStation(REPAIR01_FAIL, REPAIR01, ppid);
-//							updateRevision(request, response, ppid);
-							String partNumber = db.getPartNumber(ppid);
+							partNumber = db.getPartNumber(ppid);
 						
 							revisionList = db.getInstruction(partNumber);
-//							System.out.println(revisionList);
+							request.setAttribute("listItems", revisionList);
 							
-							if(!revisionList.isEmpty()) {
+							if(!partNumber.isEmpty()) {
 								System.out.println("run this one");
 								request.setAttribute("resultHidden", "show");
-								request.setAttribute("myObject", revisionList);
+								request.setAttribute("myObject", partNumber);
+								
+								
+								revisionList = db.getInstruction(partNumber);
+								request.setAttribute("listItems", revisionList);
 							}
 							
 							displayInitialView(request, response, true);

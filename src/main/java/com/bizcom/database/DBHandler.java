@@ -1378,9 +1378,9 @@ public class DBHandler {
 	}
 	
 	
-	public String getInstruction(String part){
-		if(instruction.containsKey(part)) return new Gson().toJson(instruction.get(part));
-		else return new Gson().toJson(new ArrayList<List<String>>());
+	public List<List<String>> getInstruction(String part){
+		if(instruction.containsKey(part)) return instruction.get(part);
+		else return new ArrayList<List<String>>();
 	}
 	
 	public String getDetailsInstruction(String code){
@@ -1396,108 +1396,6 @@ public class DBHandler {
 		return instructionDetail;
 	}
 
-	
-//	public RevesionUpgrade getInstruction(String part, String oldR, String newR) {
-//		part = part.toUpperCase();
-//		oldR = oldR.toUpperCase();
-//		newR = newR.toUpperCase();
-//
-//		// Line 1
-//		if ((part.equals("N6W51") || part.equals("JXP99") || part.equals("XMNM2") || part.equals("C4VVY")
-//				|| part.equals("71V71") || part.equals("MH7C0") || part.equals("JFGFN") || part.equals("W4DYC")
-//				|| part.equals("41M0M") || part.equals("1DMJH") || part.equals("2WCVJ") || part.equals("PHP7P"))
-//				&& oldR.equals("A00") && newR.equals("A01")) {
-//			List<String> list = instruction.get(0);
-//			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4),
-//					list.get(5), 0);
-//		}
-//
-//		// Line2
-//		else if ((part.equals("JFGFN") || part.equals("W4DYC") || part.equals("41M0M") || part.equals("1DMJH")
-//				|| part.equals("2WCVJ") || part.equals("PHP7P")) && oldR.equals("A01") && newR.equals("A02")) {
-//			List<String> list = instruction.get(1);
-//			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4),
-//					list.get(5), 1);
-//		}
-//
-//		// line3.1
-//		else if ((part.equals("71V71") || part.equals("C4VVY") || part.equals("JXP99") || part.equals("MH7C0")
-//				|| part.equals("N6W51") || part.equals("XMNM2")) && oldR.equals("A02") && newR.equals("A03")) {
-//			List<String> list = instruction.get(2);
-//			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4),
-//					list.get(5), 2);
-//		}
-//
-//		// line3.2
-//		else if ((part.equals("1DMJH") || part.equals("2WCVJ") || part.equals("41M0M") || part.equals("JFGFN")
-//				|| part.equals("PHP7P") || part.equals("W4DYC")) && oldR.equals("A03") && newR.equals("A04")) {
-//			List<String> list = instruction.get(2);
-//			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4),
-//					list.get(5), 3);
-//		}
-//
-//		// line5
-//		else if ((part.equals("07RYD") || part.equals("2PK0W") || part.equals("441WF") || part.equals("5FXXY")
-//				|| part.equals("C35PP") || part.equals("CM3RM") || part.equals("TGTM2") || part.equals("TR16P")
-//				|| part.equals("HVW90") || part.equals("JK58T") || part.equals("JT36N") || part.equals("NGHF1")
-//				|| part.equals("P79TK") || part.equals("P86NJ") || part.equals("V0P2N") || part.equals("YNMMF"))
-//				&& oldR.equals("A02") && newR.equals("A03")) {
-//			List<String> list = instruction.get(4);
-//			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4),
-//					list.get(5), 2);
-//		}
-//
-//		// line6
-//		else if ((part.equals("71V71") || part.equals("C4VVY") || part.equals("JXP99") || part.equals("MH7C0")
-//				|| part.equals("N6W51") || part.equals("XMNM2")) && oldR.equals("A05") && newR.equals("A06")) {
-//			List<String> list = instruction.get(4);
-//			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4),
-//					list.get(5), 5);
-//		}
-//
-//		// line7
-//		else if ((part.equals("1DMJH") || part.equals("2WCVJ") || part.equals("41M0M") || part.equals("JFGFN")
-//				|| part.equals("PHP7P") || part.equals("W4DYC")) && oldR.equals("A06") && newR.equals("A07")) {
-//			List<String> list = instruction.get(4);
-//			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4),
-//					list.get(5), 6);
-//		}
-//
-//		// line 8
-//		else if ((part.equals("2PK0W") || part.equals("C35PP") || part.equals("CM3RM") || part.equals("JK58T")
-//				|| part.equals("JT36N") || part.equals("NGHF1") || part.equals("P86NJ") || part.equals("TGTM2")
-//				|| part.equals("V0P2N") || part.equals("YNMMF")) && oldR.equals("A01") && newR.equals("A02")) {
-//			List<String> list = instruction.get(5);
-//			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4),
-//					list.get(5), 1);
-//		}
-//
-//		// line 9
-//		else if ((part.equals("1DMJH") || part.equals("2WCVJ") || part.equals("41M0M") || part.equals("JFGFN")
-//				|| part.equals("PHP7P") || part.equals("W4DYC")) && oldR.equals("A05") && newR.equals("A06")) {
-//			List<String> list = instruction.get(5);
-//			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4),
-//					list.get(5), 5);
-//		}
-//
-//		// line 10
-//		else if ((part.equals("441WF") || part.equals("HVW90") || part.equals("5FXXY") || part.equals("TR16P")
-//				|| part.equals("P79TK") || part.equals("07RYD")) && oldR.equals("A01") && newR.equals("A02")) {
-//			List<String> list = instruction.get(6);
-//			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4),
-//					list.get(5), 1);
-//		}
-//
-//		// line 11
-//		else if ((part.equals("N6W51") || part.equals("JXP99") || part.equals("XMNM2") || part.equals("C4VVY")
-//				|| part.equals("71V71") || part.equals("MH7C0")) && oldR.equals("A04") && newR.equals("A05")) {
-//			List<String> list = instruction.get(6);
-//			return new RevesionUpgrade(part, list.get(0), list.get(1), list.get(2), list.get(3), list.get(4),
-//					list.get(5), 4);
-//		} else {
-//			return new RevesionUpgrade();
-//		}
-//	}
 
 	public String getCurrentRev(String ppid) {
 		String result = "";
