@@ -46,13 +46,24 @@ public class DBHandler {
 	private ResultSet rsSF;
 	private static final DateTimeFormatter sdf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss.SSS");
 	private static final SimpleDateFormat dateForSearch = new SimpleDateFormat("MM/dd/yyyy");
-	private static final String PHYSICAL_RECEIVING = "PHYSICAL_RECEIVING";
-	private static final String MICI = "MICI";
-	private static final String REPAIR01_FAIL = "REPAIR01_FAIL";
-	private static final String REPAIR01_PASS = "REPAIR01_PASS";
-	private static final String REPAIR01 = "REPAIR01";
-	private static final String QC1 = "QC1";
-	private static final String START = "START";
+	public static final String PHYSICAL_RECEIVING = "PHYSICAL_RECEIVING";
+	public static final String MICI = "MICI";
+	public static final String REPAIR01_FAIL = "REPAIR01_FAIL";
+	public static final String REPAIR01_PASS = "REPAIR01_PASS";
+	public static final String REPAIR01 = "REPAIR01";
+	public static final String QC1 = "QC1";
+	public static final String QC2 = "QC2";
+	public static final String QC3 = "QC3";
+	public static final String QC4 = "QC4";
+	public static final String START = "START";
+	public static final String ECO = "ECO";
+	public static final String ECO_WAITING = "ECO_WAITING";
+	public static final String REPAIR02 = "REPAIR02";
+	public static final String BGA = "BGA";
+	public static final String VI = "VI";
+	public static final String CMB2 = "CMB2";
+	
+	
 	
 	private static Map<String, List<List<String>>> instruction;
 	private static Map<String,List<String>> instructionDetail;
@@ -692,9 +703,10 @@ public class DBHandler {
 			while (rs.next()) {
 				String pro_code = rs.getString("pro_code");
 				String desc_code = rs.getString("code_descp");
+				String pn = rs.getString("pn");
 				result[0] = pro_code.length() > 1 ? pro_code : "N/A";
 				result[1] = desc_code.length() > 1 ? desc_code : "N/A";
-				result[2] = ppid;
+				result[2] = pn;
 			}
 		} catch (Exception e) {
 			System.out.println("FAIL getPhysicalInfor " + e.getMessage());
@@ -1383,9 +1395,9 @@ public class DBHandler {
 		else return new ArrayList<List<String>>();
 	}
 	
-	public String getDetailsInstruction(String code){
-		if(instructionDetail.containsKey(code)) return new Gson().toJson(instructionDetail.get(code));
-		return new Gson().toJson(new ArrayList<String>());
+	public List<String> getDetailsInstruction(String code){
+		if(instructionDetail.containsKey(code)) return instructionDetail.get(code);
+		return new ArrayList<String>();
 	}
 	
 	public Map<String,List<List<String>>> getInstructionMap(){
@@ -1459,6 +1471,10 @@ public class DBHandler {
 	// ***************************START***************************
 	// ***************************START***************************
 	// ***************************START***************************
+
+	public boolean validatePPID(String ppid) {
+		return !ppid.isEmpty() && isPPIDExistInMICI(ppid);
+	}
 
 	public String[] getCurrentStation(String ppid) {
 		String query = "SELECT * FROM status_table WHERE ppid= ?";
@@ -2983,5 +2999,5 @@ public class DBHandler {
 	// ***************************END*****************************
 
 
-
+	
 }

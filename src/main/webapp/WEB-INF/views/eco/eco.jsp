@@ -141,7 +141,6 @@ var myList = <%=request.getAttribute("instructionDetail")%>;
 console.log(myList);
 
 function clickBTN(event){
-	console.log("Clicked");
 	var contentBTN = event.target.textContent;
 	var index = event.target.id.substring(3);
 	var leftEle = document.getElementById("left"+index);
@@ -160,8 +159,7 @@ var modalMessage = document.getElementById("modal-message");
             $('#myModal').modal('show');
         };
         
-        var isNoInformationUpdate = `<%=request.getAttribute("isNoInformationUpdate")%>
-	`;
+        var isNoInformationUpdate = `<%=request.getAttribute("isNoInformationUpdate")%>`;
 	if (isNoInformationUpdate === "True") {
 		$(document)
 				.ready(

@@ -83,7 +83,8 @@
 									<li><a class="dropdown-item"
 										href="<%=request.getContextPath()%>/extraitems">Extra Item</a></li>
 									<li><a class="dropdown-item"
-										href="<%=request.getContextPath()%>/incorrectitem">Incorrect Item</a></li>
+										href="<%=request.getContextPath()%>/incorrectitem">Incorrect
+											Item</a></li>
 								</ul></li>
 						</ul></li>
 
@@ -124,10 +125,10 @@
 						href="<%=request.getContextPath()%>/qc3"><span
 							class="text-white"><strong>QC3</strong></span></a></li>
 
-					<%-- 	<li class="nav-item"><a class="nav-link"
+					<li class="nav-item"><a class="nav-link"
 						href="<%=request.getContextPath()%>/cosmetic_check"><span
 							class="text-white"><strong>Cosmetic Check</strong></span></a></li>
-
+					<%-- 
 					<li class="nav-item"><a class="nav-link"
 						href="<%=request.getContextPath()%>/packing"><span
 							class="text-white"><strong>Packing</strong></span></a></li>
@@ -179,17 +180,16 @@
 				</ul>
 				<%
 					if (request.getSession().getAttribute("username") == null) {
-						request.setAttribute("setHiddenSignOut", "hidden");
+					request.setAttribute("setHiddenSignOut", "hidden");
 
-					} else {
-						request.setAttribute("setHiddenSignOut", "show");
-					}
+				} else {
+					request.setAttribute("setHiddenSignOut", "show");
+				}
 				%>
 
 				<ul class="navbar-nav ml-auto mr-5">
-				<li class="nav-item dropdown"><a
-						class="nav-link dropdown-toggle"
-						id="navbarDropdownMenuLink"
+					<li class="nav-item dropdown"><a
+						class="nav-link dropdown-toggle" id="navbarDropdownMenuLink"
 						data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 							<span class="text-white"><strong>Account</strong></span>
 					</a>
@@ -207,10 +207,9 @@
 									class="text-black"><strong>Manage Account</strong></span>
 							</a></li>
 						</ul>
-
 				</ul>
 
-				
+
 			</div>
 		</nav>
 	</header>
