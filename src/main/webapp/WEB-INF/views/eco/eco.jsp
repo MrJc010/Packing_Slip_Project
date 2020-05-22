@@ -162,6 +162,7 @@ function clickBTN(event){
 	var imgEle = document.getElementById("img"+index);
 	leftEle.innerHTML = myList['2'][index][0];
 	middleEle.innerHTML = myList['2'][index][1];
+	console.log(myList['2'][index][2]);
 	imgEle.src = myList['2'][index][2];
 }
 

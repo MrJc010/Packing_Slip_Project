@@ -10,50 +10,47 @@
 		</div>
 
 		<form class="container-fluid"
-			action="<%=request.getContextPath()%>/qc1"
-			method="get">
+			action="<%=request.getContextPath()%>/qc1" method="get">
 			<div class="form-group row my-4">
-			<input type="hidden" name="action" value="findPPID">
-				<label for="stationAvaiable" class="col-md-2 col-form-label"><h5>
+				<input type="hidden" name="action" value="findPPID"> <label
+					for="stationAvaiable" class="col-md-2 col-form-label"><h5>
 						<strong>Enter PPID:</strong>
 					</h5> </label>
 				<div class="col-md-8">
 					<input type="text" class="form-control" name="inputPPID0"
-						value="${inputPPID}" />
+						value="${inputPPID}" required/>
 				</div>
 				<div class="col-md-1">
 					<input type="submit" class="btn btn-md btn-primary" value="Search"
 						name="action" />
 				</div>
-			</div>			
+			</div>
 			<div class="form-group row my-4 justify-content-center"
 				${setHiddenNotification}>
-				<button type="button" class="btn btn-outline-info">
+				<button type="button" class="btn btn-outline-info font-weight-bold">
 					${messageNotification}</button>
 			</div>
 			<div class="form-group row my-4 justify-content-center">
 				<div class="btn-group" role="group">
-					<button name="action" class="btn btn-success mx-5">
-						<h1>PASS</h1>
-					</button>
-					<button name="action" class="btn btn-warning">
-						<h1>FAIL</h1>
-					</button>
+					<form class="container-fluid"
+						action="<%=request.getContextPath()%>/qc1" method="post">
+						
+						<input type="hidden" name="action" value="submitAction"> 
+						
+						<button name="btnSubmit" class="btn btn-success mx-5"
+							${setHiddenBTNPASS} value="Pass">${passedValue}
+						</button>
+						<button name="btnSubmit" class="btn btn-danger mx-5"
+							${setHiddenBTNFAIL} value="Fail"> ${failValue}
+						</button>
+					</form>
+
 				</div>
 			</div>
 		</form>
 	</div>
 
-
-	<div class="container">
-		<div class="row">
-			<h1>Pass</h1>
-		</div>
-		
-		<div class="row">
-		<h1>FAIL</h1>
-		
-		</div>
+	<div class="container"></div>
 	</div>
 </section>
 
