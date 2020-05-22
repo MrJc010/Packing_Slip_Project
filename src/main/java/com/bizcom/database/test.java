@@ -11,11 +11,15 @@ public class test {
 		//Class.forName("com.mysql.cj.jdbc.Driver");
 		DBHandler db = new DBHandler();
 		db.getConnectionAWS();
+		
+//		System.out.println(db.insertQC1Table("CN00VJ1G1296369F073F", "USER ID QC!","Passed"));
+//		System.out.println(db.updateECOStation("CN00VJ1G1296369F073F","USER ID ECO!"));
+		
+		
+//		System.out.println(db.isPPIDExistIn("CN00VJ1G1296369F073F", "eco_station"));
+//		String list = db.getInstruction("N6W51");
+//		System.out.println(list);
 
-		String list = db.getInstruction("N6W51");
-		System.out.println(list);
-		System.out.println("**********************************");
-		System.out.println();
 		
 //		CN00C209CMK007670158
 //		//Get all details for all upgrades

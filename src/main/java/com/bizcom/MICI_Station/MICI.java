@@ -102,14 +102,23 @@ public class MICI extends HttpServlet {
 					// check current ECO 
 					String currentRevision = db.getCurrentRev(ppid).trim().toUpperCase();
 					String maxRevision = db.getMaxRevision(pn).trim().toUpperCase(); 
+					try {
+						boolean test = db.addToMICITable(ppid, sn, errorCodeSet, "A USER FROM MICI");
+						//						 System.out.println(test);
+					} catch (ClassNotFoundException | SQLException e) {
+						// here
+						System.out.println(e.getMessage());
+						e.printStackTrace();
+					}
 					if(currentRevision.equals(maxRevision) || maxRevision.length() == 0) {
 						// GO to QC1
-						db.updateCurrentStation(db.MICI, db.QC1, ppid);
+						db.updateCurrentStation(db.MICI, db.QC1_WAITING, ppid);
 					}else {
 						// GO TO ECO
-
-						db.updateCurrentStation(db.MICI, db.ECO_WAITING, ppid);
+						db.updateCurrentStation(db.MICI, db.ECO_WAITING, ppid);						
+					
 					}
+					db.updateECOStation(ppid, "FROM MICI USER");
 					System.out.println("GoTo QC1 PASS");
 				} else if (action.equalsIgnoreCase("failButton")) {
 					System.out.println(request.getAttribute("currentCountMICI"));
@@ -202,8 +211,8 @@ public class MICI extends HttpServlet {
 					request.setAttribute("seterrorhiddenMICI", "");
 					request.getRequestDispatcher("/WEB-INF/views/mici_station/mici.jsp").forward(request, response);
 				}
-				
-				
+
+
 				if ( currenStaions[0].equalsIgnoreCase(db.START) 
 						&& currenStaions[1].equalsIgnoreCase(db.PHYSICAL_RECEIVING)) {
 					// no information here

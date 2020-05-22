@@ -52,19 +52,25 @@ public class DBHandler {
 	public static final String REPAIR01_PASS = "REPAIR01_PASS";
 	public static final String REPAIR01 = "REPAIR01";
 	public static final String QC1 = "QC1";
+	public static final String QC1_WAITING = "QC1_WAITING";
 	public static final String QC2 = "QC2";
+	public static final String QC2_WAITING = "QC2_WAITING";
 	public static final String QC3 = "QC3";
+	public static final String QC3_WAITING = "QC3_WAITING";
 	public static final String QC4 = "QC4";
+	public static final String QC4_WAITING = "QC4_WAITING";
 	public static final String START = "START";
 	public static final String ECO = "ECO";
 	public static final String ECO_WAITING = "ECO_WAITING";
 	public static final String REPAIR02 = "REPAIR02";
+	public static final String REPAIR02_WAITING = "REPAIR02_WAITING";
 	public static final String BGA = "BGA";
 	public static final String VI = "VI";
+	public static final String VI_WAITING = "VI_WAITING";
 	public static final String CMB2 = "CMB2";
-	
-	
-	
+
+
+
 	private static Map<String, List<List<String>>> instruction;
 	private static Map<String,List<String>> instructionDetail;
 
@@ -727,24 +733,36 @@ public class DBHandler {
 		pst = dbconnection.prepareStatement(query);
 		int i = 0;
 		LocalDateTime now = LocalDateTime.now();
-		for (String e : errors) {
+		if(errors.size() == 0) {
 			pst.setString(1, ppid);
-			pst.setString(2, e);
+			pst.setString(2, "");
 			pst.setString(3, user);
 			pst.setString(4, sdf.format(now));
-			pst.addBatch();
-			i++;
-			if (i == errors.size()) {
-				//				multi m = new multi(pst);
-				//				m.start();
-				int[] a = pst.executeBatch();
-				if (a.length > 0)
-					result = true;
-				else
-					result = false;
-				// dbconnection.commit();
+
+			pst.executeUpdate();
+			result = true;
+		}
+		else {
+			for (String e : errors) {
+				pst.setString(1, ppid);
+				pst.setString(2, e);
+				pst.setString(3, user);
+				pst.setString(4, sdf.format(now));
+				pst.addBatch();
+				i++;
+				if (i == errors.size()) {
+					//				multi m = new multi(pst);
+					//				m.start();
+					int[] a = pst.executeBatch();
+					if (a.length > 0)
+						result = true;
+					else
+						result = false;
+					// dbconnection.commit();
+				}
 			}
 		}
+
 		return result;
 	}
 
@@ -780,8 +798,8 @@ public class DBHandler {
 	// ***************************END*****************************
 	// ***************************END*****************************
 	// ***************************END*****************************
-	
-	
+
+
 
 
 	// ***************************START***************************
@@ -795,7 +813,7 @@ public class DBHandler {
 	// ***************************START***************************
 	// ***************************START***************************
 	// ***************************START***************************
-	
+
 	/**
 	 * This function is used for getting download excel file of all extra physical items after
 	 * Physical Receive in
@@ -805,7 +823,7 @@ public class DBHandler {
 	public String getExtraItemReport(List<List<String>> items) {
 		return new Gson().toJson(items);
 	}
-	
+
 	/**
 	 * This funtion is used for getting download excel file of all extra physical items, and items as left
 	 * on database after doing Physical receiving.
@@ -819,7 +837,7 @@ public class DBHandler {
 		dataMap.put("incorect", new Gson().toJson(items));
 		return new JSONObject(dataMap);
 	}
-	
+
 	/**
 	 * This function is used for getting all un-receive items
 	 * @param rma
@@ -835,7 +853,7 @@ public class DBHandler {
 			pst = dbconnection.prepareStatement(query);
 			pst.setString(1, rma);
 			rs = pst.executeQuery();
-			
+
 			while (rs.next()) {
 				List<String> temp = new ArrayList<String>();
 				temp.add(rs.getString("ppid"));
@@ -850,7 +868,7 @@ public class DBHandler {
 				result.add(temp);
 			}
 			jsonResult = new Gson().toJson(result);
-			
+
 		} catch (Exception e) {
 			System.out.println("Error getUnReceiveItem function in DBHandler: " + e.getMessage());
 		} finally {
@@ -859,8 +877,8 @@ public class DBHandler {
 
 		return jsonResult;
 	}
-	
-	
+
+
 	// ***************************END*****************************
 	// ***************************END*****************************
 	// ***************************END*****************************
@@ -873,8 +891,57 @@ public class DBHandler {
 	// ***************************END*****************************
 	// ***************************END*****************************
 
+	
 
 
+
+		// ***************************START***************************
+		// ***************************START***************************
+		// ***************************START***************************
+		// ***************************START***************************
+		// ***********************************************************
+		// * QC1 STATION *
+		// ***********************************************************
+		// ***************************START***************************
+		// ***************************START***************************
+		// ***************************START***************************
+		// ***************************START***************************
+
+		public boolean insertQC1Table(String ppid, String userId, String testResult) {
+			boolean result = false;
+		
+			LocalDateTime now = LocalDateTime.now();
+			String query = "INSERT INTO qc1_station(ppid,result,userId,time) values(?,?,?,?)";
+			
+			
+			try {
+				dbconnection = getConnectionAWS();
+				pst = dbconnection.prepareStatement(query);
+				pst.setString(1, ppid);
+				pst.setString(2, testResult);
+				pst.setString(3, userId);		
+				pst.setString(4, sdf.format(now));
+				pst.execute();
+				result = true;
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				shutdown();
+			}
+			return result;
+		}
+	// ***************************END*****************************
+			// ***************************END*****************************
+			// ***************************END*****************************
+			// ***************************END*****************************
+			// ***********************************************************
+			// *                     QC1 STATION                      *
+			// ***********************************************************
+			// ***************************END*****************************
+			// ***************************END*****************************
+			// ***************************END*****************************
+			// ***************************END*****************************
 	// ***************************START***************************
 	// ***************************START***************************
 	// ***************************START***************************
@@ -886,7 +953,7 @@ public class DBHandler {
 	// ***************************START***************************
 	// ***************************START***************************
 	// ***************************START***************************
- 	public boolean generateErrorRecord(String ppid) {
+	public boolean generateErrorRecord(String ppid) {
 		boolean result = false;
 		String query = "INSERT INTO repair01_action (ppid,errorCode) SELECT ppid,error FROM mici_station  WHERE ppid=? AND refix='YES'";
 		try {
@@ -1085,34 +1152,34 @@ public class DBHandler {
 	public Map<String,List<String>> createDetailInstruction() {
 		instructionDetail = new HashMap<>();
 		List<String> list1 = Arrays.asList("DDA30 PU610/PU612/PU613",
-		"Change PU610/PU612/PU613 from SA0000AHX00 to SA0000AHX10 or SA0000C4800,"
-		+ " to avoid no-power failures",
-		"https://image.prntscr.com/image/9uUfNxHtSLGQZm4BGmum-Q.png");
+				"Change PU610/PU612/PU613 from SA0000AHX00 to SA0000AHX10 or SA0000C4800,"
+						+ " to avoid no-power failures",
+				"https://image.prntscr.com/image/9uUfNxHtSLGQZm4BGmum-Q.png");
 
 		List<String> list2 = Arrays.asList("DDA30 UT2",
-		"TBT FW Upgrade, Improved the stability of power states/ Improved device compatibility",
-		"https://image.prntscr.com/image/9uUfNxHtSLGQZm4BGmum-Q.png");
+				"TBT FW Upgrade, Improved the stability of power states/ Improved device compatibility",
+				"https://image.prntscr.com/image/9uUfNxHtSLGQZm4BGmum-Q.png");
 
 		List<String> list3 = Arrays.asList("DDA30 PC308/PC309/PC310/PC311",
-		"Change PC308, PC309,PC310,PC311 from SE0000M00(22uF) to SE000015500 /add CC221(SE000001120) ,"
-		+ "fix WHEA BSOD issue",
-		"https://image.prntscr.com/image/9uUfNxHtSLGQZm4BGmum-Q.png");
+				"Change PC308, PC309,PC310,PC311 from SE0000M00(22uF) to SE000015500 /add CC221(SE000001120) ,"
+						+ "fix WHEA BSOD issue",
+				"https://image.prntscr.com/image/9uUfNxHtSLGQZm4BGmum-Q.png");
 
 		List<String> list4 = Arrays.asList("DDA30 PU610/PU612/PU613",
-		"Change PU610/PU612/PU613 fromSA0000AHX00 / SA0000AHX10 " + 
-		"to  SA0000AHX20 or SA0000C4800, Fairchild DrMOS FDMF3035 UIS testing criteria improvement ",
-		"https://image.prntscr.com/image/9uUfNxHtSLGQZm4BGmum-Q.png");
+				"Change PU610/PU612/PU613 fromSA0000AHX00 / SA0000AHX10 " + 
+						"to  SA0000AHX20 or SA0000C4800, Fairchild DrMOS FDMF3035 UIS testing criteria improvement ",
+				"https://image.prntscr.com/image/9uUfNxHtSLGQZm4BGmum-Q.png");
 
 		List<String> list5 = Arrays.asList("DDA30 Thunderbolt",
-		"Thunderbolt FW upgrade to NVM41, To fix issue cut in new Thunderbolt FW NVM41",
-		"https://image.prntscr.com/image/9uUfNxHtSLGQZm4BGmum-Q.png");
+				"Thunderbolt FW upgrade to NVM41, To fix issue cut in new Thunderbolt FW NVM41",
+				"https://image.prntscr.com/image/9uUfNxHtSLGQZm4BGmum-Q.png");
 
 		List<String> list6 = Arrays.asList("DDA30 RC417 , RC418 , RC419 , RC420", 
-		"Non-AR U42 Replace RC417/ RC418 Change SD028000080 to SD028330A80,Non-AR U22 "
-		+ "Replace RC419; RC420 Change SD028000080 to SD028330A80, Cut in HW workaround "
-		+ "can get further immunity of Kirkwood MLK flicker issue (BITS410252& BITS423117)"
-		+ " if any unproper manual assembly process to cause the thermal module deformation. ",
-		"https://image.prntscr.com/image/9uUfNxHtSLGQZm4BGmum-Q.png");
+				"Non-AR U42 Replace RC417/ RC418 Change SD028000080 to SD028330A80,Non-AR U22 "
+						+ "Replace RC419; RC420 Change SD028000080 to SD028330A80, Cut in HW workaround "
+						+ "can get further immunity of Kirkwood MLK flicker issue (BITS410252& BITS423117)"
+						+ " if any unproper manual assembly process to cause the thermal module deformation. ",
+				"https://image.prntscr.com/image/9uUfNxHtSLGQZm4BGmum-Q.png");
 
 		instructionDetail.put("SECO_N1870266",list1);
 		instructionDetail.put("SECO_N1850685",list2);
@@ -1368,7 +1435,7 @@ public class DBHandler {
 		return instruction;
 	}
 
-	
+
 	public String getMaxRevision(String part) {
 		String query = "SELECT max_ver FROM repair01_part_number WHERE part_number = ?";
 		String result = "";
@@ -1388,22 +1455,22 @@ public class DBHandler {
 
 		return result.toUpperCase();
 	}
-	
-	
+
+
 	public List<List<String>> getInstruction(String part){
 		if(instruction.containsKey(part)) return instruction.get(part);
 		else return new ArrayList<List<String>>();
 	}
-	
+
 	public List<String> getDetailsInstruction(String code){
 		if(instructionDetail.containsKey(code)) return instructionDetail.get(code);
 		return new ArrayList<String>();
 	}
-	
+
 	public Map<String,List<List<String>>> getInstructionMap(){
 		return instruction;
 	}
-	
+
 	public Map<String, List<String>> getInstructionDetailMap(){
 		return instructionDetail;
 	}
@@ -1431,7 +1498,8 @@ public class DBHandler {
 
 	}
 
-	public void updateRevision(String ppid, String newRev) {
+	public boolean updateRevision(String ppid, String newRev) {
+		boolean result = false;
 		String query = "UPDATE physical_station SET revision=? WHERE ppid = ?";
 		try {
 			dbconnection = getConnectionAWS();
@@ -1439,12 +1507,15 @@ public class DBHandler {
 			pst.setString(1, newRev);
 			pst.setString(2, ppid);
 			pst.execute();
+			result = true;
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			shutdown();
 		}
+		
+		return result;
 
 	}
 
@@ -1460,6 +1531,82 @@ public class DBHandler {
 	// ***************************END*****************************
 	// ***************************END*****************************
 
+
+
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***********************************************************
+	// *                   ECO STATION          *
+	// ***********************************************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
+	public boolean updateECOStation(String ppid,String userId) {
+		boolean result = false;
+		String maxRev = getMaxRevision(getPartNumber(ppid));
+		String currentRev = getCurrentRev(ppid);
+		LocalDateTime now = LocalDateTime.now();
+		String query = "INSERT INTO eco_station(ppid,original_rev,max_rev,userId,time) values(?,?,?,?,?)";
+		
+		
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(query);
+			pst.setString(1, ppid);
+			pst.setString(2, currentRev);
+			pst.setString(3, maxRev);
+			pst.setString(4, userId);
+			pst.setString(5, sdf.format(now));
+			pst.execute();
+			result = true;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			shutdown();
+		}
+		return result;
+	}
+	
+	public boolean isPPIDExistIn(String ppid,String tableName) {
+		boolean result = false;
+		String query = "SELECT * FROM " + tableName + " WHERE ppid=?";
+
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(query);
+			pst.setString(1, ppid);
+			rs = pst.executeQuery();
+
+			if (rs.next()) {
+				result = true;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			shutdown();
+		}
+
+		return result;
+	}
+
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***********************************************************
+	// *                    ECO               *
+	// ***********************************************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+
+
 	// ***************************START***************************
 	// ***************************START***************************
 	// ***************************START***************************
@@ -1473,7 +1620,7 @@ public class DBHandler {
 	// ***************************START***************************
 
 	public boolean validatePPID(String ppid) {
-		return !ppid.isEmpty() && isPPIDExistInMICI(ppid);
+		return ppid.length() != 0 && isPPIDExistInMICI(ppid);
 	}
 
 	public String[] getCurrentStation(String ppid) {
@@ -2986,6 +3133,7 @@ public class DBHandler {
 		return result;
 	}
 
+
 	// ***************************END*****************************
 	// ***************************END*****************************
 	// ***************************END*****************************
@@ -2999,5 +3147,5 @@ public class DBHandler {
 	// ***************************END*****************************
 
 
-	
+
 }

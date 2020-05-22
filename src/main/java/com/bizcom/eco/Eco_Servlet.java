@@ -66,11 +66,15 @@ public class Eco_Servlet extends HttpServlet {
 			switch (action) {
 			case "findPPID":
 				ppid = request.getParameter("inputppid").trim().toUpperCase();
+				System.out.println("findPPID");
 				if (db.validatePPID(ppid)) {
+
 					String[] stationIndo = db.getCurrentStation(ppid);
 					// Check If PPID stay at corrected station
 					// FROM : MICI TO : REPAIR01_FAIL
-					if (stationIndo[0].equalsIgnoreCase(db.MICI) && stationIndo[1].equalsIgnoreCase(db.ECO_WAITING)) {
+					if ((stationIndo[0].equalsIgnoreCase(db.MICI) && stationIndo[1].equalsIgnoreCase(db.ECO_WAITING))|| 
+							(stationIndo[0].equalsIgnoreCase(db.ECO_WAITING) && stationIndo[1].equalsIgnoreCase(db.ECO)))
+					{
 						boolean updateFlag = db.generateErrorRecord(ppid);
 						//							displayInitialView(request, response, false);
 						partNumber = db.getPartNumber(ppid);						
@@ -112,9 +116,9 @@ public class Eco_Servlet extends HttpServlet {
 					displayError(request, response, ppid, "PPID is Not Found!");
 				}
 				break;
-				//			case "updateRevision":
-				//				updateRevision(request, response, ppid);
-				//				break;
+			case "transfertoMICI":
+				request.getRequestDispatcher("/WEB-INF/views/eco/eco.jsp").forward(request, response);
+				break;
 
 			}
 		} else {
@@ -166,9 +170,18 @@ public class Eco_Servlet extends HttpServlet {
 			//				response.sendRedirect(request.getContextPath()+"/eco?action01=findPPID&inputppid="+ppid+"&actionSubmitRepair01=FIND");
 			//				break;
 			//			}
-			case "TransferAction":
+			case "transfertoMICI":
 				//				displayInitialView(request, response, true);
-				db.updateCurrentStation(db.ECO, db.QC1, ppid);
+				if(db.updateCurrentStation(db.ECO, db.QC1_WAITING, ppid)) {
+					if(db.updateRevision(ppid, db.getMaxRevision(db.getPartNumber(ppid)))) {
+						System.out.println("Added updateRevision");
+					}else {
+						System.out.println("Canot update rev");
+					}
+				}else {
+					System.out.println("Can't update current station!");
+				}
+				
 				request.getRequestDispatcher("/WEB-INF/views/eco/eco.jsp").forward(request, response);
 				break;
 			}

@@ -10,9 +10,10 @@
 		</div>
 
 		<form class="container-fluid"
-			action="<%=request.getContextPath()%>/shopfloor/station_config_step_3?partNumber=${partNumberURL}"
-			method="post">
+			action="<%=request.getContextPath()%>/qc1"
+			method="get">
 			<div class="form-group row my-4">
+			<input type="hidden" name="action" value="findPPID">
 				<label for="stationAvaiable" class="col-md-2 col-form-label"><h5>
 						<strong>Enter PPID:</strong>
 					</h5> </label>
@@ -28,10 +29,7 @@
 			<div class="form-group row my-4 justify-content-center"
 				${setHiddenNotification}>
 				<button type="button" class="btn btn-outline-info">
-					${messageNotification} Lorem ipsum, dolor sit amet consectetur
-					adipisicing elit. Non sit culpa et possimus obcaecati pariatur
-					dolorem expedita sunt, architecto impedit at numquam deleniti hic,
-					delectus, nobis quod minima. Soluta, praesentium.</button>
+					${messageNotification}</button>
 			</div>
 			<div class="form-group row my-4 justify-content-center">
 				<div class="btn-group" role="group">
@@ -46,6 +44,17 @@
 		</form>
 	</div>
 
+
+	<div class="container">
+		<div class="row">
+			<h1>Pass</h1>
+		</div>
+		
+		<div class="row">
+		<h1>FAIL</h1>
+		
+		</div>
+	</div>
 </section>
 
 

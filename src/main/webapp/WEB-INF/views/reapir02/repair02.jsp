@@ -3,7 +3,6 @@
 	<c:param name="title" value="Repair02-Station"></c:param>
 </c:import>
 <section>
-
 	<div class="container-fluid p-5">
 
 		<%-- Search Bar --%>
@@ -13,8 +12,8 @@
 				<h3 class="text-center text-primary p-1 display-5">
 					<strong>Enter and Search your PPID</strong>
 				</h3>
-				<form action="<%=request.getContextPath()%>/repair01" method="GET">
-					<input type="hidden" name="action01" value="findPPID">
+				<form action="<%=request.getContextPath()%>/repair02" method="GET">
+					<input type="hidden" name="action" value="findPPID">
 					<div class="input-group mb-3">
 						<input class="form-control form-control-lg" type="text"
 							name="inputppid" placeHolder="Enter PPID" required>
@@ -37,14 +36,21 @@
 			</div>
 		</div>
 		<div class="row justify-content-center p-5" ${setHiddenTransfer}>
-			<form action="<%=request.getContextPath()%>/repair01" method="POST">
-				<input type="hidden" name="action01" value="TransferAction">
+			<form action="<%=request.getContextPath()%>/repair02" method="POST">
+				<input type="hidden" name="action" value="TransferAction">
 				<button class="btn btn-success btn-xl" type="submit">
 					<h2>TRANSFER TO MICI</h2>
 				</button>
 			</form>
 		</div>
-
+		<div class="row justify-content-center p-5" ${setHiddenBGA}>
+			<form action="<%=request.getContextPath()%>/repair02" method="POST">
+				<input type="hidden" name="action" value="TransferBGA">
+				<button class="btn btn-success btn-xl" type="submit">
+					<h2>TRANSFER TO BGA</h2>
+				</button>
+			</form>
+		</div>
 		<%-- Information Details --%>
 		<div class="row p-4 justify-content-center" ${setInfoPPIDetails}>
 
@@ -160,8 +166,8 @@
 							<div class=" p-2">
 
 								<form method="POST"
-									action="<%=request.getContextPath()%>/repair01">
-									<input type="hidden" name="action01" value="updateRevision">
+									action="<%=request.getContextPath()%>/repair02">
+									<action type="hidden" name="action" value="updateRevision">
 									<div class="card">
 										<h2 class="card-header text-center">
 											<strong class="text-primary">Introduction to update
@@ -221,8 +227,7 @@
 									class="rounded mx-auto d-block img-responsive img-thumbnail"
 									alt="Introduction_Shortcut"
 									style="min-height: 300px; height: 300px;"
-									onclick=imgClickHandler(
-									"https://i.ibb.co/gvbJGDL/Yk3-S935-ORSey-REs-OG6o-LIw.png")>
+									onclick=imgClickHandler("https://i.ibb.co/gvbJGDL/Yk3-S935-ORSey-REs-OG6o-LIw.png")>
 
 							</div>
 
@@ -255,8 +260,8 @@
 										aria-labelledby="headingOne" data-parent="#accordionExample">
 										<div class="card-body">
 											<form method="POST"
-												action="<%=request.getContextPath()%>/repair01">
-												<input type="hidden" name="action01" value="SubmitAction" />
+												action="<%=request.getContextPath()%>/repair02">
+												<input type="hidden" name="action" value="SubmitAction" />
 												<input type="hidden" name="errorValueAction"
 													value="${aError}" />
 												<fieldset id="disable${indexValue}" disabled>
@@ -293,7 +298,7 @@
 													<br>
 
 													<div class="form-group">
-														<label for="oldPN">AREA</label> <input type="text"
+														<label for="oldPN">Location</label> <input type="text"
 															class="form-control" name="area${aError}"
 															placeholder="Enter area" required>
 													</div>
@@ -328,7 +333,6 @@
 			</div>
 		</div>
 	</div>
-
 
 </section>
 

@@ -33,7 +33,7 @@
 
 
 		<div id="result1" ${resultHidden}>
-			<h1>Show Result</h1>
+			<h1 class="text-center">Revision Update Instruction</h1>
 
 
 			<div id="accordion">
@@ -70,7 +70,9 @@
 											data-toggle="collapse" id="btn${indexValue}"
 											data-target="#collapse${indexValue}" aria-expanded="true"
 											aria-controls="collapse${indexValue}"
-											onClick="clickBTN(event)"><h3 id="th3${indexValue}">${item[0]}</h3></button>
+											onClick="clickBTN(event)">
+											<h3 id="th3${indexValue}">${item[0]}</h3>
+										</button>
 									</h3>
 								</div>
 
@@ -78,14 +80,18 @@
 
 
 									<h3 class="mb-0">
-										<button class="btn disbaled font-weight-bold"><h3>${item[1]}</h3></button>
+										<button class="btn disbaled font-weight-bold">
+											<h3>${item[1]}</h3>
+										</button>
 									</h3>
 
 								</div>
 
 								<div class="col-4">
 									<h3 class="mb-0">
-										<button class="btn disbaled font-weight-bold"><h3>${item[2]}</h3></button>
+										<button class="btn disbaled font-weight-bold">
+											<h3>${item[2]}</h3>
+										</button>
 									</h3>
 								</div>
 							</div>
@@ -122,7 +128,14 @@
 				</c:forEach>
 
 			</div>
-
+			<!-- hidden button -->
+			<div class="text-center p-5">
+				<form action="<%=request.getContextPath()%>/eco" method="post">
+					<input type="hidden" name="action01" value="transfertoMICI">
+					<button type="submit" class="btn btn-primary">TRANSFER TO
+						MICI</button>
+				</form>
+			</div>
 		</div>
 
 
@@ -159,7 +172,8 @@ var modalMessage = document.getElementById("modal-message");
             $('#myModal').modal('show');
         };
         
-        var isNoInformationUpdate = `<%=request.getAttribute("isNoInformationUpdate")%>`;
+        var isNoInformationUpdate = `<%=request.getAttribute("isNoInformationUpdate")%>
+	`;
 	if (isNoInformationUpdate === "True") {
 		$(document)
 				.ready(
