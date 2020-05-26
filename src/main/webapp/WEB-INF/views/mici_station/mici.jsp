@@ -31,7 +31,7 @@
 			<div class="col-md-2"></div>
 			<div class="col-md-8 col-sm-12  py-2 px-5">
 				<h3 class="text-center text-primary p-1 display-5">
-					<strong>MICI Stations</strong>
+					<strong>MICI STATION</strong>
 				</h3>
 				<form method="GET" action="<%=request.getContextPath()%>/mici">
 
@@ -42,13 +42,7 @@
 							placeholder="Enter PPID" name="ppidNumber" required
 							value="${ppid}">
 					</div>
-<%-- 
-					<div class="form-group">
-						<label for="serialNumbber">Enter Serial Number</label> <input
-							type="text" class="form-control" id="serialNumbber"
-							name="serialnumber" placeholder="Enter Serial Number" required
-							value="${sn}">
-					</div> --%>
+
 					<div class="form-groud text-center my-3">
 						<button type="submit" class="btn btn-primary btn-lg">Check</button>
 					</div>
@@ -60,14 +54,12 @@
 		</div>
 
 		<div class="container text-center mt-5" ${setHiddenResultSucess}>
-			<div class="alert alert-success" role="alert">${ppid}isupdated
-				successfully!</div>
+			<div class="alert alert-success" role="alert">${messageSuccess}</div>
 		</div>
-		<div class="container  text-center" ${seterrorhiddenMICI}>
-			<div class="alert alert-danger mt-5" role="alert">
-				<label>${currentStatusAtMICI}</label>
+		<div class="container text-center" ${seterrorhiddenMICI}>
+			<div class="alert alert-warning mt-5" role="alert">
+				<label class="text-dark"><h4>${errorMessage}</h4></label>
 			</div>
-
 		</div>
 	</div>
 
@@ -81,20 +73,22 @@
 				<div ${setHidenInfo}>
 
 					<div>
-						<label for="PPID"><strong>PPID#: ${ppidCheckAtMICI}</strong></label>
+						<label for="PPID"><strong>PPID#:
+								${ppidCheckAtMICI}</strong></label>
 					</div>
 					<div ${seterrorhiddenproblemMICI}>
 						<div>
-							<label><strong>Problem Code: ${problemcodeAtMICI}</strong></label>
+							<label><strong>Problem Code:
+									${problemcodeAtMICI}</strong></label>
 						</div>
 						<div>
-							<label><strong>Problem Description:#: ${problemDescpAtMICI}</strong></label>
+							<label><strong>Problem Description:#:
+									${problemDescpAtMICI}</strong></label>
 						</div>
 					</div>
-					<div>
-						<label for="statusAtMICI"><strong>${currentStatusAtMICI}</strong></label>
+					<div class="alert alert-secondary text-center" role="alert">
+						<label class="text-success"><h4><strong>${currentStatusAtMICI}</strong></h4></label>
 					</div>
-
 				</div>
 			</div>
 			<div class="col-md-4"></div>
@@ -106,42 +100,36 @@
 			<div class="col-md-2"></div>
 			<div class="col-md-8 col-sm-12 justify-content-center">
 				<form method="POST" action="<%=request.getContextPath()%>/mici">
+					<div id="selectionMICI" class="row justify-content-center"
+						${hiddenSelectErrorCode}>
+					</div>
+					<div class="text-center"></div>
 
 
-
-					<div id="selectionMICI" class="row justify-content-center">
-
-						<div class=" input-group mb-3" id="errorDiv1">
-
-							<div class="input-group-prepend">
-								<label class="input-group-text" for="inputGroupSelect01">Select
-									Error Code: </label>
-							</div>
-							<select class="custom-select" id="errorCode1" name="errorCode1">
-
-							</select>
+					<div class="text-center">
+						<div>
+							<a id="addErrorCode" onClick=functionx()> <span
+								class="btn btn-outline-danger border my-4"
+								${hiddenAddErrorCodeBTN}>
+									<H3>Add Error Code</H3>
+							</span>
+							</a>
 						</div>
 
+						<button type="submit" class="btn btn-success mr" name="action"
+							id="passBTN" value="${PassBTNValue}" ${disable} ${hiddenPassBTN}>
+							<span class="display-3" >${PassBTNValue}</span>
+						</button>
+						<button type="submit" class="btn btn-danger" name="action"
+							id="failBTN" value="failButton" ${disable} ${hiddenFailBTN}>
+							<span class="display-3">FAIL</span>
+						</button>
 					</div>
-					<a onClick=functionx()> <span
-						class="btn btn-outline-primary border my-4">
-							<H3>Add Error Code</H3>
-					</span>
-					</a><br />
 
 
-					<button type="submit" class="btn btn-success mr-5" name="action"
-						value="passButton" ${disable}>
-						<span class="display-3">PASS</span>
-					</button>
-					<button type="submit" class="btn btn-danger" name="action"
-						value="failButton" ${disable}>
-						<span class="display-3">FAIL</span>
-					</button>
 				</form>
 			</div>
 			<div class="col-md-2"></div>
-
 
 		</div>
 
@@ -152,10 +140,14 @@
 
 
 	<script type="text/javascript">
+	
     var list = ${listErrorCodes};
     var count = ${currentCountMICI};
+	
 
-    var selectX = document.getElementById("errorCode1");
+
+
+/*     var selectX = document.getElementById("errorCode1");
     var divError = document.getElementById("errorDiv1");
     var op = document.createElement('option');
     op.appendChild(document.createTextNode('Choose...'));
@@ -167,9 +159,9 @@
     btn.onclick = deleteErrorDiv;
     btn.className = "btn btn-outline-danger mx-3"
     btn.innerHTML = "Delete";
-    divError.appendChild(btn);
+    divError.appendChild(btn); */
 
-    var i = 0;
+   /*  var i = 0;
     for (var key in list) {
     	if (list.hasOwnProperty(key)) {
      	    var divError = document.getElementById("errorDiv" + i);
@@ -179,8 +171,10 @@
     	    selectX.appendChild(op);
     	    i+=1;
     	}
-      }
-
+      } */
+     var node = document.getElementById("selectionMICI");
+     var passBTN = document.getElementById("passBTN");
+  	 var failBTN = document.getElementById("failBTN");
     function deleteErrorDiv() {
     
       var aID = event;
@@ -188,18 +182,29 @@
       var node = document.getElementById("selectionMICI");
 
       node.removeChild(document.getElementById(aID.target.value));
-
+      
+      if(node.childElementCount === 0){
+    	passBTN.hidden = false;	
+      	failBTN.hidden = true;
+      	node.hidden = true;
+      }
+      
     }
 
     function functionx() {
+    	
+    	
+    	passBTN.hidden = true;	
+    	failBTN.hidden = false;
+    	node.hidden = false;
+    	
     	if(count <= 10){
-    	      var node = document.getElementById("selectionMICI");
+    		console.log("count>>>" + count);
     	      var last = document.getElementById("errorDiv"+count);
     	      var x = document.createElement('div');
     	      x.className = 'input-group mb-3';
     	      x.id = 'errorDiv' + count;
     	      x.innerHTML =
-    	        // '<div class=\" input-group mb-3\" id=\"errorDiv' + count + '\">' +
     	        '<div class=\"input-group-prepend\">' +
     	        '<label class=\"input-group-text\" for=\"inputGroupSelect01\">Select Error Code: </label>' +
     	        '</div>' +

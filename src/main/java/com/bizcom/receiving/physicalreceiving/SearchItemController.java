@@ -34,7 +34,7 @@ public class SearchItemController extends HttpServlet {
 		String isSuccess = "";
 		request.setAttribute("setHiddenSuccess", "hidden");
 		request.setAttribute("setHiddenError", "hidden");
-		if(dbHandler.checkAuthentication(request)) {		
+//		if(dbHandler.checkAuthentication(request)) {		
 			System.out.println("Run doget");
 			try {
 				isSuccess = (String) request.getSession().getAttribute("Successfull");
@@ -66,9 +66,9 @@ public class SearchItemController extends HttpServlet {
 			}
 			request.getRequestDispatcher("/WEB-INF/views/receiving_station/physicalreceiving/searchitem.jsp").forward(request, response);
 
-		}else {
-			response.sendRedirect(request.getContextPath() + "/signin?pagerequest=searchitem");
-		}
+//		}else {
+//			response.sendRedirect(request.getContextPath() + "/signin?pagerequest=searchitem");
+//		}
 	}
 
 	private void searchItem(HttpServletRequest request, HttpServletResponse response)
@@ -88,7 +88,7 @@ public class SearchItemController extends HttpServlet {
 		ppid = request.getParameter("ppid");
 
 		if (ppid != null && ppid.length() > 0) {
-
+			System.out.println("If");
 			boolean flag = dbHandler.isExistInPrePPID(ppid);
 			if (flag) {
 
@@ -100,6 +100,7 @@ public class SearchItemController extends HttpServlet {
 			}
 
 		} else {
+			System.out.println("Else");
 			errorDisplay(request, response, ppid + " is not valid at this station.");
 		}
 

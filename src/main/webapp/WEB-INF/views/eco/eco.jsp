@@ -7,11 +7,11 @@
 	<div class="container-fluid p-5">
 
 		<%-- Search Bar --%>
-		<div class="row jumbotron my-1">
-			<div class="col-lg-2"></div>
-			<div class="col-lg-8  col-sm-12">
-				<h3 class="text-center text-primary p-1 display-5">
-					<strong>Enter and Search your PPID</strong>
+		<div class="row bg-light">
+			<div class="col-md-2"></div>
+			<div class="col-md-8 col-sm-12  py-2 px-5">
+				<h3 class="text-center text-primary p-1 mb-5 display-5">
+					<strong>ECO STATION</strong>
 				</h3>
 				<form action="<%=request.getContextPath()%>/eco" method="GET">
 					<input type="hidden" name="action01" value="findPPID">
@@ -26,21 +26,21 @@
 					</div>
 				</form>
 			</div>
-			<div class="col-lg-2"></div>
+			<div class="col-md-2-2"></div>
 		</div>
 
 		<%-- Information Details --%>
 
 
-		<div id="result1" ${resultHidden}>
-			<h1 class="text-center">Revision Update Instruction</h1>
+		<div class="mt-5" id="result1" ${resultHidden}>
+			<h1 class="text-center mb-3">Revision Update Instruction</h1>
 
 
 			<div id="accordion">
 
 
 				<div class="card  text-center">
-					<div class="card-header">
+					<div class="card-header bg-dark text-white">
 						<div class="row">
 							<div class="col-4">
 								<strong><h3>ID</h3></strong>
@@ -117,7 +117,7 @@
 								<div class="col-4" id="left${indexValue}">ggg</div>
 								<div class="col-4" id="middle${indexValue}">ggg</div>
 								<div class="col-4" id="right${indexValue}">
-									<img class="img-thumbnail" src="" id="img${indexValue}"
+									<img loading="lazy" class="img-thumbnail" src="" id="img${indexValue}"
 										alt="${item[0]}" />
 								</div>
 
@@ -153,6 +153,17 @@
 var myList = <%=request.getAttribute("instructionDetail")%>;
 console.log(myList);
 
+
+/* USE FOR TEST ONLY  */
+var listIMG = [];
+var x = myList['2'];
+for(let kk in x) { 
+	listIMG.push(x[kk][2]);	
+}
+console.log(listIMG);
+/* USE FOR TEST ONLY  */
+
+
 function clickBTN(event){
 	var contentBTN = event.target.textContent;
 	var index = event.target.id.substring(3);
@@ -164,6 +175,7 @@ function clickBTN(event){
 	middleEle.innerHTML = myList['2'][index][1];
 	console.log(myList['2'][index][2]);
 	imgEle.src = myList['2'][index][2];
+	
 }
 
 var modalMessage = document.getElementById("modal-message");
