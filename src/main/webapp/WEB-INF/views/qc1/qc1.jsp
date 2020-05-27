@@ -18,32 +18,31 @@
 					</h5> </label>
 				<div class="col-md-8">
 					<input type="text" class="form-control" name="inputPPID0"
-						value="${ppid}" required/>
+						value="${ppid}" required />
 				</div>
 				<div class="col-md-1">
 					<input type="submit" class="btn btn-md btn-primary" value="Search"
 						name="action" />
 				</div>
 			</div>
+		</form>
+		<form class="container-fluid"
+			action="<%=request.getContextPath()%>/qc1" method="post">
 			<div class="form-group row my-4 justify-content-center"
 				${setHiddenNotification}>
-				<button type="button" class="btn btn-outline-info font-weight-bold">
+				<button type="button"
+					class="btn btn-outline-info font-weight-bold disable">
 					${messageNotification}</button>
 			</div>
 			<div class="form-group row my-4 justify-content-center">
 				<div class="btn-group" role="group">
-					<form class="container-fluid"
-						action="<%=request.getContextPath()%>/qc1" method="post">
-						
-						<input type="hidden" name="action" value="submitAction"> 
-						
-						<button name="btnSubmit" class="btn btn-success mx-5"
-							${setHiddenBTNPASS} value="Pass">${passedValue}
-						</button>
-						<button name="btnSubmit" class="btn btn-danger mx-5"
-							${setHiddenBTNFAIL} value="Fail"> ${failValue}
-						</button>
-					</form>
+
+					<input type="hidden" name="action" value="submitAction">
+
+					<button name="btnSubmit" class="btn btn-success mx-5"
+						${setHiddenBTNPASS} value="Pass">${passedValue}</button>
+					<button name="btnSubmit" class="btn btn-danger mx-5"
+						${setHiddenBTNFAIL} value="Fail">${failValue}</button>
 
 				</div>
 			</div>

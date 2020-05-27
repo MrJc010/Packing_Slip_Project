@@ -98,9 +98,7 @@ public class QC1_Servlet extends HttpServlet {
 
 						//						request.getRequestDispatcher("/WEB-INF/views/qc1/qc1.jsp").forward(request, response);
 					} 
-
-					else {
-//						System.out.println("ELSE ");						
+					else {						
 						errorDisplay(request, response, ppid + " doesn't belong to this station!!!");
 
 					}
@@ -111,25 +109,13 @@ public class QC1_Servlet extends HttpServlet {
 				break;
 			case "transfertoMICI":
 				initialDisplay(request,response);
-				//				request.getRequestDispatcher("/WEB-INF/views/qc1/qc1.jsp").forward(request, response);
 				break;
 
 			}
 		}
 		else {
 			initialDisplay(request,response);
-			//			request.getRequestDispatcher("/WEB-INF/views/qc1/qc1.jsp").forward(request, response);
 		}
-
-
-
-
-		//		}
-		//	else {
-		//		
-		//			response.sendRedirect(request.getContextPath() + "/signin?pagerequest=qc1");
-		//		}
-		//		
 
 	}
 
@@ -138,16 +124,19 @@ public class QC1_Servlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String action = request.getParameter("action");
+		System.out.println(action);
 		if (action != null) {
 			switch (action) {
 			case "submitAction":
-				String valueButton = request.getParameter("btnSubmit");				
+				String valueButton = request.getParameter("btnSubmit");	
+				System.out.println("asdfasdf");
+				System.out.println(valueButton);
 				if(valueButton.equalsIgnoreCase("Pass")) {
 					//go to pass action
 					if(db.insertQC1Table(ppid, "QC1 USERS", "Passed")) {									
 						if(db.updateCurrentStation(db.QC1, db.VI_WAITING, ppid)) {
 //							System.out.println("UPDATE READ DONE");
-							notificationDisplay(request,response,ppid + " tranfered to VI_WAITING. Scan a new PPID to continute!");
+							notificationDisplay(request,response,ppid + " is transferred and waited for VI Station to receive!");
 							ppid="";
 							hiddenBTN(request, response);
 						}else {
@@ -187,6 +176,7 @@ public class QC1_Servlet extends HttpServlet {
 
 	public static boolean service() throws IOException  {
 		File file = new File("C:\\Users\\viet\\Desktop\\"+ ppid+ ".txt");
+		boolean result = false;
 		try {
 			Scanner scanner = new Scanner(file);
 			//now read the file line by line...
@@ -196,14 +186,14 @@ public class QC1_Servlet extends HttpServlet {
 				System.out.println(str);
 				lineNum++;
 				if(str.toUpperCase().contains("PASS") || str.toUpperCase().contains("PASSED")) { 
-					return true;
+					result =  true;
 				}
 			}
 		} catch(FileNotFoundException e) { 
-			System.out.println(e);
-			return false;
+			//System.out.println(e);
+			result = false;
 		}
-		return false;
+		return result;
 	}
 
 
@@ -215,7 +205,8 @@ public class QC1_Servlet extends HttpServlet {
 	 * @throws IOException
 	 */
 	public void display(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.setAttribute("ppid", ppid);
+		request.setAttribute("ppid", "");
+		//doGet(request, response);
 		request.getRequestDispatcher("/WEB-INF/views/qc1/qc1.jsp").forward(request, response);
 	}
 
@@ -247,9 +238,8 @@ public class QC1_Servlet extends HttpServlet {
 		request.setAttribute("setHiddenBTNPASS", "hidden");
 		request.setAttribute("setHiddenBTNFAIL", "show");
 		request.setAttribute("passedValue", "");
-		System.out.println("ppiidd>>" + ppid);
 		request.setAttribute("ppid",ppid);
-		request.setAttribute("failValue", "TRANSFER TO REPAIR02_WAITING");
+		request.setAttribute("failValue", "TRANSFER TO REPAIR02 STATION");
 		request.setAttribute("setHiddenNotification", "show");
 		request.setAttribute("messageNotification", ppid +" is FAIL. Please click FAIL button to transfer!");
 		display(request,response);
@@ -264,9 +254,9 @@ public class QC1_Servlet extends HttpServlet {
 	 */
 	public void passedDisplay(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setAttribute("setHiddenBTNPASS", "show");
-		request.setAttribute("passedValue", "TRANSFER TO VI_WAITING");
+		request.setAttribute("passedValue", "TRANSFER TO VI STATION");
 		request.setAttribute("failValue", "");
-		request.setAttribute("ppid", ppid);
+		request.setAttribute("ppid", "");
 		request.setAttribute("setHiddenBTNFAIL", "hidden");
 		request.setAttribute("setHiddenNotification", "show");
 		request.setAttribute("messageNotification", ppid +" is PASSED. Please click PASSED button to transfer!");
@@ -300,7 +290,7 @@ public class QC1_Servlet extends HttpServlet {
 		request.setAttribute("setHiddenBTNPASS", "hidden");
 		request.setAttribute("setHiddenBTNFAIL", "hidden");
 		request.setAttribute("setHiddenNotification", "show");
-		request.setAttribute("ppid", ppid);
+		request.setAttribute("ppid", "");
 		request.setAttribute("messageNotification", message);
 		display(request,response);
 	}
@@ -313,6 +303,6 @@ public class QC1_Servlet extends HttpServlet {
 	public void hiddenBTN(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setAttribute("setHiddenBTNPASS", "hidden");
 		request.setAttribute("setHiddenBTNFAIL", "hidden");
-		display(request,response);
+		//display(request,response);
 	}
 }
