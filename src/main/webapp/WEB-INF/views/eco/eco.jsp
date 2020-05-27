@@ -2,7 +2,30 @@
 <c:import url="/WEB-INF/common/header.jsp">
 	<c:param name="title" value="ECO Station"></c:param>
 </c:import>
+
+
+
+
+
 <section>
+	<!-- Modal -->
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-xl modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="myModalLabel"></h4>
+				</div>
+				<div class="modal-body text-center">
+					<img class="img-fluid" id="mimg" src="" style="min-height: 800px; height: 800px;">
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
 
 	<div class="container-fluid p-5">
 
@@ -29,11 +52,23 @@
 			<div class="col-md-2-2"></div>
 		</div>
 
+
+		
+			<div class="container text-center mt-5" ${setHiddenResultSucess}>
+			<div class="alert alert-success" role="alert">${messageSuccess}</div>
+		</div>
+		<div class="container text-center" ${seterrorhiddenMICI}>
+			<div class="alert alert-warning mt-5" role="alert">
+				<label class="text-dark"><h4>${errorMessage}</h4></label>
+			</div>
+		</div>
+		
+		
 		<%-- Information Details --%>
 
 
-		<div class="mt-5" id="result1" ${resultHidden}>
-			<h1 class="text-center mb-3">Revision Update Instruction</h1>
+		<div class="mt-5 mb-5" id="result1" ${resultHidden}>
+			<h1 class="text-center">Revision Update Instruction</h1>
 
 
 			<div id="accordion">
@@ -117,8 +152,8 @@
 								<div class="col-4" id="left${indexValue}">ggg</div>
 								<div class="col-4" id="middle${indexValue}">ggg</div>
 								<div class="col-4" id="right${indexValue}">
-									<img loading="lazy" class="img-thumbnail" src="" id="img${indexValue}"
-										alt="${item[0]}" />
+									<img class="img-thumbnail" data-src="" id="img${indexValue}"
+										alt="${item[0]}"  onclick=imgClickHandler() >
 								</div>
 
 							</div>
@@ -153,16 +188,13 @@
 var myList = <%=request.getAttribute("instructionDetail")%>;
 console.log(myList);
 
-
-/* USE FOR TEST ONLY  */
-var listIMG = [];
-var x = myList['2'];
-for(let kk in x) { 
-	listIMG.push(x[kk][2]);	
-}
-console.log(listIMG);
-/* USE FOR TEST ONLY  */
-
+var imgLink= null;
+function imgClickHandler()
+{		
+	console.log("test img" + imgLink );
+    $('#mimg').attr('src',imgLink);
+    $('#myModal').modal('show');
+};
 
 function clickBTN(event){
 	var contentBTN = event.target.textContent;
@@ -174,16 +206,11 @@ function clickBTN(event){
 	leftEle.innerHTML = myList['2'][index][0];
 	middleEle.innerHTML = myList['2'][index][1];
 	console.log(myList['2'][index][2]);
-	imgEle.src = myList['2'][index][2];
-	
+ 	imgEle.src = myList['2'][index][2];
+ 
+ 	imgLink = myList['2'][index][2];
 }
-
-var modalMessage = document.getElementById("modal-message");
-		function imgClickHandler(sr)
-        {		
-            $('#mimg').attr('src',sr);
-            $('#myModal').modal('show');
-        };
+var modalMessage = document.getElementById("modal-message");		
         
         var isNoInformationUpdate = `<%=request.getAttribute("isNoInformationUpdate")%>
 	`;
@@ -192,7 +219,6 @@ var modalMessage = document.getElementById("modal-message");
 				.ready(
 						function() {
 							// Show modal on page load
-
 							$("#myModal").modal({
 								backdrop : 'static',
 								keyboard : false
@@ -202,5 +228,7 @@ var modalMessage = document.getElementById("modal-message");
 							modalMessage.classList.add("text-warning");
 						});
 	}
+	
+	
 </script>
 <c:import url="/WEB-INF/common/footer.jsp" />

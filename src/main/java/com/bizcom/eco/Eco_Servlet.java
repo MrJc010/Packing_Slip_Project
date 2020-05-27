@@ -56,7 +56,7 @@ public class Eco_Servlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
+		displayInitialView(request, response);
 		//		if(db.checkAuthentication(request)) {		
 		System.out.println("doget called");
 		String action = request.getParameter("action01");
@@ -83,37 +83,25 @@ public class Eco_Servlet extends HttpServlet {
 							request.setAttribute("resultHidden", "show");
 							request.setAttribute("listItems", revisionList);
 							request.setAttribute("instructionDetail", getInstructionKey(revisionList));
+							request.setAttribute("imgLink", "/WEB-INF/images/Q.png");
+
 						}
 						else {
 							System.out.println("revisionList is empty");
 							request.setAttribute("warningMessage", "No Instruction Details Found!!!");
 						}
 						db.updateCurrentStation(db.ECO_WAITING, db.ECO, ppid);
-						//							displayInitialView(request, response, true);
 						request.getRequestDispatcher("/WEB-INF/views/eco/eco.jsp").forward(request, response);
 
 					} 
-					//					else if (stationIndo[0].equalsIgnoreCase(db.REPAIR01)
-					//							&& stationIndo[1].equalsIgnoreCase(db.REPAIR01_PASS)) {
-					//						System.out.println("PASSED PPID");
-					//						isTransferButtonClicked = true;
-					//						displayInitialView(request, response, true);		
-					//
-					//						request.getRequestDispatcher("/WEB-INF/views/eco/eco.jsp").forward(request,response);
-					//					}
-					//					else if(stationIndo[0].equalsIgnoreCase(REPAIR01_FAIL) && stationIndo[1].equalsIgnoreCase(REPAIR01)){
-					//						System.out.println("ppid exist");
-					//						request.setAttribute("setPPID", ppid);
-					//						displayInitialView(request, response, false);
-					//						updateRevision(request, response, ppid);
-					//					}
+
 
 					else {
-						displayError(request, response, ppid, "PPID is Not Found!");
+						displayError(request, response, ppid+ " is Not Found!");
 					}
 
 				} else {
-					displayError(request, response, ppid, "PPID is Not Found!");
+					displayError(request, response, ppid+ " is Not Found!");
 				}
 				break;
 			case "transfertoMICI":
@@ -138,51 +126,28 @@ public class Eco_Servlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		//		System.out.println("doPost posted called");
 		String action = request.getParameter("action01");
 		if (action != null) {
 			switch (action) {
-			//			case "updateRevision":
-			//				String newRev = generatorRev(currentRev + 1);
-			//				db.updateRevision(ppid, newRev);
-			//				doGet(request, response);
-			//				break;
-			//			case "SubmitAction":
-			//				System.out.println("SubmitAction");
-			//				String err = request.getParameter("errorValueAction");
-			//				String errorCode = err.split(" --> ")[0];
-			//				String duty = request.getParameter("duty" + err);
-			//				String oldPN = request.getParameter("oldPN" + err);
-			//				String newPN = request.getParameter("newPN" + err);
-			//				String area = request.getParameter("area" + err);
-			//				String actionJob = request.getParameter("action" + err);
-			//				int recordID = db.updateRepair01RecordAction(errorCode, ppid, duty, oldPN, newPN, area, actionJob);
-			//				if(recordID!= -1) {
-			//					db.updateRefixMICITable(errorCode,ppid,recordID+"");
-			//				}else {
-			//					System.out.println("Cannot upload infomation to updateRepair01RecordAction");
-			//				}
-			//				getErrors(request, response, ppid);
-			//				updateRevision(request, response, ppid);
-			//				break;
-			//			case "TransferAction":
-			//				db.updateCurrentStation(db.ECO, db.QC1, ppid);
-			//				response.sendRedirect(request.getContextPath()+"/eco?action01=findPPID&inputppid="+ppid+"&actionSubmitRepair01=FIND");
-			//				break;
-			//			}
 			case "transfertoMICI":
-				//				displayInitialView(request, response, true);
 				if(db.updateCurrentStation(db.ECO, db.QC1_WAITING, ppid)) {
+
 					if(db.updateRevision(ppid, db.getMaxRevision(db.getPartNumber(ppid)))) {
+						
 						System.out.println("Added updateRevision");
+						displaySuccess(request, response, ppid + " is updated successfully. QC1 is the next Station.");
+						
+						
 					}else {
-						System.out.println("Canot update rev");
+						displayError(request, response, ppid + " can't update revision! Please double check updateRevision_in_ECO_servlet"); 
 					}
 				}else {
-					System.out.println("Can't update current station!");
+
+					displayError(request, response, ppid + " can't update current station! Please double check updateCurrentStation_in_ECO_servlet"); 
+					System.out.println("Can't update current station! _ updateCurrentStation");
 				}
-				
-				request.getRequestDispatcher("/WEB-INF/views/eco/eco.jsp").forward(request, response);
+
+//				request.getRequestDispatcher("/WEB-INF/views/eco/eco.jsp").forward(request, response);
 				break;
 			}
 		}
@@ -266,52 +231,6 @@ public class Eco_Servlet extends HttpServlet {
 		//		}
 	}
 
-	//	public String generatorRev(int x) {
-	//		if (x / 10 < 1) {
-	//			return "A0" + x;
-	//		} else {
-	//			return "A" + x;
-	//		}
-	//	}
-
-	//	public void getErrors(HttpServletRequest request, HttpServletResponse response, String ppid) {
-	//		HashMap<String, String> result = db.fetchErrorFromRepair01(ppid);
-	//		request.setAttribute("setRepair01HiddenFix", "show");
-	//		if (result.size() == 0) {
-	//			errorCodeFlag = true;
-	//			request.setAttribute("setPPID", ppid);
-	//			request.setAttribute("setErrorColor", "success");
-	//			request.setAttribute("setRepair01HiddenError", "");
-	//			request.setAttribute("setSuccessMessage", ppid + " has NO ERROR! Please check REVESION UPGRADE IF REQUIRE!");
-	//			// no error ccheck revision....
-	//		} else {
-	//			errorCodeFlag = false;
-	//			// List all error
-	//			request.setAttribute("setPPID", ppid);
-	//			request.setAttribute("setErrorColor", "warning");
-	//			request.setAttribute("sizeErrorList", result.size());
-	//			request.setAttribute("setRepair01Hidden", "");
-	//			request.setAttribute("currentErrorNumber", result.size());
-	//			List<String> listErrorStr = new ArrayList<>();
-	//			result.forEach((k, v) -> {
-	//				listErrorStr.add(k + " --> " + v);
-	//			});
-	//			request.setAttribute("errorList", listErrorStr);
-	//		}
-	//		if (errorCodeFlag && updateRevisionFlag) {
-	//			request.setAttribute("setHiddenTransfer", "show");
-	//			request.setAttribute("setInfoPPIDetails", "hidden");
-	//			request.setAttribute("setRepair01HiddenError", "hidden");
-	//			request.setAttribute("setHiddenBodyRepair01", "hidden");
-	//		} else {
-	//			request.setAttribute("setHiddenTransfer", "hidden");
-	//			request.setAttribute("setRepair01HiddenError", "hidden");
-	//			request.setAttribute("setErrorMessageHidden ", "hidden");
-	//			request.setAttribute("setSuccessMessageHidden ", "hidden");
-	//			request.setAttribute("setSuccessMessage", "hidden");
-	//		}
-	//	}
-
 	public JSONObject getInstructionKey(List<List<String>> list) {
 
 		List<String> keyList = new ArrayList<String>();
@@ -328,118 +247,27 @@ public class Eco_Servlet extends HttpServlet {
 		return new JSONObject(map);
 	}
 
-	public void displayError(HttpServletRequest request, HttpServletResponse response, String ppid, String message) throws ServletException, IOException {
+	public void displayError(HttpServletRequest request, HttpServletResponse response, String message) throws ServletException, IOException {
 
-		displayInitialView(request, response, true);
-		request.setAttribute("setRepair01HiddenError", "show");
-		request.setAttribute("setErrorMessageHidden", "show");
-		request.setAttribute("setSuccessMessageHidden", "hidden");
-		request.setAttribute("setErrorMessage", ppid + " : " + message);
+		displayInitialView(request, response);
+		request.setAttribute("setHiddenResultSucess", "hidden");
+		request.setAttribute("seterrorhiddenMICI", "show");
+		request.setAttribute("errorMessage",message );
 		request.getRequestDispatcher("/WEB-INF/views/eco/eco.jsp").forward(request, response);
 	}
+	public void displaySuccess(HttpServletRequest request, HttpServletResponse response, String message) throws ServletException, IOException {
 
-	public void displayInitialView(HttpServletRequest request, HttpServletResponse response, boolean isBegin) {
-		//		if (isBegin) {
-		//			if (isTransferButtonClicked) {
-		//				request.setAttribute("setTransferMessageSuccess", "show");
-		//				isTransferButtonClicked = false;
-		//			}else {
-		//				request.setAttribute("setTransferMessageSuccess", "hidden");
-		//			}
-		//			request.setAttribute("setHiddenTransfer", "hidden");
-		//			request.setAttribute("setInfoPPIDetails", "hidden");
-		//			request.setAttribute("setHiddenBodyRepair01", "hidden");
-		//			request.setAttribute("setRepair01HiddenError", "hidden");
-		//			request.setAttribute("setErrorMessageHidden", "hidden");
-		//			request.setAttribute("setErrorMessageHidden", "hidden");
-		//			request.setAttribute("setSuccessMessageHidden", "hidden");
-		//		} else {
-		//			if (errorCodeFlag && updateRevisionFlag) {
-		//				if (isTransferButtonClicked) {
-		//					request.setAttribute("setTransferMessageSuccess", "show");
-		//					isTransferButtonClicked = false;
-		//				}else {
-		//					request.setAttribute("setTransferMessageSuccess", "hidden");
-		//				}
-		//				request.setAttribute("setInfoPPIDetails", "hidden");
-		//				request.setAttribute("setHiddenBodyRepair01", "hidden");
-		//			} else {
-		//				if (isTransferButtonClicked) {
-		//					request.setAttribute("setTransferMessageSuccess", "show");
-		//					isTransferButtonClicked = false;
-		//				}else {
-		//					request.setAttribute("setTransferMessageSuccess", "hidden");
-		//				}
-		//				request.setAttribute("setTransferMessageSuccess", "hidden");
-		//				request.setAttribute("setInfoPPIDetails", "show");
-		//				request.setAttribute("setHiddenBodyRepair01", "show");
-		//			}
-		//		}
+		displayInitialView(request, response);
+		request.setAttribute("setHiddenResultSucess", "show");
+		request.setAttribute("seterrorhiddenMICI", "hidden");
+		request.setAttribute("messageSuccess",message );
+		request.getRequestDispatcher("/WEB-INF/views/eco/eco.jsp").forward(request, response);
 	}
-	//
-	//	public void ppidUpdatedOk(HttpServletRequest request, HttpServletResponse response, boolean flag) throws ServletException, IOException {
-	//		displayInitialView(request, response, false);
-	//		request.setAttribute("setRepair01Hidden", "hidden");
-	//		request.setAttribute("setRepair01HiddenFix  ", "show");
-	//		request.setAttribute("iconColor", "success");
-	//		request.setAttribute("messageIcon", "Your ppid is updated");
-	//		if (flag) {
-	//			request.setAttribute("curRevNumber",
-	//					generatorRev(currentRev) + " No Revision Upgrade Needed for this PPID");
-	//		} else {
-	//			request.setAttribute("curRevNumber", generatorRev(currentRev));
-	//		}
-	//		request.getRequestDispatcher("/WEB-INF/views/eco/eco.jsp").forward(request, response);
-	//	}
-	//
-	//	public void currentLessThanMax(HttpServletRequest request, HttpServletResponse response, String partNumber) {
-	//
-	//
-	//
-	//		request.setAttribute("setRepair01Hidden", "show");
-	//		updateRevisionFlag = false;
-	//		// Fetch data base on currentNum
-	//		//db.createInstruction();
-	//		// TODO if PART NUMBER DOES NOT EXIST
-	//		RevesionUpgrade temp = //db.getInstruction(partNumber, generatorRev(currentRev), generatorRev(currentRev + 1));
-	//				null;
-	//		if (temp.getOldMaterial() == null) {
-	//			request.setAttribute("curRevNumber", generatorRev(currentRev));
-	//			request.setAttribute("iconColor", "warning");
-	//			request.setAttribute("messageIcon", "You must to upgrade revision to pass");
-	//			request.setAttribute("nextRevNumber", generatorRev(currentRev + 1));
-	//			request.setAttribute("partNumber", "NA");
-	//			request.setAttribute("location", "NA");
-	//			request.setAttribute("desc", "NA");
-	//			request.setAttribute("ecoAction", "NA");
-	//			request.setAttribute("oldMaterialPN", "NA");
-	//			request.setAttribute("newMaterialPN", "NA");
-	//			request.setAttribute("shortcut", "NA");
-	//			request.setAttribute("setPPID", ppid);
-	//			request.setAttribute("isNoInformationUpdate", "True");
-	//
-	//		} else {
-	//			request.setAttribute("curRevNumber", generatorRev(temp.getCurrentRev()));
-	//			request.setAttribute("iconColor", "warning");
-	//			request.setAttribute("messageIcon", "You must to upgrade revision to pass");
-	//			request.setAttribute("nextRevNumber", generatorRev(temp.getCurrentRev() + 1));
-	//			request.setAttribute("partNumber", temp.getPn());
-	//			request.setAttribute("location", temp.getLocation());
-	//			request.setAttribute("desc", temp.getDesc());
-	//			request.setAttribute("ecoAction", temp.getEcoAction());
-	//			request.setAttribute("oldMaterialPN", temp.getOldMaterial());
-	//			request.setAttribute("newMaterialPN", temp.getNewMaterial());
-	//			request.setAttribute("shortcut", temp.getShortcut());
-	//			request.setAttribute("setPPID", ppid);
-	//			request.setAttribute("isNoInformationUpdate", "False");
-	//		}
-	//		displayInitialView(request, response, false);
-	//		request.setAttribute("setRepair01HiddenError", "hidden");
-	//		try {
-	//			request.getRequestDispatcher("/WEB-INF/views/eco/eco.jsp").forward(request, response);
-	//		} catch (ServletException | IOException e) {
-	//			// TODO Auto-generated catch block
-	//			e.printStackTrace();
-	//		}
-	//	}
+	public void displayInitialView(HttpServletRequest request, HttpServletResponse response) {
+		request.setAttribute("setHiddenResultSucess", "hidden");
+		request.setAttribute("seterrorhiddenMICI", "hidden");
+		request.setAttribute("resultHidden", "hidden");
+
+	}
+
 }

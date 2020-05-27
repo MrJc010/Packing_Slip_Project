@@ -54,7 +54,9 @@ public class QC1_Servlet extends HttpServlet {
 			switch (action) {
 			case "findPPID":
 				ppid = request.getParameter("inputPPID0").trim().toUpperCase();
+				
 				if (ppid.length() != 0 && db.isPPIDExistIn(ppid,"eco_station")) {
+					request.setAttribute("ppid", ppid);
 					String[] stationIndo = db.getCurrentStation(ppid);
 					// Check If PPID stay at corrected station
 					// FROM : MICI TO : REPAIR01_FAIL
@@ -62,24 +64,36 @@ public class QC1_Servlet extends HttpServlet {
 							|| (stationIndo[0].equalsIgnoreCase(db.QC1_WAITING) && stationIndo[1].equalsIgnoreCase(db.QC1)))
 					{
 
+							if(!stationIndo[1].equalsIgnoreCase(db.QC1)) {
+								if(db.updateCurrentStation(stationIndo[1], db.QC1, ppid)) {
+//									System.out.println(ppid);
 
-						if(db.updateCurrentStation(stationIndo[1], db.QC1, ppid)) {
-//							System.out.println(ppid);
+									// read text file
+									if(service()) {
+//										System.out.println("PASS PPID");
+										passedDisplay(request, response);
 
-							// read text file
-							if(service()) {
-//								System.out.println("PASS PPID");
-								passedDisplay(request, response);
+									}else {
 
+//										System.out.println("FAILED PPID");
+										failDisplay(request, response);
+
+									}
+								}else {
+									errorDisplay(request, response, " Fail to update to QC1 Station. Please check database and your system!");
+								}
 							}else {
+								if(service()) {
+//									System.out.println("PASS PPID");
+									passedDisplay(request, response);
 
-//								System.out.println("FAILED PPID");
-								failDisplay(request, response);
+								}else {
 
+//									System.out.println("FAILED PPID");
+									failDisplay(request, response);
+
+								}
 							}
-						}else {
-							errorDisplay(request, response, " Fail to update to QC1 Station. Please check database and your system!");
-						}
 
 
 						//						request.getRequestDispatcher("/WEB-INF/views/qc1/qc1.jsp").forward(request, response);
@@ -201,6 +215,7 @@ public class QC1_Servlet extends HttpServlet {
 	 * @throws IOException
 	 */
 	public void display(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setAttribute("ppid", ppid);
 		request.getRequestDispatcher("/WEB-INF/views/qc1/qc1.jsp").forward(request, response);
 	}
 
@@ -215,6 +230,7 @@ public class QC1_Servlet extends HttpServlet {
 		request.setAttribute("setHiddenBTNPASS", "hidden");
 		request.setAttribute("setHiddenBTNFAIL", "hidden");
 		request.setAttribute("passedValue", "");
+		request.setAttribute("ppid", "");
 		request.setAttribute("failValue", "");
 		request.setAttribute("setHiddenNotification", "hidden");
 		display(request,response);
@@ -231,6 +247,8 @@ public class QC1_Servlet extends HttpServlet {
 		request.setAttribute("setHiddenBTNPASS", "hidden");
 		request.setAttribute("setHiddenBTNFAIL", "show");
 		request.setAttribute("passedValue", "");
+		System.out.println("ppiidd>>" + ppid);
+		request.setAttribute("ppid",ppid);
 		request.setAttribute("failValue", "TRANSFER TO REPAIR02_WAITING");
 		request.setAttribute("setHiddenNotification", "show");
 		request.setAttribute("messageNotification", ppid +" is FAIL. Please click FAIL button to transfer!");
@@ -248,6 +266,7 @@ public class QC1_Servlet extends HttpServlet {
 		request.setAttribute("setHiddenBTNPASS", "show");
 		request.setAttribute("passedValue", "TRANSFER TO VI_WAITING");
 		request.setAttribute("failValue", "");
+		request.setAttribute("ppid", ppid);
 		request.setAttribute("setHiddenBTNFAIL", "hidden");
 		request.setAttribute("setHiddenNotification", "show");
 		request.setAttribute("messageNotification", ppid +" is PASSED. Please click PASSED button to transfer!");
@@ -265,6 +284,7 @@ public class QC1_Servlet extends HttpServlet {
 	public void errorDisplay(HttpServletRequest request, HttpServletResponse response, String message) throws ServletException, IOException {
 		request.setAttribute("setHiddenBTNPASS", "hidden");
 		request.setAttribute("setHiddenBTNFAIL", "hidden");
+		request.setAttribute("ppid", ppid);
 		request.setAttribute("setHiddenNotification", "show");
 		request.setAttribute("messageNotification", message);
 		display(request,response);
@@ -280,6 +300,7 @@ public class QC1_Servlet extends HttpServlet {
 		request.setAttribute("setHiddenBTNPASS", "hidden");
 		request.setAttribute("setHiddenBTNFAIL", "hidden");
 		request.setAttribute("setHiddenNotification", "show");
+		request.setAttribute("ppid", ppid);
 		request.setAttribute("messageNotification", message);
 		display(request,response);
 	}

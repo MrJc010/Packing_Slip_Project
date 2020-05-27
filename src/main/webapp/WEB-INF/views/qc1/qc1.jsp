@@ -18,7 +18,7 @@
 					</h5> </label>
 				<div class="col-md-8">
 					<input type="text" class="form-control" name="inputPPID0"
-						value="${inputPPID}" required/>
+						value="${ppid}" required/>
 				</div>
 				<div class="col-md-1">
 					<input type="submit" class="btn btn-md btn-primary" value="Search"
