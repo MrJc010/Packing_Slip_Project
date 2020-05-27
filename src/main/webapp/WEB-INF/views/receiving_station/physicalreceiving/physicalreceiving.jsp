@@ -5,7 +5,7 @@
 
 
 
-<section>
+<section id="mainSection">
 
 	<div class="container-fluid py-2">
 
@@ -151,8 +151,20 @@
 	</div>
 
 </section>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous"></script>
 <script>
+var jsMain = document.getElementById("mainSection");
+var doc = new jsPDF();
+doc.fromHTML(
+		jsMain,
+	    15,
+	    15,
+	    {
+	      'width': 180,'elementHandlers': elementHandler
+	    });
+	doc.autoPrint();
+	doc.output("dataurlnewwindow");
+
 var btn = document.getElementById("print-btn");
 btn.onclick = () => {
 	window.print()

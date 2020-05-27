@@ -1,5 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<jsp:include page="/WEB-INF/common/header.jsp" />
+<c:import url="/WEB-INF/common/header.jsp">
+	<c:param name="title" value="MICI Station"></c:param>
+</c:import>
 
 
 <style>
@@ -36,8 +38,8 @@
 				<form method="GET" action="<%=request.getContextPath()%>/mici">
 
 					<div class="form-group">
-						<input type="hidden" name="page" value="check"><label
-							for="PPID">Enter PPID: </label> <input type="text"
+						<input type="hidden" name="page" value="check">
+							<input type="text"
 							class="form-control" id="PPID" aria-describedby="emailHelp"
 							placeholder="Enter PPID" name="ppidNumber" required
 							value="${ppid}">
@@ -54,11 +56,13 @@
 		</div>
 
 		<div class="container text-center mt-5" ${setHiddenResultSucess}>
-			<div class="alert alert-success" role="alert">${messageSuccess}</div>
+			<div class="alert alert-success" role="alert">
+			<h4><label class="text-dark">${messageSuccess}</label></h4>
+			</div>
 		</div>
 		<div class="container text-center" ${seterrorhiddenMICI}>
 			<div class="alert alert-warning mt-5" role="alert">
-				<label class="text-dark"><h4>${errorMessage}</h4></label>
+			<h4><label class="text-dark">${errorMessage}</label></h4>
 			</div>
 		</div>
 	</div>
@@ -87,7 +91,9 @@
 						</div>
 					</div>
 					<div class="alert alert-secondary text-center" role="alert">
-						<label class="text-success"><h4><strong>${currentStatusAtMICI}</strong></h4></label>
+						<h4><label class="text-success">
+								<strong>${currentStatusAtMICI}</strong>
+							</label></h4>
 					</div>
 				</div>
 			</div>
@@ -101,24 +107,23 @@
 			<div class="col-md-8 col-sm-12 justify-content-center">
 				<form method="POST" action="<%=request.getContextPath()%>/mici">
 					<div id="selectionMICI" class="row justify-content-center"
-						${hiddenSelectErrorCode}>
-					</div>
+						${hiddenSelectErrorCode}></div>
 					<div class="text-center"></div>
 
 
 					<div class="text-center">
 						<div>
-							<a id="addErrorCode" onClick=functionx()> <span
+							<h3><a id="addErrorCode" onClick=functionx()> <span
 								class="btn btn-outline-danger border my-4"
 								${hiddenAddErrorCodeBTN}>
-									<H3>Add Error Code</H3>
+									Add Error Code
 							</span>
-							</a>
+							</a></h3>
 						</div>
 
 						<button type="submit" class="btn btn-success mr" name="action"
 							id="passBTN" value="${PassBTNValue}" ${disable} ${hiddenPassBTN}>
-							<span class="display-3" >${PassBTNValue}</span>
+							<span class="display-3">${PassBTNValue}</span>
 						</button>
 						<button type="submit" class="btn btn-danger" name="action"
 							id="failBTN" value="failButton" ${disable} ${hiddenFailBTN}>
@@ -135,7 +140,7 @@
 
 
 	</div>
-	<hr />
+
 
 
 
@@ -191,15 +196,15 @@
       
     }
 
-    function functionx() {
+  function functionx() {
     	
     	
     	passBTN.hidden = true;	
     	failBTN.hidden = false;
     	node.hidden = false;
     	
-    	if(count <= 10){
-    		console.log("count>>>" + count);
+     	if(count <= 10){
+    		
     	      var last = document.getElementById("errorDiv"+count);
     	      var x = document.createElement('div');
     	      x.className = 'input-group mb-3';
@@ -211,7 +216,7 @@
     	        '<select class=\"custom-select\" id=\"errorCode' + count + '\" name=\"errorCode' + count + '\">' +
     	        '<option value=\"0\" selected>Choose...</option> ' +
     	        '< /select> ';
-    	      // '< /div>';
+    	     
     	      node.appendChild(x);
     	      var selectX = document.getElementById("errorCode" + count);
     	      var divError = document.getElementById("errorDiv" + count);

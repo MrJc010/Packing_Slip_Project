@@ -921,7 +921,7 @@ public class DBHandler {
 				pst.setString(2, testResult);
 				pst.setString(3, userId);		
 				pst.setString(4, sdf.format(now));
-				pst.execute();
+				pst.executeUpdate();
 				result = true;
 
 			} catch (Exception e) {
