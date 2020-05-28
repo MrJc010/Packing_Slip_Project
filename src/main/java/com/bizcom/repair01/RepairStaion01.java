@@ -72,12 +72,14 @@ public class RepairStaion01 extends HttpServlet {
 						//SPECIAL CASE push up error
 						displayError(request, ppid + " DOESN\"t BELONG TO THIS STATION");
 					}
-
+					request.setAttribute("ppid", "");
 					request.getRequestDispatcher("/WEB-INF/views/repair_01/repair01.jsp").forward(request, response);
 				} else {
-					displayError(request, ppid + " CAN\"T FOUND! CHECK WITH OTHER PPID");
+					displayError(request, ppid + " IS NOT FOUND! PLEASE CHECK WITH ANOTHER PPID");
+					request.setAttribute("ppid", "");
 					request.getRequestDispatcher("/WEB-INF/views/repair_01/repair01.jsp").forward(request, response);
 				}
+				
 				break;
 			default: {
 				System.out.println("Defaul case called");
@@ -173,7 +175,7 @@ public class RepairStaion01 extends HttpServlet {
 		request.setAttribute("seterrorhiddenMICI", "hidden");
 		request.setAttribute("setInfoHidden", "show");
 		request.setAttribute("reapir01BodyHidden", "show");
-		request.setAttribute("ppid", "");
+		request.setAttribute("ppid", ppid);
 		HashMap<String, String> result = db.fetchErrorFromRepair01(ppid);
 		if (result.size() == 0) {			
 			displayTransferState(request,  ppid + " has NO ERROR! Transfer to MICI now.");
@@ -185,6 +187,7 @@ public class RepairStaion01 extends HttpServlet {
 			result.forEach((k, v) -> {
 				listErrorStr.add(k + " --> " + v);
 			});
+			System.out.println("here");
 			request.setAttribute("errorList", listErrorStr);
 		}
 

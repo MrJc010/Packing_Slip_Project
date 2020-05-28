@@ -733,34 +733,21 @@ public class DBHandler {
 		pst = dbconnection.prepareStatement(query);
 		int i = 0;
 		LocalDateTime now = LocalDateTime.now();
-		if(errors.size() == 0) {
+		for (String e : errors) {
 			pst.setString(1, ppid);
-			pst.setString(2, "");
+			pst.setString(2, e);
 			pst.setString(3, user);
 			pst.setString(4, sdf.format(now));
-
-			pst.executeUpdate();
-			result = true;
-		}
-		else {
-			for (String e : errors) {
-				pst.setString(1, ppid);
-				pst.setString(2, e);
-				pst.setString(3, user);
-				pst.setString(4, sdf.format(now));
-				pst.addBatch();
-				i++;
-				if (i == errors.size()) {
-					//				multi m = new multi(pst);
-					//				m.start();
-					int[] a = pst.executeBatch();
-					if (a.length > 0)
-						result = true;
-					else
-						result = false;
-					// dbconnection.commit();
-				}
+			pst.addBatch();
+			i++;
+			if (i == errors.size()) {
+				int[] a = pst.executeBatch();
+				if (a.length > 0)
+					result = true;
+				else
+					result = false;
 			}
+
 		}
 
 		return result;
