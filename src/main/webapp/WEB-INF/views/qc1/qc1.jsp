@@ -4,12 +4,9 @@
 </c:import>
 <section>
 
-	<div class="container p-5">
-		<div class="row justify-content-center">
-			<h1>QC1 Station</h1>
-		</div>
+	<div class="container-fluid p-5">
 
-		<form class="container-fluid"
+<%-- 		<form class="container-fluid"
 			action="<%=request.getContextPath()%>/qc1" method="get">
 			<div class="form-group row my-4">
 				<input type="hidden" name="action" value="findPPID"> <label
@@ -25,7 +22,31 @@
 						name="action" />
 				</div>
 			</div>
-		</form>
+		</form> --%>
+		
+		
+		<div class="row bg-light">
+			<div class="col-md-2"></div>
+			<div class="col-md-8 col-sm-12  py-2 px-5">
+				<h3 class="text-center text-primary p-1 display-3">
+					<strong>QC1 STATION</strong>
+				</h3>
+				<form action="<%=request.getContextPath()%>/qc1" method="GET">
+					<div class="input-group mb-3">
+						<input type="hidden" name="action" value="findPPID"> <input
+							type="text" class="form-control form-control-lg" id="PPID"
+							aria-describedby="emailHelp" placeholder="Enter PPID"
+							name="inputPPID0" required value="${ppid}"> 
+							<div class="input-group-append">
+							<input type="submit" name="action" class="btn btn-primary btn-lg" value="FIND">
+						</div>	
+					</div>
+				</form>
+			</div>
+
+		</div>
+		
+		
 		<form class="container-fluid"
 			action="<%=request.getContextPath()%>/qc1" method="post">
 			<div class="form-group row my-4 justify-content-center"

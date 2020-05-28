@@ -32,23 +32,27 @@
 		<div class="row bg-light">
 			<div class="col-md-2"></div>
 			<div class="col-md-8 col-sm-12  py-2 px-5">
-				<h2 class="text-center text-primary p-1 display-3">
+				<h3 class="text-center text-primary p-1 display-3">
 					<strong>MICI STATION</strong>
-					</h3>
-					<form method="GET" action="<%=request.getContextPath()%>/mici">
+				</h3>
 
-						<div class="form-group">
-							<input type="hidden" name="page" value="check"> <input
-								type="text" class="form-control" id="PPID"
-								aria-describedby="emailHelp" placeholder="Enter PPID"
-								name="ppidNumber" required value="${ppid}">
+
+				<form action="<%=request.getContextPath()%>/mici" method="GET">
+					<div class="input-group mb-3">
+						<input type="hidden" name="page" value="check"> <input
+							type="text" class="form-control form-control-lg" id="PPID"
+							aria-describedby="emailHelp" placeholder="Enter PPID"
+							name="ppidNumber" required value="${ppid}"> 
+							<div class="input-group-append">
+
+							<input type="submit" class="btn btn-primary btn-lg" value="FIND">
 						</div>
+							
+					</div>
+				</form>
+				
 
-						<div class="form-groud text-center my-3">
-							<button type="submit" class="btn btn-primary btn-lg px-5 text-uppercase">Check</button>
-						</div>
 
-					</form>
 			</div>
 
 		</div>
@@ -115,25 +119,29 @@
 
 
 					<div class="text-center">
-						
 
-						<a id="addErrorCode" class="btn btn-danger  border shadow p-3 mb-5 rounded mr-4" onClick=functionx() ${hiddenAddErrorCodeBTN}> 
-						<span class="h3 text-white">
-								ADD ERROR CODE
-						</span>
+
+						<a id="addErrorCode"
+							class="btn btn-danger  border shadow p-3 mb-5 rounded mr-4"
+							onClick=functionx() ${hiddenAddErrorCodeBTN}> <span
+							class="h3 text-white"> ADD ERROR CODE </span>
 						</a>
 
-						<button type="submit" class="btn btn-success border  shadow p-3 mb-5 rounded mr-4" name="action"
-							id="passBTN" value="${PassBTNValue}" ${disable} ${hiddenPassBTN}>
+						<button type="submit"
+							class="btn btn-success border  shadow p-3 mb-5 rounded mr-4"
+							name="action" id="passBTN" value="${PassBTNValue}" ${disable}
+							${hiddenPassBTN}>
 							<span class="h3 text-white">${PassBTNValue}</span>
 						</button>
 						<div>
-						<button type="submit" class="btn btn-danger  border shadow p-3 mb-5 rounded mr-4" name="action"
-							id="failBTN" value="failButton" ${disable} ${hiddenFailBTN}>
-							<span class="h3 text-white px-5">MOVE TO REPAIR01</span>
-						</button>
+							<button type="submit"
+								class="btn btn-danger  border shadow p-3 mb-5 rounded mr-4"
+								name="action" id="failBTN" value="failButton" ${disable}
+								${hiddenFailBTN}>
+								<span class="h3 text-white px-5">MOVE TO REPAIR01</span>
+							</button>
 						</div>
-						
+
 					</div>
 
 
@@ -150,106 +158,106 @@
 
 
 	<script type="text/javascript">
-	
-    var list = ${listErrorCodes};
-    var count = ${currentCountMICI};
-	
+		var list = $
+		{
+			listErrorCodes
+		};
+		var count = $
+		{
+			currentCountMICI
+		};
 
+		/*     var selectX = document.getElementById("errorCode1");
+		 var divError = document.getElementById("errorDiv1");
+		 var op = document.createElement('option');
+		 op.appendChild(document.createTextNode('Choose...'));
+		 op.value = '0';
+		 selectX.appendChild(op);
 
+		 var btn = document.createElement('span');
+		 btn.value = "errorDiv1";
+		 btn.onclick = deleteErrorDiv;
+		 btn.className = "btn btn-outline-danger mx-3"
+		 btn.innerHTML = "Delete";
+		 divError.appendChild(btn); */
 
-/*     var selectX = document.getElementById("errorCode1");
-    var divError = document.getElementById("errorDiv1");
-    var op = document.createElement('option');
-    op.appendChild(document.createTextNode('Choose...'));
-    op.value = '0';
-    selectX.appendChild(op);
+		/*  var i = 0;
+		 for (var key in list) {
+		 	if (list.hasOwnProperty(key)) {
+		  	    var divError = document.getElementById("errorDiv" + i);
+		 	    var op = document.createElement('option');
+		 	    op.appendChild(document.createTextNode(key + " -> " + list[key]));
+		 	    op.value = key;
+		 	    selectX.appendChild(op);
+		 	    i+=1;
+		 	}
+		   } */
+		var node = document.getElementById("selectionMICI");
+		var passBTN = document.getElementById("passBTN");
+		var failBTN = document.getElementById("failBTN");
+		function deleteErrorDiv() {
 
-    var btn = document.createElement('span');
-    btn.value = "errorDiv1";
-    btn.onclick = deleteErrorDiv;
-    btn.className = "btn btn-outline-danger mx-3"
-    btn.innerHTML = "Delete";
-    divError.appendChild(btn); */
+			var aID = event;
 
-   /*  var i = 0;
-    for (var key in list) {
-    	if (list.hasOwnProperty(key)) {
-     	    var divError = document.getElementById("errorDiv" + i);
-    	    var op = document.createElement('option');
-    	    op.appendChild(document.createTextNode(key + " -> " + list[key]));
-    	    op.value = key;
-    	    selectX.appendChild(op);
-    	    i+=1;
-    	}
-      } */
-     var node = document.getElementById("selectionMICI");
-     var passBTN = document.getElementById("passBTN");
-  	 var failBTN = document.getElementById("failBTN");
-    function deleteErrorDiv() {
-    
-      var aID = event;
+			var node = document.getElementById("selectionMICI");
 
-      var node = document.getElementById("selectionMICI");
+			node.removeChild(document.getElementById(aID.target.value));
 
-      node.removeChild(document.getElementById(aID.target.value));
-      
-      if(node.childElementCount === 0){
-    	passBTN.hidden = false;	
-      	failBTN.hidden = true;
-      	node.hidden = true;
-      }
-      
-    }
+			if (node.childElementCount === 0) {
+				passBTN.hidden = false;
+				failBTN.hidden = true;
+				node.hidden = true;
+			}
 
-  function functionx() {
-    	
-    	
-    	passBTN.hidden = true;	
-    	failBTN.hidden = false;
-    	node.hidden = false;
-    	
-     	if(count <= 10){
-    		
-    	      var last = document.getElementById("errorDiv"+count);
-    	      var x = document.createElement('div');
-    	      x.className = 'input-group mb-3';
-    	      x.id = 'errorDiv' + count;
-    	      x.innerHTML =
-    	        '<div class=\"input-group-prepend\">' +
-    	        '<label class=\"input-group-text\" for=\"inputGroupSelect01\">Select Error Code: </label>' +
-    	        '</div>' +
-    	        '<select class=\"custom-select\" id=\"errorCode' + count + '\" name=\"errorCode' + count + '\">' +
-    	        '<option value=\"0\" selected>Choose...</option> ' +
-    	        '< /select> ';
-    	     
-    	      node.appendChild(x);
-    	      var selectX = document.getElementById("errorCode" + count);
-    	      var divError = document.getElementById("errorDiv" + count);
+		}
 
-    	      var btn = document.createElement('button');
-    	      btn.value = "errorDiv" + count;
-    	      btn.onclick = deleteErrorDiv;
-    	      btn.innerHTML = "Delete";
-    	      btn.className = "btn btn-outline-danger mx-3"
-    	      divError.appendChild(btn);
-    	      var i = 0;
-    	      for (var key in list) {
-    	      	if (list.hasOwnProperty(key)) {
-    
-    	       	    var divError = document.getElementById("errorDiv" + i);
-    	      	    var op = document.createElement('option');
-    	      	    op.appendChild(document.createTextNode(key + " -> " + list[key]));
-    	      	    op.value = key;
-    	      	    selectX.appendChild(op);
-    	      	    i+=1;
-    	      	}
-    	     	}
-    	      count++;
-    	}
+		function functionx() {
 
-    }
-    
-  </script>
+			passBTN.hidden = true;
+			failBTN.hidden = false;
+			node.hidden = false;
+
+			if (count <= 10) {
+
+				var last = document.getElementById("errorDiv" + count);
+				var x = document.createElement('div');
+				x.className = 'input-group mb-3';
+				x.id = 'errorDiv' + count;
+				x.innerHTML = '<div class=\"input-group-prepend\">'
+						+ '<label class=\"input-group-text\" for=\"inputGroupSelect01\">Select Error Code: </label>'
+						+ '</div>'
+						+ '<select class=\"custom-select\" id=\"errorCode' + count + '\" name=\"errorCode' + count + '\">'
+						+ '<option value=\"0\" selected>Choose...</option> '
+						+ '< /select> ';
+
+				node.appendChild(x);
+				var selectX = document.getElementById("errorCode" + count);
+				var divError = document.getElementById("errorDiv" + count);
+
+				var btn = document.createElement('button');
+				btn.value = "errorDiv" + count;
+				btn.onclick = deleteErrorDiv;
+				btn.innerHTML = "Delete";
+				btn.className = "btn btn-outline-danger mx-3"
+				divError.appendChild(btn);
+				var i = 0;
+				for ( var key in list) {
+					if (list.hasOwnProperty(key)) {
+
+						var divError = document.getElementById("errorDiv" + i);
+						var op = document.createElement('option');
+						op.appendChild(document.createTextNode(key + " -> "
+								+ list[key]));
+						op.value = key;
+						selectX.appendChild(op);
+						i += 1;
+					}
+				}
+				count++;
+			}
+
+		}
+	</script>
 
 </section>
 <jsp:include page="/WEB-INF/common/footer.jsp" />
