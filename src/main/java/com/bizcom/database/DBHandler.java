@@ -733,34 +733,21 @@ public class DBHandler {
 		pst = dbconnection.prepareStatement(query);
 		int i = 0;
 		LocalDateTime now = LocalDateTime.now();
-		if(errors.size() == 0) {
+		for (String e : errors) {
 			pst.setString(1, ppid);
-			pst.setString(2, "");
+			pst.setString(2, e);
 			pst.setString(3, user);
 			pst.setString(4, sdf.format(now));
-
-			pst.executeUpdate();
-			result = true;
-		}
-		else {
-			for (String e : errors) {
-				pst.setString(1, ppid);
-				pst.setString(2, e);
-				pst.setString(3, user);
-				pst.setString(4, sdf.format(now));
-				pst.addBatch();
-				i++;
-				if (i == errors.size()) {
-					//				multi m = new multi(pst);
-					//				m.start();
-					int[] a = pst.executeBatch();
-					if (a.length > 0)
-						result = true;
-					else
-						result = false;
-					// dbconnection.commit();
-				}
+			pst.addBatch();
+			i++;
+			if (i == errors.size()) {
+				int[] a = pst.executeBatch();
+				if (a.length > 0)
+					result = true;
+				else
+					result = false;
 			}
+
 		}
 
 		return result;
@@ -891,57 +878,57 @@ public class DBHandler {
 	// ***************************END*****************************
 	// ***************************END*****************************
 
-	
 
 
 
-		// ***************************START***************************
-		// ***************************START***************************
-		// ***************************START***************************
-		// ***************************START***************************
-		// ***********************************************************
-		// * QC1 STATION *
-		// ***********************************************************
-		// ***************************START***************************
-		// ***************************START***************************
-		// ***************************START***************************
-		// ***************************START***************************
 
-		public boolean insertQC1Table(String ppid, String userId, String testResult) {
-			boolean result = false;
-		
-			LocalDateTime now = LocalDateTime.now();
-			String query = "INSERT INTO qc1_station(ppid,result,userId,time) values(?,?,?,?)";
-			
-			
-			try {
-				dbconnection = getConnectionAWS();
-				pst = dbconnection.prepareStatement(query);
-				pst.setString(1, ppid);
-				pst.setString(2, testResult);
-				pst.setString(3, userId);		
-				pst.setString(4, sdf.format(now));
-				pst.execute();
-				result = true;
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***********************************************************
+	// * QC1 STATION *
+	// ***********************************************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
 
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				shutdown();
-			}
-			return result;
+	public boolean insertQC1Table(String ppid, String userId, String testResult) {
+		boolean result = false;
+
+		LocalDateTime now = LocalDateTime.now();
+		String query = "INSERT INTO qc1_station(ppid,result,userId,time) values(?,?,?,?)";
+
+
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(query);
+			pst.setString(1, ppid);
+			pst.setString(2, testResult);
+			pst.setString(3, userId);		
+			pst.setString(4, sdf.format(now));
+			pst.execute();
+			result = true;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			shutdown();
 		}
+		return result;
+	}
 	// ***************************END*****************************
-			// ***************************END*****************************
-			// ***************************END*****************************
-			// ***************************END*****************************
-			// ***********************************************************
-			// *                     QC1 STATION                      *
-			// ***********************************************************
-			// ***************************END*****************************
-			// ***************************END*****************************
-			// ***************************END*****************************
-			// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***********************************************************
+	// *                     QC1 STATION                      *
+	// ***********************************************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
 	// ***************************START***************************
 	// ***************************START***************************
 	// ***************************START***************************
@@ -1514,7 +1501,7 @@ public class DBHandler {
 		} finally {
 			shutdown();
 		}
-		
+
 		return result;
 
 	}
@@ -1550,8 +1537,8 @@ public class DBHandler {
 		String currentRev = getCurrentRev(ppid);
 		LocalDateTime now = LocalDateTime.now();
 		String query = "INSERT INTO eco_station(ppid,original_rev,max_rev,userId,time) values(?,?,?,?,?)";
-		
-		
+
+
 		try {
 			dbconnection = getConnectionAWS();
 			pst = dbconnection.prepareStatement(query);
@@ -1570,7 +1557,7 @@ public class DBHandler {
 		}
 		return result;
 	}
-	
+
 	public boolean isPPIDExistIn(String ppid,String tableName) {
 		boolean result = false;
 		String query = "SELECT * FROM " + tableName + " WHERE ppid=?";

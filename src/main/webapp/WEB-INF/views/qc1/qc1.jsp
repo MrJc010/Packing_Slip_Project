@@ -30,9 +30,8 @@
 			action="<%=request.getContextPath()%>/qc1" method="post">
 			<div class="form-group row my-4 justify-content-center"
 				${setHiddenNotification}>
-				<button type="button"
-					class="btn btn-outline-info font-weight-bold disable">
-					${messageNotification}</button>
+				<p class="btn-outline-info font-weight-bold disable">
+					${messageNotification}</p>
 			</div>
 			<div class="form-group row my-4 justify-content-center">
 				<div class="btn-group" role="group">

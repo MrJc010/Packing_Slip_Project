@@ -153,7 +153,7 @@ public class QC1_Servlet extends HttpServlet {
 					if(db.insertQC1Table(ppid, "QC1 USERS", "Failed")) {
 						if(db.updateCurrentStation(db.QC1, db.REPAIR02_WAITING, ppid)) {
 //							System.out.println("UPDATE READ DONE");
-							notificationDisplay(request,response,ppid + " tranfered to REPAIR02_WAITING. Scan a new PPID to continute!");
+							notificationDisplay(request,response,ppid + " is transferred and waited for REPAIR02 Station to receive!");
 							ppid="";
 							hiddenBTN(request, response);
 						}else {
