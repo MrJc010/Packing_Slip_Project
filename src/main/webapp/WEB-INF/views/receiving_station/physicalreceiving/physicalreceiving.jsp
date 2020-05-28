@@ -6,14 +6,101 @@
 
 
 <section id="mainSection">
+	<div class="text-center" id="count"
+		style="position: fixed; top: 70px; right: 10px;">
+		<div class="badge badge-info rounded-circle m-2">
+			<h2 class="p-3 text-danger mb-2">${count}</h2>
+		</div>
+		<h2 class="text-dark font-weight-bold">Receiving</h2>
+	</div>
+	<div class="container-fluid p-sm-0 p-lg-3">
+		<h1 class="text-uppercase text-center text-primary mb-3">Physical
+			Receiving</h1>
+		<div class="row">
+			<div class="col-lg-2"></div>
+			<div class="col-sm-12 col-lg-8 px-3">
+				<!-- Display Details of PPID -->
+				<div class="row">
+					<div class="col-3">
+						<strong>PPID#:</strong>
+					</div>
+					<div class="col-9">
+						<span class="text-uppercase text-dark font-weight-bold"> ${ppid_Number}</span>
+					</div>
+				</div>
 
-	<div class="container-fluid py-2">
+
+				<div class="row">
+					<div class="col-3">
+						<strong>RMA#:</strong>
+					</div>
+					<div class="col-9">
+						<span class="text-uppercase text-dark font-weight-bold"> ${rma_Number}</span>
+					</div>
+				</div>
 
 
-		<div class="row px-5">
-			<div class="col-md-2"></div>
-			<div
-				class="col-md-8 col-sm-12 shadow-lg p-3 mb-5 bg-white rounded sh bg-light py-2 px-5">
+				<div class="row">
+					<div class="col-3">
+						<strong>PN#:</strong>
+					</div>
+					<div class="col-9">
+						<span class="text-uppercase text-dark font-weight-bold"> ${pn_Number}</span>
+					</div>
+				</div>
+
+
+				<div class="row">
+					<div class="col-3">
+						<strong>CO#:</strong>
+					</div>
+					<div class="col-9">
+						<span class="text-uppercase text-dark font-weight-bold"> ${co_Number}</span>
+					</div>
+				</div>
+
+
+				<div class="row">
+					<div class="col-3">
+						<strong>LOT#:</strong>
+					</div>
+					<div class="col-9">
+						<span class="text-uppercase text-dark font-weight-bold"> ${lot}</span>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-3">
+						<strong>DPS#:</strong>
+					</div>
+					<div class="col-9">
+						<span class="text-uppercase text-dark font-weight-bold"> ${dps}</span>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-3">
+						<strong>Problem Code#:</strong>
+					</div>
+					<div class="col-9">
+						<span class="text-uppercase text-dark font-weight-bold"> ${problem_code}</span>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-3">
+						<strong>Problem Description#:</strong>
+					</div>
+					<div class="col-9">
+						<textarea class="w-100 " disabled>${problem_desc}</textarea>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2"></div>
+
+		</div>
+
+
+		<div class="row">
+			<div class="col-lg-2"></div>
+			<div class="col-lg-8 col-sm-12 py-2">
 				<form method="POST"
 					action="<%=request.getContextPath()%>/physicalreceiving">
 
@@ -28,7 +115,7 @@
 						<label for="Revision" class="col-sm-3 col-form-label text-primary"><strong>Revision</strong></label>
 						<div class="col-sm-8">
 							<input type="text" id="Revision" class="form-control"
-								name="revision" placeholder="Revision" required>
+								name="revision" placeholder="Revision (example A01)" required>
 						</div>
 					</div>
 
@@ -58,115 +145,28 @@
 						</div>
 					</div>
 
-
-
-					<div class="form-group row">
-						<label for="RMA#" class="col-sm-3 col-form-label text-primary"><strong>RMA#</strong></label>
-						<div class="col-sm-8">
-							<input type="text" id="RMA#" class="form-control"
-								value="${rma_Number}" name="rma" placeholder="RMA Number"
-								disabled>
-						</div>
-					</div>
-
-					<div class="form-group row">
-						<label for="PPID#" class="col-sm-3 col-form-label text-primary"><strong>PPID#</strong></label>
-						<div class="col-sm-8">
-							<input type="text" id="RMA#" class="form-control"
-								value="${ppid_Number}" name="ppid" placeholder="PPID Number"
-								disabled>
-						</div>
-					</div>
-
-					<div class="form-group row">
-						<label for="PN#" class="col-sm-3 col-form-label text-primary"><strong>PN#</strong></label>
-						<div class="col-sm-8">
-							<input type="text" id="PN#" class="form-control"
-								value="${pn_Number}" placeholder="PN Number" name="pn" disabled>
-						</div>
-					</div>
-
-					<div class="form-group row">
-						<label for="CO#" class="col-sm-3 col-form-label text-primary"><strong>CO#</strong></label>
-						<div class="col-sm-8">
-							<input type="text" id="CO#" class="form-control"
-								value="${co_Number}" placeholder="CO Number" name="co" disabled>
-						</div>
-					</div>
-
-					<div class="form-group row">
-						<label for="problem_desc#"
-							class="col-sm-3 col-form-label text-primary"><strong>Problem
-								Description</strong></label>
-						<div class="col-sm-8">
-							<input type="text" id="problem_desc#" class="form-control"
-								value="${problem_desc}" name="problemDesc"
-								placeholder="Problem Description" disabled>
-						</div>
-					</div>
-
-					<div class="form-group row">
-						<label for="Lot#" class="col-sm-3 col-form-label text-primary"><strong>Lot#</strong></label>
-						<div class="col-sm-8">
-							<input type="text" id="Lot#" class="form-control" value="${lot}"
-								placeholder="Lot number" name="lotNumber" disabled>
-						</div>
-					</div>
-					<div class="form-group row">
-						<label for="problem_code#"
-							class="col-sm-3 col-form-label text-primary"><strong>Problem
-								code</strong></label>
-						<div class="col-sm-8">
-							<input type="text" id="problem_code#" class="form-control"
-								value="${problem_code}" name="problemCode"
-								placeholder="Problem code" disabled>
-						</div>
-					</div>
-
-					<div class="form-group row">
-						<label for="dps#" class="col-sm-3 col-form-label text-primary"><strong>DPS#</strong></label>
-						<div class="col-sm-8">
-							<input type="text" id="dps#" class="form-control" value="${dps}"
-								placeholder="DPS Number" name="dpnNumber" disabled>
-						</div>
-					</div>
-
 					<div class="row justify-content-center my-3">
-						<button id="print-btn" type="submit" class="btn btn-primary"
-							>
+						<button id="print-btn" type="submit" class="btn btn-primary">
 							<strong>Receive Item</strong>
 						</button>
 						<!-- <button id="print-btn" >Print Out</button> -->
 					</div>
 				</form>
-				<br/>
-				
+				<br />
+
 			</div>
 			<div class="col-md-2"></div>
 
 		</div>
-
-
 
 	</div>
 
 </section>
 
 <script>
-var jsMain = document.getElementById("mainSection");
-var doc = new jsPDF();
-doc.fromHTML(
-		jsMain,
-	    15,
-	    15,
-	    {
-	      'width': 180
-	    });
-	doc.autoPrint();
-	doc.output("dataurlnewwindow");
-
-var btn = document.getElementById("print-btn");
-
+	var jsMain = document.getElementById("mainSection");
+	var doc = new jsPDF();
+	var btn = document.getElementById("print-btn");
 </script>
 
 <c:import url="/WEB-INF/common/footer.jsp" />

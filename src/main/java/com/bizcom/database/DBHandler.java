@@ -891,57 +891,57 @@ public class DBHandler {
 	// ***************************END*****************************
 	// ***************************END*****************************
 
-	
 
 
 
-		// ***************************START***************************
-		// ***************************START***************************
-		// ***************************START***************************
-		// ***************************START***************************
-		// ***********************************************************
-		// * QC1 STATION *
-		// ***********************************************************
-		// ***************************START***************************
-		// ***************************START***************************
-		// ***************************START***************************
-		// ***************************START***************************
 
-		public boolean insertQC1Table(String ppid, String userId, String testResult) {
-			boolean result = false;
-		
-			LocalDateTime now = LocalDateTime.now();
-			String query = "INSERT INTO qc1_station(ppid,result,userId,time) values(?,?,?,?)";
-			
-			
-			try {
-				dbconnection = getConnectionAWS();
-				pst = dbconnection.prepareStatement(query);
-				pst.setString(1, ppid);
-				pst.setString(2, testResult);
-				pst.setString(3, userId);		
-				pst.setString(4, sdf.format(now));
-				pst.executeUpdate();
-				result = true;
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***********************************************************
+	// * QC1 STATION *
+	// ***********************************************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
+	// ***************************START***************************
 
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				shutdown();
-			}
-			return result;
+	public boolean insertQC1Table(String ppid, String userId, String testResult) {
+		boolean result = false;
+
+		LocalDateTime now = LocalDateTime.now();
+		String query = "INSERT INTO qc1_station(ppid,result,userId,time) values(?,?,?,?)";
+
+
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(query);
+			pst.setString(1, ppid);
+			pst.setString(2, testResult);
+			pst.setString(3, userId);		
+			pst.setString(4, sdf.format(now));
+			pst.executeUpdate();
+			result = true;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			shutdown();
 		}
+		return result;
+	}
 	// ***************************END*****************************
-			// ***************************END*****************************
-			// ***************************END*****************************
-			// ***************************END*****************************
-			// ***********************************************************
-			// *                     QC1 STATION                      *
-			// ***********************************************************
-			// ***************************END*****************************
-			// ***************************END*****************************
-			// ***************************END*****************************
-			// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***********************************************************
+	// *                     QC1 STATION                      *
+	// ***********************************************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
+	// ***************************END*****************************
 	// ***************************START***************************
 	// ***************************START***************************
 	// ***************************START***************************
@@ -967,7 +967,6 @@ public class DBHandler {
 		} finally {
 			shutdown();
 		}
-
 		return result;
 	}
 
@@ -1513,7 +1512,7 @@ public class DBHandler {
 		} finally {
 			shutdown();
 		}
-		
+
 		return result;
 
 	}
@@ -1549,8 +1548,8 @@ public class DBHandler {
 		String currentRev = getCurrentRev(ppid);
 		LocalDateTime now = LocalDateTime.now();
 		String query = "INSERT INTO eco_station(ppid,original_rev,max_rev,userId,time) values(?,?,?,?,?)";
-		
-		
+
+
 		try {
 			dbconnection = getConnectionAWS();
 			pst = dbconnection.prepareStatement(query);
@@ -1569,7 +1568,7 @@ public class DBHandler {
 		}
 		return result;
 	}
-	
+
 	public boolean isPPIDExistIn(String ppid,String tableName) {
 		boolean result = false;
 		String query = "SELECT * FROM " + tableName + " WHERE ppid=?";
@@ -1980,7 +1979,6 @@ public class DBHandler {
 	}
 
 	//Test Done	
-
 	public List<List<String>> searchPhysicalReceivingStationByDate(String from, String to) throws ParseException{
 		List<List<String>> result = new ArrayList<List<String>>();
 		String query = "SELECT * FROM physical_station WHERE physical_station.ppid "
@@ -2017,6 +2015,53 @@ public class DBHandler {
 		return result;
 	}
 
+
+	// Get the amount un-receipt items
+	// Received : isReveived is true 
+	public int fetchAmountReceived(String rma, boolean isReveived) {
+		int result = 0;
+		String query = "SELECT COUNT(*) AS rowcount FROM pre_ppid WHERE rma= ? and status=?";
+		String status = isReveived == true? "Received" : "UnRecevied";
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(query);
+			pst.setString(1,rma);
+			pst.setString(2,status);
+			rs = pst.executeQuery();
+
+			if (rs.next()) {
+				result = rs.getInt(1);
+			} 
+		} catch (Exception e) {
+			System.out.println("Error search physical_station: " + e.getMessage());
+		} finally {
+			shutdown();
+		}
+
+		return result;
+	}
+	
+	public int fetchAmountItemBasedOnRMA(String rma) {
+		int result = 0;
+		String query = "SELECT COUNT(*) AS rowcount FROM pre_ppid WHERE rma= ?";
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(query);
+			pst.setString(1,rma);
+			rs = pst.executeQuery();
+			if (rs.next()) {
+				result = rs.getInt(1);
+			} 
+		} catch (Exception e) {
+			System.out.println("Error search physical_station: " + e.getMessage());
+		} finally {
+			shutdown();
+		}
+		return result;
+	}
+	
+	
+	
 	// Test Done
 	public List<List<String>> searchMICIStationByDate(String from, String to) throws ParseException {
 		List<List<String>> result = new ArrayList<List<String>>();

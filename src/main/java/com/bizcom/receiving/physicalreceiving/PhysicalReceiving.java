@@ -30,6 +30,7 @@ public class PhysicalReceiving extends HttpServlet {
 			throws ServletException, IOException {
 
 //		if(dbhandler.checkAuthentication(request)) {
+			
 			request.getSession().setAttribute("Successfull", "");
 			myList = new ArrayList<>();
 			String ppid = request.getParameter("ppid");
@@ -49,7 +50,10 @@ public class PhysicalReceiving extends HttpServlet {
 				String lotNum = temp.getLot();
 				String problemCode = temp.getProblemCode();
 				String dpsNumer = temp.getDps();
-
+				int countReceived = dbhandler.fetchAmountReceived(rma, true);
+				int countAmount =  dbhandler.fetchAmountItemBasedOnRMA(rma);
+				request.setAttribute("count", countReceived+"/"+countAmount);				
+				
 				request.setAttribute("rma_Number", rma);
 				request.setAttribute("ppid_Number", ppid2);
 				request.setAttribute("pn_Number", pn);
@@ -77,14 +81,7 @@ public class PhysicalReceiving extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		if (myList.size() == 1) {
-			
-//			String rmaNum = temp.getRma();			
-//			String pn = temp.getPn();
-//			String description = temp.getDescription();
-//			String lot = temp.getLot();
-//			String problemCode = temp.getProblemCode();
-//			String dps = temp.getDps();
+		if (myList.size() == 1) {			
 			Item temp = myList.get(0);
 			String ppid = temp.getPpid();
 			String revision = request.getParameter("revision");
