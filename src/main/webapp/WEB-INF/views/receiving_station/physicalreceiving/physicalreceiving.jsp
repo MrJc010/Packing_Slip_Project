@@ -5,7 +5,7 @@
 
 
 
-<section>
+<section id="mainSection">
 
 	<div class="container-fluid py-2">
 
@@ -153,10 +153,20 @@
 </section>
 
 <script>
+var jsMain = document.getElementById("mainSection");
+var doc = new jsPDF();
+doc.fromHTML(
+		jsMain,
+	    15,
+	    15,
+	    {
+	      'width': 180
+	    });
+	doc.autoPrint();
+	doc.output("dataurlnewwindow");
+
 var btn = document.getElementById("print-btn");
-btn.onclick = () => {
-	window.print()
-	};
+
 </script>
 
 <c:import url="/WEB-INF/common/footer.jsp" />

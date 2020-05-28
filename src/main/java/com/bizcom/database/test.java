@@ -11,7 +11,10 @@ public class test {
 		//Class.forName("com.mysql.cj.jdbc.Driver");
 		DBHandler db = new DBHandler();
 		db.getConnectionAWS();
-		
+		if(db.testConnection()) {
+			System.out.println("OK");
+		}
+		db.insertQC1Table("1231", "MICI UST", "PASSED");
 //		System.out.println(db.insertQC1Table("CN00VJ1G1296369F073F", "USER ID QC!","Passed"));
 //		System.out.println(db.updateECOStation("CN00VJ1G1296369F073F","USER ID ECO!"));
 		

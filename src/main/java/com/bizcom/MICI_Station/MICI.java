@@ -75,7 +75,7 @@ public class MICI extends HttpServlet {
 				miciDisplay(request, response);
 				break;
 			case "check":
-				System.out.println("display");
+				System.out.println("check");
 				checkMICI(request, response);
 				break;
 			default:
@@ -109,7 +109,6 @@ public class MICI extends HttpServlet {
 				String maxRevision = db.getMaxRevision(pn).trim().toUpperCase(); 
 				try {
 					boolean test = db.addToMICITable(ppid, sn, errorCodeSet, "A USER FROM MICI");
-					//						 System.out.println(test);
 				} catch (ClassNotFoundException | SQLException e) {
 					// here
 					System.out.println(e.getMessage());
@@ -117,37 +116,23 @@ public class MICI extends HttpServlet {
 				}
 
 				if (action.equalsIgnoreCase("TRANSFER TO QC1")) {
-
+					System.out.println("Transfert to QC1 clicked");
 					// GO to QC1
 					if(currentRevision.equals(maxRevision) || maxRevision.length() == 0) {	
-						if(!db.updateCurrentStation(db.MICI, db.QC1_WAITING, ppid)) {
+						if(!db.updateCurrentStation(DBHandler.MICI, DBHandler.QC1_WAITING, ppid)) {
 							System.out.println("Error canot update station to transfer to QC1");
-
-							// eror transfer qc1
-							request.setAttribute("setHiddenResultSucess", "hidden");
-							request.setAttribute("seterrorhiddenMICI", "show");
-							request.setAttribute("errorMessage", ppid  + " can't update station to transfer to QC1_WAITINGcccccc .Check updateCurrentStation");
-							request.setAttribute("sethideMICI", "hidden");
+							displayErrorMessage(request, ppid  + " can't update station to transfer to QC1_WAITINGcccccc .Check updateCurrentStation");
 
 						}else {
 
 
-							if(!db.updateECOStation(ppid, "FROM MICI USER")) {
-								// errror
-								// eror transfer qc1
-								request.setAttribute("setHiddenResultSucess", "hidden");
-								request.setAttribute("seterrorhiddenMICI", "show");
-								request.setAttribute("errorMessage", ppid  + " can't update station to transfer to ECO .Check updateECOStation");
-								request.setAttribute("sethideMICI", "hidden");
-
+							if(!db.insertQC1Table(ppid, "MICI USER", "Passed") ){
+								// errror								
+								displayErrorMessage(request, ppid  + " can't update station to transfer to ECO .Check updateECOStation");
 								System.out.println("Error cannot update station eco");
 							}else {
 								// set html qc1	
-								request.setAttribute("setHiddenResultSucess", "show");
-								request.setAttribute("seterrorhiddenMICI", "hidden");
-								request.setAttribute("sethideMICI", "hidden");
-								request.setAttribute("messageSuccess", ppid + " is successfully tranfered to QC1!");
-
+								displayNotification(request, ppid + " is successfully tranfered to QC1!");
 							}
 						}
 					}
@@ -159,74 +144,59 @@ public class MICI extends HttpServlet {
 					if(!db.updateCurrentStation(db.MICI, db.ECO_WAITING, ppid))			{
 
 						// eror transfer qc1
-						request.setAttribute("setHiddenResultSucess", "hidden");
-						request.setAttribute("seterrorhiddenMICI", "show");
-						request.setAttribute("errorMessage", ppid  + " can't update station to transfer to ECO_WAITING .Check updateCurrentStation");
-						request.setAttribute("sethideMICI", "hidden");
+
+						displayErrorMessage(request, ppid  + " can't update station to transfer to ECO_WAITING .Check updateCurrentStation");
 						System.out.println("Error cannot update station to transfer to QC1");
 					}else {
 						if(!db.updateECOStation(ppid, "FROM MICI USER")) {
 							// errror
 							// eror transfer qc1
-							request.setAttribute("setHiddenResultSucess", "hidden");
-							request.setAttribute("seterrorhiddenMICI", "show");
-							request.setAttribute("errorMessage", ppid  + " can't update station to transfer to ECO .Check updateECOStation");
-							request.setAttribute("sethideMICI", "hidden");
+							displayErrorMessage(request, ppid  + " can't update station to transfer to ECO .Check updateECOStation");
 							System.out.println("Error cannot update station eco");
 						}else {
 							//set html eco
-							request.setAttribute("setHiddenResultSucess", "show");
-							request.setAttribute("seterrorhiddenMICI", "hidden");
-							request.setAttribute("sethideMICI", "hidden");
-							request.setAttribute("messageSuccess", ppid + " is successfully tranfered to ECO!");
 
+							displayNotification(request,  ppid + " is successfully tranfered to ECO!");
 						}
 					}									
 				}
 				else if (action.equalsIgnoreCase("failButton")) {
 					System.out.println(request.getAttribute("currentCountMICI"));
-					String errorCode = request.getParameter("errorCode");
 					for (int i = 1; i < 10; i++) {
 						String temp = request.getParameter("errorCode" + i);
 						if (temp != null && !temp.contentEquals("0"))
 							errorCodeSet.add(temp);
 					}
-					System.out.println("Error Code Set:" + errorCodeSet.toString());
-					System.out.println("Result Update Station Status : "
-							+ db.updateCurrentStation(db.MICI, db.REPAIR01_FAIL, ppid));
+
 					try {
-						boolean test = db.addToMICITable(ppid, sn, errorCodeSet, "A USER FROM MICI");
-						// System.out.println(test);
-					} catch (ClassNotFoundException | SQLException e) {
-						// here
-						System.out.println(e.getMessage());
+						if(!db.addToMICITable(ppid, sn, errorCodeSet, "A USER FROM MICI")) {
+							displayErrorMessage(request, ppid + " System error. Can't add to MICI table error code list!"); 
+						}else {
+							if(!db.updateCurrentStation(db.MICI, db.REPAIR01_FAIL, ppid)) {
+								displayErrorMessage(request, ppid + " System error. Can't change status of item!!!");
+							}else {
+								displayNotification(request, ppid + " is transfered and waited at REPAIR_01!"); 
+							}
+						}
+					} catch (ClassNotFoundException e) {
+						displayErrorMessage(request, ppid + " System error. Can't add to MICI table error code list!"); 
+						e.printStackTrace();
+					} catch (SQLException e) {
+						displayErrorMessage(request, ppid + " System error. Can't add to MICI table error code list!"); 
 						e.printStackTrace();
 					}
 
-					request.setAttribute("setHiddenResultSucess", "show");
-					request.setAttribute("ppid", ppid);
-					request.setAttribute("seterrorhiddenMICI", "hidden");
-					request.setAttribute("sethideMICI", "hidden");
 					request.getRequestDispatcher("/WEB-INF/views/mici_station/mici.jsp").forward(request, response);
-					return;
+				}else {
+					request.setAttribute("sethideMICI", "hidden");
+					request.setAttribute("seterrorhiddenMICI", "");
+					request.setAttribute("currentStatusAtMICI", "This PPID is invalid at this station. ");
+					request.getRequestDispatcher("/WEB-INF/views/mici_station/mici.jsp").forward(request, response);
+					System.out.println("Redirect to currentpage on Post Method from outer if");
+
 				}
-			} else {
-				request.getRequestDispatcher("/WEB-INF/views/mici_station/mici.jsp").forward(request, response);
-				System.out.println("Redirect to currentpage on Post Method from inner if");
-			}
 
-
-			request.getRequestDispatcher("/WEB-INF/views/mici_station/mici.jsp").forward(request, response);
-
-		} else {
-			request.setAttribute("sethideMICI", "hidden");
-			request.setAttribute("seterrorhiddenMICI", "");
-			request.setAttribute("currentStatusAtMICI", "This PPID is invalid at this station. ");
-			request.getRequestDispatcher("/WEB-INF/views/mici_station/mici.jsp").forward(request, response);
-			System.out.println("Redirect to currentpage on Post Method from outer if");
-
-		}
-	}
+			}}}
 
 	public void checkLocation(HttpServletRequest request) {
 		String currentRevision = db.getCurrentRev(ppid).trim().toUpperCase();
@@ -244,9 +214,7 @@ public class MICI extends HttpServlet {
 	}
 	public void miciDisplay(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		displayPPIDAndSN(request);
 		request.setAttribute("PassBTNValue", "PASS");
-		request.setAttribute("titlePageMICI", "MICI");
 		request.setAttribute("ppid", "");
 		request.setAttribute("sethideMICI", "hidden");
 		request.getRequestDispatcher("/WEB-INF/views/mici_station/mici.jsp").forward(request, response);
@@ -259,13 +227,24 @@ public class MICI extends HttpServlet {
 
 	}
 
-	public void displayPPIDAndSN(HttpServletRequest request) {
-		if(ppid!=null && !ppid.isEmpty()) {
-			request.setAttribute("ppid", ppid);
-		}else {
-			request.setAttribute("ppid", "");
-		}
+	public void displayErrorMessage(HttpServletRequest request, String message) {
+		request.setAttribute("setHiddenResultSucess", "hidden");
+		request.setAttribute("seterrorhiddenMICI", "show");
+		request.setAttribute("errorMessage", message);
+		request.setAttribute("sethideMICI", "hidden");
+		System.out.println(message);
+
 	}
+
+	public void displayNotification(HttpServletRequest request, String message) {
+		request.setAttribute("setHiddenResultSucess", "show");
+		request.setAttribute("seterrorhiddenMICI", "hidden");
+		request.setAttribute("messageSuccess", message);
+		request.setAttribute("sethideMICI", "hidden");
+		System.out.println(message);
+
+	}
+
 	public void checkMICI(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		request.setAttribute("problemcodeAtMICI", "");
@@ -273,7 +252,7 @@ public class MICI extends HttpServlet {
 		checkState(request);
 
 		String page = request.getParameter("page");
-		ppid = request.getParameter("ppidNumber");
+		ppid = request.getParameter("ppidNumber").trim().toUpperCase();
 		sn = request.getParameter("serialnumber");
 		String[] miciInfo = db.getPhysicalInfor(ppid);
 		if (validate(ppid, request, miciInfo)) {
@@ -282,21 +261,24 @@ public class MICI extends HttpServlet {
 			if (ppid != null) {
 				request.setAttribute("sethideMICI", "");
 				request.setAttribute("setHidenInfo", "show");
-				displayPPIDAndSN(request);
+				request.setAttribute("ppid", ppid);
 				String[] currenStaions = db.getCurrentStation(ppid);
-
+				System.out.println("currenStaions" + currenStaions[0]  + currenStaions[1]  + currenStaions[2]  + currenStaions[3] );
 				request.setAttribute("ppidCheckAtMICI", ppid);
 				request.setAttribute("snCheckAtMICI", sn);
 				if(currenStaions[0] == null && currenStaions[1] == null) {
+					System.out.println("null null");
 					request.setAttribute("currentStatusAtMICI", "Invalid Access This Item At This Station!");
 					request.setAttribute("sethideMICI", "hidden");
-					request.setAttribute("seterrorhiddenMICI", "");
+					request.setAttribute("setHiddenResultSucess", "hidden");
+					request.setAttribute("seterrorhiddenMICI", "show");
+					request.setAttribute("errorMessage", ppid + " doesn't found!");
+
 					checkLocation(request);
-					request.getRequestDispatcher("/WEB-INF/views/mici_station/mici.jsp").forward(request, response);					
 				}
 
 
-				if ( currenStaions[0].equalsIgnoreCase(db.START) 
+				else if ( currenStaions[0].equalsIgnoreCase(db.START) 
 						&& currenStaions[1].equalsIgnoreCase(db.PHYSICAL_RECEIVING)) {
 					// no information here
 					request.setAttribute("problemcodeAtMICI", miciInfo[0]);
@@ -367,7 +349,7 @@ public class MICI extends HttpServlet {
 		} else {
 			request.setAttribute("sethideMICI", "hidden");
 			request.setAttribute("seterrorhiddenMICI", "");
-			displayPPIDAndSN(request);
+			request.setAttribute("ppid", ppid);
 			request.setAttribute("errorMessage", ppid +" DOESN'T FOUND!");
 			pn = "";
 			return false;
