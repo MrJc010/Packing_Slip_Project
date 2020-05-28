@@ -35,7 +35,7 @@
 					<input type="hidden" name="action01" value="findPPID">
 					<div class="input-group mb-3">
 						<input class="form-control form-control-lg" type="text"
-							name="inputppid" placeHolder="Enter PPID" required value=${ppid}>
+							name="inputppid" placeHolder="Enter PPID" required value=${ppid} >
 						<div class="input-group-append">
 
 							<input type="submit" class="btn btn-primary btn-lg" value="FIND"
@@ -130,15 +130,13 @@
 							<c:set var="indexValue" value="${indexValue +1}" scope="page" />
 							<div class="accordion" id="accordionExample">
 								<div class="card">
-									<div class="card-header" id="headingOne">
+									<div class="card-header bg-dark" id="headingOne">
 										<strong><span class="mb-0">
-												<button class="btn btn-link" type="button"
+												<button class="btn btn-link text-white" type="button"
 													data-toggle="collapse" data-target="#xx${indexValue}"
 													aria-expanded="false" aria-controls="xx${indexValue}">
-													${aError}</button>
+													<h3>${aError}</h3></button>
 										</span> </strong>
-										<button class="float-right btn btn-primary"
-											name="edit${aError}" onclick="enableForm(${indexValue})">Edit</button>
 									</div>
 
 									<div id="xx${indexValue}" class="collapse"
@@ -149,7 +147,7 @@
 												<input type="hidden" name="action01" value="fix" />
 												<input type="hidden" name="errorValueAction"
 													value="${aError}" />
-												<fieldset id="disable${indexValue}" disabled>
+												<fieldset id="disable${indexValue}"  >
 													<div class="input-group mb-3">
 														<div class="input-group-prepend">
 															<label class="input-group-text" for="duty">Select
@@ -196,64 +194,23 @@
 															name="action${aError}" rows="4" id="actionInput"
 															aria-describedby="emailHelp" placeholder="Enter action"
 															required></textarea>
-														<button type="submit" value="${aError}"
-															name="submitButton"
-															class="btn btn-primary my-5 text-center mx-auto">Submit</button>
+														
 													</div>
-													<select class="custom-select" id="duty"
-														name="duty${aError}" required>
-														<option value="0" selected="">Choose a duty</option>
-														<option value="duty 01">duty 01</option>
-														<option value="duty 02">duty 02</option>
-														<option value="duty 03">duty 03</option>
-													</select>
-												</div>
-
-												<br>
-												<div class="form-group">
-													<label for="oldPN">OLD PN</label> <input type="text"
-														class="form-control" name="oldPN${aError}"
-														placeholder="Enter Old PN" required>
-												</div>
-
-
-												<br>
-
-												<div class="form-group">
-													<label for="oldPN">NEW PN</label> <input type="text"
-														class="form-control" name="newPN${aError}"
-														placeholder="Enter new PN" required>
-												</div>
-
-												<br>
-
-												<div class="form-group">
-													<label for="oldPN">Location</label> <input type="text"
-														class="form-control" name="area${aError}"
-														placeholder="Enter area" required>
-												</div>
-
-
-												<br>
-												<div class="form-group">
-													<label for="actionInput">Action</label>
-													<textarea type="text" class="form-control"
-														name="action${aError}" rows="4" id="actionInput"
-														aria-describedby="emailHelp" placeholder="Enter action"
-														required></textarea>
-													<button type="submit" value="${aError}" name="submitButton"
-														class="btn btn-primary my-5 text-center mx-auto">Submit</button>
-												</div>
-											</fieldset>
-										</form>
+													<div class="text-center">
+													<button type="submit" value="${aError}"
+															name="submitButton"
+															class="btn btn-primary mx-auto btn-lg px-5"><h3 class="m-0">SUBMIT</h3></button>
+													</div>
+													
+												</fieldset>
+											</form>
+										</div>
 									</div>
 								</div>
 							</div>
-						</div>		</c:forEach>
-					<script>
-						function enableForm(errorCode) {
-							document.getElementById("disable" + errorCode).disabled = false;
-						}
+						</c:forEach>
+						<script>
+					
 					</script>
 					</div>
 				

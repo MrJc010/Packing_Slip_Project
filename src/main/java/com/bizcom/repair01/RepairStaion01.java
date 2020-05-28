@@ -173,7 +173,7 @@ public class RepairStaion01 extends HttpServlet {
 		request.setAttribute("seterrorhiddenMICI", "hidden");
 		request.setAttribute("setInfoHidden", "show");
 		request.setAttribute("reapir01BodyHidden", "show");
-		request.setAttribute("ppid", ppid);
+		request.setAttribute("ppid", "");
 		HashMap<String, String> result = db.fetchErrorFromRepair01(ppid);
 		if (result.size() == 0) {			
 			displayTransferState(request,  ppid + " has NO ERROR! Transfer to MICI now.");
