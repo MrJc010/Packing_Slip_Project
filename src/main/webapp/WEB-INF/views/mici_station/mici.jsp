@@ -32,37 +32,39 @@
 		<div class="row bg-light">
 			<div class="col-md-2"></div>
 			<div class="col-md-8 col-sm-12  py-2 px-5">
-				<h3 class="text-center text-primary p-1 display-5">
+				<h2 class="text-center text-primary p-1 display-3">
 					<strong>MICI STATION</strong>
-				</h3>
-				<form method="GET" action="<%=request.getContextPath()%>/mici">
+					</h3>
+					<form method="GET" action="<%=request.getContextPath()%>/mici">
 
-					<div class="form-group">
-						<input type="hidden" name="page" value="check">
-							<input type="text"
-							class="form-control" id="PPID" aria-describedby="emailHelp"
-							placeholder="Enter PPID" name="ppidNumber" required
-							value="${ppid}">
-					</div>
+						<div class="form-group">
+							<input type="hidden" name="page" value="check"> <input
+								type="text" class="form-control" id="PPID"
+								aria-describedby="emailHelp" placeholder="Enter PPID"
+								name="ppidNumber" required value="${ppid}">
+						</div>
 
-					<div class="form-groud text-center my-3">
-						<button type="submit" class="btn btn-primary btn-lg">Check</button>
-					</div>
+						<div class="form-groud text-center my-3">
+							<button type="submit" class="btn btn-primary btn-lg px-5 text-uppercase">Check</button>
+						</div>
 
-				</form>
-
+					</form>
 			</div>
 
 		</div>
 
 		<div class="container text-center mt-5" ${setHiddenResultSucess}>
 			<div class="alert alert-success" role="alert">
-			<h4><label class="text-dark">${messageSuccess}</label></h4>
+				<h4>
+					<label class="text-dark">${messageSuccess}</label>
+				</h4>
 			</div>
 		</div>
 		<div class="container text-center" ${seterrorhiddenMICI}>
 			<div class="alert alert-warning mt-5" role="alert">
-			<h4><label class="text-dark">${errorMessage}</label></h4>
+				<h4>
+					<label class="text-dark">${errorMessage}</label>
+				</h4>
 			</div>
 		</div>
 	</div>
@@ -90,10 +92,11 @@
 									${problemDescpAtMICI}</strong></label>
 						</div>
 					</div>
-					<div class="alert alert-secondary text-center" role="alert">
-						<h4><label class="text-success">
-								<strong>${currentStatusAtMICI}</strong>
-							</label></h4>
+					<div class="alert alert-white text-center" role="alert">
+						<h4>
+							<label class="text-success"> <strong>${currentStatusAtMICI}</strong>
+							</label>
+						</h4>
 					</div>
 				</div>
 			</div>
@@ -112,23 +115,25 @@
 
 
 					<div class="text-center">
-						<div>
-							<h3><a id="addErrorCode" onClick=functionx()> <span
-								class="btn btn-outline-danger border my-4"
-								${hiddenAddErrorCodeBTN}>
-									Add Error Code
-							</span>
-							</a></h3>
-						</div>
+						
 
-						<button type="submit" class="btn btn-success mr" name="action"
+						<a id="addErrorCode" class="btn btn-danger  border shadow p-3 mb-5 rounded mr-4" onClick=functionx() ${hiddenAddErrorCodeBTN}> 
+						<span class="h3 text-white">
+								ADD ERROR CODE
+						</span>
+						</a>
+
+						<button type="submit" class="btn btn-success border  shadow p-3 mb-5 rounded mr-4" name="action"
 							id="passBTN" value="${PassBTNValue}" ${disable} ${hiddenPassBTN}>
-							<span class="display-3">${PassBTNValue}</span>
+							<span class="h3 text-white">${PassBTNValue}</span>
 						</button>
-						<button type="submit" class="btn btn-danger" name="action"
+						<div>
+						<button type="submit" class="btn btn-danger  border shadow p-3 mb-5 rounded mr-4" name="action"
 							id="failBTN" value="failButton" ${disable} ${hiddenFailBTN}>
-							<span class="display-3">FAIL</span>
+							<span class="h3 text-white px-5">MOVE TO REPAIR01</span>
 						</button>
+						</div>
+						
 					</div>
 
 

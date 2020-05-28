@@ -175,7 +175,7 @@ public class MICI extends HttpServlet {
 							if(!db.updateCurrentStation(db.MICI, db.REPAIR01_FAIL, ppid)) {
 								displayErrorMessage(request, ppid + " System error. Can't change status of item!!!");
 							}else {
-								displayNotification(request, ppid + " is transfered successfully to  REPAIR_FAIL!"); 
+								displayNotification(request, ppid + " is transfered and waited at REPAIR_01!"); 
 							}
 						}
 					} catch (ClassNotFoundException e) {
@@ -252,7 +252,7 @@ public class MICI extends HttpServlet {
 		checkState(request);
 
 		String page = request.getParameter("page");
-		ppid = request.getParameter("ppidNumber");
+		ppid = request.getParameter("ppidNumber").trim().toUpperCase();
 		sn = request.getParameter("serialnumber");
 		String[] miciInfo = db.getPhysicalInfor(ppid);
 		if (validate(ppid, request, miciInfo)) {

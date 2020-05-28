@@ -960,7 +960,6 @@ public class DBHandler {
 			dbconnection = getConnectionAWS();
 			pst = dbconnection.prepareStatement(query);
 			pst.setString(1, ppid);
-
 			pst.execute();
 			result = true;
 		} catch (SQLException | ClassNotFoundException e) {
