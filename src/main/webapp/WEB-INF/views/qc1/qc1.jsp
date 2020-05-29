@@ -28,9 +28,9 @@
 		<div class="row bg-light">
 			<div class="col-md-2"></div>
 			<div class="col-md-8 col-sm-12  py-2 px-5">
-				<h3 class="text-center text-primary p-1 display-3">
+				<h4 class="text-center text-primary p-1 display-4">
 					<strong>QC1 STATION</strong>
-				</h3>
+				</h4>
 				<form action="<%=request.getContextPath()%>/qc1" method="GET">
 					<div class="input-group mb-3">
 						<input type="hidden" name="action" value="findPPID"> <input

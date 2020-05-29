@@ -32,11 +32,9 @@
 		<div class="row bg-light">
 			<div class="col-md-2"></div>
 			<div class="col-md-8 col-sm-12  py-2 px-5">
-				<h3 class="text-center text-primary p-1 display-3">
+				<h4 class="text-center text-primary p-1 display-4">
 					<strong>MICI STATION</strong>
-				</h3>
-
-
+				</h4>
 				<form action="<%=request.getContextPath()%>/mici" method="GET">
 					<div class="input-group mb-3">
 						<input type="hidden" name="page" value="check"> <input
@@ -158,40 +156,8 @@
 
 
 	<script type="text/javascript">
-		var list = $
-		{
-			listErrorCodes
-		};
-		var count = $
-		{
-			currentCountMICI
-		};
-
-		/*     var selectX = document.getElementById("errorCode1");
-		 var divError = document.getElementById("errorDiv1");
-		 var op = document.createElement('option');
-		 op.appendChild(document.createTextNode('Choose...'));
-		 op.value = '0';
-		 selectX.appendChild(op);
-
-		 var btn = document.createElement('span');
-		 btn.value = "errorDiv1";
-		 btn.onclick = deleteErrorDiv;
-		 btn.className = "btn btn-outline-danger mx-3"
-		 btn.innerHTML = "Delete";
-		 divError.appendChild(btn); */
-
-		/*  var i = 0;
-		 for (var key in list) {
-		 	if (list.hasOwnProperty(key)) {
-		  	    var divError = document.getElementById("errorDiv" + i);
-		 	    var op = document.createElement('option');
-		 	    op.appendChild(document.createTextNode(key + " -> " + list[key]));
-		 	    op.value = key;
-		 	    selectX.appendChild(op);
-		 	    i+=1;
-		 	}
-		   } */
+		var list = ${listErrorCodes};
+		var count = ${currentCountMICI};
 		var node = document.getElementById("selectionMICI");
 		var passBTN = document.getElementById("passBTN");
 		var failBTN = document.getElementById("failBTN");
@@ -213,9 +179,9 @@
 
 		function functionx() {
 
-			passBTN.hidden = true;
-			failBTN.hidden = false;
-			node.hidden = false;
+			passBTN.hidden = 'true';
+			failBTN.hidden = 'false';
+			node.hidden = 'false';
 
 			if (count <= 10) {
 
@@ -242,6 +208,7 @@
 				divError.appendChild(btn);
 				var i = 0;
 				for ( var key in list) {
+					console.log(key);					
 					if (list.hasOwnProperty(key)) {
 
 						var divError = document.getElementById("errorDiv" + i);

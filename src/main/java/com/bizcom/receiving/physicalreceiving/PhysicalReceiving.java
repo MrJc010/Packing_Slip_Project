@@ -54,6 +54,8 @@ public class PhysicalReceiving extends HttpServlet {
 				int countAmount =  dbhandler.fetchAmountItemBasedOnRMA(rma);
 				request.setAttribute("count", countReceived+"/"+countAmount);				
 				
+				request.setAttribute("setHiddenBeforeReceived", "show");
+				request.setAttribute("setHiddenAfterReceived", "hidden");
 				request.setAttribute("rma_Number", rma);
 				request.setAttribute("ppid_Number", ppid2);
 				request.setAttribute("pn_Number", pn);
@@ -97,14 +99,17 @@ public class PhysicalReceiving extends HttpServlet {
 				if (!updateStatus) {
 					request.getSession().setAttribute("Successfull", "Unsuccessfull");
 					System.out.println("Cannot update item status");
+					response.sendRedirect(request.getContextPath() + "/searchitem?ppid=" + ppid);
 				} else {
-
+					request.setAttribute("setHiddenBeforeReceived", "hidden");
+					request.setAttribute("setHiddenAfterReceived", "show");
 					request.getSession().setAttribute("Successfull", "Successfull");
 					request.setAttribute("setHiddenError", "hidden");
-
+//					request.getRequestDispatcher("/WEB-INF/views/receiving_station/physicalreceiving/physicalreceiving.jsp");
 				}
 			} else {
 				System.out.println("Cannot add record to physical table");
+				response.sendRedirect(request.getContextPath() + "/searchitem?ppid=" + ppid);
 
 			}
 

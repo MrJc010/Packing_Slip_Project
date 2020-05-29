@@ -5,28 +5,26 @@
 
 <section>
 
-	<div class="container-fluid px-5">
+	<div class="container-fluid  p-5" ${hidden}>
 
-		<div class="jumbotron row">
-			<div class="col-lg-2"></div>
-			<div class="col-lg-8  col-sm-12">
-				<h1 class="text-center text-primary p-2 display-4">
-					<strong>Searching Item</strong>
-				</h1>
+		<div class="row bg-light">
+			<div class="col-md-2"></div>
+			<div class="col-md-8 col-sm-12  py-2 px-5">
+				<h4 class="text-center text-primary p-1 display-4">
+					<strong>PHYSICAL RECEIVING</strong>
+				</h4>
 
 				<form action="<%=request.getContextPath()%>/searchitem"
 					method="POST">
+					<div class="input-group mb-3">
+						<input id="input-2" class="form-control form-control-lg"
+							name="ppid" placeholder="Enter PPID number" type="text" required
+							value="${ppidValue}" required /> <input type="submit"
+							class="btn btn-primary btn-lg" value="SEARCH">
 
-					<input id="input-2" class="form-control form-control-lg"
-						name="ppid" placeholder="Enter PPID number" type="text" required
-						value="${ppidValue}" />
-
-
-					<div class="row justify-content-center mt-5">
-						<Button type="submit" class="btn btn-primary btn-lg">
-							<strong>Search Item</strong>
-						</Button>
 					</div>
+
+
 				</form>
 
 			</div>
