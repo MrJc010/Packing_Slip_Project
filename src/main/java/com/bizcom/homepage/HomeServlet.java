@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.bizcom.database.DBHandler;
 
 
-@WebServlet(description = "Show Up Home page", urlPatterns = { "/" })
+@WebServlet(description = "Show Up Home page", urlPatterns = { "/home" })
 public class HomeServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private DBHandler db = new DBHandler();
@@ -27,7 +27,15 @@ public class HomeServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.getRequestDispatcher("/WEB-INF/index.jsp").forward(request, response);		
+		System.out.println(request.getSession().getAttribute("username"));
+		System.out.println(request.getSession().getAttribute("user_role"));
+		if(db.checkAuthentication(request)) {
+			request.getRequestDispatcher("/WEB-INF/index.jsp").forward(request, response);	
+		}else {
+			response.sendRedirect(request.getContextPath() + "/signin?pagerequest=home");
+		}
+
+		
 //		
 	}
 

@@ -52,43 +52,48 @@ public class MICI extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
+		System.out.println(request.getSession().getAttribute("username"));
+		System.out.println(request.getSession().getAttribute("user_role"));
+		
+//		while(request.getSession().getId().length() != 0){
+//			System.out.println(request.getSession().getId());
+//		}
 
 		//		if(isBegin) {
 		//			request.setAttribute("ppid", "");
 		//		}
-		//		if(db.checkAuthentication(request)) {			
-		request.setAttribute("listErrorCodes", jsonMap);
-		errorCodeSet = new HashSet<String>();
-		request.setAttribute("seterrorhiddenMICI", "hidden");
-		request.setAttribute("PassBTNValue", "PASS");
-		request.setAttribute("setHiddenResultSucess", "hidden");
-		request.setAttribute("currentCountMICI", 2);
-		String page = request.getParameter("page");
+		if(db.checkAuthentication(request)) {			
+			request.setAttribute("listErrorCodes", jsonMap);
+			errorCodeSet = new HashSet<String>();
+			request.setAttribute("seterrorhiddenMICI", "hidden");
+			request.setAttribute("PassBTNValue", "PASS");
+			request.setAttribute("setHiddenResultSucess", "hidden");
+			request.setAttribute("currentCountMICI", 2);
+			String page = request.getParameter("page");
 
-		if (page == null) {
-			miciDisplay(request, response);
-		} else {
-			switch (page) {
-			case "display":
-				System.out.println("display");
+			if (page == null) {
 				miciDisplay(request, response);
-				break;
-			case "check":
-				System.out.println("check");
-				checkMICI(request, response);
-				break;
-			default:
-				System.out.println("default");
-				request.setAttribute("ppid", "");
-				errorPage(request, response);
+			} else {
+				switch (page) {
+				case "display":
+					System.out.println("display");
+					miciDisplay(request, response);
+					break;
+				case "check":
+					System.out.println("check");
+					checkMICI(request, response);
+					break;
+				default:
+					System.out.println("default");
+					request.setAttribute("ppid", "");
+					errorPage(request, response);
+				}
 			}
 		}
-		//		}
-		//			else {
-		//			System.out.println("RUN WHEEE");
-		//			response.sendRedirect(request.getContextPath() + "/signin?pagerequest=mici");
-		//		}
+		else {
+			System.out.println("RUN WHEEE");
+			response.sendRedirect(request.getContextPath() + "/signin?pagerequest=mici");
+		}
 
 
 	}

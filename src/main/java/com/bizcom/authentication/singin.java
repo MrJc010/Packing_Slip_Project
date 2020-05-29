@@ -40,7 +40,6 @@ public class singin extends HttpServlet {
 		if (!username.isEmpty() && !password.isEmpty()) {
 			if (db.signIn(username, password)) {
 				String role = db.getUserRole(username);
-				request.getSession().setMaxInactiveInterval(15);
 				request.getSession().setAttribute("username", username);
 				request.getSession().setAttribute("user_role", role);
 				response.sendRedirect(request.getContextPath() + "/"+page);

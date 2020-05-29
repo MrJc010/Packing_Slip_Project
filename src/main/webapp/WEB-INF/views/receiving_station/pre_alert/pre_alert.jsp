@@ -3,20 +3,8 @@
 	<c:param name="title" value="Pre-Alert Station"></c:param>
 </c:import>
 <section>
-	<div class="container-fluid p-3">
-		<div class="float-right mx-5">
-			<form class="float-right" method="GET"
-				action="<%=request.getContextPath()%>/pre_alert">
-				<input type="hidden" name="resetButton" value="resetPage" />
-				<button type="submit" class="btn btn-danger btn-lg">
-					<strong>Reset Page</strong>
-				</button>
 
-			</form>
-		</div>
-
-	</div>
-	<div class="container-fluid mt-5 px-5 ">
+	<div class="container-fluid px-5 ">
 
 		<div class="jumbotron row">
 			<div class="col-lg-2"></div>
@@ -67,24 +55,31 @@
 			</div>
 			<div class="col-lg-2"></div>
 		</div>
-
-
 	</div>
 
 	<div class="container-fluid p-5" ${setHideInfo}>
 
 		<ul class="nav nav-tabs " id="myTab" role="tablist">
-			<li class="nav-item"><a class="nav-link active"
+			<li class="nav-item"><a
+				class="nav-link active text-primary font-weight-bold"
 				id="packingslip-tab" data-toggle="tab" href="#packingslip"
 				role="tab" aria-controls="packingslip" aria-selected="true"><strong>Packing
 						Slip</strong></a></li>
-			<li class="nav-item"><a class="nav-link" id="ppids-tab"
+			<li class="nav-item"><a
+				class="nav-link text-primary font-weight-bold" id="ppids-tab"
 				data-toggle="tab" href="#ppids" role="tab" aria-controls="ppids"
 				aria-selected="false"><strong>PPIDs</strong></a></li>
-			<li class="nav-item"><a class="nav-link" href="File_DownLoad"
-				role="button"
-				onclick="if(!confirm('Are you sure to export?')) return false"
-				${setHiddenExport}><strong>Export</strong></a></li>
+			<li class="nav-item">
+				<form method="GET" action="<%=request.getContextPath()%>/pre_alert">
+
+					<input class="nav-link text-success font-weight-bold"
+						id="ppids-tab" type="submit" value="Export" name="action"
+						${setHiddenExport}>
+				</form>
+
+
+
+			</li>
 		</ul>
 
 		<div class="tab-content p-4">
@@ -99,7 +94,7 @@
 							enctype=multipart/form-data>
 							<!-- <br> <input type="text" name="RMA Number" required/> -->
 							<input type="submit" name="rmaButton"
-								class="btn btn-md btn-primary my-4" value="GET RMA" />
+								class="btn btn-md btn-primary my-4" value="GET RMA" ${hiddenRMA} />
 						</form>
 
 					</div>
