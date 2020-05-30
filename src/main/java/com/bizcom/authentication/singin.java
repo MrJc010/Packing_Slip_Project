@@ -33,7 +33,7 @@ public class singin extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
+
 		System.out.println("GET APGE ?? " + page);
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
@@ -42,7 +42,15 @@ public class singin extends HttpServlet {
 				String role = db.getUserRole(username);
 				request.getSession().setAttribute("username", username);
 				request.getSession().setAttribute("user_role", role);
-				response.sendRedirect(request.getContextPath() + "/"+page);
+				if(page.length()== 0) {					
+
+//					request.getRequestDispatcher("/WEB-INF/index.jsp").forward(request, response);	
+					System.out.println("HEREEEE" + request.getServletPath());
+					response.sendRedirect(request.getContextPath()+"/" );
+				}else {
+
+					response.sendRedirect(request.getContextPath() + "/"+page);
+					}
 			}
 		} else {
 			response.sendRedirect(request.getContextPath() + "/signin");

@@ -1699,6 +1699,7 @@ public class DBHandler {
 
 	public boolean checkAuthentication(HttpServletRequest request) throws IOException {
 		StringBuilder stB = new StringBuilder(UrlPatternUtils.getUrlPattern(request));
+		System.out.println(stB.toString() + "stb");
 		stB.deleteCharAt(0);
 		String urlPattern = stB.toString();
 		System.out.println(urlPattern);
