@@ -817,22 +817,22 @@ public class DBHandler {
 	 * @param rma
 	 * @param items
 	 */
-	public JSONObject getIncorrectItem(String rma, List<List<String>> items) {
-		String unreceivedItems = getUnReceiveItem(rma);
-		Map<String,String> dataMap = new HashMap<String,String>();
-		dataMap.put("unreceived", unreceivedItems);
-		dataMap.put("incorect", new Gson().toJson(items));
-		return new JSONObject(dataMap);
-	}
+//	public List<List<String>> getIncorrectItem(String rma, List<List<String>> items) {
+//		List<List<String>> unreceivedItems = getUnReceiveItem(rma);
+//		Map<String,JSONObject> dataMap = new HashMap<String,JSONObject>();
+//		dataMap.put("unreceived", unreceivedItems);
+//		dataMap.put("incorect", new JSONObject(items));
+//		return unreceivedItems;
+//	}
 
 	/**
 	 * This function is used for getting all un-receive items
 	 * @param rma
 	 * @return
 	 */
-	public String getUnReceiveItem(String rma){
+	public List<List<String>> getUnReceiveItem(String rma){
 		List<List<String>> result = new ArrayList<List<String>>();
-		String jsonResult = "";
+//		JSONObject jsonResult = null;
 		String query = "SELECT * FROM pre_item where pre_item.ppid IN " + 
 				"(SELECT ppid  FROM pre_ppid WHERE rma = ? AND status = 'UnRecevied');";
 		try {
@@ -841,7 +841,7 @@ public class DBHandler {
 			pst.setString(1, rma);
 			rs = pst.executeQuery();
 
-			while (rs.next()) {
+			while (rs.next()) {				
 				List<String> temp = new ArrayList<String>();
 				temp.add(rs.getString("ppid"));
 				temp.add(rs.getString("pn"));
@@ -853,8 +853,12 @@ public class DBHandler {
 				temp.add(rma);
 				temp.add("UnReceived");
 				result.add(temp);
+				
 			}
-			jsonResult = new Gson().toJson(result);
+//			HashMap<String, Object> map = new HashMap<String, Object>();
+//			map.put("1", result);
+////			System.out.println(map.toString());
+//			return new JSONObject(map);
 
 		} catch (Exception e) {
 			System.out.println("Error getUnReceiveItem function in DBHandler: " + e.getMessage());
@@ -862,10 +866,14 @@ public class DBHandler {
 			shutdown();
 		}
 
-		return jsonResult;
+		return result;
 	}
 
-
+//	public boolean isRMAExist(String rma) {
+//		boolean result = false;
+//		String query = "SELECT rma FROM rma_table WHERE "
+//		return result;
+//	}
 	// ***************************END*****************************
 	// ***************************END*****************************
 	// ***************************END*****************************

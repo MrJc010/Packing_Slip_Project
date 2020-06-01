@@ -5,8 +5,27 @@
 <section>
 
 	<div class="container p-5">
-		<div class="row justify-content-center">
-			<h1>Physical Receiving Station</h1>
+		<%-- Search Bar --%>
+		<div class="row bg-light">
+			<div class="col-md-2"></div>
+			<div class="col-md-8 col-sm-12  py-2 px-5">
+				<h4 class="text-center text-primary p-1 display-4">
+					<strong>SHORT ITEM REPORT</strong>
+				</h4>
+				<form action="<%=request.getContextPath()%>/shortitem" method="GET">
+
+					<div class="input-group mb-3">
+						<input type="hidden" name="action" value="findRMA"> <input
+							class="form-control form-control-lg" type="text" name="inputrma"
+							aria-describedby="emailHelp" placeHolder="Enter RMA" required>
+						<div class="input-group-append">
+							<input type="submit" class="btn btn-primary btn-lg" value="FIND"
+								name="actionSubmitRMA">
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="col-md-2-2"></div>
 		</div>
 		<div>
 			<p>Calling data from function getUnReceiveItem. This function is
@@ -30,42 +49,16 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr>
-					<td>John Doe</td>
-					<td>john@gmail.com</td>
-					<td>USA</td>
-					<td>John Doe</td>
-					<td>john@gmail.com</td>
-					<td>USA</td>
-					<td>John Doe</td>
-					<td>john@gmail.com</td>
-					<td>USA</td>
-				</tr>
-				<tr>
-					<td>John Doe</td>
-					<td>john@gmail.com</td>
-					<td>USA</td>
-					<td>John Doe</td>
-					<td>john@gmail.com</td>
-					<td>USA</td>
-					<td>John Doe</td>
-					<td>john@gmail.com</td>
-					<td>USA</td>
-				</tr>
-				<tr>
-					<td>John Doe</td>
-					<td>john@gmail.com</td>
-					<td>USA</td>
-					<td>John Doe</td>
-					<td>john@gmail.com</td>
-					<td>USA</td>
-					<td>John Doe</td>
-					<td>john@gmail.com</td>
-					<td>USA</td>
-				</tr>
-
+				<c:forEach items="${passingList}" var="aRow">
+					<tr>
+						<c:forEach items="${aRow}" var="iRow">
+							<td>${iRow}</td>
+						</c:forEach>
+					</tr>
+				</c:forEach>
 			</tbody>
 		</table>
+
 	</div>
 
 	<script>
