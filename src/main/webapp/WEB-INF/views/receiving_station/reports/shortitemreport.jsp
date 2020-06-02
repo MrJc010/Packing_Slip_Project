@@ -31,21 +31,23 @@
 			<p>Calling data from function getUnReceiveItem. This function is
 				providing JSON format.</p>
 		</div>
-		<button onclick="exportTableToExcel('tblData', 'members-data')">Export
+		<!-- <button onclick="exportTableToExcel('tblData', 'members-data')">Export
 			Table Data To Excel File</button>
-
-		<table id="tblData" class="table table-bordered">
+ -->
+		<!-- <table id="tblData" class="table table-bordered"> -->
+		<button onclick="ExportExcel('xlsx')">Export</button>
+		<table id="exportable_table" class="table table-bordered">
 			<thead class="thead-dark">
 				<tr>
-					<th scope="col">ppid</th>
-					<th scope="col">pn</th>
-					<th scope="col">co</th>
-					<th scope="col">lot</th>
-					<th scope="col">dps</th>
-					<th scope="col">pro_code</th>
-					<th scope="col">code_descp</th>
-					<th scope="col">rma</th>
-					<th scope="col">status</th>
+					<th scope="col">PPID</th>
+					<th scope="col">PN</th>
+					<th scope="col">CO</th>
+					<th scope="col">LOT</th>
+					<th scope="col">DPS</th>
+					<th scope="col">PRO CODE</th>
+					<th scope="col">CODE DESCP</th>
+					<th scope="col">RMA</th>
+					<th scope="col">STATUS</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -61,39 +63,16 @@
 
 	</div>
 
-	<script>
-	function exportTableToExcel(tableID, filename = ''){
-	    var downloadLink;
-	    var dataType = 'application/vnd.ms-excel';
-	    var tableSelect = document.getElementById(tableID);
-	    var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
-	    
-	    // Specify file name
-	    filename = filename?filename+'.xls':'excel_data.xls';
-	    
-	    // Create download link element
-	    downloadLink = document.createElement("a");
-	    
-	    document.body.appendChild(downloadLink);
-	    
-	    if(navigator.msSaveOrOpenBlob){
-	        var blob = new Blob(['\ufeff', tableHTML], {
-	            type: dataType
-	        });
-	        navigator.msSaveOrOpenBlob( blob, filename);
-	    }else{
-	        // Create a link to the file
-	        downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
-	    
-	        // Setting the file name
-	        downloadLink.download = filename;
-	        
-	        //triggering the function
-	        downloadLink.click();
-	    }
-	}
-	
-	</script>
+   <script type="text/javascript">
+      function ExportExcel(type, fn, dl) {
+         var elt = document.getElementById('exportable_table');
+         var wb = XLSX.utils.table_to_book(elt, {sheet:"Sheet JS"});
+         return dl ?
+            XLSX.write(wb, {bookType:type, bookSST:true, type: 'base64'}) :
+            XLSX.writeFile(wb, fn || ('SheetJSTableExport.' + (type || 'xlsx')));
+      }
+   </script>
+   <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
 
 </section>
 
