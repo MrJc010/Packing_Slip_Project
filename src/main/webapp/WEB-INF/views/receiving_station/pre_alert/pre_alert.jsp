@@ -4,15 +4,13 @@
 </c:import>
 <section>
 
-	<div class="container-fluid px-5 ">
-
-		<div class="jumbotron row">
-			<div class="col-lg-2"></div>
-			<div class="col-lg-8  col-sm-12">
-
-				<h1 class="text-center text-primary p-2 display-4">
-					<strong>Upload Your Excel File</strong>
-				</h1>
+	<div class="container-fluid  p-5" ${hidden}>
+		<div class="row bg-light">
+			<div class="col-md-2"></div>
+			<div class="col-md-8 col-sm-12  py-2 px-5">
+				<h4 class="text-center text-primary p-1 display-4">
+					<strong>PRE-ALERT STATION</strong>
+				</h4>
 				<form method="POST" action="<%=request.getContextPath()%>/pre_alert"
 					enctype="multipart/form-data" class="mt-2">
 
@@ -30,12 +28,19 @@
 
 
 					</div>
-					<div class="alert alert-danger" role="alert" ${setErrorHidden}>
-						<strong>${message }</strong>
+					<div class="container text-center mt-2" ${setSuccesHidden}>
+						<div class="alert alert-success" role="alert">
+							<h4>
+								<label class="text-dark">${messageSuccess}</label>
+							</h4>
+						</div>
 					</div>
-
-					<div class="alert alert-success" role="alert" ${setSuccesHidden}>
-						<strong>Excel file was loaded successfully</strong>
+					<div class="container text-center" ${setErrorHidden}>
+						<div class="alert alert-warning mt-2" role="alert">
+							<h4>
+								<label class="text-dark">${message }</label>
+							</h4>
+						</div>
 					</div>
 
 					<script>
@@ -52,9 +57,17 @@
 					</script>
 
 				</form>
+
+
+
 			</div>
-			<div class="col-lg-2"></div>
+
 		</div>
+
+	</div>
+
+
+
 	</div>
 
 	<div class="container-fluid p-5" ${setHideInfo}>
@@ -98,7 +111,8 @@
 						</form>
 
 					</div>
-					<div class="row p5 table-responsive">
+					<div class="row p5 table-responsive"
+						style="height: 500px; overflow: auto;">
 						<table class="table table-striped ">
 							<thead>
 								<tr>
@@ -142,7 +156,8 @@
 					<div class="row">
 						<h3>List PPID Read From Excel</h3>
 					</div>
-					<div class="row p5 table-responsive">
+					<div class="row p5 table-responsive"
+						style="height: 500px; overflow: auto;">
 						<table class="table table-striped">
 							<thead>
 								<tr>

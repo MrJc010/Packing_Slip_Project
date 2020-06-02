@@ -66,23 +66,28 @@ public class FileUploadServlet extends HttpServlet {
 	private DBHandler dbHandler = new DBHandler();
 
 	public FileUploadServlet() throws ClassNotFoundException {
-
+		
 		super();
 		// Class.forName("com.mysql.jdbc.Driver");
+		System.out.println("FileUploadServlet");
 	}
 
+	@Override
+	protected void service(HttpServletRequest arg0, HttpServletResponse arg1) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		super.service(arg0, arg1);
+		System.out.println("service");
+	}
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		if(tempPathFile.equalsIgnoreCase(pathFile)) {
-			System.out.println("do no thing");
 			request.setAttribute("hiddenRMA", "hidden");
 		}
 		request.setAttribute("setErrorHidden", "hidden");
 		request.setAttribute("setSuccesHidden", "hidden");
 		String action = request.getParameter("action");
 
-		System.out.println("Action: "  + action);
 		if(action!= null && action.equalsIgnoreCase("Export")) {			
 			exportExcelFile(request, response, fileName, pathFile);
 			return;
@@ -95,6 +100,7 @@ public class FileUploadServlet extends HttpServlet {
 				hideBody(request, response, false);
 				//				pathFile = request.getSession().getAttribute("PathFile").toString();
 				request.setAttribute("setSuccesHidden", "show");
+				request.setAttribute("messageSuccess", "Excel file was loaded successfully");				
 				request.setAttribute("urll", pathFile);
 				String rmaPara = request.getParameter("rmaButton");
 				// excelService.read(pathFile);
@@ -115,14 +121,10 @@ public class FileUploadServlet extends HttpServlet {
 				if (rmaPara != null && isExported.isEmpty()) {
 
 					if(!tempPathFile.equalsIgnoreCase(pathFile)) {		
-						System.out.println("tempPathFile" + tempPathFile);
-						System.out.println("pathFile" + pathFile);
-
 						RMAServices rma = new RMAServices();
 						String newRMA = rma.generatorRMA();
 						try {
 							dbHandler.ppidToDB(excelService.appendRMAForPPID(list, newRMA));
-
 							setHiddenExport = "show";
 
 
@@ -154,6 +156,7 @@ public class FileUploadServlet extends HttpServlet {
 						request.setAttribute("hiddenRMA", "hidden");
 						request.setAttribute("setErrorHidden", "hidden");
 					}else {
+//						Can't generate new RMA from database
 						request.setAttribute("hiddenRMA", "show");
 						request.setAttribute("setErrorHidden", "hidden");
 					}
@@ -190,7 +193,7 @@ public class FileUploadServlet extends HttpServlet {
 				workbook = new HSSFWorkbook(inputStream);
 			}
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+//			System.out.println(e.getMessage());
 			return false;
 		}
 
@@ -270,7 +273,7 @@ public class FileUploadServlet extends HttpServlet {
 		// this path is relative to application's directory
 		String uploadPath = getServletContext().getRealPath("") + UPLOAD_DIRECTORY;
 
-		System.out.println("uploadPath" + uploadPath);
+//		System.out.println("uploadPath" + uploadPath);
 
 		// creates the directory if it does not exist
 		File uploadDir = new File(uploadPath);
@@ -278,7 +281,7 @@ public class FileUploadServlet extends HttpServlet {
 			uploadDir.mkdir();
 		}
 
-		System.out.println("uploadPath_2" + uploadPath);
+//		System.out.println("uploadPath_2" + uploadPath);
 		fileName = "";
 		try {
 			// parses the request's content to extract file data
@@ -300,9 +303,9 @@ public class FileUploadServlet extends HttpServlet {
 						request.setAttribute("setHiddenExport", "hidden");
 
 						int valflag = validation.prealertValidation(pathFile);
-						System.out.println("valflag: " + valflag);
+//						System.out.println("valflag: " + valflag);
 
-						System.out.println("pathFil 297" + pathFile);
+//						System.out.println("pathFil 297" + pathFile);
 						if (valflag == 1) {
 							request.setAttribute("setErrorHidden", "hidden");
 							request.setAttribute("setSuccesHidden", "show");
@@ -340,38 +343,6 @@ public class FileUploadServlet extends HttpServlet {
 			request.setAttribute("message", "There was an error: " + ex.getMessage());
 		}
 		response.sendRedirect(request.getContextPath() + "/pre_alert");
-
-		//		request.getRequestDispatcher("/WEB-INF/views/receiving_station/pre_alert/pre_alert.jsp").forward(request,
-		//				response);
-		// get the s3Client
-		//		AmazonS3 s3Client = new AmazonS3Client(new ProfileCredentialsProvider());
-		//		String uploadFilePath = uploadPath;
-		//		File fileSaveDir = new File(uploadFilePath);
-		//		if (!fileSaveDir.exists()) {
-		//			fileSaveDir.mkdirs();
-		//		}
-		//
-		//		File uploadFileName = new File(filePath);
-		//
-		//		try {
-		//			System.out.println("Uploading file to s3");
-		//			s3Client.putObject("bizcom-us-prealert", fileName, uploadFileName);
-		//
-		//		} catch (AmazonServiceException ase) {
-		//			System.out.println("Caught an AmazonServiceException, which " + "means your request made it "
-		//					+ "to Amazon S3, but was rejected with an error response" + " for some reason.");
-		//			System.out.println("Error Message:    " + ase.getMessage());
-		//			System.out.println("HTTP Status Code: " + ase.getStatusCode());
-		//			System.out.println("AWS Error Code:   " + ase.getErrorCode());
-		//			System.out.println("Error Type:       " + ase.getErrorType());
-		//			System.out.println("Request ID:       " + ase.getRequestId());
-		//		} catch (AmazonClientException ace) {
-		//			System.out.println("Caught an AmazonClientException, which " + "means the client encountered "
-		//					+ "an internal error while trying to " + "communicate with S3, "
-		//					+ "such as not being able to access the network.");
-		//			System.out.println("Error Message: " + ace.getMessage());
-		//		}
-
 	}
 
 	public void refeshPackingSlip(HttpServletRequest request, HttpServletResponse response, String path)

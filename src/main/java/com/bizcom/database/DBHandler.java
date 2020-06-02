@@ -384,6 +384,30 @@ public class DBHandler {
 
 	}
 
+	public boolean isExistInPPID(String ppid) {
+		boolean result = false;
+		String query = "SELECT * FROM pre_ppid WHERE ppid=?";
+
+		try {
+			dbconnection = getConnectionAWS();
+			pst = dbconnection.prepareStatement(query);
+			pst.setString(1, ppid);
+			rs = pst.executeQuery();
+
+			if (rs.next()) {
+				result = true;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			shutdown();
+		}
+
+		return result;
+
+	}
+
 	// ***************************END*****************************
 	// ***************************END*****************************
 	// ***************************END*****************************
