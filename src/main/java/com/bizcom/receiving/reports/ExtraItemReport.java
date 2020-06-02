@@ -21,6 +21,7 @@ import com.bizcom.database.DBHandler;
 public class ExtraItemReport extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static String ppid = "";
+	private static String rma = "";
 	private static Map<String,List<String>> receivedList = new HashMap<>();
 	private static DBHandler db = new DBHandler();
 	/**
@@ -45,8 +46,9 @@ public class ExtraItemReport extends HttpServlet {
 			case "checkPPID":
 				// Run check PPID in here
 				ppid = request.getParameter("ppidNumber");
+				rma = request.getParameter("rma");
 				// Change isExistInPrePPID if need
-				if(ppid != null &&ppid.length() !=0 ) {
+				if(ppid != null && ppid.length() !=0 ) {
 					
 					if(!db.isExistInPPID(ppid)) {
 						// exist in list
@@ -107,6 +109,7 @@ public class ExtraItemReport extends HttpServlet {
 	public void displayEditView(HttpServletRequest request, String message, List<String> l) {
 		request.setAttribute("setHiddenCount", "show");
 		request.setAttribute("count", receivedList.size());
+		request.setAttribute("receivedList", receivedList.values());
 		request.setAttribute("setErrorMessage","hidden");
 		request.setAttribute("setHiddenResultSucess","hidden");
 		request.setAttribute("checkResult", message);
@@ -122,12 +125,13 @@ public class ExtraItemReport extends HttpServlet {
 //		add(manfPN);
 //		add(mac);
 //		add(cpuSN);
-		if(l.size()>=5) {
-		request.setAttribute("sn", l.get(1));
-		request.setAttribute("rev", l.get(2));
-		request.setAttribute("manfPN", l.get(3));
-		request.setAttribute("mac", l.get(4));
-		request.setAttribute("cpuSN", l.get(5));		
+		if(l.size()>=6) {
+		request.setAttribute("rma", l.get(1));
+		request.setAttribute("sn", l.get(2));
+		request.setAttribute("rev", l.get(3));
+		request.setAttribute("manfPN", l.get(4));
+		request.setAttribute("mac", l.get(5));
+		request.setAttribute("cpuSN", l.get(6));		
 		}
 		
 		
@@ -136,6 +140,7 @@ public class ExtraItemReport extends HttpServlet {
 	public void displayAfterAddNewExtra (HttpServletRequest request, String message) {
 		request.setAttribute("setHiddenCount", "show");
 		request.setAttribute("count", receivedList.size());
+		request.setAttribute("receivedList", receivedList.values());
 		request.setAttribute("setErrorMessage","hidden");
 		request.setAttribute("setHiddenResultSucess","show");
 		request.setAttribute("messageSuccess",message);
@@ -148,6 +153,7 @@ public class ExtraItemReport extends HttpServlet {
 	public void displayInputExtra(HttpServletRequest request, String message) {
 		request.setAttribute("setHiddenCount", "show");
 		request.setAttribute("count", receivedList.size());
+		request.setAttribute("receivedList", receivedList.values());
 		request.setAttribute("ppidInfox", ppid);
 		request.setAttribute("ppid", ppid);
 		request.setAttribute("setHiddenResultSucess", "hidden");
@@ -188,6 +194,7 @@ public class ExtraItemReport extends HttpServlet {
 			case "addInformation":
 				System.out.println("addInformation");
 				// save all information into list string
+				String rma= request.getParameter("rma");
 				String sn= request.getParameter("sn");
 				String rev= request.getParameter("rev");
 				String manfPN= request.getParameter("manfPN");
@@ -197,6 +204,7 @@ public class ExtraItemReport extends HttpServlet {
 					
 				{
 					add(ppid);
+					add(rma);
 					add(sn);
 					add(rev);
 					add(manfPN);

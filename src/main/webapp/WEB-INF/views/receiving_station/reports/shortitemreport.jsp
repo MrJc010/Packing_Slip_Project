@@ -72,7 +72,7 @@
             XLSX.writeFile(wb, fn || ('SheetJSTableExport.' + (type || 'xlsx')));
       }
    </script>
-   <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
+   <script type="text/javascript" src="${pageContext.request.contextPath}/js/xlsx.full.min.js"></script>
 
 </section>
 

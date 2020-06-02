@@ -47,6 +47,7 @@
 <link
 	href="https://cdnjs.cloudflare.com/ajax/libs/gijgo/1.9.13/combined/css/gijgo.min.css"
 	rel="stylesheet" type="text/css" />
+	<link href='https://fonts.googleapis.com/css?family=Libre Barcode 128' rel='stylesheet'>
 <title>${param.title}</title>
 </head>
 <body>
